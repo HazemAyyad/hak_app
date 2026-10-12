@@ -91,39 +91,44 @@ class _HomePageState extends State<HomePage> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            const SliverToBoxAdapter(child: _HeroHeader()),
-            const SliverPadding(
-              padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate.fixed([
-                  PrayerCard(),
-                  SizedBox(height: 14),
-                  QuickServices(),
-                  SizedBox(height: 18),
-                  DhikrCard(),
-                  SizedBox(height: 14),
-                  ReadingCard(),
-                  SizedBox(height: 14),
-                  DailyVerseCard(),
-                  SizedBox(height: 20),
-                  SectionHeader(title: 'رحلتك اليوم', action: 'عرض الكل'),
-                  SizedBox(height: 10),
-                  JourneyCards(),
-                  SizedBox(height: 20),
-                  FridayCard(),
-                  SizedBox(height: 20),
-                  SectionHeader(title: 'مقالات ومعلومات', action: 'عرض الكل'),
-                  SizedBox(height: 10),
-                  ArticlesRow(),
-                  SizedBox(height: 24),
-                  SocialMediaSection(),
-                ]),
+        body: _currentIndex == 4
+            ? const MorePage()
+            : CustomScrollView(
+                slivers: [
+                  const SliverToBoxAdapter(child: _HeroHeader()),
+                  const SliverPadding(
+                    padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate.fixed([
+                        PrayerCard(),
+                        SizedBox(height: 14),
+                        QuickServices(),
+                        SizedBox(height: 18),
+                        DhikrCard(),
+                        SizedBox(height: 14),
+                        ReadingCard(),
+                        SizedBox(height: 14),
+                        DailyVerseCard(),
+                        SizedBox(height: 20),
+                        SectionHeader(title: 'رحلتك اليوم', action: 'عرض الكل'),
+                        SizedBox(height: 10),
+                        JourneyCards(),
+                        SizedBox(height: 20),
+                        FridayCard(),
+                        SizedBox(height: 20),
+                        SectionHeader(
+                          title: 'مقالات ومعلومات',
+                          action: 'عرض الكل',
+                        ),
+                        SizedBox(height: 10),
+                        ArticlesRow(),
+                        SizedBox(height: 24),
+                        SocialMediaSection(),
+                      ]),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
         extendBody: true,
         bottomNavigationBar: NavigationBar(
           selectedIndex: _currentIndex,
@@ -164,6 +169,192 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+class MorePage extends StatelessWidget {
+  const MorePage({super.key});
+
+  static const _items = [
+    ('ادعُ معي', Icons.people_alt_outlined),
+    ('حلقات الذكر', Icons.auto_awesome_outlined),
+    ('الإعدادات', Icons.settings_outlined),
+    ('المسبحة الإلكترونية', Icons.mosque_outlined),
+    ('أسماء الله الحسنى', Icons.brightness_7_outlined),
+    ('بماذا تشعر؟', Icons.emoji_emotions_outlined),
+    ('أذكار المسلم', Icons.volunteer_activism_outlined),
+    ('إحصائيات', Icons.query_stats_outlined),
+    ('أذكاري', Icons.edit_note_outlined),
+    ('قرآن', Icons.menu_book_outlined),
+    ('بوصلة القبلة', Icons.explore_outlined),
+    ('متعقب العادة', Icons.fact_check_outlined),
+    ('الرقية الشرعية', Icons.health_and_safety_outlined),
+    ('استغفار', Icons.self_improvement_outlined),
+    ('الحمد', Icons.front_hand_outlined),
+    ('تسبيح', Icons.radio_button_checked),
+    ('الأربعون النووية', Icons.book_outlined),
+    ('أدعية الأنبياء', Icons.self_improvement_outlined),
+    ('أدعية نبوية', Icons.volunteer_activism_outlined),
+    ('أدعية قرآنية', Icons.auto_stories_outlined),
+    ('ختمة', Icons.menu_book_rounded),
+    ('سنن الجمعة', Icons.groups_outlined),
+    ('رمضان', Icons.nightlight_outlined),
+    ('سنن النبي ﷺ', Icons.import_contacts_outlined),
+    ('مظهر التطبيق', Icons.palette_outlined),
+    ('سكينة', Icons.air_outlined),
+    ('الأحاديث النبوية', Icons.menu_book_outlined),
+    ('أقرب المساجد', Icons.mosque_outlined),
+    ('تطبيقاتنا', Icons.account_balance_outlined),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Container(
+            height: 265,
+            padding: EdgeInsets.fromLTRB(
+              18,
+              MediaQuery.paddingOf(context).top + 12,
+              18,
+              18,
+            ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: const AssetImage('assets/images/home_header.png'),
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                colorFilter: dark
+                    ? const ColorFilter.mode(
+                        Color(0x55102A43),
+                        BlendMode.darken,
+                      )
+                    : null,
+              ),
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(30),
+              ),
+            ),
+            child: Column(
+              children: [
+                Image.asset(
+                  'assets/branding/haq_logo_transparent.png',
+                  width: 90,
+                  height: 90,
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  'المزيد',
+                  style: TextStyle(
+                    color: AppColors.navy,
+                    fontSize: 30,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const Text(
+                  'كل ما تحتاجه في مكان واحد',
+                  style: TextStyle(
+                    color: AppColors.navy,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(18, 18, 18, 24),
+          sliver: SliverGrid.builder(
+            itemCount: _items.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 18,
+              crossAxisSpacing: 10,
+              childAspectRatio: .72,
+            ),
+            itemBuilder: (context, index) {
+              final item = _items[index];
+              return _MoreItem(title: item.$1, icon: item.$2);
+            },
+          ),
+        ),
+        const SliverToBoxAdapter(child: _MoreSocialLinks()),
+        const SliverToBoxAdapter(child: SizedBox(height: 108)),
+      ],
+    );
+  }
+}
+
+class _MoreItem extends StatelessWidget {
+  const _MoreItem({required this.title, required this.icon});
+  final String title;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    onTap: () {},
+    borderRadius: BorderRadius.circular(18),
+    child: Column(
+      children: [
+        Container(
+          width: 64,
+          height: 64,
+          decoration: const BoxDecoration(
+            color: AppColors.deepTeal,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: Colors.white, size: 34),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          title,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: AppColors.navy,
+            fontSize: 12,
+            height: 1.25,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class _MoreSocialLinks extends StatelessWidget {
+  const _MoreSocialLinks();
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(24, 6, 24, 18),
+    child: Column(
+      children: [
+        Divider(color: AppColors.navy.withValues(alpha: .45)),
+        const SizedBox(height: 12),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Icon(Icons.edit_outlined, color: AppColors.navy, size: 30),
+            Icon(Icons.share_outlined, color: AppColors.navy, size: 30),
+            Icon(Icons.play_circle_outline, color: AppColors.navy, size: 34),
+            Icon(Icons.camera_alt_outlined, color: AppColors.navy, size: 31),
+            Text(
+              'f',
+              style: TextStyle(
+                color: AppColors.navy,
+                fontSize: 34,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 }
 
 class _HeroHeader extends StatelessWidget {
