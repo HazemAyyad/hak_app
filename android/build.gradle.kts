@@ -1,3 +1,5 @@
+import com.android.build.api.variant.LibraryAndroidComponentsExtension
+
 allprojects {
     repositories {
         google()
@@ -17,6 +19,12 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(":app")
+    // Use the same complete NDK as the application for native plugin builds.
+    plugins.withId("com.android.library") {
+        extensions.configure<LibraryAndroidComponentsExtension> {
+            finalizeDsl { android -> android.ndkVersion = "27.0.12077973" }
+        }
+    }
 }
 
 tasks.register<Delete>("clean") {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_appearance.dart';
+import 'features/quran/data/quran_controller.dart';
+import 'features/quran/presentation/quran_host.dart';
 import 'settings_pages.dart';
 
 Future<void> main() async {
@@ -21,8 +23,9 @@ class AppColors {
 }
 
 class HaqApp extends StatefulWidget {
-  const HaqApp({super.key, this.appearance});
+  const HaqApp({super.key, this.appearance, this.quranController});
   final AppAppearance? appearance;
+  final QuranController? quranController;
 
   @override
   State<HaqApp> createState() => _HaqAppState();
@@ -80,7 +83,10 @@ class _HaqAppState extends State<HaqApp> {
             ),
             child: child!,
           ),
-          home: HomePage(onToggleTheme: _toggleTheme),
+          home: HomePage(
+            onToggleTheme: _toggleTheme,
+            quranController: widget.quranController,
+          ),
         ),
       ),
     );
@@ -115,9 +121,14 @@ class _HaqAppState extends State<HaqApp> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.onToggleTheme});
+  const HomePage({
+    super.key,
+    required this.onToggleTheme,
+    this.quranController,
+  });
 
   final VoidCallback onToggleTheme;
+  final QuranController? quranController;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -125,6 +136,38 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  bool _quranFullscreen = false;
+  late final QuranController _quran;
+  final _quranKey = GlobalKey<QuranHostState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _quran = widget.quranController ?? QuranController();
+    if (_quran.repository == null) _quran.load();
+  }
+
+  @override
+  void dispose() {
+    if (widget.quranController == null) _quran.dispose();
+    super.dispose();
+  }
+
+  void _openQuran({bool resume = false}) {
+    setState(() => _currentIndex = 1);
+    if (resume) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _quranKey.currentState?.openLastReading();
+      });
+    }
+  }
+
+  void _openQuranSettings() {
+    _openQuran();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _quranKey.currentState?.openSettings();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,86 +175,117 @@ class _HomePageState extends State<HomePage> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        body: _currentIndex == 4
-            ? MorePage()
-            : CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(child: _HeroHeader()),
-                  SliverPadding(
-                    padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate.fixed([
-                        PrayerCard(),
-                        SizedBox(height: 14),
-                        QuickServices(),
-                        SizedBox(height: 18),
-                        DhikrCard(),
-                        SizedBox(height: 14),
-                        ReadingCard(),
-                        SizedBox(height: 14),
-                        DailyVerseCard(),
-                        SizedBox(height: 20),
-                        SectionHeader(title: 'رحلتك اليوم', action: 'عرض الكل'),
-                        SizedBox(height: 10),
-                        JourneyCards(),
-                        SizedBox(height: 20),
-                        FridayCard(),
-                        SizedBox(height: 20),
-                        SectionHeader(
-                          title: 'مقالات ومعلومات',
-                          action: 'عرض الكل',
+        body: IndexedStack(
+          index: _currentIndex == 1 ? 1 : 0,
+          children: [
+            _currentIndex == 4
+                ? MorePage(
+                    onQuranTap: () => _openQuran(),
+                    onQuranSettings: _openQuranSettings,
+                  )
+                : CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(child: _HeroHeader()),
+                      SliverPadding(
+                        padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate.fixed([
+                            PrayerCard(),
+                            SizedBox(height: 14),
+                            QuickServices(onQuranTap: () => _openQuran()),
+                            SizedBox(height: 18),
+                            DhikrCard(),
+                            SizedBox(height: 14),
+                            ReadingCard(
+                              controller: _quran,
+                              onContinue: () => _openQuran(resume: true),
+                            ),
+                            SizedBox(height: 14),
+                            DailyVerseCard(),
+                            SizedBox(height: 20),
+                            SectionHeader(
+                              title: 'رحلتك اليوم',
+                              action: 'عرض الكل',
+                            ),
+                            SizedBox(height: 10),
+                            JourneyCards(),
+                            SizedBox(height: 20),
+                            FridayCard(),
+                            SizedBox(height: 20),
+                            SectionHeader(
+                              title: 'مقالات ومعلومات',
+                              action: 'عرض الكل',
+                            ),
+                            SizedBox(height: 10),
+                            ArticlesRow(),
+                            SizedBox(height: 24),
+                            SocialMediaSection(),
+                          ]),
                         ),
-                        SizedBox(height: 10),
-                        ArticlesRow(),
-                        SizedBox(height: 24),
-                        SocialMediaSection(),
-                      ]),
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+            TickerMode(
+              enabled: _currentIndex == 1,
+              child: QuranHost(
+                key: _quranKey,
+                controller: _quran,
+                active: _currentIndex == 1,
+                onFullscreenChanged: (value) {
+                  if (mounted && value != _quranFullscreen) {
+                    setState(() => _quranFullscreen = value);
+                  }
+                },
               ),
-        extendBody: true,
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: _currentIndex,
-          height: 72,
-          backgroundColor: dark ? Color(0xF2132331) : Color(0xF9FFFFFF),
-          indicatorColor: AppColors.teal.withValues(alpha: .16),
-          onDestinationSelected: (value) =>
-              setState(() => _currentIndex = value),
-          destinations: [
-            NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
-              label: 'الرئيسية',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.menu_book_outlined),
-              selectedIcon: Icon(Icons.menu_book),
-              label: 'القرآن',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.eco_outlined),
-              selectedIcon: Icon(Icons.eco),
-              label: 'الأذكار',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.explore_outlined),
-              selectedIcon: Icon(Icons.explore),
-              label: 'القبلة',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.more_horiz),
-              label: 'المزيد',
             ),
           ],
         ),
+        extendBody: true,
+        bottomNavigationBar: _quranFullscreen
+            ? null
+            : NavigationBar(
+                selectedIndex: _currentIndex,
+                height: 72,
+                backgroundColor: dark ? Color(0xF2132331) : Color(0xF9FFFFFF),
+                indicatorColor: AppColors.teal.withValues(alpha: .16),
+                onDestinationSelected: (value) =>
+                    setState(() => _currentIndex = value),
+                destinations: [
+                  NavigationDestination(
+                    icon: Icon(Icons.home_outlined),
+                    selectedIcon: Icon(Icons.home),
+                    label: 'الرئيسية',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.menu_book_outlined),
+                    selectedIcon: Icon(Icons.menu_book),
+                    label: 'القرآن',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.eco_outlined),
+                    selectedIcon: Icon(Icons.eco),
+                    label: 'الأذكار',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.explore_outlined),
+                    selectedIcon: Icon(Icons.explore),
+                    label: 'القبلة',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.more_horiz),
+                    label: 'المزيد',
+                  ),
+                ],
+              ),
       ),
     );
   }
 }
 
 class MorePage extends StatelessWidget {
-  const MorePage({super.key});
+  const MorePage({super.key, this.onQuranTap, this.onQuranSettings});
+  final VoidCallback? onQuranTap;
+  final VoidCallback? onQuranSettings;
 
   static const _items = [
     ('ادعُ معي', Icons.people_alt_outlined),
@@ -316,7 +390,14 @@ class MorePage extends StatelessWidget {
                 icon: item.$2,
                 onTap: item.$1 == 'الإعدادات'
                     ? () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(builder: (_) => SettingsPage()),
+                        MaterialPageRoute<void>(
+                          builder: (_) => SettingsPage(
+                            onQuranSettings: () {
+                              Navigator.of(context).pop();
+                              onQuranSettings?.call();
+                            },
+                          ),
+                        ),
                       )
                     : item.$1 == 'مظهر التطبيق'
                     ? () => Navigator.of(context).push(
@@ -326,6 +407,8 @@ class MorePage extends StatelessWidget {
                           ),
                         ),
                       )
+                    : item.$1 == 'قرآن'
+                    ? onQuranTap
                     : null,
               );
             },
@@ -642,7 +725,8 @@ class PrayerCard extends StatelessWidget {
 }
 
 class QuickServices extends StatelessWidget {
-  const QuickServices({super.key});
+  const QuickServices({super.key, this.onQuranTap});
+  final VoidCallback? onQuranTap;
   @override
   Widget build(BuildContext context) {
     final items = [
@@ -666,32 +750,38 @@ class QuickServices extends StatelessWidget {
         mainAxisExtent: 110 * MediaQuery.textScalerOf(context).scale(1),
       ),
       itemCount: items.length,
-      itemBuilder: (context, index) => Container(
-        decoration: BoxDecoration(
-          color: index == 0 ? AppColors.navy : AppPalette.of(context).paleTeal,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              items[index].$2,
-              color: index == 0 ? Colors.white : AppColors.teal,
-              size: 28,
-            ),
-            SizedBox(height: 7),
-            Text(
-              items[index].$1,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: index == 0 ? Colors.white : null,
+      itemBuilder: (context, index) => InkWell(
+        onTap: index == 0 ? onQuranTap : null,
+        borderRadius: BorderRadius.circular(18),
+        child: Container(
+          decoration: BoxDecoration(
+            color: index == 0
+                ? AppColors.navy
+                : AppPalette.of(context).paleTeal,
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                items[index].$2,
+                color: index == 0 ? Colors.white : AppColors.teal,
+                size: 28,
               ),
-            ),
-          ],
+              SizedBox(height: 7),
+              Text(
+                items[index].$1,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  color: index == 0 ? Colors.white : null,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -743,9 +833,18 @@ class DhikrCard extends StatelessWidget {
 }
 
 class ReadingCard extends StatelessWidget {
-  const ReadingCard({super.key});
+  const ReadingCard({super.key, this.controller, this.onContinue});
+  final QuranController? controller;
+  final VoidCallback? onContinue;
   @override
-  Widget build(BuildContext context) => _PhotoCard(
+  Widget build(BuildContext context) => controller == null
+      ? _card(context)
+      : ListenableBuilder(
+          listenable: controller!,
+          builder: (context, _) => _card(context),
+        );
+
+  Widget _card(BuildContext context) => _PhotoCard(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -768,7 +867,9 @@ class ReadingCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'سورة البقرة • الآية 255',
+                    controller?.lastVerse == null
+                        ? 'ابدأ القراءة وسيُحفظ موضعك هنا'
+                        : 'سورة ${controller!.repository!.surahs[controller!.lastVerse!.surah - 1].name} • الآية ${controller!.lastVerse!.ayah}',
                     style: TextStyle(color: Colors.white70),
                   ),
                 ],
@@ -778,7 +879,13 @@ class ReadingCard extends StatelessWidget {
         ),
         SizedBox(height: 14),
         LinearProgressIndicator(
-          value: .38,
+          value: controller?.lastVerse == null
+              ? 0
+              : controller!.lastVerse!.ayah /
+                    controller!
+                        .repository!
+                        .surahs[controller!.lastVerse!.surah - 1]
+                        .ayahCount,
           minHeight: 7,
           borderRadius: BorderRadius.all(Radius.circular(8)),
           color: AppColors.teal,
@@ -791,7 +898,7 @@ class ReadingCard extends StatelessWidget {
               backgroundColor: AppColors.teal,
               foregroundColor: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: onContinue,
             icon: Icon(Icons.arrow_back_ios_new, size: 14),
             label: Text('متابعة القراءة'),
           ),

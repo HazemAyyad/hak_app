@@ -1,0 +1,4 @@
+# Preserve downloaded sources, licenses and canonical data byte for byte.
+tool/quran_sources/*.xml -text -whitespace
+assets/fonts/*-OFL.txt -text -whitespace
+assets/quran/quran.json -text
