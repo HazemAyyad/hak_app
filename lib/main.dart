@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(const HaqApp());
+import 'app_appearance.dart';
+import 'settings_pages.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final preferences = await SharedPreferences.getInstance();
+  runApp(HaqApp(appearance: AppAppearance(preferences)));
+}
 
 class AppColors {
   static const navy = Color(0xFF102A43);
@@ -13,33 +21,68 @@ class AppColors {
 }
 
 class HaqApp extends StatefulWidget {
-  const HaqApp({super.key});
+  const HaqApp({super.key, this.appearance});
+  final AppAppearance? appearance;
 
   @override
   State<HaqApp> createState() => _HaqAppState();
 }
 
 class _HaqAppState extends State<HaqApp> {
-  ThemeMode _themeMode = ThemeMode.light;
+  AppAppearance? _appearance;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.appearance != null) {
+      _appearance = widget.appearance;
+    } else {
+      SharedPreferences.getInstance().then((preferences) {
+        if (mounted) setState(() => _appearance = AppAppearance(preferences));
+      });
+    }
+  }
 
   void _toggleTheme() {
-    setState(() {
-      _themeMode = _themeMode == ThemeMode.light
-          ? ThemeMode.dark
-          : ThemeMode.light;
-    });
+    final appearance = _appearance!;
+    appearance.setMode(
+      appearance.mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark,
+    );
+  }
+
+  @override
+  void dispose() {
+    if (widget.appearance == null) _appearance?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'حق',
-      themeMode: _themeMode,
-      locale: const Locale('ar'),
-      theme: _theme(Brightness.light),
-      darkTheme: _theme(Brightness.dark),
-      home: HomePage(onToggleTheme: _toggleTheme),
+    final appearance = _appearance;
+    if (appearance == null) return SizedBox.shrink();
+    return AppearanceScope(
+      controller: appearance,
+      child: ListenableBuilder(
+        listenable: appearance,
+        builder: (context, _) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'حق',
+          themeMode: appearance.mode,
+          locale: Locale('ar'),
+          theme: _theme(Brightness.light),
+          darkTheme: _theme(Brightness.dark),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(
+                MediaQuery.textScalerOf(context).scale(1) *
+                    appearance.fontScale,
+              ),
+            ),
+            child: child!,
+          ),
+          home: HomePage(onToggleTheme: _toggleTheme),
+        ),
+      ),
     );
   }
 
@@ -50,22 +93,20 @@ class _HaqAppState extends State<HaqApp> {
       brightness: brightness,
       primary: AppColors.teal,
       secondary: AppColors.gold,
-      surface: isDark ? const Color(0xFF132331) : const Color(0xFFFFFCF7),
+      surface: isDark ? Color(0xFF132331) : Color(0xFFFFFCF7),
     );
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
       colorScheme: scheme,
-      scaffoldBackgroundColor: isDark
-          ? const Color(0xFF081722)
-          : const Color(0xFFFFFCF7),
+      scaffoldBackgroundColor: isDark ? Color(0xFF081722) : Color(0xFFFFFCF7),
       fontFamily: 'Arial',
       textTheme: ThemeData(brightness: brightness).textTheme.apply(
-        bodyColor: isDark ? const Color(0xFFF1F5F9) : AppColors.text,
-        displayColor: isDark ? const Color(0xFFF1F5F9) : AppColors.navy,
+        bodyColor: isDark ? Color(0xFFF1F5F9) : AppColors.text,
+        displayColor: isDark ? Color(0xFFF1F5F9) : AppColors.navy,
       ),
       cardTheme: CardThemeData(
-        color: isDark ? const Color(0xFF132331) : Colors.white,
+        color: isDark ? Color(0xFF132331) : Colors.white,
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
       ),
@@ -92,11 +133,11 @@ class _HomePageState extends State<HomePage> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         body: _currentIndex == 4
-            ? const MorePage()
+            ? MorePage()
             : CustomScrollView(
                 slivers: [
-                  const SliverToBoxAdapter(child: _HeroHeader()),
-                  const SliverPadding(
+                  SliverToBoxAdapter(child: _HeroHeader()),
+                  SliverPadding(
                     padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate.fixed([
@@ -133,13 +174,11 @@ class _HomePageState extends State<HomePage> {
         bottomNavigationBar: NavigationBar(
           selectedIndex: _currentIndex,
           height: 72,
-          backgroundColor: dark
-              ? const Color(0xF2132331)
-              : const Color(0xF9FFFFFF),
+          backgroundColor: dark ? Color(0xF2132331) : Color(0xF9FFFFFF),
           indicatorColor: AppColors.teal.withValues(alpha: .16),
           onDestinationSelected: (value) =>
               setState(() => _currentIndex = value),
-          destinations: const [
+          destinations: [
             NavigationDestination(
               icon: Icon(Icons.home_outlined),
               selectedIcon: Icon(Icons.home),
@@ -222,40 +261,36 @@ class MorePage extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: const AssetImage('assets/images/home_header.png'),
+                image: AssetImage('assets/images/home_header.png'),
                 fit: BoxFit.cover,
                 alignment: Alignment.topCenter,
                 colorFilter: dark
-                    ? const ColorFilter.mode(
-                        Color(0x55102A43),
-                        BlendMode.darken,
-                      )
+                    ? ColorFilter.mode(Color(0xB3102A43), BlendMode.darken)
                     : null,
               ),
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(30),
-              ),
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
             ),
             child: Column(
               children: [
                 Image.asset(
                   'assets/branding/haq_logo_transparent.png',
+                  color: dark ? AppPalette.of(context).heading : null,
                   width: 90,
                   height: 90,
                 ),
-                const SizedBox(height: 5),
-                const Text(
+                SizedBox(height: 5),
+                Text(
                   'المزيد',
                   style: TextStyle(
-                    color: AppColors.navy,
+                    color: AppPalette.of(context).heading,
                     fontSize: 30,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                const Text(
+                Text(
                   'كل ما تحتاجه في مكان واحد',
                   style: TextStyle(
-                    color: AppColors.navy,
+                    color: AppPalette.of(context).heading,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -265,10 +300,10 @@ class MorePage extends StatelessWidget {
           ),
         ),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(18, 18, 18, 24),
+          padding: EdgeInsets.fromLTRB(18, 18, 18, 24),
           sliver: SliverGrid.builder(
             itemCount: _items.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
               mainAxisSpacing: 18,
               crossAxisSpacing: 10,
@@ -276,45 +311,62 @@ class MorePage extends StatelessWidget {
             ),
             itemBuilder: (context, index) {
               final item = _items[index];
-              return _MoreItem(title: item.$1, icon: item.$2);
+              return _MoreItem(
+                title: item.$1,
+                icon: item.$2,
+                onTap: item.$1 == 'الإعدادات'
+                    ? () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(builder: (_) => SettingsPage()),
+                      )
+                    : item.$1 == 'مظهر التطبيق'
+                    ? () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const SettingsDetailPage(
+                            kind: SettingKind.appearance,
+                          ),
+                        ),
+                      )
+                    : null,
+              );
             },
           ),
         ),
-        const SliverToBoxAdapter(child: _MoreSocialLinks()),
-        const SliverToBoxAdapter(child: SizedBox(height: 108)),
+        SliverToBoxAdapter(child: _MoreSocialLinks()),
+        SliverToBoxAdapter(child: SizedBox(height: 108)),
       ],
     );
   }
 }
 
 class _MoreItem extends StatelessWidget {
-  const _MoreItem({required this.title, required this.icon});
+  const _MoreItem({required this.title, required this.icon, this.onTap});
   final String title;
   final IconData icon;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => InkWell(
-    onTap: () {},
+    onTap: onTap,
     borderRadius: BorderRadius.circular(18),
     child: Column(
       children: [
         Container(
           width: 64,
           height: 64,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.deepTeal,
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: Colors.white, size: 34),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           title,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: AppColors.navy,
+          style: TextStyle(
+            color: AppPalette.of(context).heading,
             fontSize: 12,
             height: 1.25,
             fontWeight: FontWeight.w700,
@@ -330,22 +382,38 @@ class _MoreSocialLinks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(24, 6, 24, 18),
+    padding: EdgeInsets.fromLTRB(24, 6, 24, 18),
     child: Column(
       children: [
-        Divider(color: AppColors.navy.withValues(alpha: .45)),
-        const SizedBox(height: 12),
-        const Row(
+        Divider(color: AppPalette.of(context).border),
+        SizedBox(height: 12),
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Icon(Icons.edit_outlined, color: AppColors.navy, size: 30),
-            Icon(Icons.share_outlined, color: AppColors.navy, size: 30),
-            Icon(Icons.play_circle_outline, color: AppColors.navy, size: 34),
-            Icon(Icons.camera_alt_outlined, color: AppColors.navy, size: 31),
+            Icon(
+              Icons.edit_outlined,
+              color: AppPalette.of(context).heading,
+              size: 30,
+            ),
+            Icon(
+              Icons.share_outlined,
+              color: AppPalette.of(context).heading,
+              size: 30,
+            ),
+            Icon(
+              Icons.play_circle_outline,
+              color: AppPalette.of(context).heading,
+              size: 34,
+            ),
+            Icon(
+              Icons.camera_alt_outlined,
+              color: AppPalette.of(context).heading,
+              size: 31,
+            ),
             Text(
               'f',
               style: TextStyle(
-                color: AppColors.navy,
+                color: AppPalette.of(context).heading,
                 fontSize: 34,
                 fontWeight: FontWeight.w900,
               ),
@@ -369,11 +437,14 @@ class _HeroHeader extends StatelessWidget {
         18,
         28,
       ),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/home_header.png'),
           fit: BoxFit.cover,
           alignment: Alignment.topCenter,
+          colorFilter: Theme.of(context).brightness == Brightness.dark
+              ? const ColorFilter.mode(Color(0xB3102A43), BlendMode.darken)
+              : null,
         ),
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(36)),
       ),
@@ -382,33 +453,39 @@ class _HeroHeader extends StatelessWidget {
           Row(
             children: [
               _RoundButton(icon: Icons.person_outline, onTap: () {}),
-              const Spacer(),
+              Spacer(),
               _RoundButton(icon: Icons.search, onTap: () {}),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               _RoundButton(icon: Icons.notifications_none, onTap: () {}),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Image.asset(
             'assets/branding/haq_logo_transparent.png',
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppPalette.of(context).heading
+                : null,
             width: 92,
             height: 92,
             fit: BoxFit.contain,
           ),
-          const SizedBox(height: 10),
-          const Align(
+          SizedBox(height: 10),
+          Align(
             alignment: Alignment.centerRight,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'مرحبًا بك',
-                  style: TextStyle(color: AppColors.navy, fontSize: 14),
+                  style: TextStyle(
+                    color: AppPalette.of(context).heading,
+                    fontSize: 14,
+                  ),
                 ),
                 Text(
                   'أحمد محمد',
                   style: TextStyle(
-                    color: AppColors.navy,
+                    color: AppPalette.of(context).heading,
                     fontSize: 25,
                     fontWeight: FontWeight.w800,
                   ),
@@ -416,7 +493,10 @@ class _HeroHeader extends StatelessWidget {
                 SizedBox(height: 4),
                 Text(
                   'تقبّل الله طاعاتك، وجعلنا وإياك من أهل القرآن',
-                  style: TextStyle(color: AppColors.navy, fontSize: 13),
+                  style: TextStyle(
+                    color: AppPalette.of(context).heading,
+                    fontSize: 13,
+                  ),
                 ),
               ],
             ),
@@ -433,11 +513,11 @@ class _RoundButton extends StatelessWidget {
   final VoidCallback onTap;
   @override
   Widget build(BuildContext context) => Material(
-    color: Colors.white.withValues(alpha: .90),
-    shape: const CircleBorder(),
+    color: AppPalette.of(context).surface.withValues(alpha: .90),
+    shape: CircleBorder(),
     child: IconButton(
       onPressed: onTap,
-      icon: Icon(icon, color: AppColors.navy),
+      icon: Icon(icon, color: AppPalette.of(context).heading),
     ),
   );
 }
@@ -446,7 +526,7 @@ class PrayerCard extends StatelessWidget {
   const PrayerCard({super.key});
   @override
   Widget build(BuildContext context) {
-    const prayers = [
+    final prayers = [
       ('الفجر', '04:32', Icons.wb_twilight),
       ('الظهر', '12:07', Icons.light_mode),
       ('العصر', '15:34', Icons.wb_sunny_outlined),
@@ -456,7 +536,7 @@ class PrayerCard extends StatelessWidget {
     return _Surface(
       child: Column(
         children: [
-          const Row(
+          Row(
             children: [
               CircleAvatar(
                 radius: 28,
@@ -477,38 +557,46 @@ class PrayerCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.navy,
+                        color: AppPalette.of(context).heading,
                       ),
                     ),
                   ],
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '02:35:42',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: AppColors.gold,
-                      fontWeight: FontWeight.w800,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        '02:35:42',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: AppColors.gold,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
                     ),
-                  ),
-                  Text(
-                    'نابلس، فلسطين',
-                    style: TextStyle(fontSize: 12, color: AppColors.muted),
-                  ),
-                ],
+                    Text(
+                      'نابلس، فلسطين',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppPalette.of(context).muted,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Row(
             children: prayers
                 .map(
                   (p) => Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 9),
+                      padding: EdgeInsets.symmetric(vertical: 9),
                       decoration: p.$1 == 'الظهر'
                           ? BoxDecoration(
                               color: AppColors.teal,
@@ -537,7 +625,7 @@ class PrayerCard extends StatelessWidget {
                               fontSize: 12,
                               color: p.$1 == 'الظهر'
                                   ? Colors.white70
-                                  : AppColors.muted,
+                                  : AppPalette.of(context).muted,
                             ),
                           ),
                         ],
@@ -557,7 +645,7 @@ class QuickServices extends StatelessWidget {
   const QuickServices({super.key});
   @override
   Widget build(BuildContext context) {
-    const items = [
+    final items = [
       ('القرآن الكريم', Icons.menu_book),
       ('الأذكار اليومية', Icons.eco),
       ('الختمة', Icons.auto_stories),
@@ -568,20 +656,19 @@ class QuickServices extends StatelessWidget {
       ('المزيد', Icons.grid_view_rounded),
     ];
     return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
         childAspectRatio: .92,
+        mainAxisExtent: 110 * MediaQuery.textScalerOf(context).scale(1),
       ),
       itemCount: items.length,
       itemBuilder: (context, index) => Container(
         decoration: BoxDecoration(
-          color: index == 0
-              ? AppColors.navy
-              : AppColors.teal.withValues(alpha: .08),
+          color: index == 0 ? AppColors.navy : AppPalette.of(context).paleTeal,
           borderRadius: BorderRadius.circular(18),
         ),
         child: Column(
@@ -592,9 +679,11 @@ class QuickServices extends StatelessWidget {
               color: index == 0 ? Colors.white : AppColors.teal,
               size: 28,
             ),
-            const SizedBox(height: 7),
+            SizedBox(height: 7),
             Text(
               items[index].$1,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 11,
@@ -616,7 +705,7 @@ class DhikrCard extends StatelessWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Row(
+        Row(
           children: [
             Icon(Icons.wb_sunny_outlined, color: AppColors.gold, size: 34),
             Spacer(),
@@ -630,23 +719,23 @@ class DhikrCard extends StatelessWidget {
             ),
           ],
         ),
-        const Text(
+        Text(
           'ابدأ يومك بذكر الله',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
         ),
-        const Text(
+        Text(
           'مجموعة من الأذكار الصحيحة لبدء يومك\nبالبركة والطمأنينة.',
           textAlign: TextAlign.right,
           style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.5),
         ),
-        const Spacer(),
+        Spacer(),
         FilledButton(
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.gold,
             foregroundColor: AppColors.navy,
           ),
           onPressed: () {},
-          child: const Text('عرض الأذكار'),
+          child: Text('عرض الأذكار'),
         ),
       ],
     ),
@@ -660,7 +749,7 @@ class ReadingCard extends StatelessWidget {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Row(
+        Row(
           children: [
             CircleAvatar(
               backgroundColor: Color(0xDDFFFFFF),
@@ -687,14 +776,14 @@ class ReadingCard extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 14),
-        const LinearProgressIndicator(
+        SizedBox(height: 14),
+        LinearProgressIndicator(
           value: .38,
           minHeight: 7,
           borderRadius: BorderRadius.all(Radius.circular(8)),
           color: AppColors.teal,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Align(
           alignment: Alignment.centerLeft,
           child: FilledButton.icon(
@@ -717,7 +806,7 @@ class DailyVerseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => _Surface(
     color: AppColors.gold.withValues(alpha: .10),
-    child: const Column(
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
@@ -744,7 +833,7 @@ class DailyVerseCard extends StatelessWidget {
         ),
         Text(
           'سورة الطلاق • الآية 2',
-          style: TextStyle(fontSize: 12, color: AppColors.muted),
+          style: TextStyle(fontSize: 12, color: AppPalette.of(context).muted),
         ),
       ],
     ),
@@ -755,7 +844,7 @@ class JourneyCards extends StatelessWidget {
   const JourneyCards({super.key});
   @override
   Widget build(BuildContext context) {
-    const items = [
+    final items = [
       ('الختمة', 'الجزء الثاني', Icons.menu_book, .18),
       ('الأذكار', 'أذكار الصباح', Icons.radio_button_checked, .62),
       ('العادات', 'تم اليوم', Icons.eco, .84),
@@ -765,24 +854,24 @@ class JourneyCards extends StatelessWidget {
           .map(
             (item) => Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: EdgeInsets.symmetric(horizontal: 4),
                 child: _Surface(
                   child: Column(
                     children: [
                       Icon(item.$3, color: AppColors.teal),
-                      const SizedBox(height: 7),
+                      SizedBox(height: 7),
                       Text(
                         item.$1,
-                        style: const TextStyle(fontWeight: FontWeight.w800),
+                        style: TextStyle(fontWeight: FontWeight.w800),
                       ),
                       Text(
                         item.$2,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
-                          color: AppColors.muted,
+                          color: AppPalette.of(context).muted,
                         ),
                       ),
-                      const SizedBox(height: 9),
+                      SizedBox(height: 9),
                       LinearProgressIndicator(
                         value: item.$4,
                         minHeight: 6,
@@ -804,16 +893,16 @@ class FridayCard extends StatelessWidget {
   const FridayCard({super.key});
   @override
   Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(20),
+    padding: EdgeInsets.all(20),
     decoration: BoxDecoration(
-      image: const DecorationImage(
+      image: DecorationImage(
         image: AssetImage('assets/images/mosque_sunrise.png'),
         fit: BoxFit.cover,
         colorFilter: ColorFilter.mode(Color(0xAA0A5260), BlendMode.darken),
       ),
       borderRadius: BorderRadius.circular(22),
     ),
-    child: const Row(
+    child: Row(
       children: [
         Icon(Icons.mosque, size: 48, color: AppColors.gold),
         SizedBox(width: 16),
@@ -846,7 +935,7 @@ class FridayCard extends StatelessWidget {
 class ArticlesRow extends StatelessWidget {
   const ArticlesRow({super.key});
   @override
-  Widget build(BuildContext context) => const Row(
+  Widget build(BuildContext context) => Row(
     children: [
       Expanded(
         child: _ArticleCard(
@@ -872,9 +961,9 @@ class _ArticleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     height: 112,
-    padding: const EdgeInsets.all(14),
+    padding: EdgeInsets.all(14),
     decoration: BoxDecoration(
-      image: const DecorationImage(
+      image: DecorationImage(
         image: AssetImage('assets/images/mosque_sunrise.png'),
         fit: BoxFit.cover,
         colorFilter: ColorFilter.mode(Color(0xAA102A43), BlendMode.darken),
@@ -888,10 +977,7 @@ class _ArticleCard extends StatelessWidget {
         Icon(icon, color: AppColors.gold),
         Text(
           title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
         ),
       ],
     ),
@@ -907,26 +993,26 @@ class SocialMediaSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Text(
+        Text(
           'تواصل معنا',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
         ),
-        const SizedBox(height: 5),
-        const Text(
+        SizedBox(height: 5),
+        Text(
           'تابع حسابات حق وشارك الخير مع من تحب',
-          style: TextStyle(color: AppColors.muted, fontSize: 13),
+          style: TextStyle(color: AppPalette.of(context).muted, fontSize: 13),
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           decoration: BoxDecoration(
-            color: dark ? const Color(0xFF132331) : Colors.white,
+            color: dark ? Color(0xFF132331) : Colors.white,
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color: dark ? Colors.white10 : const Color(0xFFE8EDF0),
+              color: dark ? Colors.white10 : Color(0xFFE8EDF0),
             ),
           ),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _SocialButton(
@@ -951,14 +1037,14 @@ class SocialMediaSection extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Material(
           color: AppColors.teal,
           borderRadius: BorderRadius.circular(20),
           child: InkWell(
             onTap: null,
             borderRadius: BorderRadius.circular(20),
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 18, vertical: 17),
               child: Row(
                 children: [
@@ -1028,7 +1114,7 @@ class _SocialButton extends StatelessWidget {
       onTap: () {},
       borderRadius: BorderRadius.circular(18),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Column(
           children: [
             Container(
@@ -1040,15 +1126,15 @@ class _SocialButton extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: IconTheme(
-                data: const IconThemeData(color: AppColors.teal),
+                data: IconThemeData(color: AppColors.teal),
                 child: DefaultTextStyle(
-                  style: const TextStyle(color: AppColors.teal),
+                  style: TextStyle(color: AppColors.teal),
                   child: child,
                 ),
               ),
             ),
-            const SizedBox(height: 7),
-            Text(label, style: const TextStyle(fontSize: 11)),
+            SizedBox(height: 7),
+            Text(label, style: TextStyle(fontSize: 11)),
           ],
         ),
       ),
@@ -1066,17 +1152,14 @@ class SectionHeader extends StatelessWidget {
       Expanded(
         child: Text(
           title,
-          style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
+          style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
         ),
       ),
       Text(
         action,
-        style: const TextStyle(
-          color: AppColors.teal,
-          fontWeight: FontWeight.w700,
-        ),
+        style: TextStyle(color: AppColors.teal, fontWeight: FontWeight.w700),
       ),
-      const Icon(Icons.chevron_left, color: AppColors.teal),
+      Icon(Icons.chevron_left, color: AppColors.teal),
     ],
   );
 }
@@ -1089,20 +1172,18 @@ class _Surface extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color ?? (dark ? const Color(0xFF132331) : Colors.white),
+        color: color ?? (dark ? Color(0xFF132331) : Colors.white),
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: dark ? Colors.white10 : const Color(0xFFE8EDF0),
-        ),
+        border: Border.all(color: dark ? Colors.white10 : Color(0xFFE8EDF0)),
         boxShadow: dark
             ? null
             : [
                 BoxShadow(
                   color: AppColors.navy.withValues(alpha: .05),
                   blurRadius: 18,
-                  offset: const Offset(0, 6),
+                  offset: Offset(0, 6),
                 ),
               ],
       ),
@@ -1117,10 +1198,10 @@ class _PhotoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-    height: 180,
-    padding: const EdgeInsets.all(16),
+    height: 220 * MediaQuery.textScalerOf(context).scale(1),
+    padding: EdgeInsets.all(16),
     decoration: BoxDecoration(
-      image: const DecorationImage(
+      image: DecorationImage(
         image: AssetImage('assets/images/mosque_sunrise.png'),
         fit: BoxFit.cover,
         colorFilter: ColorFilter.mode(Color(0x8A102A43), BlendMode.darken),
