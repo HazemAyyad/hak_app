@@ -651,7 +651,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
       );
 
   String _shareText(QuranVerse verse) =>
-      '${verse.text}\n[سورة ${repo.surah(verse.surah).name}: ${verse.ayah}]\nالنص: Tanzil Project • https://tanzil.net';
+      '${verse.text}\n[سورة ${repo.surah(verse.surah).name}: ${verse.ayah}]';
 
   Future<void> _share(QuranVerse verse) async {
     final box = context.findRenderObject() as RenderBox?;
