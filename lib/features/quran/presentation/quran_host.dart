@@ -7,6 +7,11 @@ import 'quran_reader.dart';
 import 'quran_search.dart';
 import 'quran_saved.dart';
 import 'quran_widgets.dart';
+import 'quran_audio_pages.dart';
+import 'quran_audio_widgets.dart';
+import 'quran_download_pages.dart';
+import 'quran_tafsir.dart';
+import 'quran_account.dart';
 
 class QuranHost extends StatefulWidget {
   const QuranHost({
@@ -25,6 +30,7 @@ class QuranHost extends StatefulWidget {
 class QuranHostState extends State<QuranHost> {
   final navigator = GlobalKey<NavigatorState>();
   bool _pendingResume = false;
+  Widget? _pendingPage;
   QuranController get controller => widget.controller;
   Future<void> openReader(QuranVerse verse, {String? highlight}) async {
     await navigator.currentState?.push(
@@ -84,10 +90,29 @@ class QuranHostState extends State<QuranHost> {
   );
 
   void openSettings() => _push(QuranReadingSettings(controller: controller));
-
-  void _push(Widget page) => navigator.currentState?.push(
-    MaterialPageRoute<void>(builder: (_) => _frame(page)),
+  void openAccount() => _push(QuranAccountPage(controller: controller));
+  void openAudio() => _push(QuranAudioPage(controller: controller));
+  void openDownloads() => _push(QuranDownloadPage(controller: controller));
+  void openExplanation({bool meanings = false}) => _push(
+    QuranExplanation(
+      controller: controller,
+      verse: controller.lastVerse ?? controller.repository!.verses.first,
+      meanings: meanings,
+      onPlay: controller.audio.playVerse,
+      onWordPlay: (word) =>
+          controller.audio.playWord(word.key, word.position, word.audio!),
+    ),
   );
+
+  void _push(Widget page) {
+    if (navigator.currentState == null) {
+      _pendingPage = page;
+      return;
+    }
+    navigator.currentState!.push(
+      MaterialPageRoute<void>(builder: (_) => _frame(page)),
+    );
+  }
 
   Widget _frame(Widget child) => Builder(
     builder: (context) => Theme(
@@ -98,7 +123,34 @@ class QuranHostState extends State<QuranHost> {
         textDirection: TextDirection.rtl,
         child: Scaffold(
           backgroundColor: AppPalette.of(context).background,
-          body: SafeArea(bottom: false, child: child),
+          body: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                Expanded(child: child),
+                if (child is! QuranReader &&
+                    child is! QuranAudioPage &&
+                    child is! QuranExplanation)
+                  ListenableBuilder(
+                    listenable: controller.audio,
+                    builder: (context, _) =>
+                        controller.audio.current == null &&
+                            !controller.audio.loading &&
+                            controller.audio.error == null
+                        ? const SizedBox()
+                        : Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 82),
+                            child: QuranPlayerPanel(
+                              media: controller.audio,
+                              repository: controller.repository!,
+                              compact: true,
+                              onOpen: openAudio,
+                            ),
+                          ),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     ),
@@ -129,6 +181,13 @@ class QuranHostState extends State<QuranHost> {
           if (mounted) openLastReading();
         });
       }
+      if (_pendingPage != null) {
+        final pending = _pendingPage!;
+        _pendingPage = null;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _push(pending);
+        });
+      }
       return NavigatorPopHandler<void>(
         enabled: widget.active,
         onPopWithResult: (_) => navigator.currentState?.maybePop(),
@@ -143,6 +202,9 @@ class QuranHostState extends State<QuranHost> {
                 onResume: openLastReading,
                 onSaved: openSaved,
                 onSearch: openSearch,
+                onAudio: openAudio,
+                onDownloads: openDownloads,
+                onExplain: () => openExplanation(),
                 onSettings: () =>
                     _push(QuranReadingSettings(controller: controller)),
               ),
@@ -163,12 +225,15 @@ class QuranHomePage extends StatelessWidget {
     required this.onSaved,
     required this.onSearch,
     required this.onSettings,
+    required this.onAudio,
+    required this.onDownloads,
+    required this.onExplain,
   });
   final QuranController controller;
   final void Function({bool juz}) onIndex;
   final void Function({bool bookmarks}) onSaved;
   final void Function({String query}) onSearch;
-  final VoidCallback onResume, onSettings;
+  final VoidCallback onResume, onSettings, onAudio, onDownloads, onExplain;
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
@@ -350,23 +415,23 @@ class QuranHomePage extends StatelessWidget {
                   children: [
                     _homeShortcut(
                       context,
-                      'آخر قراءة',
-                      Icons.history,
-                      onResume,
+                      'التفسير',
+                      Icons.menu_book_outlined,
+                      onExplain,
                     ),
                     const SizedBox(width: 8),
                     _homeShortcut(
                       context,
-                      'العلامات',
-                      Icons.bookmark_outline,
-                      () => onSaved(bookmarks: true),
+                      'القرآن المسموع',
+                      Icons.headphones_outlined,
+                      onAudio,
                     ),
                     const SizedBox(width: 8),
                     _homeShortcut(
                       context,
-                      'البحث',
-                      Icons.search,
-                      () => onSearch(),
+                      'التحميلات',
+                      Icons.cloud_download_outlined,
+                      onDownloads,
                     ),
                   ],
                 ),

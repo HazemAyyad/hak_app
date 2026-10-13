@@ -89,7 +89,11 @@ class QuranHeader extends StatelessWidget {
         ),
         Positioned(
           right: center ? 30 : 25,
-          left: center ? 30 : 135,
+          left: center
+              ? 30
+              : title.length > 24
+              ? 90
+              : 135,
           top: center ? 32 : null,
           bottom: center ? null : 21,
           child: Column(
@@ -99,10 +103,16 @@ class QuranHeader extends StatelessWidget {
             children: [
               Text(
                 title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 textAlign: center ? TextAlign.center : TextAlign.right,
                 style: qText(
                   context,
-                  size: center ? 24 : 20,
+                  size: center
+                      ? 24
+                      : title.length > 24
+                      ? 18
+                      : 20,
                   weight: FontWeight.w800,
                   color: dark ? Colors.white : qNavy,
                 ),
@@ -110,6 +120,8 @@ class QuranHeader extends StatelessWidget {
               const SizedBox(height: 3),
               Text(
                 subtitle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 textAlign: center ? TextAlign.center : TextAlign.right,
                 style: qText(
                   context,

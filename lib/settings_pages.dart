@@ -10,8 +10,14 @@ ThemeMode _themeMode(String label) => switch (label) {
 };
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key, this.onQuranSettings});
+  const SettingsPage({
+    super.key,
+    this.onQuranSettings,
+    this.onQuranAccount,
+    this.onQuranDownloads,
+  });
   final VoidCallback? onQuranSettings;
+  final VoidCallback? onQuranAccount, onQuranDownloads;
 
   @override
   Widget build(BuildContext context) => _SettingsShell(
@@ -44,7 +50,11 @@ class SettingsPage extends StatelessWidget {
     icon: kind.icon,
     title: kind.title,
     subtitle: kind.subtitle,
-    onTap: kind == SettingKind.quran && onQuranSettings != null
+    onTap: kind == SettingKind.account && onQuranAccount != null
+        ? onQuranAccount
+        : kind == SettingKind.storage && onQuranDownloads != null
+        ? onQuranDownloads
+        : kind == SettingKind.quran && onQuranSettings != null
         ? onQuranSettings
         : () => Navigator.of(context).push(
             MaterialPageRoute<void>(

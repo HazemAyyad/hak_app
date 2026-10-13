@@ -234,6 +234,8 @@ void main() {
       controller.setMode(QuranReadingMode.ayah);
       host.openReader(repo.byKey['1:7']!);
       await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('الآية التالية'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('الآية التالية'));
       await tester.pumpAndSettle();
       expect(controller.lastKey, '2:1');
