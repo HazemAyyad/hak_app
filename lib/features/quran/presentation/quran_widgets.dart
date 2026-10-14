@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
 
-const qTeal = Color(0xFF006570);
-const qNavy = Color(0xFF102B4D);
+const qTeal = Color(0xFF007D85);
+const qNavy = Color(0xFF0C2057);
 const qGold = Color(0xFFB38C42);
 const qCream = Color(0xFFFFFCF7);
 
@@ -19,7 +19,9 @@ TextStyle qText(
   fontSize: size,
   height: 1.55,
   fontWeight: weight,
-  color: color ?? AppPalette.of(context).heading,
+  color:
+      color ??
+      (AppPalette.of(context).dark ? AppPalette.of(context).heading : qNavy),
 );
 
 class QuranHeader extends StatelessWidget {
@@ -168,7 +170,11 @@ class QCircleButton extends StatelessWidget {
           child: Icon(
             icon,
             size: 23,
-            color: color ?? AppPalette.of(context).heading,
+            color:
+                color ??
+                (AppPalette.of(context).dark
+                    ? AppPalette.of(context).heading
+                    : qNavy),
           ),
         ),
       ),
@@ -194,7 +200,9 @@ class QCard extends StatelessWidget {
       color: color ?? AppPalette.of(context).surface,
       borderRadius: BorderRadius.circular(14),
       border: Border.all(
-        color: AppPalette.of(context).border.withValues(alpha: .65),
+        color: AppPalette.of(context).dark
+            ? AppPalette.of(context).border
+            : const Color(0xFFE8E9EC),
       ),
       boxShadow: const [
         BoxShadow(

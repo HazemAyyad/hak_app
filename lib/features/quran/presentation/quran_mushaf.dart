@@ -1,12 +1,10 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../data/quran_content.dart';
 import '../data/quran_repository.dart';
 import 'quran_widgets.dart';
 
-/// Fifteen physical lines are rendered on one fixed canvas. Accessibility text
-/// scaling and zoom never change word placement or wrap a Mushaf line.
+/// Page glyphs keep their source line grouping at every zoom/text scale.
 class QuranMushaf extends StatefulWidget {
   const QuranMushaf({
     super.key,
@@ -85,7 +83,7 @@ class _QuranMushafState extends State<QuranMushaf> {
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Center(
-                    child: Padding(
+                    child: SingleChildScrollView(
                       padding: const EdgeInsets.all(12),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -97,11 +95,11 @@ class _QuranMushafState extends State<QuranMushaf> {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            'هذه الصفحة لم تُحمّل بعد',
+                            'تعذّر فتح صفحة المصحف',
                             style: qText(context, size: 16),
                           ),
                           Text(
-                            'اتصل بالإنترنت لفتحها؛ تبقى محفوظة للقراءة لاحقًا.',
+                            'تحتاج صفحة التجويد اتصالًا بالإنترنت. القراءة المتصلة والآيات متاحتان بدون اتصال.',
                             textAlign: TextAlign.center,
                             style: qText(context, size: 12),
                           ),
@@ -121,47 +119,72 @@ class _QuranMushafState extends State<QuranMushaf> {
                   );
                 }
                 final data = snapshot.data!;
-                return InteractiveViewer(
-                  minScale: 1,
-                  maxScale: 5,
-                  child: Center(
-                    child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: MushafCanvas(
-                        data: data,
-                        repository: widget.repository,
-                        selected: widget.selected,
-                        paper: widget.paper,
-                        ink: widget.ink,
-                        onSelect: widget.onSelect,
-                        onOptions: widget.onOptions,
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    final width = constraints.maxWidth.clamp(0.0, 560.0);
+                    final height = width * 1.5;
+                    // Keep the page at readable phone width. When controls take
+                    // space, its lower part scrolls instead of shrinking the text.
+                    return SingleChildScrollView(
+                      key: PageStorageKey('mushaf-scroll-${index + 1}'),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                        ),
+                        child: Center(
+                          child: InteractiveViewer(
+                            minScale: 1,
+                            maxScale: 5,
+                            child: SizedBox(
+                              width: width,
+                              height: height,
+                              child: FittedBox(
+                                fit: BoxFit.fill,
+                                child: MushafCanvas(
+                                  data: data,
+                                  repository: widget.repository,
+                                  selected: widget.selected,
+                                  paper: widget.paper,
+                                  ink: widget.ink,
+                                  onSelect: widget.onSelect,
+                                  onOptions: widget.onOptions,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 );
               },
             ),
           ),
         ),
       ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-            tooltip: 'الصفحة السابقة',
-            onPressed: current == 1 ? null : () => move(-1),
-            icon: Icon(Icons.chevron_right, color: widget.ink),
-          ),
-          Text(
-            'الصفحة $current من 604',
-            style: qText(context, size: 12, color: widget.ink),
-          ),
-          IconButton(
-            tooltip: 'الصفحة التالية',
-            onPressed: current == 604 ? null : () => move(1),
-            icon: Icon(Icons.chevron_left, color: widget.ink),
-          ),
-        ],
+      SizedBox(
+        height: 34,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              tooltip: 'الصفحة السابقة',
+              padding: EdgeInsets.zero,
+              onPressed: current == 1 ? null : () => move(-1),
+              icon: Icon(Icons.chevron_right, color: widget.ink),
+            ),
+            Text(
+              'الصفحة $current من 604',
+              style: qText(context, size: 12, color: widget.ink),
+            ),
+            IconButton(
+              tooltip: 'الصفحة التالية',
+              padding: EdgeInsets.zero,
+              onPressed: current == 604 ? null : () => move(1),
+              icon: Icon(Icons.chevron_left, color: widget.ink),
+            ),
+          ],
+        ),
       ),
     ],
   );
@@ -183,11 +206,15 @@ class MushafCanvas extends StatelessWidget {
   final String selected;
   final Color paper, ink;
   final ValueChanged<QuranVerse> onSelect, onOptions;
+
   @override
   Widget build(BuildContext context) {
     final lines = <int, List<MushafWord>>{};
     final headings = <int, QuranSurah>{};
     final basmala = <int>{};
+    final firstChapter = repository.surah(
+      repository.byKey[data.words.first.key]!.surah,
+    );
     for (final word in data.words) {
       lines.putIfAbsent(word.line, () => []).add(word);
       final verse = repository.byKey[word.key]!;
@@ -200,51 +227,104 @@ class MushafCanvas extends StatelessWidget {
         if (chapter.id != 1 && chapter.id != 9) basmala.add(word.line - 1);
       }
     }
+    final opening = data.page <= 2;
+    // The opening pages have a centered shorter block in the source layout.
+    final lastLine = opening ? lines.keys.reduce((a, b) => a > b ? a : b) : 15;
+    // The first source heading lives in the frame's top cartouche.
+    final firstLine = headings[1]?.id == firstChapter.id ? 2 : 1;
+    // QCF V4 stores explicit colors, including black, in its own palette.
+    // A light sheet keeps every glyph legible without recoloring Tajweed.
+    final sheet = paper.computeLuminance() < .2
+        ? const Color(0xFFFFF9E9)
+        : paper;
+    final textInk = const Color(0xFF17150F);
     return MediaQuery.withNoTextScaling(
       child: SizedBox(
         width: 560,
-        height: 820,
+        height: 840,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: paper,
+            color: sheet,
+            gradient: LinearGradient(
+              colors: [sheet, Color.lerp(sheet, qGold, .055)!],
+            ),
             boxShadow: const [
               BoxShadow(color: Color(0x18000000), blurRadius: 8),
             ],
           ),
-          child: CustomPaint(
-            painter: MushafBorder(),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(28, 25, 28, 22),
-              child: Column(
-                children: [
-                  for (int line = 1; line <= 15; line++)
-                    Expanded(
-                      child: headings.containsKey(line)
-                          ? _heading(context, headings[line]!)
-                          : basmala.contains(line)
-                          ? Center(
-                              child: Text(
-                                'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
-                                style: TextStyle(
-                                  fontFamily: 'AmiriQuran',
-                                  fontSize: 29,
-                                  color: ink,
-                                ),
-                              ),
-                            )
-                          : _line(context, lines[line] ?? []),
-                    ),
-                  Text(
-                    '${data.page}',
-                    style: TextStyle(
-                      fontFamily: 'QuranUI',
-                      fontSize: 13,
-                      color: ink,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Image.asset(
+                'assets/quran/mushaf_frame.png',
+                fit: BoxFit.fill,
+                excludeFromSemantics: true,
+              ),
+              Positioned(
+                top: 65,
+                height: 65,
+                left: 130,
+                right: 130,
+                child: Center(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'سُورَةُ ${firstChapter.name}',
+                      style: TextStyle(
+                        fontFamily: 'AmiriQuran',
+                        fontSize: 33,
+                        color: textInk,
+                      ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+              Positioned(
+                top: 143,
+                bottom: 61,
+                left: 58,
+                right: 58,
+                child: Column(
+                  children: [
+                    for (int line = firstLine; line <= lastLine; line++)
+                      Expanded(
+                        child: headings.containsKey(line)
+                            ? _heading(context, headings[line]!)
+                            : basmala.contains(line)
+                            ? Center(
+                                child: Text(
+                                  'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+                                  style: TextStyle(
+                                    fontFamily: 'AmiriQuran',
+                                    fontSize: opening ? 36 : 29,
+                                    color: textInk,
+                                  ),
+                                ),
+                              )
+                            : _line(
+                                context,
+                                lines[line] ?? [],
+                                opening ? 44 : 35,
+                              ),
+                      ),
+                  ],
+                ),
+              ),
+              Positioned(
+                bottom: 28,
+                left: 0,
+                right: 0,
+                child: Text(
+                  '${data.page}',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'QuranUI',
+                    fontSize: 13,
+                    color: textInk,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -252,43 +332,36 @@ class MushafCanvas extends StatelessWidget {
   }
 
   Widget _heading(BuildContext context, QuranSurah chapter) => Container(
-    margin: const EdgeInsets.symmetric(vertical: 3),
+    margin: const EdgeInsets.symmetric(vertical: 2),
     alignment: Alignment.center,
     decoration: BoxDecoration(
       color: const Color(0x15B38C42),
       border: Border.all(color: qGold),
     ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        const Icon(Icons.filter_vintage_outlined, size: 26, color: qGold),
-        Text(
-          'سورة ${chapter.name}',
-          style: const TextStyle(
-            fontFamily: 'QuranUI',
-            color: qNavy,
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const Icon(Icons.filter_vintage_outlined, size: 26, color: qGold),
-      ],
+    child: Text(
+      'سُورَةُ ${chapter.name}',
+      style: const TextStyle(
+        fontFamily: 'AmiriQuran',
+        color: Color(0xFF17150F),
+        fontSize: 26,
+      ),
     ),
   );
-  Widget _line(BuildContext context, List<MushafWord> words) {
+
+  Widget _line(BuildContext context, List<MushafWord> words, double fontSize) {
     if (words.isEmpty) return const SizedBox();
     final naturalWidths = words.map((word) {
       final painter = TextPainter(
         text: TextSpan(
           text: word.glyph,
-          style: TextStyle(fontFamily: data.fontFamily, fontSize: 35),
+          style: TextStyle(fontFamily: data.fontFamily, fontSize: fontSize),
         ),
         textDirection: TextDirection.rtl,
       )..layout();
       return painter.width;
     }).toList();
     final sum = naturalWidths.fold<double>(0, (a, b) => a + b);
-    final factor = (490 / sum).clamp(.1, 1.0);
+    final factor = (444 / sum).clamp(.1, 1.0);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Row(
@@ -307,7 +380,7 @@ class MushafCanvas extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: words[i].key == selected
-                        ? const Color(0x30C7A45A)
+                        ? const Color(0x20C7A45A)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(3),
                   ),
@@ -316,9 +389,9 @@ class MushafCanvas extends StatelessWidget {
                     textDirection: TextDirection.rtl,
                     style: TextStyle(
                       fontFamily: data.fontFamily,
-                      fontSize: 35 * factor,
-                      height: 1.4,
-                      color: ink,
+                      fontSize: fontSize * factor,
+                      height: 1.3,
+                      color: const Color(0xFF17150F),
                     ),
                   ),
                 ),
@@ -328,55 +401,4 @@ class MushafCanvas extends StatelessWidget {
       ),
     );
   }
-}
-
-class MushafBorder extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final gold = Paint()
-      ..color = qGold
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-    for (final inset in [4.0, 8.0, 21.0, 24.0]) {
-      canvas.drawRect(
-        Rect.fromLTWH(
-          inset,
-          inset,
-          size.width - 2 * inset,
-          size.height - 2 * inset,
-        ),
-        gold,
-      );
-    }
-    final green = Paint()..color = const Color(0xFF275D3B);
-    for (final vertical in [false, true]) {
-      final length = vertical ? size.height : size.width;
-      for (double t = 17; t < length - 12; t += 18) {
-        for (final far in [false, true]) {
-          final center = vertical
-              ? Offset(far ? size.width - 14 : 14, t)
-              : Offset(t, far ? size.height - 14 : 14);
-          final petal = Path();
-          for (var k = 0; k < 8; k++) {
-            final angle = k * math.pi / 4;
-            final point =
-                center +
-                Offset(math.cos(angle), math.sin(angle)) * (k.isEven ? 6 : 3);
-            if (k == 0) {
-              petal.moveTo(point.dx, point.dy);
-            } else {
-              petal.lineTo(point.dx, point.dy);
-            }
-          }
-          petal.close();
-          canvas.drawPath(petal, green);
-          canvas.drawPath(petal, gold);
-          canvas.drawCircle(center, 1.6, Paint()..color = qGold);
-        }
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

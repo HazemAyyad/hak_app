@@ -35,7 +35,7 @@ class MushafPageData {
   MushafPageData(this.page, this.words);
   final int page;
   final List<MushafWord> words;
-  String get fontFamily => 'QuranPage$page';
+  String get fontFamily => 'QuranTajweedPage$page';
   static MushafPageData parse(
     int page,
     Map<String, dynamic> data,
@@ -119,26 +119,65 @@ class VerseMeanings {
 /// Only official public content endpoints are used. Original provider payloads
 /// are retained in the device cache, with their URL and retrieval timestamp.
 class QuranContent {
-  QuranContent({Dio? dio, this.directory, this.apiBase = haqApiBase})
-    : dio =
-          dio ??
-          Dio(
-            BaseOptions(
-              connectTimeout: const Duration(seconds: 20),
-              receiveTimeout: const Duration(seconds: 35),
-            ),
-          );
+  QuranContent({
+    Dio? dio,
+    this.directory,
+    this.apiBase = haqApiBase,
+    DateTime Function()? now,
+  }) : _now = now ?? DateTime.now,
+       dio =
+           dio ??
+           Dio(
+             BaseOptions(
+               connectTimeout: const Duration(seconds: 20),
+               receiveTimeout: const Duration(seconds: 35),
+             ),
+           );
+  static const cacheMaxAge = Duration(days: 7);
+  final DateTime Function() _now;
   final Dio dio;
   final String? apiBase;
   Directory? directory;
   final _pending = <String, Future<Map<String, dynamic>>>{};
   final _loadedFonts = <int, Future<void>>{};
   final _pages = <int, Future<MushafPageData>>{};
-  Future<Directory> cacheDirectory() async {
+  Future<Directory>? _cacheReady;
+  Future<Directory> cacheDirectory() =>
+      _cacheReady ??= _prepareCacheDirectory().catchError((Object error) {
+        _cacheReady = null;
+        throw error;
+      });
+
+  Future<Directory> _prepareCacheDirectory() async {
     directory ??= await getApplicationSupportDirectory().then(
       (dir) =>
           Directory('${dir.path}/quran_content_v1').create(recursive: true),
     );
+    // Purge stale responses on the next app session rather than leaving old,
+    // unused provider copies indefinitely. Legacy persisted page fonts are no
+    // longer used; the Tajweed renderer loads official font bytes per session.
+    await for (final file in directory!.list()) {
+      if (file is! File) continue;
+      final name = file.uri.pathSegments.last;
+      try {
+        if (RegExp(r'^qcf-v[24]-[0-9]{1,3}\.ttf(?:\.tmp)?$').hasMatch(name)) {
+          await file.delete();
+        } else if (name.endsWith('.json')) {
+          var remove = false;
+          try {
+            final record = jsonDecode(await file.readAsString()) as Map;
+            remove = !isCacheRecordFresh(record);
+          } on FormatException {
+            remove = true;
+          } on TypeError {
+            remove = true;
+          }
+          if (remove) await file.delete();
+        }
+      } on FileSystemException {
+        // A cache cleanup failure must not hide otherwise readable content.
+      }
+    }
     return directory!;
   }
 
@@ -158,13 +197,14 @@ class QuranContent {
     Map<String, dynamic>? cached;
     if (await file.exists()) {
       try {
-        cached =
-            (jsonDecode(await file.readAsString())
-                    as Map<String, dynamic>)['payload']
-                as Map<String, dynamic>;
+        final record = jsonDecode(await file.readAsString()) as Map;
+        if (isCacheRecordFresh(record)) {
+          cached = record['payload'] as Map<String, dynamic>;
+        }
       } catch (_) {
         /* Refetch a damaged cache. */
       }
+      if (cached == null) await file.delete();
     }
     if (!refresh && cached != null) return cached;
     try {
@@ -188,7 +228,7 @@ class QuranContent {
       await temporary.writeAsString(
         jsonEncode({
           'url': url,
-          'fetchedAt': DateTime.now().toUtc().toIso8601String(),
+          'fetchedAt': _now().toUtc().toIso8601String(),
           'payload': data,
         }),
         flush: true,
@@ -199,6 +239,17 @@ class QuranContent {
       if (cached != null) return cached;
       rethrow;
     }
+  }
+
+  /// Regular provider responses expire after seven days, including during an
+  /// outage. A missing or future timestamp cannot make an offline copy fresh.
+  bool isCacheRecordFresh(Map record) {
+    final timestamp = record['fetchedAt'];
+    if (timestamp is! String) return false;
+    final fetchedAt = DateTime.tryParse(timestamp);
+    if (fetchedAt == null) return false;
+    final age = _now().toUtc().difference(fetchedAt.toUtc());
+    return !age.isNegative && age < cacheMaxAge;
   }
 
   String? _proxy(String url) {
@@ -224,36 +275,54 @@ class QuranContent {
         : '${apiBase!.replaceAll(RegExp(r'/+$'), '')}/v1/quran/content/$route';
   }
 
-  Future<void> pageFont(int page) => _loadedFonts.putIfAbsent(
-    page,
-    () => _loadPageFont(page).catchError((Object error) async {
-      _loadedFonts.remove(page);
-      final cached = File('${(await cacheDirectory()).path}/qcf-v2-$page.ttf');
-      if (await cached.exists()) await cached.delete();
-      throw error;
-    }),
-  );
+  /// Official V4 fonts retain their original per-letter Tajweed palette.
+  /// Font bytes stay in the running process only; they are not bundled or
+  /// persisted in the application's offline cache.
+  Future<void> pageFont(int page) {
+    if (page < 1 || page > 604) throw ArgumentError.value(page);
+    return _loadedFonts.putIfAbsent(
+      page,
+      () => _loadPageFont(page).catchError((Object error) {
+        _loadedFonts.remove(page);
+        throw error;
+      }),
+    );
+  }
+
   Future<void> _loadPageFont(int page) async {
-    final file = File('${(await cacheDirectory()).path}/qcf-v2-$page.ttf');
-    if (!await file.exists()) {
-      final response = await dio.get<List<int>>(
-        'https://verses.quran.foundation/fonts/quran/hafs/v2/ttf/p$page.ttf',
-        options: Options(responseType: ResponseType.bytes),
-      );
-      final bytes = response.data!;
-      if (bytes.length < 1000 ||
-          !(bytes[0] == 0 && bytes[1] == 1 ||
-              ascii.decode(bytes.take(4).toList(), allowInvalid: true) ==
-                  'OTTO')) {
-        throw const FormatException('Invalid Quran font');
-      }
-      await File('${file.path}.tmp').writeAsBytes(bytes, flush: true);
-      await File('${file.path}.tmp').rename(file.path);
+    final response = await dio.get<List<int>>(
+      'https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p$page.ttf',
+      options: Options(responseType: ResponseType.bytes),
+    );
+    final bytes = Uint8List.fromList(response.data ?? const []);
+    final data = ByteData.sublistView(bytes);
+    if (bytes.length < 1000 ||
+        !(data.getUint32(0) == 0x00010000 || data.getUint32(0) == 0x4F54544F)) {
+      throw const FormatException('Invalid Quran Tajweed font');
     }
-    await (FontLoader('QuranPage$page')..addFont(
-          Future.value(ByteData.sublistView(await file.readAsBytes())),
-        ))
-        .load();
+    final count = data.getUint16(4);
+    if (12 + count * 16 > bytes.length) {
+      throw const FormatException('Invalid Quran font table directory');
+    }
+    final tags = <int>{};
+    for (var i = 0; i < count; i++) {
+      final offset = 12 + i * 16;
+      final start = data.getUint32(offset + 8);
+      final length = data.getUint32(offset + 12);
+      if (start + length > bytes.length) {
+        throw const FormatException('Incomplete Quran font table');
+      }
+      tags.add(data.getUint32(offset));
+    }
+    // Reject a monochrome V2 response instead of claiming it is Tajweed.
+    if (!tags.contains(0x434F4C52) || !tags.contains(0x4350414C)) {
+      throw const FormatException(
+        'Missing original Quran Tajweed color tables',
+      );
+    }
+    await (FontLoader(
+      'QuranTajweedPage$page',
+    )..addFont(Future.value(data))).load();
   }
 
   Future<MushafPageData> page(int page, QuranRepository repo) {
@@ -269,7 +338,7 @@ class QuranContent {
 
   Future<MushafPageData> _loadPage(int page, QuranRepository repo) async {
     final url =
-        'https://api.quran.com/api/v4/verses/by_page/$page?mushaf=1&words=true&word_fields=code_v2,text_qpc_hafs,page_number,line_number&per_page=50';
+        'https://api.quran.com/api/v4/verses/by_page/$page?mushaf=19&words=true&word_fields=code_v2,text_qpc_hafs,page_number,line_number&per_page=50';
     final parsed = await _validated(url, (result) {
       if ((result['pagination'] as Map?)?['next_page'] != null) {
         throw const FormatException('Incomplete page response');

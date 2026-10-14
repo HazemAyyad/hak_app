@@ -173,6 +173,10 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 9),
                   child: QCard(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 9,
+                    ),
                     onTap: () => widget.onRead(verse),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +192,9 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                             const Icon(Icons.chevron_right, color: qNavy),
                           ],
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 8),
+                        QMedallion(number: verse.ayah, size: 32),
+                        const SizedBox(width: 8),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,19 +203,19 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                                 'سورة ${repo.surah(verse.surah).name}',
                                 style: qText(
                                   context,
-                                  size: 17,
+                                  size: 14,
                                   weight: FontWeight.w800,
                                 ),
                               ),
                               const SizedBox(height: 5),
                               Text(
                                 verse.text,
-                                maxLines: 2,
+                                maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontFamily: 'AmiriQuran',
-                                  fontSize: 21,
-                                  height: 1.8,
+                                  fontSize: 19,
+                                  height: 1.55,
                                   color: AppPalette.of(context).heading,
                                 ),
                               ),
@@ -226,8 +232,10 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        QMedallion(number: verse.ayah, size: 36),
                         PopupMenuButton<String>(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          iconSize: 20,
                           tooltip: 'خيارات المحفوظ',
                           itemBuilder: (_) => [
                             PopupMenuItem(

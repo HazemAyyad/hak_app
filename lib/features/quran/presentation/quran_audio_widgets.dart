@@ -33,9 +33,9 @@ class QuranPlayerPanel extends StatelessWidget {
   final QuranMedia media;
   final QuranRepository repository;
   final bool compact;
-  final VoidCallback? onReciter, onOpen;
-  final VoidCallback? onStart;
+  final VoidCallback? onReciter, onOpen, onStart;
   final String? initialTitle;
+
   @override
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: media,
@@ -48,315 +48,487 @@ class QuranPlayerPanel extends StatelessWidget {
           media.error == null) {
         return const SizedBox();
       }
-      final duration = media.duration;
-      final position = media.position;
-      final max = duration?.inMilliseconds.toDouble() ?? 0;
       return QCard(
-        padding: EdgeInsets.all(compact ? 9 : 15),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            InkWell(
-              onTap: onOpen,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: compact ? 16 : 22,
-                    backgroundColor: AppPalette.of(context).paleTeal,
-                    child:
-                        track == null || reciterPortrait(track.reciter) == null
-                        ? const Icon(Icons.headphones, color: qTeal)
-                        : ClipOval(
-                            child: Image.network(
-                              reciterPortrait(track.reciter)!,
-                              width: 42,
-                              height: 42,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, error, stack) =>
-                                  const Icon(Icons.headphones, color: qTeal),
-                            ),
-                          ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          track?.title ?? initialTitle ?? 'اختر سورة للاستماع',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: qText(
-                            context,
-                            size: compact ? 12 : 18,
-                            weight: FontWeight.w800,
-                          ),
-                        ),
-                        InkWell(
-                          onTap: onReciter,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  track?.reciter ?? 'حفص عن عاصم',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: qText(context, size: 11, color: qTeal),
-                                ),
-                              ),
-                              if (onReciter != null)
-                                const Icon(
-                                  Icons.expand_more,
-                                  color: qTeal,
-                                  size: 18,
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (compact)
-                    IconButton(
-                      tooltip: media.playing ? 'إيقاف مؤقت' : 'تشغيل',
-                      onPressed: media.buffering
-                          ? null
-                          : track == null
-                          ? onStart
-                          : media.toggle,
-                      icon: Icon(
-                        media.playing
-                            ? Icons.pause_circle_filled
-                            : Icons.play_circle_fill,
-                        color: qTeal,
-                        size: 34,
-                      ),
-                    ),
-                  if (compact)
-                    IconButton(
-                      tooltip: 'إيقاف التلاوة',
-                      onPressed: media.stop,
-                      icon: const Icon(Icons.close, size: 19, color: qNavy),
-                    ),
-                ],
-              ),
-            ),
-            if (!compact && track?.ayah != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  repository.byKey['${track!.surah}:${track.ayah}']!.text,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'AmiriQuran',
-                    fontSize: 22,
-                    height: 1.8,
-                    color: AppPalette.of(context).heading,
-                  ),
-                ),
-              ),
-            if (media.buffering)
-              const Padding(
-                padding: EdgeInsets.only(top: 6),
-                child: LinearProgressIndicator(color: qTeal),
-              ),
-            SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                trackHeight: compact ? 3 : 4,
-                thumbShape: RoundSliderThumbShape(
-                  enabledThumbRadius: compact ? 5 : 7,
-                ),
-                overlayShape: const RoundSliderOverlayShape(overlayRadius: 12),
-              ),
-              child: Slider(
-                value: max > 0
-                    ? position.inMilliseconds.toDouble().clamp(0, max)
-                    : 0,
-                max: max > 0 ? max : 1,
-                min: 0,
-                activeColor: qTeal,
-                onChanged: max > 0
-                    ? (value) =>
-                          media.seek(Duration(milliseconds: value.round()))
-                    : null,
-              ),
-            ),
-            Directionality(
-              textDirection: TextDirection.ltr,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    audioTime(position),
-                    style: qText(context, size: 10, color: qTeal),
-                  ),
-                  Text(
-                    audioTime(duration),
-                    style: qText(context, size: 10, color: qTeal),
-                  ),
-                ],
-              ),
-            ),
-            if (!compact) ...[
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _control(
-                    context,
-                    Icons.repeat,
-                    'التكرار',
-                    () => chooseAudioRepeat(context, media),
-                    active: media.repeat != AudioServiceRepeatMode.none,
-                  ),
-                  _control(
-                    context,
-                    Icons.replay_10,
-                    'إرجاع 10 ثوانٍ',
-                    () => media.seek(position - const Duration(seconds: 10)),
-                  ),
-                  IconButton(
-                    tooltip: 'التلاوة السابقة',
-                    onPressed: media.handler?.player.hasPrevious == true
-                        ? () => media.skip(-1)
-                        : null,
-                    icon: const Icon(Icons.skip_previous, color: qNavy),
-                  ),
-                  Material(
-                    color: qTeal,
-                    shape: const CircleBorder(),
-                    child: IconButton(
-                      tooltip: media.playing ? 'إيقاف مؤقت' : 'تشغيل',
-                      onPressed: track == null || media.buffering
-                          ? null
-                          : media.toggle,
-                      icon: Icon(
-                        media.playing ? Icons.pause : Icons.play_arrow,
-                        color: Colors.white,
-                        size: 36,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'التلاوة التالية',
-                    onPressed: media.handler?.player.hasNext == true
-                        ? () => media.skip(1)
-                        : null,
-                    icon: const Icon(Icons.skip_next, color: qNavy),
-                  ),
-                  _control(
-                    context,
-                    Icons.forward_10,
-                    'تقديم 10 ثوانٍ',
-                    () => media.seek(position + const Duration(seconds: 10)),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton.icon(
-                    onPressed: () => chooseAudioSpeed(context, media),
-                    icon: const Icon(Icons.speed, size: 18),
-                    label: Text(
-                      '${media.speed.toStringAsFixed(2)}x',
-                      style: qText(context, size: 11, color: qTeal),
-                    ),
-                  ),
-                  TextButton.icon(
-                    onPressed: () => chooseAudioTimer(context, media),
-                    icon: const Icon(Icons.timer_outlined, size: 18),
-                    label: Text(
-                      media.stopAt == null ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
-                      style: qText(context, size: 11, color: qTeal),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-            if (compact && MediaQuery.sizeOf(context).height >= 700)
-              Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 10,
-                children: [
-                  IconButton(
-                    tooltip: 'التلاوة السابقة',
-                    onPressed: media.handler?.player.hasPrevious == true
-                        ? () => media.skip(-1)
-                        : null,
-                    icon: const Icon(
-                      Icons.skip_previous,
-                      size: 20,
-                      color: qNavy,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => chooseAudioSpeed(context, media),
-                    child: Text(
-                      '${media.speed.toStringAsFixed(1)}x',
-                      style: qText(context, size: 11, color: qTeal),
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'مؤقت إيقاف',
-                    onPressed: () => chooseAudioTimer(context, media),
-                    icon: Icon(
-                      Icons.timer_outlined,
-                      size: 20,
-                      color: media.stopAt == null ? qNavy : qTeal,
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'التكرار',
-                    onPressed: () => chooseAudioRepeat(context, media),
-                    icon: Icon(
-                      Icons.repeat,
-                      size: 20,
-                      color: media.repeat == AudioServiceRepeatMode.none
-                          ? qNavy
-                          : qTeal,
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: 'التلاوة التالية',
-                    onPressed: media.handler?.player.hasNext == true
-                        ? () => media.skip(1)
-                        : null,
-                    icon: const Icon(Icons.skip_next, size: 20, color: qNavy),
-                  ),
-                ],
-              ),
-            if (media.error != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  media.error!,
-                  style: qText(
-                    context,
-                    size: 11,
-                    color: AppPalette.of(context).muted,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-          ],
-        ),
+        padding: EdgeInsets.all(compact ? 8 : 15),
+        child: compact ? _compact(context) : _full(context),
       );
     },
   );
-  Widget _control(
-    BuildContext context,
+
+  String get _reciter =>
+      media.current?.reciter ??
+      (media.catalog == null
+          ? 'حفص عن عاصم'
+          : media.selection(verse: compact && onStart != null).name);
+
+  Widget _compact(BuildContext context) => Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      SizedBox(
+        height: 26,
+        child: Row(
+          children: [
+            _AudioPortrait(name: _reciter, size: 26),
+            const SizedBox(width: 7),
+            Expanded(
+              child: InkWell(
+                onTap: onReciter,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _reciter,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: qText(
+                          context,
+                          size: 10.5,
+                          weight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    if (onReciter != null)
+                      const Icon(Icons.expand_more, size: 16, color: qNavy),
+                  ],
+                ),
+              ),
+            ),
+            _smallButton(
+              Icons.timer_outlined,
+              media.stopAt == null ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
+              () => chooseAudioTimer(context, media),
+              active: media.stopAt != null,
+            ),
+            SizedBox(
+              width: 37,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: const Size(0, 26),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () => chooseAudioSpeed(context, media),
+                child: Text(
+                  '${media.speed.toStringAsFixed(1)}x',
+                  textDirection: TextDirection.ltr,
+                  style: qText(context, size: 10.5, weight: FontWeight.w800),
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 26,
+              child: PopupMenuButton<String>(
+                tooltip: 'قائمة التشغيل وخيارات التلاوة',
+                padding: EdgeInsets.zero,
+                icon: const Icon(Icons.playlist_play, size: 23, color: qNavy),
+                onSelected: (value) {
+                  if (value == 'queue') _showQueue(context);
+                  if (value == 'open') onOpen?.call();
+                  if (value == 'stop') unawaited(media.stop());
+                },
+                itemBuilder: (_) => [
+                  const PopupMenuItem(
+                    value: 'queue',
+                    child: Text('قائمة التشغيل'),
+                  ),
+                  if (onOpen != null)
+                    const PopupMenuItem(
+                      value: 'open',
+                      child: Text('فتح المشغل'),
+                    ),
+                  PopupMenuItem(
+                    value: 'stop',
+                    enabled: media.current != null || media.loading,
+                    child: const Text('إيقاف التلاوة'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      SizedBox(height: 20, child: _timeline(context, small: true)),
+      SizedBox(
+        height: 36,
+        child: Directionality(
+          textDirection: TextDirection.ltr,
+          child: Row(
+            children: [
+              _timeLabel(context, media.position),
+              const Spacer(),
+              _smallButton(
+                Icons.skip_previous,
+                'التلاوة السابقة',
+                media.handler?.player.hasPrevious == true
+                    ? () => media.skip(-1)
+                    : null,
+                size: 30,
+              ),
+              const SizedBox(width: 8),
+              _playButton(size: 36),
+              const SizedBox(width: 8),
+              _smallButton(
+                Icons.skip_next,
+                'التلاوة التالية',
+                media.handler?.player.hasNext == true
+                    ? () => media.skip(1)
+                    : null,
+                size: 30,
+              ),
+              const Spacer(),
+              _smallButton(
+                Icons.repeat,
+                'التكرار',
+                () => chooseAudioRepeat(context, media),
+                active: media.repeat != AudioServiceRepeatMode.none,
+              ),
+              _timeLabel(context, media.duration),
+            ],
+          ),
+        ),
+      ),
+      if (media.error != null) _error(context),
+    ],
+  );
+
+  Widget _full(BuildContext context) {
+    final track = media.current;
+    final verse = track == null
+        ? null
+        : repository.byKey['${track.surah}:${track.ayah ?? 1}'];
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: onOpen,
+          child: Row(
+            children: [
+              _AudioPortrait(name: _reciter, size: 42),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      track?.title ?? initialTitle ?? 'اختر سورة للاستماع',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: qText(context, size: 18, weight: FontWeight.w800),
+                    ),
+                    InkWell(
+                      onTap: onReciter,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              _reciter,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: qText(context, size: 11, color: qTeal),
+                            ),
+                          ),
+                          if (onReciter != null)
+                            const Icon(
+                              Icons.expand_more,
+                              color: qTeal,
+                              size: 18,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (verse != null) ...[
+          const SizedBox(height: 14),
+          Text(
+            verse.text,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'AmiriQuran',
+              fontSize: 22,
+              height: 1.8,
+              color: AppPalette.of(context).heading,
+            ),
+          ),
+          Text(
+            track?.ayah == null ? 'مطلع السورة' : 'الآية ${track!.ayah}',
+            style: qText(
+              context,
+              size: 10,
+              color: AppPalette.of(context).muted,
+            ),
+          ),
+        ],
+        const SizedBox(height: 10),
+        SizedBox(height: 24, child: _timeline(context)),
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                audioTime(media.position),
+                style: qText(context, size: 10, color: qTeal),
+              ),
+              Text(
+                audioTime(media.duration),
+                style: qText(context, size: 10, color: qTeal),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 6),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: _smallButton(
+                Icons.repeat,
+                'التكرار',
+                () => chooseAudioRepeat(context, media),
+                active: media.repeat != AudioServiceRepeatMode.none,
+              ),
+            ),
+            Expanded(
+              child: _smallButton(
+                Icons.replay_10,
+                'إرجاع 10 ثوانٍ',
+                () => media.seek(media.position - const Duration(seconds: 10)),
+              ),
+            ),
+            Expanded(
+              child: _smallButton(
+                Icons.skip_previous,
+                'التلاوة السابقة',
+                media.handler?.player.hasPrevious == true
+                    ? () => media.skip(-1)
+                    : null,
+              ),
+            ),
+            _playButton(size: 52),
+            Expanded(
+              child: _smallButton(
+                Icons.skip_next,
+                'التلاوة التالية',
+                media.handler?.player.hasNext == true
+                    ? () => media.skip(1)
+                    : null,
+              ),
+            ),
+            Expanded(
+              child: _smallButton(
+                Icons.forward_10,
+                'تقديم 10 ثوانٍ',
+                () => media.seek(media.position + const Duration(seconds: 10)),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton.icon(
+              onPressed: () => chooseAudioSpeed(context, media),
+              icon: const Icon(Icons.speed, size: 17),
+              label: Text(
+                '${media.speed.toStringAsFixed(2)}x',
+                style: qText(context, size: 11, color: qTeal),
+              ),
+            ),
+            TextButton.icon(
+              onPressed: () => chooseAudioTimer(context, media),
+              icon: const Icon(Icons.timer_outlined, size: 17),
+              label: Text(
+                media.stopAt == null ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
+                style: qText(context, size: 11, color: qTeal),
+              ),
+            ),
+          ],
+        ),
+        if (media.error != null) _error(context),
+      ],
+    );
+  }
+
+  Widget _timeline(BuildContext context, {bool small = false}) {
+    final max = media.duration?.inMilliseconds.toDouble() ?? 0;
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            trackHeight: small ? 3 : 4,
+            thumbShape: RoundSliderThumbShape(
+              enabledThumbRadius: small ? 4 : 6,
+            ),
+            overlayShape: const RoundSliderOverlayShape(overlayRadius: 8),
+          ),
+          child: Slider(
+            value: max > 0
+                ? media.position.inMilliseconds.toDouble().clamp(0, max)
+                : 0,
+            max: max > 0 ? max : 1,
+            activeColor: qTeal,
+            inactiveColor: AppPalette.of(context).border,
+            onChanged: max > 0
+                ? (value) => media.seek(Duration(milliseconds: value.round()))
+                : null,
+          ),
+        ),
+        if (media.buffering)
+          const IgnorePointer(
+            child: LinearProgressIndicator(color: qTeal, minHeight: 2),
+          ),
+      ],
+    );
+  }
+
+  Widget _playButton({required double size}) => Tooltip(
+    message: media.playing ? 'إيقاف مؤقت' : 'تشغيل',
+    child: Material(
+      color: qTeal,
+      shape: const CircleBorder(),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: media.buffering
+            ? null
+            : media.current == null
+            ? onStart
+            : media.toggle,
+        child: SizedBox.square(
+          dimension: size,
+          child: media.buffering
+              ? Padding(
+                  padding: EdgeInsets.all(size * .27),
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
+                )
+              : Icon(
+                  media.playing ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white,
+                  size: size * .59,
+                ),
+        ),
+      ),
+    ),
+  );
+
+  Widget _smallButton(
     IconData icon,
     String label,
-    VoidCallback onTap, {
+    VoidCallback? onTap, {
     bool active = false,
-  }) => IconButton(
-    tooltip: label,
-    onPressed: onTap,
-    visualDensity: VisualDensity.compact,
-    icon: Icon(icon, color: active ? qTeal : qNavy, size: 23),
+    double size = 26,
+  }) => SizedBox.square(
+    dimension: size,
+    child: IconButton(
+      tooltip: label,
+      onPressed: onTap,
+      padding: EdgeInsets.zero,
+      constraints: BoxConstraints.tight(Size.square(size)),
+      style: IconButton.styleFrom(
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      ),
+      icon: Icon(
+        icon,
+        color: onTap == null
+            ? null
+            : active
+            ? qTeal
+            : qNavy,
+        size: 21,
+      ),
+    ),
   );
+
+  Widget _timeLabel(BuildContext context, Duration? time) => SizedBox(
+    width: 37,
+    child: FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        audioTime(time),
+        style: qText(context, size: 9.5, color: qTeal),
+      ),
+    ),
+  );
+
+  Widget _error(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(top: 6),
+    child: Text(
+      media.error!,
+      style: qText(context, size: 11, color: AppPalette.of(context).muted),
+      textAlign: TextAlign.center,
+    ),
+  );
+
+  Future<void> _showQueue(BuildContext context) => showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    builder: (context) => SafeArea(
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(
+              'قائمة التشغيل',
+              style: qText(context, size: 18, weight: FontWeight.w800),
+            ),
+          ),
+          if (media.playingTracks.isEmpty)
+            const ListTile(title: Text('لم تبدأ تلاوة بعد')),
+          for (var i = 0; i < media.playingTracks.length; i++)
+            ListTile(
+              title: Text(media.playingTracks[i].title),
+              subtitle: Text(media.playingTracks[i].reciter),
+              trailing: media.current?.id == media.playingTracks[i].id
+                  ? const Icon(Icons.check_circle, color: qTeal)
+                  : null,
+              onTap: media.handler == null
+                  ? null
+                  : () {
+                      unawaited(media.handler!.skipToQueueItem(i));
+                      Navigator.pop(context);
+                    },
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
+class _AudioPortrait extends StatelessWidget {
+  const _AudioPortrait({required this.name, required this.size});
+  final String name;
+  final double size;
+  @override
+  Widget build(BuildContext context) {
+    final portrait = reciterPortrait(name);
+    return CircleAvatar(
+      radius: size / 2,
+      backgroundColor: AppPalette.of(context).paleTeal,
+      child: portrait == null
+          ? Icon(Icons.headphones, color: qTeal, size: size * .6)
+          : ClipOval(
+              child: Image.network(
+                portrait,
+                width: size,
+                height: size,
+                fit: BoxFit.cover,
+                errorBuilder: (_, error, stack) =>
+                    Icon(Icons.headphones, color: qTeal, size: size * .6),
+              ),
+            ),
+    );
+  }
 }
 
 Future<void> chooseAudioSpeed(BuildContext context, QuranMedia media) =>

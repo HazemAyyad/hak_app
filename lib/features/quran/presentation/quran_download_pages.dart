@@ -29,24 +29,130 @@ Future<void> confirmAudioDelete(
   final size = entries.fold<int>(0, (sum, entry) => sum + entry.received);
   final confirmed = await showDialog<bool>(
     context: context,
-    builder: (context) => AlertDialog(
-      icon: const Icon(Icons.delete_outline, color: Colors.red, size: 36),
-      title: const Text('حذف التلاوة المحمّلة؟'),
-      content: Text(
-        '${entries.length == 1 ? '${entries.first.track.title}\n${entries.first.track.reciter}' : '${entries.length} ملف صوتي'}\nسيتم تحرير ${audioBytes(size)}. ستحتاج إلى تنزيلها مجددًا للاستماع دون إنترنت.',
+    builder: (context) => Directionality(
+      textDirection: TextDirection.rtl,
+      child: Dialog(
+        backgroundColor: AppPalette.of(context).surface,
+        surfaceTintColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircleAvatar(
+                radius: 29,
+                backgroundColor: Color(0xFFFFECEB),
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Color(0xFFDC3C3F),
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Text(
+                'حذف التلاوة المحمّلة؟',
+                textAlign: TextAlign.center,
+                style: qText(context, size: 19, weight: FontWeight.w800),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'سيتم حذف الملف من هذا الجهاز وتحرير ${audioBytes(size)}. يمكنك تنزيله مرة أخرى للاستماع دون إنترنت.',
+                textAlign: TextAlign.center,
+                style: qText(
+                  context,
+                  size: 12,
+                  color: AppPalette.of(context).muted,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (entries.length == 1)
+                QCard(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      QMedallion(number: entries.first.track.surah, size: 34),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              entries.first.track.title,
+                              style: qText(
+                                context,
+                                size: 14,
+                                weight: FontWeight.w800,
+                              ),
+                            ),
+                            Text(
+                              entries.first.track.reciter,
+                              style: qText(
+                                context,
+                                size: 10,
+                                color: AppPalette.of(context).muted,
+                              ),
+                            ),
+                            Text(
+                              audioBytes(size),
+                              textDirection: TextDirection.ltr,
+                              style: qText(context, size: 10, color: qTeal),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.audiotrack_outlined,
+                        color: qTeal,
+                        size: 24,
+                      ),
+                    ],
+                  ),
+                )
+              else
+                Text(
+                  '${entries.length} ملف صوتي',
+                  style: qText(context, size: 14),
+                ),
+              const SizedBox(height: 18),
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton.icon(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFFDC3C3F),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(11),
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(context, true),
+                  icon: const Icon(Icons.delete_outline, size: 20),
+                  label: Text(
+                    'حذف',
+                    style: qText(context, color: Colors.white),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: AppPalette.of(context).neutral,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(11),
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text('إلغاء', style: qText(context)),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: const Text('إلغاء'),
-        ),
-        FilledButton.icon(
-          style: FilledButton.styleFrom(backgroundColor: Colors.red),
-          onPressed: () => Navigator.pop(context, true),
-          icon: const Icon(Icons.delete_outline),
-          label: const Text('حذف'),
-        ),
-      ],
     ),
   );
   if (confirmed != true) return;

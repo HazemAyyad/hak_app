@@ -25,6 +25,10 @@ Future<List<QuranContentMatch>> searchQuranCache(
     if (file is! File || !file.path.endsWith('.json')) continue;
     try {
       final record = jsonDecode(await file.readAsString()) as Map;
+      if (!content.isCacheRecordFresh(record)) {
+        await file.delete();
+        continue;
+      }
       final url = record['url'] as String;
       final data = record['payload'] as Map;
       late String text, source;

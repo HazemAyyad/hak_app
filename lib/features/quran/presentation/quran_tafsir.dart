@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../app_appearance.dart';
 import '../data/quran_content.dart';
@@ -251,22 +252,58 @@ class _QuranExplanationState extends State<QuranExplanation> {
                         textAlign: TextAlign.right,
                         style: const TextStyle(
                           fontFamily: 'AmiriQuran',
-                          fontSize: 24,
-                          height: 1.8,
+                          fontSize: 21,
+                          height: 1.65,
                         ),
                       ),
                     ),
                     if (widget.onPlay != null)
-                      QCircleButton(
-                        icon: Icons.play_arrow,
-                        label: 'استماع إلى الآية',
-                        color: qTeal,
-                        onTap: () => widget.onPlay!(verse),
+                      Tooltip(
+                        message: 'استماع إلى الآية',
+                        child: Material(
+                          color: qTeal,
+                          shape: const CircleBorder(),
+                          child: InkWell(
+                            customBorder: const CircleBorder(),
+                            onTap: () => widget.onPlay!(verse),
+                            child: const SizedBox(
+                              width: 34,
+                              height: 34,
+                              child: Icon(
+                                Icons.play_arrow,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                   ],
                 ),
               ),
-              const SizedBox(height: 12),
+              Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: TextButton.icon(
+                  onPressed: () => SharePlus.instance.share(
+                    ShareParams(
+                      text:
+                          '${verse.text}\n[سورة ${repo.surah(verse.surah).name}: ${verse.ayah}]',
+                      sharePositionOrigin: Rect.fromLTWH(
+                        0,
+                        0,
+                        MediaQuery.sizeOf(context).width,
+                        100,
+                      ),
+                    ),
+                  ),
+                  icon: const Icon(Icons.share_outlined, size: 16),
+                  label: Text(
+                    'مشاركة الآية',
+                    style: qText(context, size: 11, color: qTeal),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
               if (!meanings)
                 QSegments(
                   labels: tafsirSources.values.toList(),
@@ -299,7 +336,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                             style: qText(context, size: 17),
                           ),
                           Text(
-                            'المحتوى الذي سبق فتحه يبقى متاحًا دون إنترنت.',
+                            'المحتوى المحمّل متاح دون إنترنت لمدة سبعة أيام.',
                             style: qText(context, size: 11),
                             textAlign: TextAlign.center,
                           ),
@@ -355,15 +392,19 @@ class _QuranExplanationState extends State<QuranExplanation> {
                           const SizedBox(height: 14),
                           SelectableText(
                             text.text,
-                            style: qText(
-                              context,
-                              size: 17,
-                              weight: FontWeight.w400,
+                            style: TextStyle(
+                              fontFamily: 'AmiriQuran',
+                              fontSize: 17,
+                              height: 1.85,
+                              fontWeight: FontWeight.w400,
+                              color: AppPalette.of(context).dark
+                                  ? AppPalette.of(context).heading
+                                  : const Color(0xFF171D28),
                             ),
                           ),
                           const SizedBox(height: 14),
                           Text(
-                            'المصدر: Quran.com • ${text.title}\nالنص كما ورد من المصدر؛ يُحفظ للقراءة دون إنترنت بعد فتحه.',
+                            'المصدر: Quran.com • ${text.title}\nالنص كما ورد من المصدر؛ يُحفظ مؤقتًا لمدة سبعة أيام بعد فتحه.',
                             style: qText(
                               context,
                               size: 10,
@@ -384,22 +425,35 @@ class _QuranExplanationState extends State<QuranExplanation> {
                             style: qText(context),
                           ),
                         ),
-                      for (final entry in data.entries)
+                      for (final (entryIndex, entry) in data.entries.indexed)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 8),
                           child: QCard(
                             padding: const EdgeInsets.all(10),
                             child: Row(
                               children: [
+                                QMedallion(number: entryIndex + 1, size: 24),
+                                const SizedBox(width: 7),
                                 if (entry.word.isNotEmpty)
                                   Container(
-                                    width: 85,
+                                    width:
+                                        MediaQuery.sizeOf(context).width < 380
+                                        ? 56
+                                        : 70,
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 12,
                                       horizontal: 5,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: AppPalette.of(context).paleTeal,
+                                      color: AppPalette.of(context).dark
+                                          ? AppPalette.of(context).paleTeal
+                                          : const [
+                                              Color(0xFFFFF0D2),
+                                              Color(0xFFEAF5E7),
+                                              Color(0xFFFDE9E6),
+                                              Color(0xFFE7F1FA),
+                                              Color(0xFFF1E9F8),
+                                            ][entryIndex % 5],
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
@@ -407,7 +461,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                         fontFamily: 'AmiriQuran',
-                                        fontSize: 23,
+                                        fontSize: 20,
                                         height: 1.7,
                                       ),
                                     ),
@@ -416,13 +470,25 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                 Expanded(
                                   child: SelectableText(
                                     entry.meaning,
-                                    style: qText(context, size: 14),
+                                    style: TextStyle(
+                                      fontFamily: 'AmiriQuran',
+                                      fontSize: 15,
+                                      height: 1.65,
+                                      color: AppPalette.of(context).heading,
+                                    ),
                                   ),
                                 ),
-                                Column(
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
                                       tooltip: 'نسخ المعنى',
+                                      visualDensity: VisualDensity.compact,
+                                      padding: const EdgeInsets.all(4),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 28,
+                                        minHeight: 32,
+                                      ),
                                       onPressed: () async {
                                         await Clipboard.setData(
                                           ClipboardData(
@@ -444,6 +510,12 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                         entry.word.isNotEmpty)
                                       IconButton(
                                         tooltip: 'استماع إلى الكلمة',
+                                        visualDensity: VisualDensity.compact,
+                                        padding: const EdgeInsets.all(4),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 28,
+                                          minHeight: 32,
+                                        ),
                                         onPressed: () =>
                                             _listenWord(entry.word),
                                         icon: const Icon(

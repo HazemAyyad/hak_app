@@ -90,7 +90,7 @@ void main() {
       await (FontLoader(font.$1)..addFont(rootBundle.load(font.$2))).load();
     }
     for (final font in [
-      ('QuranPage2', 'build/quran-fixtures/p2.ttf'),
+      ('QuranTajweedPage2', 'build/quran-fixtures/v4-p2.ttf'),
       (
         'MaterialIcons',
         'C:/src/flutter/bin/cache/artifacts/material_fonts/materialicons-regular.otf',
@@ -148,6 +148,10 @@ void main() {
     );
     await tester.pumpAndSettle();
     await tester.runAsync(() async {
+      await precacheImage(
+        const AssetImage('assets/quran/mushaf_frame.png'),
+        tester.element(find.byType(Scaffold).first),
+      );
       for (final header in ['home', 'light', 'dark']) {
         await precacheImage(
           AssetImage('assets/quran/header_$header.png'),

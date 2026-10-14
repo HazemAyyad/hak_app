@@ -103,7 +103,6 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                   title: 'القرآن المسموع',
                   subtitle: 'استمع إلى تلاوات متنوعة وخشوع',
                   height: 145,
-                  dark: true,
                   onBack: () => Navigator.pop(context),
                 ),
               ),
@@ -178,7 +177,22 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                 onTap: () => _select(entry),
                                 child: Column(
                                   children: [
-                                    ReciterAvatar(recitation: entry),
+                                    Stack(
+                                      clipBehavior: Clip.none,
+                                      children: [
+                                        ReciterAvatar(recitation: entry),
+                                        if (entry.id == recitation.id)
+                                          const Positioned(
+                                            top: -4,
+                                            right: -8,
+                                            child: Icon(
+                                              Icons.check_circle,
+                                              color: qTeal,
+                                              size: 16,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                     const SizedBox(height: 6),
                                     Text(
                                       entry.name,
@@ -191,12 +205,16 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                         weight: FontWeight.w800,
                                       ),
                                     ),
-                                    if (entry.id == recitation.id)
-                                      const Icon(
-                                        Icons.check_circle,
-                                        size: 15,
+                                    Text(
+                                      entry.style,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: qText(
+                                        context,
+                                        size: 9,
                                         color: qTeal,
                                       ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -491,6 +509,14 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
             sliver: SliverToBoxAdapter(
               child: Column(
                 children: [
+                  if (widget.media.current != null) ...[
+                    QuranPlayerPanel(
+                      media: widget.media,
+                      repository: widget.media.repository(),
+                      compact: true,
+                    ),
+                    const SizedBox(height: 12),
+                  ],
                   QSearchField(
                     hint: 'ابحث عن قارئ...',
                     onChanged: (value) => setState(() => query = value),

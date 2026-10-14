@@ -358,22 +358,36 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                       : _single(context, verse),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+                  padding: const EdgeInsets.fromLTRB(12, 2, 12, 4),
                   child: Row(
                     children: [
                       Expanded(
-                        child: QPrimaryButton(
-                          label: fullscreen
-                              ? 'إغلاق التكبير'
-                              : (controller.mode == QuranReadingMode.ayah
-                                    ? 'تكبير الآية'
-                                    : controller.mode == QuranReadingMode.pages
-                                    ? 'تكبير الصفحة'
-                                    : 'تكبير السورة'),
-                          icon: fullscreen
-                              ? Icons.fullscreen_exit
-                              : Icons.fullscreen,
-                          onTap: () => _setFullscreen(!fullscreen),
+                        child: TextButton.icon(
+                          style: TextButton.styleFrom(
+                            foregroundColor: qNavy,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 5,
+                            ),
+                          ),
+                          label: Text(
+                            fullscreen
+                                ? 'إغلاق التكبير'
+                                : (controller.mode == QuranReadingMode.ayah
+                                      ? 'تكبير الآية'
+                                      : controller.mode ==
+                                            QuranReadingMode.pages
+                                      ? 'تكبير الصفحة'
+                                      : 'تكبير السورة'),
+                            style: qText(context, size: 11),
+                          ),
+                          icon: Icon(
+                            fullscreen
+                                ? Icons.fullscreen_exit
+                                : Icons.fullscreen,
+                            size: 24,
+                          ),
+                          onPressed: () => _setFullscreen(!fullscreen),
                         ),
                       ),
                       const SizedBox(width: 8),
