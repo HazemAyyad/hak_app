@@ -35,6 +35,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   shared_preferences: ^2.5.6
+  scrollable_positioned_list: ^0.3.8
+  share_plus: ^12.0.1
+  rive: ^0.14.11
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +67,22 @@ flutter:
     - assets/branding/haq_logo_transparent.png
     - assets/images/mosque_sunrise.png
     - assets/images/home_header.png
+    - assets/quran/
+    - assets/home/
+    - assets/animations/
+
+  fonts:
+    - family: QuranUI
+      fonts:
+        - asset: assets/fonts/Cairo.ttf
+    - family: AmiriQuran
+      fonts:
+        - asset: assets/fonts/AmiriQuran.ttf
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/Tajawal-Regular.ttf
+        - asset: assets/fonts/Tajawal-Bold.ttf
+          weight: 700
 
 flutter_launcher_icons:
   android: true

@@ -44,3 +44,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 /android/.kotlin/
+/tool/haq_splash_rive/build/

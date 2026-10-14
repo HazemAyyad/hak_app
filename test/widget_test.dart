@@ -13,8 +13,45 @@ void main() {
   });
   tearDown(() => appearance.dispose());
 
+  testWidgets('نوع الخط يتغير من الإعدادات ويحفظ بعد إعادة التشغيل', (
+    tester,
+  ) async {
+    await tester.pumpWidget(HaqApp(showStartup: false, appearance: appearance));
+    await tester.tap(find.byIcon(Icons.more_horiz).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('الإعدادات'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('المظهر وإعدادات العرض'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('تجوال'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('تجوال'));
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(
+        tester.element(find.text('تجوال')),
+      ).textTheme.bodyMedium!.fontFamily,
+      'Tajawal',
+    );
+    final restored = AppAppearance(appearance.preferences);
+    expect(restored.font, AppFont.tajawal);
+    restored.dispose();
+    await tester.ensureVisible(find.text('خط الجهاز'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('خط الجهاز'));
+    await tester.pumpAndSettle();
+    expect(appearance.font, AppFont.system);
+  });
+
+  test('قيمة خط غير معروفة تعود إلى القاهرة', () async {
+    await appearance.preferences.setString('appearance.font', 'missing-font');
+    final restored = AppAppearance(appearance.preferences);
+    expect(restored.font, AppFont.cairo);
+    restored.dispose();
+  });
+
   testWidgets('تعرض الصفحة الرئيسية الأساسية', (tester) async {
-    await tester.pumpWidget(HaqApp(appearance: appearance));
+    await tester.pumpWidget(HaqApp(showStartup: false, appearance: appearance));
 
     expect(find.text('أحمد محمد'), findsOneWidget);
     expect(find.text('الصلاة القادمة'), findsOneWidget);
@@ -23,7 +60,7 @@ void main() {
   });
 
   testWidgets('تفتح الإعدادات وصفحة فرعية من قسم المزيد', (tester) async {
-    await tester.pumpWidget(HaqApp(appearance: appearance));
+    await tester.pumpWidget(HaqApp(showStartup: false, appearance: appearance));
 
     await tester.tap(find.byIcon(Icons.more_horiz).last);
     await tester.pumpAndSettle();
@@ -42,7 +79,7 @@ void main() {
   testWidgets('اختيار المظهر يغير المسارات ويحفظ الاختيار وحجم الخط', (
     tester,
   ) async {
-    await tester.pumpWidget(HaqApp(appearance: appearance));
+    await tester.pumpWidget(HaqApp(showStartup: false, appearance: appearance));
     await tester.tap(find.byIcon(Icons.more_horiz).last);
     await tester.pumpAndSettle();
     await tester.tap(find.text('الإعدادات'));
@@ -115,7 +152,9 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       await appearance.setMode(mode);
       await appearance.setFontScale(1.2);
-      await tester.pumpWidget(HaqApp(appearance: appearance));
+      await tester.pumpWidget(
+        HaqApp(showStartup: false, appearance: appearance),
+      );
       for (final kind in SettingKind.values) {
         final navigator = tester.state<NavigatorState>(find.byType(Navigator));
         navigator.push(

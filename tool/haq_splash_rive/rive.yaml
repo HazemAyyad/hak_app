@@ -1,0 +1,4 @@
+name: haq_splash_rive
+logs:
+  file: build/rive.log
+  problems: build/problems.log

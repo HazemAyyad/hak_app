@@ -1,8 +1,15 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_appearance.dart';
 import 'settings_pages.dart';
+import 'features/quran/data/quran_controller.dart';
+import 'features/quran/presentation/quran_host.dart';
+import 'startup/startup_flow.dart';
+
+part 'home_widgets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,8 +28,15 @@ class AppColors {
 }
 
 class HaqApp extends StatefulWidget {
-  const HaqApp({super.key, this.appearance});
+  const HaqApp({
+    super.key,
+    this.appearance,
+    this.quranController,
+    this.showStartup = true,
+  });
   final AppAppearance? appearance;
+  final QuranController? quranController;
+  final bool showStartup;
 
   @override
   State<HaqApp> createState() => _HaqAppState();
@@ -80,7 +94,18 @@ class _HaqAppState extends State<HaqApp> {
             ),
             child: child!,
           ),
-          home: HomePage(onToggleTheme: _toggleTheme),
+          home: widget.showStartup
+              ? StartupFlow(
+                  preferences: appearance.preferences,
+                  child: HomePage(
+                    onToggleTheme: _toggleTheme,
+                    quranController: widget.quranController,
+                  ),
+                )
+              : HomePage(
+                  onToggleTheme: _toggleTheme,
+                  quranController: widget.quranController,
+                ),
         ),
       ),
     );
@@ -100,8 +125,35 @@ class _HaqAppState extends State<HaqApp> {
       brightness: brightness,
       colorScheme: scheme,
       scaffoldBackgroundColor: isDark ? Color(0xFF081722) : Color(0xFFFFFCF7),
-      fontFamily: 'Arial',
+      fontFamily: _appearance!.font.family,
+      navigationBarTheme: NavigationBarThemeData(
+        iconTheme: WidgetStateProperty.resolveWith(
+          (states) => IconThemeData(
+            size: 26,
+            color: states.contains(WidgetState.selected)
+                ? _homeTeal
+                : isDark
+                ? const Color(0xFFB8DFE5)
+                : AppColors.navy,
+          ),
+        ),
+        labelTextStyle: WidgetStateProperty.resolveWith(
+          (states) => TextStyle(
+            fontFamily: _appearance!.font.family,
+            fontSize: 10,
+            fontWeight: states.contains(WidgetState.selected)
+                ? FontWeight.w800
+                : FontWeight.w500,
+            color: states.contains(WidgetState.selected)
+                ? _homeTeal
+                : isDark
+                ? const Color(0xFFC6D6DE)
+                : const Color(0xFF71869A),
+          ),
+        ),
+      ),
       textTheme: ThemeData(brightness: brightness).textTheme.apply(
+        fontFamily: _appearance!.font.family,
         bodyColor: isDark ? Color(0xFFF1F5F9) : AppColors.text,
         displayColor: isDark ? Color(0xFFF1F5F9) : AppColors.navy,
       ),
@@ -115,9 +167,14 @@ class _HaqAppState extends State<HaqApp> {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.onToggleTheme});
+  const HomePage({
+    super.key,
+    required this.onToggleTheme,
+    this.quranController,
+  });
 
   final VoidCallback onToggleTheme;
+  final QuranController? quranController;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -125,6 +182,38 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  bool _quranFullscreen = false;
+  late final QuranController _quran;
+  final _quranKey = GlobalKey<QuranHostState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _quran = widget.quranController ?? QuranController();
+    if (_quran.repository == null) _quran.load();
+  }
+
+  @override
+  void dispose() {
+    if (widget.quranController == null) _quran.dispose();
+    super.dispose();
+  }
+
+  void _openQuran({bool resume = false}) {
+    setState(() => _currentIndex = 1);
+    if (resume) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _quranKey.currentState?.openLastReading();
+      });
+    }
+  }
+
+  void _openQuranSettings() {
+    _openQuran();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _quranKey.currentState?.openSettings();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,86 +221,123 @@ class _HomePageState extends State<HomePage> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        body: _currentIndex == 4
-            ? MorePage()
-            : CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(child: _HeroHeader()),
-                  SliverPadding(
-                    padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate.fixed([
-                        PrayerCard(),
-                        SizedBox(height: 14),
-                        QuickServices(),
-                        SizedBox(height: 18),
-                        DhikrCard(),
-                        SizedBox(height: 14),
-                        ReadingCard(),
-                        SizedBox(height: 14),
-                        DailyVerseCard(),
-                        SizedBox(height: 20),
-                        SectionHeader(title: 'رحلتك اليوم', action: 'عرض الكل'),
-                        SizedBox(height: 10),
-                        JourneyCards(),
-                        SizedBox(height: 20),
-                        FridayCard(),
-                        SizedBox(height: 20),
-                        SectionHeader(
-                          title: 'مقالات ومعلومات',
-                          action: 'عرض الكل',
+        body: IndexedStack(
+          index: _currentIndex == 1 ? 1 : 0,
+          children: [
+            _currentIndex == 4
+                ? MorePage(
+                    onQuranTap: () => _openQuran(),
+                    onQuranSettings: _openQuranSettings,
+                  )
+                : CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(child: _HeroHeader()),
+                      SliverPadding(
+                        padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
+                        sliver: SliverList(
+                          delegate: SliverChildListDelegate.fixed([
+                            PrayerCard(),
+                            SizedBox(height: 14),
+                            QuickServices(
+                              onQuranTap: () => _openQuran(),
+                              onMoreTap: () =>
+                                  setState(() => _currentIndex = 4),
+                            ),
+                            SizedBox(height: 18),
+                            DhikrCard(),
+                            SizedBox(height: 14),
+                            ReadingCard(
+                              controller: _quran,
+                              onContinue: () => _openQuran(resume: true),
+                            ),
+                            SizedBox(height: 14),
+                            DailyVerseCard(),
+                            SizedBox(height: 20),
+                            SectionHeader(
+                              title: 'رحلتك اليوم',
+                              action: 'عرض الكل',
+                            ),
+                            SizedBox(height: 10),
+                            JourneyCards(),
+                            SizedBox(height: 20),
+                            FridayCard(),
+                            SizedBox(height: 20),
+                            SectionHeader(
+                              title: 'مقالات ومعلومات',
+                              action: 'عرض الكل',
+                            ),
+                            SizedBox(height: 10),
+                            ArticlesRow(),
+                          ]),
                         ),
-                        SizedBox(height: 10),
-                        ArticlesRow(),
-                        SizedBox(height: 24),
-                        SocialMediaSection(),
-                      ]),
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+            TickerMode(
+              enabled: _currentIndex == 1,
+              child: QuranHost(
+                key: _quranKey,
+                controller: _quran,
+                onFullscreenChanged: (value) {
+                  if (mounted && value != _quranFullscreen) {
+                    setState(() => _quranFullscreen = value);
+                  }
+                },
               ),
-        extendBody: true,
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: _currentIndex,
-          height: 72,
-          backgroundColor: dark ? Color(0xF2132331) : Color(0xF9FFFFFF),
-          indicatorColor: AppColors.teal.withValues(alpha: .16),
-          onDestinationSelected: (value) =>
-              setState(() => _currentIndex = value),
-          destinations: [
-            NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
-              label: 'الرئيسية',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.menu_book_outlined),
-              selectedIcon: Icon(Icons.menu_book),
-              label: 'القرآن',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.eco_outlined),
-              selectedIcon: Icon(Icons.eco),
-              label: 'الأذكار',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.explore_outlined),
-              selectedIcon: Icon(Icons.explore),
-              label: 'القبلة',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.more_horiz),
-              label: 'المزيد',
             ),
           ],
         ),
+        extendBody: true,
+        bottomNavigationBar: _quranFullscreen
+            ? null
+            : ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(30),
+                ),
+                child: NavigationBar(
+                  selectedIndex: _currentIndex,
+                  height: 72,
+                  backgroundColor: dark ? Color(0xF2132331) : Color(0xF9FFFFFF),
+                  indicatorColor: Colors.transparent,
+                  onDestinationSelected: (value) =>
+                      setState(() => _currentIndex = value),
+                  destinations: [
+                    NavigationDestination(
+                      icon: Icon(Icons.home_outlined),
+                      selectedIcon: Icon(Icons.home),
+                      label: 'الرئيسية',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.menu_book_outlined),
+                      selectedIcon: Icon(Icons.menu_book),
+                      label: 'القرآن',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.eco_outlined),
+                      selectedIcon: Icon(Icons.eco),
+                      label: 'الأذكار',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.explore_outlined),
+                      selectedIcon: Icon(Icons.explore),
+                      label: 'القبلة',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.more_horiz),
+                      label: 'المزيد',
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }
 }
 
 class MorePage extends StatelessWidget {
-  const MorePage({super.key});
+  const MorePage({super.key, this.onQuranTap, this.onQuranSettings});
+  final VoidCallback? onQuranTap;
+  final VoidCallback? onQuranSettings;
 
   static const _items = [
     ('ادعُ معي', Icons.people_alt_outlined),
@@ -316,7 +442,14 @@ class MorePage extends StatelessWidget {
                 icon: item.$2,
                 onTap: item.$1 == 'الإعدادات'
                     ? () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(builder: (_) => SettingsPage()),
+                        MaterialPageRoute<void>(
+                          builder: (_) => SettingsPage(
+                            onQuranSettings: () {
+                              Navigator.of(context).pop();
+                              onQuranSettings?.call();
+                            },
+                          ),
+                        ),
                       )
                     : item.$1 == 'مظهر التطبيق'
                     ? () => Navigator.of(context).push(
@@ -326,6 +459,8 @@ class MorePage extends StatelessWidget {
                           ),
                         ),
                       )
+                    : item.$1 == 'قرآن'
+                    ? onQuranTap
                     : null,
               );
             },
@@ -419,565 +554,6 @@ class _MoreSocialLinks extends StatelessWidget {
               ),
             ),
           ],
-        ),
-      ],
-    ),
-  );
-}
-
-class _HeroHeader extends StatelessWidget {
-  const _HeroHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(
-        18,
-        MediaQuery.paddingOf(context).top + 12,
-        18,
-        28,
-      ),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/home_header.png'),
-          fit: BoxFit.cover,
-          alignment: Alignment.topCenter,
-          colorFilter: Theme.of(context).brightness == Brightness.dark
-              ? const ColorFilter.mode(Color(0xB3102A43), BlendMode.darken)
-              : null,
-        ),
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(36)),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              _RoundButton(icon: Icons.person_outline, onTap: () {}),
-              Spacer(),
-              _RoundButton(icon: Icons.search, onTap: () {}),
-              SizedBox(width: 8),
-              _RoundButton(icon: Icons.notifications_none, onTap: () {}),
-            ],
-          ),
-          SizedBox(height: 10),
-          Image.asset(
-            'assets/branding/haq_logo_transparent.png',
-            color: Theme.of(context).brightness == Brightness.dark
-                ? AppPalette.of(context).heading
-                : null,
-            width: 92,
-            height: 92,
-            fit: BoxFit.contain,
-          ),
-          SizedBox(height: 10),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'مرحبًا بك',
-                  style: TextStyle(
-                    color: AppPalette.of(context).heading,
-                    fontSize: 14,
-                  ),
-                ),
-                Text(
-                  'أحمد محمد',
-                  style: TextStyle(
-                    color: AppPalette.of(context).heading,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'تقبّل الله طاعاتك، وجعلنا وإياك من أهل القرآن',
-                  style: TextStyle(
-                    color: AppPalette.of(context).heading,
-                    fontSize: 13,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _RoundButton extends StatelessWidget {
-  const _RoundButton({required this.icon, required this.onTap});
-  final IconData icon;
-  final VoidCallback onTap;
-  @override
-  Widget build(BuildContext context) => Material(
-    color: AppPalette.of(context).surface.withValues(alpha: .90),
-    shape: CircleBorder(),
-    child: IconButton(
-      onPressed: onTap,
-      icon: Icon(icon, color: AppPalette.of(context).heading),
-    ),
-  );
-}
-
-class PrayerCard extends StatelessWidget {
-  const PrayerCard({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final prayers = [
-      ('الفجر', '04:32', Icons.wb_twilight),
-      ('الظهر', '12:07', Icons.light_mode),
-      ('العصر', '15:34', Icons.wb_sunny_outlined),
-      ('المغرب', '18:21', Icons.wb_twilight),
-      ('العشاء', '19:45', Icons.dark_mode),
-    ];
-    return _Surface(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: Color(0x142A8C82),
-                child: Icon(Icons.mosque, color: AppColors.teal, size: 30),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'الصلاة القادمة',
-                      style: TextStyle(fontWeight: FontWeight.w700),
-                    ),
-                    Text(
-                      'الظهر',
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        color: AppPalette.of(context).heading,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        '02:35:42',
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: AppColors.gold,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      'نابلس، فلسطين',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: AppPalette.of(context).muted,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
-          Row(
-            children: prayers
-                .map(
-                  (p) => Expanded(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 9),
-                      decoration: p.$1 == 'الظهر'
-                          ? BoxDecoration(
-                              color: AppColors.teal,
-                              borderRadius: BorderRadius.circular(14),
-                            )
-                          : null,
-                      child: Column(
-                        children: [
-                          Icon(
-                            p.$3,
-                            size: 20,
-                            color: p.$1 == 'الظهر'
-                                ? Colors.white
-                                : AppColors.gold,
-                          ),
-                          Text(
-                            p.$1,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: p.$1 == 'الظهر' ? Colors.white : null,
-                            ),
-                          ),
-                          Text(
-                            p.$2,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: p.$1 == 'الظهر'
-                                  ? Colors.white70
-                                  : AppPalette.of(context).muted,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class QuickServices extends StatelessWidget {
-  const QuickServices({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final items = [
-      ('القرآن الكريم', Icons.menu_book),
-      ('الأذكار اليومية', Icons.eco),
-      ('الختمة', Icons.auto_stories),
-      ('العداد والتسبيح', Icons.radio_button_checked),
-      ('الأدعية', Icons.volunteer_activism),
-      ('ماذا تشعر؟', Icons.favorite),
-      ('القبلة', Icons.explore),
-      ('المزيد', Icons.grid_view_rounded),
-    ];
-    return GridView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        mainAxisSpacing: 10,
-        crossAxisSpacing: 10,
-        childAspectRatio: .92,
-        mainAxisExtent: 110 * MediaQuery.textScalerOf(context).scale(1),
-      ),
-      itemCount: items.length,
-      itemBuilder: (context, index) => Container(
-        decoration: BoxDecoration(
-          color: index == 0 ? AppColors.navy : AppPalette.of(context).paleTeal,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              items[index].$2,
-              color: index == 0 ? Colors.white : AppColors.teal,
-              size: 28,
-            ),
-            SizedBox(height: 7),
-            Text(
-              items[index].$1,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                color: index == 0 ? Colors.white : null,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class DhikrCard extends StatelessWidget {
-  const DhikrCard({super.key});
-  @override
-  Widget build(BuildContext context) => _PhotoCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Row(
-          children: [
-            Icon(Icons.wb_sunny_outlined, color: AppColors.gold, size: 34),
-            Spacer(),
-            Text(
-              'أذكار الصباح',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ],
-        ),
-        Text(
-          'ابدأ يومك بذكر الله',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-        ),
-        Text(
-          'مجموعة من الأذكار الصحيحة لبدء يومك\nبالبركة والطمأنينة.',
-          textAlign: TextAlign.right,
-          style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.5),
-        ),
-        Spacer(),
-        FilledButton(
-          style: FilledButton.styleFrom(
-            backgroundColor: AppColors.gold,
-            foregroundColor: AppColors.navy,
-          ),
-          onPressed: () {},
-          child: Text('عرض الأذكار'),
-        ),
-      ],
-    ),
-  );
-}
-
-class ReadingCard extends StatelessWidget {
-  const ReadingCard({super.key});
-  @override
-  Widget build(BuildContext context) => _PhotoCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            CircleAvatar(
-              backgroundColor: Color(0xDDFFFFFF),
-              child: Icon(Icons.menu_book, color: AppColors.teal),
-            ),
-            SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'أكمل من حيث توقفت',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  Text(
-                    'سورة البقرة • الآية 255',
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 14),
-        LinearProgressIndicator(
-          value: .38,
-          minHeight: 7,
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: AppColors.teal,
-        ),
-        SizedBox(height: 12),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.teal,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {},
-            icon: Icon(Icons.arrow_back_ios_new, size: 14),
-            label: Text('متابعة القراءة'),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-class DailyVerseCard extends StatelessWidget {
-  const DailyVerseCard({super.key});
-  @override
-  Widget build(BuildContext context) => _Surface(
-    color: AppColors.gold.withValues(alpha: .10),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(Icons.auto_awesome, color: AppColors.gold),
-            SizedBox(width: 8),
-            Text(
-              'آية اليوم',
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-                color: AppColors.gold,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 12),
-        Text(
-          '﴿ وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا ﴾',
-          style: TextStyle(
-            fontSize: 19,
-            height: 1.8,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        Text(
-          'سورة الطلاق • الآية 2',
-          style: TextStyle(fontSize: 12, color: AppPalette.of(context).muted),
-        ),
-      ],
-    ),
-  );
-}
-
-class JourneyCards extends StatelessWidget {
-  const JourneyCards({super.key});
-  @override
-  Widget build(BuildContext context) {
-    final items = [
-      ('الختمة', 'الجزء الثاني', Icons.menu_book, .18),
-      ('الأذكار', 'أذكار الصباح', Icons.radio_button_checked, .62),
-      ('العادات', 'تم اليوم', Icons.eco, .84),
-    ];
-    return Row(
-      children: items
-          .map(
-            (item) => Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4),
-                child: _Surface(
-                  child: Column(
-                    children: [
-                      Icon(item.$3, color: AppColors.teal),
-                      SizedBox(height: 7),
-                      Text(
-                        item.$1,
-                        style: TextStyle(fontWeight: FontWeight.w800),
-                      ),
-                      Text(
-                        item.$2,
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: AppPalette.of(context).muted,
-                        ),
-                      ),
-                      SizedBox(height: 9),
-                      LinearProgressIndicator(
-                        value: item.$4,
-                        minHeight: 6,
-                        borderRadius: BorderRadius.circular(6),
-                        color: AppColors.teal,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
-}
-
-class FridayCard extends StatelessWidget {
-  const FridayCard({super.key});
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      image: DecorationImage(
-        image: AssetImage('assets/images/mosque_sunrise.png'),
-        fit: BoxFit.cover,
-        colorFilter: ColorFilter.mode(Color(0xAA0A5260), BlendMode.darken),
-      ),
-      borderRadius: BorderRadius.circular(22),
-    ),
-    child: Row(
-      children: [
-        Icon(Icons.mosque, size: 48, color: AppColors.gold),
-        SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('محتوى خاص', style: TextStyle(color: Colors.white60)),
-              Text(
-                'يوم الجمعة',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 21,
-                ),
-              ),
-              Text(
-                'سورة الكهف • الصلاة على النبي ﷺ',
-                style: TextStyle(color: Colors.white70, fontSize: 12),
-              ),
-            ],
-          ),
-        ),
-        Icon(Icons.arrow_back_ios_new, color: Colors.white),
-      ],
-    ),
-  );
-}
-
-class ArticlesRow extends StatelessWidget {
-  const ArticlesRow({super.key});
-  @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      Expanded(
-        child: _ArticleCard(
-          title: 'فضل صلاة الجماعة',
-          icon: Icons.groups_rounded,
-        ),
-      ),
-      SizedBox(width: 10),
-      Expanded(
-        child: _ArticleCard(
-          title: 'فضل الصدقة في الإسلام',
-          icon: Icons.volunteer_activism,
-        ),
-      ),
-    ],
-  );
-}
-
-class _ArticleCard extends StatelessWidget {
-  const _ArticleCard({required this.title, required this.icon});
-  final String title;
-  final IconData icon;
-  @override
-  Widget build(BuildContext context) => Container(
-    height: 112,
-    padding: EdgeInsets.all(14),
-    decoration: BoxDecoration(
-      image: DecorationImage(
-        image: AssetImage('assets/images/mosque_sunrise.png'),
-        fit: BoxFit.cover,
-        colorFilter: ColorFilter.mode(Color(0xAA102A43), BlendMode.darken),
-      ),
-      borderRadius: BorderRadius.circular(18),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Icon(icon, color: AppColors.gold),
-        Text(
-          title,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
         ),
       ],
     ),
@@ -1159,56 +735,11 @@ class SectionHeader extends StatelessWidget {
         action,
         style: TextStyle(color: AppColors.teal, fontWeight: FontWeight.w700),
       ),
-      Icon(Icons.chevron_left, color: AppColors.teal),
+      Icon(
+        Icons.chevron_left,
+        color: AppColors.teal,
+        textDirection: TextDirection.ltr,
+      ),
     ],
-  );
-}
-
-class _Surface extends StatelessWidget {
-  const _Surface({required this.child, this.color});
-  final Widget child;
-  final Color? color;
-  @override
-  Widget build(BuildContext context) {
-    final dark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color ?? (dark ? Color(0xFF132331) : Colors.white),
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: dark ? Colors.white10 : Color(0xFFE8EDF0)),
-        boxShadow: dark
-            ? null
-            : [
-                BoxShadow(
-                  color: AppColors.navy.withValues(alpha: .05),
-                  blurRadius: 18,
-                  offset: Offset(0, 6),
-                ),
-              ],
-      ),
-      child: child,
-    );
-  }
-}
-
-class _PhotoCard extends StatelessWidget {
-  const _PhotoCard({required this.child});
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => Container(
-    height: 220 * MediaQuery.textScalerOf(context).scale(1),
-    padding: EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      image: DecorationImage(
-        image: AssetImage('assets/images/mosque_sunrise.png'),
-        fit: BoxFit.cover,
-        colorFilter: ColorFilter.mode(Color(0x8A102A43), BlendMode.darken),
-      ),
-      borderRadius: BorderRadius.circular(22),
-      border: Border.all(color: AppColors.gold),
-    ),
-    child: child,
   );
 }

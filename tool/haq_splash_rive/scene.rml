@@ -1,0 +1,65 @@
+<Rive version="1" kind="fragment">
+    <ImageAsset file="../../assets/branding/haq_logo_transparent.png" name="Haq original logo" id="0:60"/>
+    <Artboard defaultStateMachineId="0:7" styleId="0:5" width="360" height="360" name="Haq Splash" id="0:2">
+        <LayoutComponentStyle name="Artboard Style" id="0:5"/>
+        <Fill name="Warm cream background"><SolidColor colorValue="FFFFFCF7"/></Fill>
+        <Node x="180" y="180" opacity="0" name="Golden halo" id="0:20">
+            <Shape name="Halo">
+                <Ellipse width="250" height="250"/>
+                <Stroke thickness="2" name="Gold outline"><SolidColor colorValue="FFCAA15D"/></Stroke>
+            </Shape>
+        </Node>
+        <Node x="180" y="200" opacity="0" scaleX="0.72" scaleY="0.72" name="Haq logo entrance" id="0:30">
+            <Image assetId="0:60" scaleX="0.225" scaleY="0.225" name="Original Haq logo"/>
+        </Node>
+        <StateMachine name="Splash" id="0:7">
+            <StateMachineLayer name="Entrance">
+                <AnyState x="200" y="-120"/>
+                <ExitState x="400" y="-120"/>
+                <EntryState><StateTransition stateToId="0:12"/></EntryState>
+                <AnimationState x="200" y="0" animationId="0:6" id="0:12"/>
+            </StateMachineLayer>
+        </StateMachine>
+        <LinearAnimation fps="60" duration="144" loopValue="oneShot" name="Logo entrance" id="0:6">
+            <KeyedObject objectId="0:30">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
+                    <KeyFrameDouble frame="30" value="1"/>
+                </KeyedProperty>
+                <KeyedProperty propertyKey="14">
+                    <KeyFrameDouble frame="0" value="200" interpolationType="linear"/>
+                    <KeyFrameDouble frame="38" value="180"/>
+                </KeyedProperty>
+                <KeyedProperty propertyKey="16">
+                    <KeyFrameDouble frame="0" value="0.72" interpolationType="linear"/>
+                    <KeyFrameDouble frame="32" value="1.045" interpolationType="linear"/>
+                    <KeyFrameDouble frame="48" value="1" interpolationType="linear"/>
+                    <KeyFrameDouble frame="96" value="1.025" interpolationType="linear"/>
+                    <KeyFrameDouble frame="144" value="1"/>
+                </KeyedProperty>
+                <KeyedProperty propertyKey="17">
+                    <KeyFrameDouble frame="0" value="0.72" interpolationType="linear"/>
+                    <KeyFrameDouble frame="32" value="1.045" interpolationType="linear"/>
+                    <KeyFrameDouble frame="48" value="1" interpolationType="linear"/>
+                    <KeyFrameDouble frame="96" value="1.025" interpolationType="linear"/>
+                    <KeyFrameDouble frame="144" value="1"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:20">
+                <KeyedProperty propertyKey="18">
+                    <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
+                    <KeyFrameDouble frame="24" value="0.7" interpolationType="linear"/>
+                    <KeyFrameDouble frame="84" value="0"/>
+                </KeyedProperty>
+                <KeyedProperty propertyKey="16">
+                    <KeyFrameDouble frame="0" value="0.65" interpolationType="linear"/>
+                    <KeyFrameDouble frame="84" value="1.2"/>
+                </KeyedProperty>
+                <KeyedProperty propertyKey="17">
+                    <KeyFrameDouble frame="0" value="0.65" interpolationType="linear"/>
+                    <KeyFrameDouble frame="84" value="1.2"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+    </Artboard>
+</Rive>

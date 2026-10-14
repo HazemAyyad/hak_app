@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+enum AppFont {
+  cairo('Cairo', 'القاهرة', 'QuranUI'),
+  tajawal('Tajawal', 'تجوال', 'Tajawal'),
+  system('System', 'خط الجهاز', null);
+
+  const AppFont(this.id, this.label, this.family);
+  final String id;
+  final String label;
+  final String? family;
+}
+
 /// The single source of appearance preferences for every route.
 class AppAppearance extends ChangeNotifier {
   AppAppearance(this.preferences) {
@@ -12,11 +23,22 @@ class AppAppearance extends ChangeNotifier {
       .85,
       1.2,
     );
+    font = AppFont.values.firstWhere(
+      (value) => value.id == preferences.getString('appearance.font'),
+      orElse: () => AppFont.cairo,
+    );
   }
 
   final SharedPreferences preferences;
   late ThemeMode mode;
   late double fontScale;
+  late AppFont font;
+
+  Future<void> setFont(AppFont value) async {
+    font = value;
+    notifyListeners();
+    await preferences.setString('appearance.font', value.id);
+  }
 
   Future<void> setMode(ThemeMode value) async {
     mode = value;

@@ -10,7 +10,8 @@ ThemeMode _themeMode(String label) => switch (label) {
 };
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({super.key, this.onQuranSettings});
+  final VoidCallback? onQuranSettings;
 
   @override
   Widget build(BuildContext context) => _SettingsShell(
@@ -43,9 +44,13 @@ class SettingsPage extends StatelessWidget {
     icon: kind.icon,
     title: kind.title,
     subtitle: kind.subtitle,
-    onTap: () => Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => SettingsDetailPage(kind: kind)),
-    ),
+    onTap: kind == SettingKind.quran && onQuranSettings != null
+        ? onQuranSettings
+        : () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => SettingsDetailPage(kind: kind),
+            ),
+          ),
   );
 }
 
@@ -53,7 +58,7 @@ enum SettingKind {
   account('الحساب والمزامنة', 'احتفظ بتقدمك وإعداداتك', Icons.person_outline),
   appearance(
     'المظهر وإعدادات العرض',
-    'خصص الألوان وحجم النص',
+    'خصص الألوان ونوع الخط وحجمه',
     Icons.palette_outlined,
   ),
   quran(
@@ -216,6 +221,37 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
       _InfoBox(
         'الوضع التلقائي',
         'يتبع مظهر الجهاز تلقائياً، ويتغير عند تغيير إعداداته.',
+      ),
+      _SectionTitle('نوع الخط'),
+      _Panel(
+        child: RadioGroup<AppFont>(
+          groupValue: AppearanceScope.of(context).font,
+          onChanged: (value) {
+            if (value != null) AppearanceScope.of(context).setFont(value);
+          },
+          child: Column(
+            children: [
+              for (final font in AppFont.values)
+                RadioListTile<AppFont>(
+                  title: Text(
+                    font.label,
+                    style: TextStyle(fontFamily: font.family),
+                  ),
+                  subtitle: Text(
+                    'تقبّل الله طاعاتك وجعلنا وإياك من أهل القرآن',
+                    style: TextStyle(fontFamily: font.family, fontSize: 12),
+                  ),
+                  value: font,
+                  activeColor: _teal,
+                  contentPadding: EdgeInsets.zero,
+                ),
+            ],
+          ),
+        ),
+      ),
+      _InfoBox(
+        'خط التطبيق',
+        'يُطبق الاختيار فورًا على الواجهة ويُحفظ على الجهاز. يبقى نص المصحف بخط قرآني مخصص لضبط الحركات.',
       ),
       _SectionTitle('حجم الخط'),
       _Panel(
@@ -870,7 +906,7 @@ class _Header extends StatelessWidget {
     child: Stack(
       children: [
         Positioned(
-          left: 0,
+          right: 0,
           top: 0,
           child: Material(
             color: AppPalette.of(context).surface,
