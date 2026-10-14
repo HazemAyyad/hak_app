@@ -215,6 +215,20 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _openQuranAccount() {
+    _openQuran();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _quranKey.currentState?.openAccount();
+    });
+  }
+
+  void _openQuranDownloads() {
+    _openQuran();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _quranKey.currentState?.openDownloads();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
@@ -228,6 +242,8 @@ class _HomePageState extends State<HomePage> {
                 ? MorePage(
                     onQuranTap: () => _openQuran(),
                     onQuranSettings: _openQuranSettings,
+                    onQuranAccount: _openQuranAccount,
+                    onQuranDownloads: _openQuranDownloads,
                   )
                 : CustomScrollView(
                     slivers: [
@@ -278,6 +294,7 @@ class _HomePageState extends State<HomePage> {
               child: QuranHost(
                 key: _quranKey,
                 controller: _quran,
+                active: _currentIndex == 1,
                 onFullscreenChanged: (value) {
                   if (mounted && value != _quranFullscreen) {
                     setState(() => _quranFullscreen = value);
@@ -335,9 +352,16 @@ class _HomePageState extends State<HomePage> {
 }
 
 class MorePage extends StatelessWidget {
-  const MorePage({super.key, this.onQuranTap, this.onQuranSettings});
+  const MorePage({
+    super.key,
+    this.onQuranTap,
+    this.onQuranSettings,
+    this.onQuranAccount,
+    this.onQuranDownloads,
+  });
   final VoidCallback? onQuranTap;
   final VoidCallback? onQuranSettings;
+  final VoidCallback? onQuranAccount, onQuranDownloads;
 
   static const _items = [
     ('ادعُ معي', Icons.people_alt_outlined),
@@ -444,6 +468,18 @@ class MorePage extends StatelessWidget {
                     ? () => Navigator.of(context).push(
                         MaterialPageRoute<void>(
                           builder: (_) => SettingsPage(
+                            onQuranAccount: onQuranAccount == null
+                                ? null
+                                : () {
+                                    Navigator.of(context).pop();
+                                    onQuranAccount?.call();
+                                  },
+                            onQuranDownloads: onQuranDownloads == null
+                                ? null
+                                : () {
+                                    Navigator.of(context).pop();
+                                    onQuranDownloads?.call();
+                                  },
                             onQuranSettings: () {
                               Navigator.of(context).pop();
                               onQuranSettings?.call();

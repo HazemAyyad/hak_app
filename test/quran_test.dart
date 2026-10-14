@@ -37,6 +37,9 @@ void main() {
     // Replace the widget test's rectangle-only fallback during visual exports.
     if (Platform.environment.containsKey('QURAN_CAPTURE_DIR')) {
       await (FontLoader(
+        'Roboto',
+      )..addFont(rootBundle.load('assets/fonts/Cairo.ttf'))).load();
+      await (FontLoader(
         'Ahem',
       )..addFont(rootBundle.load('assets/fonts/Cairo.ttf'))).load();
     }
@@ -137,6 +140,22 @@ void main() {
           .map((d) => d.label)
           .toList();
       expect(labels, ['الرئيسية', 'القرآن', 'الأذكار', 'القبلة', 'المزيد']);
+      final bar = tester.widget<NavigationBar>(find.byType(NavigationBar));
+      expect(bar.height, 72);
+      expect(bar.indicatorColor, Colors.transparent);
+      expect(bar.backgroundColor, const Color(0xF9FFFFFF));
+      expect(
+        bar.destinations.cast<NavigationDestination>().map(
+          (d) => (d.icon as Icon).icon,
+        ),
+        [
+          Icons.home_outlined,
+          Icons.menu_book_outlined,
+          Icons.eco_outlined,
+          Icons.explore_outlined,
+          Icons.more_horiz,
+        ],
+      );
       await _capture(tester, boundary, '01-quran-home');
       final host = tester.state<QuranHostState>(find.byType(QuranHost));
       host.openIndex();
@@ -157,6 +176,19 @@ void main() {
       expect(find.byType(NavigationBar), findsOneWidget);
       expect(controller.lastVerse!.surah, 2);
       expect(tester.takeException(), isNull);
+      await tester.tap(find.text('المزيد').last);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<NavigatorPopHandler<void>>(
+              find.byType(NavigatorPopHandler<void>, skipOffstage: false),
+            )
+            .enabled,
+        isFalse,
+      );
+      await tester.tap(find.text('القرآن').last);
+      await tester.pumpAndSettle();
+      expect(find.byType(QuranReader), findsOneWidget);
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       expect(find.byType(QuranReader), findsNothing);
@@ -209,6 +241,8 @@ void main() {
       expect(controller.lastKey, '5:82');
       controller.setMode(QuranReadingMode.ayah);
       host.openReader(repo.byKey['1:7']!);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('الآية التالية'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('الآية التالية'));
       await tester.pumpAndSettle();

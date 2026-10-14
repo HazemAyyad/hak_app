@@ -1,3 +1,4 @@
-# Preserve upstream Quran sources and font licenses without rewriting their bytes.
-tool/quran_sources/*.xml -text whitespace=-blank-at-eol
-assets/fonts/*-OFL.txt -text whitespace=-blank-at-eol,-blank-at-eof
+# Preserve downloaded sources, licenses and canonical data byte for byte.
+tool/quran_sources/*.xml -text -whitespace
+assets/fonts/*-OFL.txt -text -whitespace
+assets/quran/quran.json -text

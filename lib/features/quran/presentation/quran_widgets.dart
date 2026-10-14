@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
 
-const qTeal = Color(0xFF006570);
-const qNavy = Color(0xFF102B4D);
+const qTeal = Color(0xFF007D85);
+const qNavy = Color(0xFF0C2057);
 const qGold = Color(0xFFB38C42);
 const qCream = Color(0xFFFFFCF7);
 
@@ -19,7 +19,9 @@ TextStyle qText(
   fontSize: size,
   height: 1.55,
   fontWeight: weight,
-  color: color ?? AppPalette.of(context).heading,
+  color:
+      color ??
+      (AppPalette.of(context).dark ? AppPalette.of(context).heading : qNavy),
 );
 
 class QuranHeader extends StatelessWidget {
@@ -72,12 +74,12 @@ class QuranHeader extends StatelessWidget {
           right: 18,
           top: 12,
           child: Directionality(
-            textDirection: TextDirection.rtl,
+            textDirection: TextDirection.ltr,
             child: Row(
               children: [
                 if (onBack != null)
                   QCircleButton(
-                    icon: Icons.arrow_back_ios_new,
+                    icon: Icons.chevron_left,
                     label: 'رجوع',
                     onTap: onBack,
                   ),
@@ -89,7 +91,11 @@ class QuranHeader extends StatelessWidget {
         ),
         Positioned(
           right: center ? 30 : 25,
-          left: center ? 30 : 135,
+          left: center
+              ? 30
+              : title.length > 24
+              ? 90
+              : 135,
           top: center ? 32 : null,
           bottom: center ? null : 21,
           child: Column(
@@ -99,10 +105,16 @@ class QuranHeader extends StatelessWidget {
             children: [
               Text(
                 title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 textAlign: center ? TextAlign.center : TextAlign.right,
                 style: qText(
                   context,
-                  size: center ? 24 : 20,
+                  size: center
+                      ? 24
+                      : title.length > 24
+                      ? 18
+                      : 20,
                   weight: FontWeight.w800,
                   color: dark ? Colors.white : qNavy,
                 ),
@@ -110,6 +122,8 @@ class QuranHeader extends StatelessWidget {
               const SizedBox(height: 3),
               Text(
                 subtitle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 textAlign: center ? TextAlign.center : TextAlign.right,
                 style: qText(
                   context,
@@ -132,11 +146,13 @@ class QCircleButton extends StatelessWidget {
     required this.label,
     this.onTap,
     this.color,
+    this.size = 38,
   });
   final IconData icon;
   final String label;
   final VoidCallback? onTap;
   final Color? color;
+  final double size;
   @override
   Widget build(BuildContext context) => Tooltip(
     message: label,
@@ -149,12 +165,16 @@ class QCircleButton extends StatelessWidget {
         onTap: onTap,
         customBorder: const CircleBorder(),
         child: SizedBox(
-          width: 38,
-          height: 38,
+          width: size,
+          height: size,
           child: Icon(
             icon,
             size: 23,
-            color: color ?? AppPalette.of(context).heading,
+            color:
+                color ??
+                (AppPalette.of(context).dark
+                    ? AppPalette.of(context).heading
+                    : qNavy),
           ),
         ),
       ),
@@ -180,7 +200,9 @@ class QCard extends StatelessWidget {
       color: color ?? AppPalette.of(context).surface,
       borderRadius: BorderRadius.circular(14),
       border: Border.all(
-        color: AppPalette.of(context).border.withValues(alpha: .65),
+        color: AppPalette.of(context).dark
+            ? AppPalette.of(context).border
+            : const Color(0xFFE8E9EC),
       ),
       boxShadow: const [
         BoxShadow(
@@ -448,7 +470,7 @@ void qNotice(BuildContext context, String message) =>
         content: Text(
           message,
           textDirection: TextDirection.rtl,
-          style: TextStyle(fontFamily: AppearanceScope.of(context).font.family),
+          style: const TextStyle(fontFamily: 'QuranUI'),
         ),
       ),
     );

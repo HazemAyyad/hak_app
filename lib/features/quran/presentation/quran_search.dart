@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../app_appearance.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
+import '../data/quran_cached_search.dart';
 import 'quran_widgets.dart';
 
 class QuranSearchPage extends StatefulWidget {
@@ -29,6 +30,9 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
   bool group = true, fullText = true;
   List<QuranVerse> results = [];
   String executedQuery = '';
+  int type = 0, generation = 0;
+  bool searching = false;
+  Map<String, QuranContentMatch> contentMatches = {};
 
   @override
   void initState() {
@@ -45,16 +49,40 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
     super.dispose();
   }
 
-  void _search() {
+  Future<void> _search() async {
     debounce?.cancel();
+    final request = ++generation;
     setState(() {
       executedQuery = query.text.trim();
-      results = widget.controller.repository!.search(
-        executedQuery,
-        surahId: surahId,
-        juzId: juzId,
-      );
+      contentMatches = {};
+      searching = type != 0;
+      results = type == 0
+          ? widget.controller.repository!.search(
+              executedQuery,
+              surahId: surahId,
+              juzId: juzId,
+            )
+          : [];
     });
+    if (type == 0) return;
+    try {
+      final found = await searchQuranCache(
+        widget.controller.content,
+        widget.controller.repository!,
+        executedQuery,
+        meanings: type == 2,
+        surah: surahId,
+        juz: juzId,
+      );
+      if (!mounted || request != generation) return;
+      setState(() {
+        contentMatches = {for (final match in found) match.verse.key: match};
+        results = found.map((m) => m.verse).toList();
+        searching = false;
+      });
+    } catch (_) {
+      if (mounted && request == generation) setState(() => searching = false);
+    }
   }
 
   void _changed(String _) {
@@ -270,6 +298,28 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
+                QSegments(
+                  labels: const ['الآيات', 'التفسير', 'معاني الكلمات'],
+                  selected: type,
+                  onSelect: (value) {
+                    type = value;
+                    _search();
+                  },
+                ),
+                if (type != 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                      'البحث في ${type == 1 ? 'التفاسير' : 'المعاني'} التي فُتحت وحُفظت على هذا الجهاز فقط. افتح المحتوى المطلوب لتنزيله أولًا.',
+                      style: qText(
+                        context,
+                        size: 11,
+                        color: AppPalette.of(context).muted,
+                      ),
+                    ),
+                  ),
+                if (searching) const LinearProgressIndicator(color: qTeal),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     Expanded(
@@ -387,18 +437,29 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  verse.text,
+                                  contentMatches[verse.key]?.text ?? verse.text,
                                   maxLines: fullText ? null : 3,
                                   overflow: fullText
                                       ? null
                                       : TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    fontFamily: 'AmiriQuran',
-                                    fontSize: 20,
+                                    fontFamily: type == 0
+                                        ? 'AmiriQuran'
+                                        : 'QuranUI',
+                                    fontSize: type == 0 ? 20 : 13,
                                     height: 1.8,
                                     color: AppPalette.of(context).heading,
                                   ),
                                 ),
+                                if (type != 0)
+                                  Text(
+                                    contentMatches[verse.key]?.source ?? '',
+                                    style: qText(
+                                      context,
+                                      size: 10,
+                                      color: qTeal,
+                                    ),
+                                  ),
                                 Text(
                                   '${juzName(verse.juz)} • الصفحة ${verse.page}',
                                   style: qText(

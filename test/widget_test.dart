@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:haq_app/features/quran/data/quran_controller.dart';
+import 'package:haq_app/features/quran/data/quran_repository.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/main.dart';
 import 'package:haq_app/app_appearance.dart';
@@ -7,16 +12,35 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   late AppAppearance appearance;
+  late QuranController controller;
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     appearance = AppAppearance(await SharedPreferences.getInstance());
+    FlutterSecureStorage.setMockInitialValues({});
+    controller = QuranController(
+      initialRepository: QuranRepository.fromJson(
+        jsonDecode(File('assets/quran/quran.json').readAsStringSync())
+            as Map<String, dynamic>,
+      ),
+      preferences: await SharedPreferences.getInstance(),
+    );
+    await controller.load();
   });
-  tearDown(() => appearance.dispose());
+  tearDown(() {
+    controller.dispose();
+    appearance.dispose();
+  });
 
   testWidgets('نوع الخط يتغير من الإعدادات ويحفظ بعد إعادة التشغيل', (
     tester,
   ) async {
-    await tester.pumpWidget(HaqApp(showStartup: false, appearance: appearance));
+    await tester.pumpWidget(
+      HaqApp(
+        showStartup: false,
+        appearance: appearance,
+        quranController: controller,
+      ),
+    );
     await tester.tap(find.byIcon(Icons.more_horiz).last);
     await tester.pumpAndSettle();
     await tester.tap(find.text('الإعدادات'));
@@ -51,7 +75,13 @@ void main() {
   });
 
   testWidgets('تعرض الصفحة الرئيسية الأساسية', (tester) async {
-    await tester.pumpWidget(HaqApp(showStartup: false, appearance: appearance));
+    await tester.pumpWidget(
+      HaqApp(
+        showStartup: false,
+        appearance: appearance,
+        quranController: controller,
+      ),
+    );
 
     expect(find.text('أحمد محمد'), findsOneWidget);
     expect(find.text('الصلاة القادمة'), findsOneWidget);
@@ -60,7 +90,13 @@ void main() {
   });
 
   testWidgets('تفتح الإعدادات وصفحة فرعية من قسم المزيد', (tester) async {
-    await tester.pumpWidget(HaqApp(showStartup: false, appearance: appearance));
+    await tester.pumpWidget(
+      HaqApp(
+        showStartup: false,
+        appearance: appearance,
+        quranController: controller,
+      ),
+    );
 
     await tester.tap(find.byIcon(Icons.more_horiz).last);
     await tester.pumpAndSettle();
@@ -73,13 +109,19 @@ void main() {
 
     await tester.tap(find.text('الحساب والمزامنة'));
     await tester.pumpAndSettle();
-    expect(find.text('حسابك وبياناتك'), findsOneWidget);
+    expect(find.text('تسجيل الدخول'), findsAtLeastNWidgets(1));
   });
 
   testWidgets('اختيار المظهر يغير المسارات ويحفظ الاختيار وحجم الخط', (
     tester,
   ) async {
-    await tester.pumpWidget(HaqApp(showStartup: false, appearance: appearance));
+    await tester.pumpWidget(
+      HaqApp(
+        showStartup: false,
+        appearance: appearance,
+        quranController: controller,
+      ),
+    );
     await tester.tap(find.byIcon(Icons.more_horiz).last);
     await tester.pumpAndSettle();
     await tester.tap(find.text('الإعدادات'));
@@ -153,7 +195,11 @@ void main() {
       await appearance.setMode(mode);
       await appearance.setFontScale(1.2);
       await tester.pumpWidget(
-        HaqApp(showStartup: false, appearance: appearance),
+        HaqApp(
+          showStartup: false,
+          appearance: appearance,
+          quranController: controller,
+        ),
       );
       for (final kind in SettingKind.values) {
         final navigator = tester.state<NavigatorState>(find.byType(Navigator));

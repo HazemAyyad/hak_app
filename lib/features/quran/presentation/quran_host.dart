@@ -7,15 +7,23 @@ import 'quran_reader.dart';
 import 'quran_search.dart';
 import 'quran_saved.dart';
 import 'quran_widgets.dart';
+import 'quran_audio_pages.dart';
+import 'quran_audio_widgets.dart';
+import 'quran_download_pages.dart';
+import 'quran_tafsir.dart';
+import 'quran_account.dart';
+import 'quran_home_sections.dart';
 
 class QuranHost extends StatefulWidget {
   const QuranHost({
     super.key,
     required this.controller,
     required this.onFullscreenChanged,
+    this.active = true,
   });
   final QuranController controller;
   final ValueChanged<bool> onFullscreenChanged;
+  final bool active;
   @override
   State<QuranHost> createState() => QuranHostState();
 }
@@ -23,6 +31,7 @@ class QuranHost extends StatefulWidget {
 class QuranHostState extends State<QuranHost> {
   final navigator = GlobalKey<NavigatorState>();
   bool _pendingResume = false;
+  Widget? _pendingPage;
   QuranController get controller => widget.controller;
   Future<void> openReader(QuranVerse verse, {String? highlight}) async {
     await navigator.currentState?.push(
@@ -82,10 +91,30 @@ class QuranHostState extends State<QuranHost> {
   );
 
   void openSettings() => _push(QuranReadingSettings(controller: controller));
-
-  void _push(Widget page) => navigator.currentState?.push(
-    MaterialPageRoute<void>(builder: (_) => _frame(page)),
+  void openAccount() => _push(QuranAccountPage(controller: controller));
+  void openAudio() => _push(QuranAudioPage(controller: controller));
+  void openDownloads() => _push(QuranDownloadPage(controller: controller));
+  void openExplanation({bool meanings = false, QuranVerse? verse}) => _push(
+    QuranExplanation(
+      controller: controller,
+      verse:
+          verse ?? controller.lastVerse ?? controller.repository!.verses.first,
+      meanings: meanings,
+      onPlay: controller.audio.playVerse,
+      onWordPlay: (word) =>
+          controller.audio.playWord(word.key, word.position, word.audio!),
+    ),
   );
+
+  void _push(Widget page) {
+    if (navigator.currentState == null) {
+      _pendingPage = page;
+      return;
+    }
+    navigator.currentState!.push(
+      MaterialPageRoute<void>(builder: (_) => _frame(page)),
+    );
+  }
 
   Widget _frame(Widget child) => Builder(
     builder: (context) => Theme(
@@ -97,8 +126,37 @@ class QuranHostState extends State<QuranHost> {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          backgroundColor: AppPalette.of(context).background,
-          body: SafeArea(bottom: false, child: child),
+          backgroundColor: AppPalette.of(context).dark
+              ? AppPalette.of(context).background
+              : Colors.white,
+          body: SafeArea(
+            bottom: false,
+            child: Column(
+              children: [
+                Expanded(child: child),
+                if (child is! QuranReader &&
+                    child is! QuranAudioPage &&
+                    child is! QuranExplanation)
+                  ListenableBuilder(
+                    listenable: controller.audio,
+                    builder: (context, _) =>
+                        controller.audio.current == null &&
+                            !controller.audio.loading &&
+                            controller.audio.error == null
+                        ? const SizedBox()
+                        : Padding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 82),
+                            child: QuranPlayerPanel(
+                              media: controller.audio,
+                              repository: controller.repository!,
+                              compact: true,
+                              onOpen: openAudio,
+                            ),
+                          ),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     ),
@@ -129,7 +187,15 @@ class QuranHostState extends State<QuranHost> {
           if (mounted) openLastReading();
         });
       }
+      if (_pendingPage != null) {
+        final pending = _pendingPage!;
+        _pendingPage = null;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _push(pending);
+        });
+      }
       return NavigatorPopHandler<void>(
+        enabled: widget.active,
         onPopWithResult: (_) => navigator.currentState?.maybePop(),
         child: Navigator(
           key: navigator,
@@ -142,6 +208,10 @@ class QuranHostState extends State<QuranHost> {
                 onResume: openLastReading,
                 onSaved: openSaved,
                 onSearch: openSearch,
+                onAudio: openAudio,
+                onDownloads: openDownloads,
+                onExplain: () => openExplanation(),
+                onVerseExplain: (verse) => openExplanation(verse: verse),
                 onSettings: () =>
                     _push(QuranReadingSettings(controller: controller)),
               ),
@@ -162,12 +232,17 @@ class QuranHomePage extends StatelessWidget {
     required this.onSaved,
     required this.onSearch,
     required this.onSettings,
+    required this.onAudio,
+    required this.onDownloads,
+    required this.onExplain,
+    required this.onVerseExplain,
   });
   final QuranController controller;
   final void Function({bool juz}) onIndex;
   final void Function({bool bookmarks}) onSaved;
   final void Function({String query}) onSearch;
-  final VoidCallback onResume, onSettings;
+  final VoidCallback onResume, onSettings, onAudio, onDownloads, onExplain;
+  final ValueChanged<QuranVerse> onVerseExplain;
 
   @override
   Widget build(BuildContext context) => ListenableBuilder(
@@ -309,6 +384,8 @@ class QuranHomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 14),
+                QuranAudioBanner(onOpen: onAudio),
+                const SizedBox(height: 14),
                 QSectionTitle(
                   'استكشف القرآن',
                   action: 'عرض الكل',
@@ -345,30 +422,42 @@ class QuranHomePage extends StatelessWidget {
                 const SizedBox(height: 18),
                 const QSectionTitle('أدوات إضافية'),
                 const SizedBox(height: 10),
-                Row(
-                  children: [
-                    _homeShortcut(
-                      context,
-                      'آخر قراءة',
-                      Icons.history,
-                      onResume,
-                    ),
-                    const SizedBox(width: 8),
-                    _homeShortcut(
-                      context,
-                      'العلامات',
-                      Icons.bookmark_outline,
-                      () => onSaved(bookmarks: true),
-                    ),
-                    const SizedBox(width: 8),
-                    _homeShortcut(
-                      context,
-                      'البحث',
-                      Icons.search,
-                      () => onSearch(),
-                    ),
-                  ],
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _homeShortcut(
+                        context,
+                        'التفسير',
+                        Icons.menu_book_outlined,
+                        onExplain,
+                      ),
+                      const SizedBox(width: 8),
+                      _homeShortcut(
+                        context,
+                        'المحتوى المحمل',
+                        Icons.cloud_download_outlined,
+                        onDownloads,
+                      ),
+                      const SizedBox(width: 8),
+                      _homeShortcut(
+                        context,
+                        'العلامات',
+                        Icons.bookmark_outline,
+                        () => onSaved(bookmarks: true),
+                      ),
+                      const SizedBox(width: 8),
+                      _homeShortcut(
+                        context,
+                        'آخر قراءة',
+                        Icons.history,
+                        onResume,
+                      ),
+                    ],
+                  ),
                 ),
+                const SizedBox(height: 16),
+                QuranDailyVerse(repository: repo, onExplain: onVerseExplain),
                 const SizedBox(height: 16),
                 QCard(
                   onTap: onSettings,
@@ -412,7 +501,7 @@ class QuranHomePage extends StatelessWidget {
                         title: const Text('مصدر القرآن الكريم'),
                         content: SingleChildScrollView(
                           child: SelectableText(
-                            'Tanzil Project\n${repo.sourceUrl}\n\n${repo.license}',
+                            'Tanzil Project\n${repo.sourceUrl}\n\n${repo.license}\n\nصفحات التجويد: خط QCF V4 من مجمع الملك فهد عبر Quran Foundation.\nhttps://api-docs.quran.com/docs/tutorials/fonts/font-rendering/',
                           ),
                         ),
                         actions: [
@@ -424,7 +513,7 @@ class QuranHomePage extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'النص والفهارس: Tanzil Project • tanzil.net',
+                      'النص: Tanzil • المصحف والتجويد: Quran Foundation',
                       style: qText(
                         context,
                         size: 10,
@@ -764,14 +853,14 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                   child: QCard(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
-                      vertical: 4,
+                      vertical: 2,
                     ),
                     onTap: () => widget.onRead(repo.byKey['${chapter.id}:1']!),
                     child: Directionality(
                       textDirection: TextDirection.ltr,
                       child: Row(
                         children: [
-                          QMedallion(number: chapter.id, size: 40),
+                          QMedallion(number: chapter.id, size: 38),
                           const SizedBox(width: 9),
                           Expanded(
                             child: Column(
@@ -799,11 +888,16 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                           const SizedBox(width: 12),
                           QCircleButton(
                             icon: Icons.play_arrow,
+                            size: 30,
                             label: 'بدء قراءة سورة ${chapter.name}',
                             onTap: () =>
                                 widget.onRead(repo.byKey['${chapter.id}:1']!),
                           ),
                           IconButton(
+                            visualDensity: VisualDensity.compact,
+                            style: IconButton.styleFrom(
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
                             tooltip: saved
                                 ? 'إزالة السورة المحفوظة'
                                 : 'حفظ السورة',

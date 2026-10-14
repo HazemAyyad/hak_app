@@ -80,8 +80,8 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, action='append', required=True)
     args = parser.parse_args()
     dataset = build(args.source_dir)
-    payload = json.dumps(dataset, ensure_ascii=False, separators=(',', ':')) + '\n'
+    payload = (json.dumps(dataset, ensure_ascii=False, separators=(',', ':')) + '\n').encode('utf-8')
     for output in args.output:
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(payload, encoding='utf-8')
+        output.write_bytes(payload)
     print(f"Verified {len(dataset['surahs'])} surahs, {len(dataset['verses'])} verses, 30 juz, 604 pages")
