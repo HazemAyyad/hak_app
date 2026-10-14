@@ -73,23 +73,27 @@ class QuranPlayerPanel extends StatelessWidget {
             Expanded(
               child: InkWell(
                 onTap: onReciter,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        _reciter,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: qText(
-                          context,
-                          size: 10.5,
-                          weight: FontWeight.w800,
+                child: Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Text(
+                          _reciter,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: qText(
+                            context,
+                            size: 10.5,
+                            weight: FontWeight.w800,
+                          ),
                         ),
                       ),
-                    ),
-                    if (onReciter != null)
-                      const Icon(Icons.expand_more, size: 16, color: qNavy),
-                  ],
+                      if (onReciter != null)
+                        const Icon(Icons.expand_more, size: 16, color: qNavy),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -218,8 +222,9 @@ class QuranPlayerPanel extends StatelessWidget {
                     InkWell(
                       onTap: onReciter,
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Expanded(
+                          Flexible(
                             child: Text(
                               _reciter,
                               maxLines: 1,
@@ -284,51 +289,56 @@ class QuranPlayerPanel extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              child: _smallButton(
-                Icons.repeat,
-                'التكرار',
-                () => chooseAudioRepeat(context, media),
-                active: media.repeat != AudioServiceRepeatMode.none,
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: _smallButton(
+                  Icons.repeat,
+                  'التكرار',
+                  () => chooseAudioRepeat(context, media),
+                  active: media.repeat != AudioServiceRepeatMode.none,
+                ),
               ),
-            ),
-            Expanded(
-              child: _smallButton(
-                Icons.replay_10,
-                'إرجاع 10 ثوانٍ',
-                () => media.seek(media.position - const Duration(seconds: 10)),
+              Expanded(
+                child: _smallButton(
+                  Icons.replay_10,
+                  'إرجاع 10 ثوانٍ',
+                  () =>
+                      media.seek(media.position - const Duration(seconds: 10)),
+                ),
               ),
-            ),
-            Expanded(
-              child: _smallButton(
-                Icons.skip_previous,
-                'التلاوة السابقة',
-                media.handler?.player.hasPrevious == true
-                    ? () => media.skip(-1)
-                    : null,
+              Expanded(
+                child: _smallButton(
+                  Icons.skip_previous,
+                  'التلاوة السابقة',
+                  media.handler?.player.hasPrevious == true
+                      ? () => media.skip(-1)
+                      : null,
+                ),
               ),
-            ),
-            _playButton(size: 52),
-            Expanded(
-              child: _smallButton(
-                Icons.skip_next,
-                'التلاوة التالية',
-                media.handler?.player.hasNext == true
-                    ? () => media.skip(1)
-                    : null,
+              _playButton(size: 52),
+              Expanded(
+                child: _smallButton(
+                  Icons.skip_next,
+                  'التلاوة التالية',
+                  media.handler?.player.hasNext == true
+                      ? () => media.skip(1)
+                      : null,
+                ),
               ),
-            ),
-            Expanded(
-              child: _smallButton(
-                Icons.forward_10,
-                'تقديم 10 ثوانٍ',
-                () => media.seek(media.position + const Duration(seconds: 10)),
+              Expanded(
+                child: _smallButton(
+                  Icons.forward_10,
+                  'تقديم 10 ثوانٍ',
+                  () =>
+                      media.seek(media.position + const Duration(seconds: 10)),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -369,16 +379,19 @@ class QuranPlayerPanel extends StatelessWidget {
             ),
             overlayShape: const RoundSliderOverlayShape(overlayRadius: 8),
           ),
-          child: Slider(
-            value: max > 0
-                ? media.position.inMilliseconds.toDouble().clamp(0, max)
-                : 0,
-            max: max > 0 ? max : 1,
-            activeColor: qTeal,
-            inactiveColor: AppPalette.of(context).border,
-            onChanged: max > 0
-                ? (value) => media.seek(Duration(milliseconds: value.round()))
-                : null,
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: Slider(
+              value: max > 0
+                  ? media.position.inMilliseconds.toDouble().clamp(0, max)
+                  : 0,
+              max: max > 0 ? max : 1,
+              activeColor: qTeal,
+              inactiveColor: AppPalette.of(context).border,
+              onChanged: max > 0
+                  ? (value) => media.seek(Duration(milliseconds: value.round()))
+                  : null,
+            ),
           ),
         ),
         if (media.buffering)
@@ -489,7 +502,7 @@ class QuranPlayerPanel extends StatelessWidget {
             ListTile(
               title: Text(media.playingTracks[i].title),
               subtitle: Text(media.playingTracks[i].reciter),
-              trailing: media.current?.id == media.playingTracks[i].id
+              trailing: media.handler?.playbackState.value.queueIndex == i
                   ? const Icon(Icons.check_circle, color: qTeal)
                   : null,
               onTap: media.handler == null

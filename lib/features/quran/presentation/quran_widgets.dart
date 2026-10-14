@@ -74,12 +74,12 @@ class QuranHeader extends StatelessWidget {
           right: 18,
           top: 12,
           child: Directionality(
-            textDirection: TextDirection.ltr,
+            textDirection: TextDirection.rtl,
             child: Row(
               children: [
                 if (onBack != null)
                   QCircleButton(
-                    icon: Icons.chevron_left,
+                    icon: Icons.arrow_back_ios_new,
                     label: 'رجوع',
                     onTap: onBack,
                   ),
@@ -429,6 +429,73 @@ class QSectionTitle extends StatelessWidget {
           child: Text(action!, style: qText(context, size: 12, color: qTeal)),
         ),
     ],
+  );
+}
+
+/// Previous is on the right and next on the left in the Arabic reading flow.
+/// Icon direction is explicit: Material chevrons otherwise mirror again in RTL.
+class QuranVerseNavigation extends StatelessWidget {
+  const QuranVerseNavigation({super.key, this.onPrevious, this.onNext});
+  final VoidCallback? onPrevious, onNext;
+
+  Widget _button(
+    BuildContext context, {
+    required String label,
+    required IconData icon,
+    VoidCallback? onTap,
+  }) => Expanded(
+    child: Semantics(
+      button: true,
+      enabled: onTap != null,
+      child: Opacity(
+        opacity: onTap == null ? .45 : 1,
+        child: QCard(
+          onTap: onTap,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                textDirection: TextDirection.ltr,
+                color: qTeal,
+                size: 22,
+              ),
+              const SizedBox(width: 5),
+              Flexible(
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: qText(context, size: 12),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.rtl,
+    child: Row(
+      children: [
+        _button(
+          context,
+          label: 'الآية السابقة',
+          icon: Icons.chevron_right,
+          onTap: onPrevious,
+        ),
+        const SizedBox(width: 10),
+        _button(
+          context,
+          label: 'الآية التالية',
+          icon: Icons.chevron_left,
+          onTap: onNext,
+        ),
+      ],
+    ),
   );
 }
 

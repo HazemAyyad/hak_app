@@ -550,40 +550,13 @@ class _QuranExplanationState extends State<QuranExplanation> {
                 },
               ),
               const SizedBox(height: 14),
-              Row(
-                children: [
-                  Expanded(
-                    child: QCard(
-                      onTap: () => _step(1),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.chevron_right, color: qTeal),
-                          Text(
-                            'الآية التالية',
-                            style: qText(context, size: 12),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: QCard(
-                      onTap: () => _step(-1),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'الآية السابقة',
-                            style: qText(context, size: 12),
-                          ),
-                          const Icon(Icons.chevron_left, color: qTeal),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+              QuranVerseNavigation(
+                onPrevious: verse.key == repo.verses.first.key
+                    ? null
+                    : () => _step(-1),
+                onNext: verse.key == repo.verses.last.key
+                    ? null
+                    : () => _step(1),
               ),
             ],
           ),

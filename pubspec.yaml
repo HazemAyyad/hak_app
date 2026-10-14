@@ -43,6 +43,7 @@ dependencies:
   path_provider: ^2.1.5
   crypto: ^3.0.7
   html: ^0.15.6
+  flutter_svg: ^2.2.3
   just_audio: ^0.10.6
   audio_service: ^0.18.18
   audio_session: ^0.2.2

@@ -147,6 +147,7 @@ class QuranDownloads extends ChangeNotifier {
 
   Future<void> enqueue(QuranAudioTrack track) async {
     await initialize();
+    await _waitForCancelledActive({track.id});
     final existing = entries[track.id];
     if (existing?.state == QuranDownloadState.complete &&
         existing!.track.version == track.version) {
@@ -166,7 +167,9 @@ class QuranDownloads extends ChangeNotifier {
 
   Future<void> enqueueAll(Iterable<QuranAudioTrack> tracks) async {
     await initialize();
-    for (final track in tracks) {
+    final requested = tracks.toList();
+    await _waitForCancelledActive(requested.map((track) => track.id).toSet());
+    for (final track in requested) {
       final existing = entries[track.id];
       if (existing?.state == QuranDownloadState.downloading ||
           existing?.state == QuranDownloadState.complete &&
@@ -183,6 +186,14 @@ class QuranDownloads extends ChangeNotifier {
     _save();
     _emit();
     _start();
+  }
+
+  Future<void> _waitForCancelledActive(Set<String> ids) async {
+    if (ids.contains(_active) && _cancel?.isCancelled == true) {
+      // Do not requeue the same mutable entry until its old transfer has closed.
+      // Otherwise cancellation can mark the resumed request paused again.
+      await _activeDone?.future;
+    }
   }
 
   void _start() {
@@ -316,13 +327,32 @@ class QuranDownloads extends ChangeNotifier {
     }
   }
 
-  Future<void> pause(String id) async {
-    final entry = entries[id];
-    if (entry == null || entry.state == QuranDownloadState.complete) return;
-    entry.state = QuranDownloadState.paused;
-    if (_active == id) _cancel?.cancel();
-    _save();
+  Future<void> pause(String id) => pauseAll([id]);
+
+  /// Pauses the selected tasks atomically before cancelling the active stream.
+  /// Omitting [ids] pauses every pending download, while completed files remain.
+  Future<void> pauseAll([Iterable<String>? ids]) async {
+    await initialize();
+    final selected = ids?.toSet();
+    Completer<void>? cancelled;
+    for (final entry in entries.values) {
+      if (selected != null && !selected.contains(entry.track.id)) continue;
+      if (entry.state != QuranDownloadState.downloading &&
+          entry.state != QuranDownloadState.queued) {
+        continue;
+      }
+      entry.state = QuranDownloadState.paused;
+      entry.error = null;
+      if (_active == entry.track.id) {
+        cancelled = _activeDone;
+        _cancel?.cancel('Download paused');
+      }
+    }
     _emit();
+    // Wait until the partial file is closed so an immediate resume uses its
+    // final on-disk offset rather than racing the cancelled transfer.
+    await cancelled?.future;
+    await _persist();
   }
 
   Future<void> remove(String id) async {

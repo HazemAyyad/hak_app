@@ -2,3 +2,7 @@
 tool/quran_sources/*.xml -text -whitespace
 assets/fonts/*-OFL.txt -text -whitespace
 assets/quran/quran.json -text
+test/fixtures/quran/offline*.svg -text
+test/fixtures/quran/offline*.json -text
+assets/quran/offline-page-LICENSE.txt -text
+assets/quran/offline-page-NOTICE.md -text

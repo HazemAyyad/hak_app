@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui' show Color;
 
 import 'package:audio_service/audio_service.dart';
 import 'package:audio_session/audio_session.dart';
@@ -12,23 +13,15 @@ import 'quran_downloads.dart';
 import 'quran_repository.dart';
 
 class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
-  QuranAudioHandler() {
-    player.playbackEventStream.listen((_) => _broadcast());
-    player.currentIndexStream.listen((index) {
-      if (index != null && index < queue.value.length) {
-        mediaItem.add(queue.value[index]);
-      }
-      _broadcast();
-    });
-    player.durationStream.listen((duration) {
-      final current = mediaItem.value;
-      if (current != null && duration != null) {
-        mediaItem.add(current.copyWith(duration: duration));
-      }
-    });
-    player.errorStream.listen((error) {
+  QuranAudioHandler({AudioPlayer? player})
+    : player = player ?? AudioPlayer(useProxyForRequestHeaders: false) {
+    this.player.playbackEventStream.listen(_broadcast);
+    this.player.playerStateStream.listen((_) => _broadcast());
+    this.player.sequenceStateStream.listen((_) => _broadcast());
+    this.player.errorStream.listen((error) {
       playbackState.add(
         playbackState.value.copyWith(
+          processingState: AudioProcessingState.error,
           errorCode: error.code,
           errorMessage:
               'تعذّر تشغيل التلاوة؛ تحقق من الاتصال أو أعد تنزيل الملف',
@@ -36,68 +29,116 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
       );
     });
   }
-  final player = AudioPlayer(useProxyForRequestHeaders: false);
+  final AudioPlayer player;
   AudioServiceRepeatMode _repeatMode = AudioServiceRepeatMode.none;
-  void _broadcast() => playbackState.add(
-    PlaybackState(
-      controls: [
-        MediaControl.skipToPrevious,
-        player.playing ? MediaControl.pause : MediaControl.play,
-        MediaControl.skipToNext,
-        MediaControl.stop,
-      ],
-      systemActions: const {
-        MediaAction.seek,
-        MediaAction.seekForward,
-        MediaAction.seekBackward,
-      },
-      androidCompactActionIndices: const [0, 1, 2],
-      processingState: switch (player.processingState) {
-        ProcessingState.idle => AudioProcessingState.idle,
-        ProcessingState.loading => AudioProcessingState.loading,
-        ProcessingState.buffering => AudioProcessingState.buffering,
-        ProcessingState.ready => AudioProcessingState.ready,
-        ProcessingState.completed => AudioProcessingState.completed,
-      },
-      playing: player.playing,
-      updatePosition: player.position,
-      bufferedPosition: player.bufferedPosition,
-      speed: player.speed,
-      queueIndex: player.currentIndex,
-      repeatMode: _repeatMode,
-    ),
-  );
+  void _broadcast([PlaybackEvent? event]) {
+    final currentEvent = event ?? player.playbackEvent;
+    final index = currentEvent.currentIndex;
+    if (index != null && index >= 0 && index < queue.value.length) {
+      final queued = queue.value[index];
+      final source = index < player.sequence.length
+          ? player.sequence[index].tag
+          : null;
+      // The duration and index must come from the same playback event. Keeping
+      // it in the queue also preserves it when returning to a loaded recording.
+      if (source is MediaItem && source.id == queued.id) {
+        final duration = currentEvent.duration;
+        final current = duration != null && duration > Duration.zero
+            ? queued.copyWith(duration: duration)
+            : queued;
+        if (current.duration != queued.duration) {
+          final items = List<MediaItem>.of(queue.value)..[index] = current;
+          queue.add(items);
+        }
+        if (mediaItem.value?.id != current.id ||
+            mediaItem.value?.duration != current.duration) {
+          mediaItem.add(current);
+        }
+      }
+    }
+    final hasTrack = index != null && index >= 0 && index < queue.value.length;
+    final isPlaying =
+        player.playing && player.processingState != ProcessingState.completed;
+    final controls = [
+      if (hasTrack && player.hasPrevious) MediaControl.skipToPrevious,
+      if (hasTrack) isPlaying ? MediaControl.pause : MediaControl.play,
+      if (hasTrack && player.hasNext) MediaControl.skipToNext,
+    ];
+    playbackState.add(
+      PlaybackState(
+        controls: controls,
+        systemActions: {
+          if (hasTrack) ...{
+            MediaAction.seek,
+            MediaAction.seekForward,
+            MediaAction.seekBackward,
+          },
+        },
+        androidCompactActionIndices: List.generate(controls.length, (i) => i),
+        processingState: switch (player.processingState) {
+          ProcessingState.idle => AudioProcessingState.idle,
+          ProcessingState.loading => AudioProcessingState.loading,
+          ProcessingState.buffering => AudioProcessingState.buffering,
+          ProcessingState.ready => AudioProcessingState.ready,
+          ProcessingState.completed => AudioProcessingState.completed,
+        },
+        playing: isPlaying,
+        updatePosition: player.position,
+        bufferedPosition: currentEvent.bufferedPosition,
+        speed: player.speed,
+        queueIndex: player.currentIndex,
+        repeatMode: _repeatMode,
+      ),
+    );
+  }
+
   Future<void> load(
     List<QuranAudioTrack> tracks,
     List<Uri> uris, {
     int start = 0,
   }) async {
+    if (tracks.isEmpty || tracks.length != uris.length) {
+      throw ArgumentError('A recording URI is required for every track');
+    }
+    RangeError.checkValidIndex(start, tracks, 'start');
     await player.stop();
     queue.add(
-      tracks
-          .map(
-            (track) => MediaItem(
-              id: track.id,
-              title: track.title,
-              artist: track.reciter,
-              album: 'القرآن الكريم • ${track.quality}',
-              extras: track.toJson(),
-            ),
-          )
-          .toList(),
+      tracks.asMap().entries.map((entry) {
+        final track = entry.value;
+        final portrait = reciterPortrait(track.reciter);
+        return MediaItem(
+          id: '${track.id}#queue-${entry.key}',
+          title: track.title,
+          artist: track.reciter,
+          displayTitle: track.title,
+          displaySubtitle: track.reciter,
+          artUri: portrait == null ? null : Uri.parse(portrait),
+          isLive: false,
+          extras: {
+            for (final value in track.toJson().entries)
+              if (value.value != null) value.key: value.value,
+            'trackId': track.id,
+          },
+        );
+      }).toList(),
     );
     mediaItem.add(queue.value[start]);
     await player.setLoopMode(LoopMode.off);
     _repeatMode = AudioServiceRepeatMode.none;
     await player.setAudioSources(
-      uris.map(AudioSource.uri).toList(),
+      [
+        for (var index = 0; index < uris.length; index++)
+          AudioSource.uri(uris[index], tag: queue.value[index]),
+      ],
       initialIndex: start,
       initialPosition: Duration.zero,
     );
+    _broadcast();
     unawaited(
       play().catchError((Object error) {
         playbackState.add(
           playbackState.value.copyWith(
+            processingState: AudioProcessingState.error,
             errorCode: 1,
             errorMessage: 'تعذّر تشغيل التلاوة',
           ),
@@ -109,7 +150,7 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
   @override
   Future<void> play() async {
     if (player.processingState == ProcessingState.completed) {
-      await player.seek(Duration.zero, index: 0);
+      await player.seek(Duration.zero, index: player.currentIndex);
     }
     await player.play();
   }
@@ -117,14 +158,38 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
   @override
   Future<void> pause() => player.pause();
   @override
-  Future<void> seek(Duration position) => player.seek(position);
+  Future<void> seek(Duration position) => player.seek(
+    Duration(
+      milliseconds: position.inMilliseconds.clamp(
+        0,
+        player.duration?.inMilliseconds ??
+            mediaItem.value?.duration?.inMilliseconds ??
+            (position.isNegative ? 0 : position.inMilliseconds),
+      ),
+    ),
+  );
   @override
-  Future<void> skipToNext() => player.seekToNext();
+  Future<void> fastForward() =>
+      seek(player.position + const Duration(seconds: 10));
   @override
-  Future<void> skipToPrevious() => player.seekToPrevious();
+  Future<void> rewind() => seek(player.position - const Duration(seconds: 10));
   @override
-  Future<void> skipToQueueItem(int index) =>
-      player.seek(Duration.zero, index: index);
+  Future<void> skipToNext() async {
+    if (player.hasNext) await player.seekToNext();
+  }
+
+  @override
+  Future<void> skipToPrevious() async {
+    if (player.hasPrevious) await player.seekToPrevious();
+  }
+
+  @override
+  Future<void> skipToQueueItem(int index) async {
+    if (index >= 0 && index < queue.value.length) {
+      await player.seek(Duration.zero, index: index);
+    }
+  }
+
   @override
   Future<void> setSpeed(double speed) => player.setSpeed(speed);
   @override
@@ -141,6 +206,7 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> stop() async {
+    await seekForward(false);
     await player.stop();
     await super.stop();
   }
@@ -173,15 +239,17 @@ class QuranMedia extends ChangeNotifier {
   double _preferredSpeed = 1;
   List<QuranAudioTrack> playingTracks = [];
   QuranAudioTrack? get current {
-    final id = handler?.mediaItem.value?.id;
+    final item = handler?.mediaItem.value;
+    final id = item?.extras?['trackId'] ?? item?.id;
     final found = playingTracks.where((track) => track.id == id);
     return found.isEmpty ? null : found.first;
   }
 
-  bool get playing => handler?.player.playing ?? false;
+  bool get playing => handler?.playbackState.value.playing ?? false;
   double get speed => handler?.player.speed ?? _preferredSpeed;
   Duration get position => handler?.player.position ?? Duration.zero;
-  Duration? get duration => handler?.player.duration;
+  Duration? get duration =>
+      handler?.player.duration ?? handler?.mediaItem.value?.duration;
   bool get buffering =>
       loading ||
       handler?.player.processingState == ProcessingState.loading ||
@@ -262,6 +330,8 @@ class QuranMedia extends ChangeNotifier {
       config: const AudioServiceConfig(
         androidNotificationChannelId: 'com.haqfoundation.haq_app.quran',
         androidNotificationChannelName: 'تلاوة القرآن الكريم',
+        androidNotificationIcon: 'drawable/ic_quran_notification',
+        notificationColor: Color(0xFF006570),
         androidNotificationOngoing: false,
         androidStopForegroundOnPause: false,
       ),
@@ -403,14 +473,7 @@ class QuranMedia extends ChangeNotifier {
 
   Future<void> seek(Duration value) async {
     if (handler != null) {
-      await handler!.seek(
-        Duration(
-          milliseconds: value.inMilliseconds.clamp(
-            0,
-            duration?.inMilliseconds ?? value.inMilliseconds,
-          ),
-        ),
-      );
+      await handler!.seek(value);
     }
   }
 

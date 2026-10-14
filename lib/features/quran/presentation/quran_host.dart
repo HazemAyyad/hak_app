@@ -501,7 +501,7 @@ class QuranHomePage extends StatelessWidget {
                         title: const Text('مصدر القرآن الكريم'),
                         content: SingleChildScrollView(
                           child: SelectableText(
-                            'Tanzil Project\n${repo.sourceUrl}\n\n${repo.license}\n\nصفحات التجويد: خط QCF V4 من مجمع الملك فهد عبر Quran Foundation.\nhttps://api-docs.quran.com/docs/tutorials/fonts/font-rendering/',
+                            'Tanzil Project\n${repo.sourceUrl}\n\n${repo.license}\n\nصفحات التجويد: خط QCF V4 من مجمع الملك فهد عبر Quran Foundation.\nhttps://api-docs.quran.com/docs/tutorials/fonts/font-rendering/\n\nصور المصحف المحفوظة: مصحف المدينة برواية حفص، مجمع الملك فهد عبر Quran.ws quran-svg v1.1.1.\nحقوق الرسوم للمجمع؛ بيانات مناطق الآيات © 2026 Quran.ws، ترخيص CC BY 4.0.\nhttps://github.com/quran-ws/quran-svg/blob/v1.1.1/NOTICE.md',
                           ),
                         ),
                         actions: [
@@ -513,7 +513,7 @@ class QuranHomePage extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'النص: Tanzil • المصحف والتجويد: Quran Foundation',
+                      'مصادر القرآن وحقوقه',
                       style: qText(
                         context,
                         size: 10,

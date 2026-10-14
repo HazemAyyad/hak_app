@@ -9,6 +9,7 @@ import 'quran_content.dart';
 import 'quran_audio.dart';
 import 'quran_sync.dart';
 import 'quran_downloads.dart';
+import 'quran_page_downloads.dart';
 
 enum QuranReadingMode { continuous, ayah, pages }
 
@@ -19,7 +20,12 @@ class QuranController extends ChangeNotifier {
     QuranContent? content,
     this.accountFactory,
     this.downloads,
-  }) : content = content ?? QuranContent();
+    QuranPageDownloads? pageDownloads,
+  }) : content = content ?? QuranContent(),
+       _pageDownloads = pageDownloads;
+  QuranPageDownloads? _pageDownloads;
+  QuranPageDownloads get pageDownloads =>
+      _pageDownloads ??= QuranPageDownloads();
   final QuranContent content;
   final QuranAccount Function(QuranController)? accountFactory;
   late final QuranAccount account =
@@ -230,6 +236,7 @@ class QuranController extends ChangeNotifier {
     persist();
     _disposed = true;
     if (_mediaUsed) media.dispose();
+    _pageDownloads?.dispose();
     if (_accountReady) account.dispose();
     super.dispose();
   }

@@ -12,6 +12,7 @@ import 'package:haq_app/features/quran/data/quran_controller.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/quran/data/quran_content.dart';
 import 'package:haq_app/features/quran/data/quran_downloads.dart';
+import 'package:haq_app/features/quran/data/quran_page_downloads.dart';
 import 'package:haq_app/features/quran/data/quran_audio_models.dart';
 import 'package:haq_app/features/quran/presentation/quran_host.dart';
 import 'package:haq_app/features/quran/presentation/quran_download_pages.dart';
@@ -74,6 +75,14 @@ class ScreenDownloads extends QuranDownloads {
   }
 }
 
+class ScreenPages extends QuranPageDownloads {
+  ScreenPages(Directory folder) : super(directory: folder);
+  @override
+  Future<void> initialize() async {}
+  @override
+  Future<QuranOfflinePageData?> offlinePage(int page) async => null;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late QuranController controller;
@@ -119,6 +128,7 @@ void main() {
       preferences: prefs,
       content: PreviewContent(),
       downloads: ScreenDownloads(directory),
+      pageDownloads: ScreenPages(directory),
     );
     await controller.load();
     controller.audio.catalog = QuranAudioCatalog.fromJson(
@@ -230,6 +240,9 @@ void main() {
       await showApp(tester);
       final host = tester.state<QuranHostState>(find.byType(QuranHost));
       host.openReader(controller.repository!.byKey['2:2']!);
+      await tester.pumpAndSettle();
+      expect(find.text('تنزيل صفحات المصحف'), findsOneWidget);
+      await tester.tap(find.text('لاحقًا'));
       await tester.pumpAndSettle();
       expect(find.text('الصفحة 2 من 604'), findsOneWidget);
       expect(tester.takeException(), isNull);

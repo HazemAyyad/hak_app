@@ -12,6 +12,7 @@ import 'quran_mushaf.dart';
 import 'quran_audio_widgets.dart';
 import 'quran_audio_pages.dart';
 import 'quran_tafsir.dart';
+import 'quran_page_download_sheet.dart';
 
 class QuranReader extends StatefulWidget {
   const QuranReader({
@@ -38,6 +39,9 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   double initialAlignment = 0;
   late int fixedPage;
   late QuranReadingMode previousMode;
+  double _ayahDrag = 0;
+  bool _pageOfferPending = false;
+  final _offeredSurahs = <int>{};
   QuranController get controller => widget.controller;
   QuranRepository get repo => controller.repository!;
 
@@ -62,6 +66,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     controller.audio.addListener(_onAudioChanged);
     positions.itemPositions.addListener(_onVisibleItems);
     WidgetsBinding.instance.addObserver(this);
+    _schedulePageDownloadOffer();
   }
 
   void _onVisibleItems() {
@@ -112,6 +117,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     if (controller.mode == QuranReadingMode.continuous && items.isAttached) {
       items.jumpTo(index: verse.ayah);
     }
+    _schedulePageDownloadOffer();
   }
 
   void _step(int delta) {
@@ -136,6 +142,52 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
       initialAlignment = 0;
       items = ItemScrollController();
       previousMode = controller.mode;
+    });
+    _schedulePageDownloadOffer();
+  }
+
+  void _schedulePageDownloadOffer() {
+    if (controller.mode != QuranReadingMode.pages ||
+        _pageOfferPending ||
+        _offeredSurahs.contains(surahId)) {
+      return;
+    }
+    _pageOfferPending = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        if (!mounted ||
+            controller.mode != QuranReadingMode.pages ||
+            ModalRoute.of(context)?.isCurrent != true) {
+          return;
+        }
+        final id = surahId;
+        final downloads = controller.pageDownloads;
+        try {
+          await downloads.initialize();
+        } catch (_) {
+          if (mounted) {
+            qNotice(context, 'تعذّر فتح ملفات المصحف؛ تحقق من مساحة الجهاز');
+          }
+          return;
+        }
+        if (!mounted ||
+            controller.mode != QuranReadingMode.pages ||
+            id != surahId ||
+            ModalRoute.of(context)?.isCurrent != true) {
+          return;
+        }
+        _offeredSurahs.add(id);
+        final pages = downloads.pagesForSurah(repo, id);
+        if (pages.every(downloads.hasPage) || downloads.isActive) return;
+        await showQuranPageDownloadSheet(
+          context,
+          downloads: downloads,
+          repository: repo,
+          surahId: id,
+        );
+      } finally {
+        _pageOfferPending = false;
+      }
     });
   }
 
@@ -238,7 +290,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                   ),
                 if (fullscreen)
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.centerRight,
                     child: IconButton(
                       tooltip: 'إغلاق التكبير',
                       onPressed: () => _setFullscreen(false),
@@ -352,6 +404,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                           onOptions: _options,
                           paper: _paper(context),
                           ink: _ink(context),
+                          downloads: controller.pageDownloads,
                         )
                       : controller.mode == QuranReadingMode.continuous
                       ? _continuous(context, chapter)
@@ -362,35 +415,53 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                   child: Row(
                     children: [
                       Expanded(
-                        child: TextButton.icon(
-                          style: TextButton.styleFrom(
-                            foregroundColor: qNavy,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 5,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton.icon(
+                            style: TextButton.styleFrom(
+                              foregroundColor: qNavy,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 5,
+                              ),
                             ),
+                            label: Text(
+                              fullscreen
+                                  ? 'إغلاق التكبير'
+                                  : (controller.mode == QuranReadingMode.ayah
+                                        ? 'تكبير الآية'
+                                        : controller.mode ==
+                                              QuranReadingMode.pages
+                                        ? 'تكبير الصفحة'
+                                        : 'تكبير السورة'),
+                              style: qText(context, size: 11),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            icon: Icon(
+                              fullscreen
+                                  ? Icons.fullscreen_exit
+                                  : Icons.fullscreen,
+                              size: 24,
+                            ),
+                            onPressed: () => _setFullscreen(!fullscreen),
                           ),
-                          label: Text(
-                            fullscreen
-                                ? 'إغلاق التكبير'
-                                : (controller.mode == QuranReadingMode.ayah
-                                      ? 'تكبير الآية'
-                                      : controller.mode ==
-                                            QuranReadingMode.pages
-                                      ? 'تكبير الصفحة'
-                                      : 'تكبير السورة'),
-                            style: qText(context, size: 11),
-                          ),
-                          icon: Icon(
-                            fullscreen
-                                ? Icons.fullscreen_exit
-                                : Icons.fullscreen,
-                            size: 24,
-                          ),
-                          onPressed: () => _setFullscreen(!fullscreen),
                         ),
                       ),
                       const SizedBox(width: 8),
+                      if (controller.mode == QuranReadingMode.pages) ...[
+                        QCircleButton(
+                          icon: Icons.download_for_offline_outlined,
+                          label: 'تنزيل صفحات المصحف',
+                          onTap: () => showQuranPageDownloadSheet(
+                            context,
+                            downloads: controller.pageDownloads,
+                            repository: repo,
+                            surahId: surahId,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                      ],
                       QCircleButton(
                         icon: Icons.format_list_bulleted,
                         label: 'طريقة العرض',
@@ -558,111 +629,102 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     );
   }
 
-  Widget _single(BuildContext context, QuranVerse verse) =>
-      SingleChildScrollView(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          children: [
-            QCard(
-              color: _paper(context),
-              child: Column(
-                children: [
-                  QMedallion(
-                    number: verse.ayah,
-                    size: 42,
-                    textColor: _ink(context),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(
-                    verse.text,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'AmiriQuran',
-                      fontSize: controller.fontSize + 3,
-                      height: 1.85,
-                      color: _ink(context),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      QCircleButton(
-                        icon: Icons.share_outlined,
-                        label: 'مشاركة الآية',
-                        onTap: () => _share(verse),
-                      ),
-                      QCircleButton(
-                        icon: controller.favorites.containsKey(verse.key)
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        label: 'المفضلة',
-                        onTap: () => controller.toggleFavorite(verse.key),
-                        color: qTeal,
-                      ),
-                      QCircleButton(
-                        icon: Icons.more_horiz,
-                        label: 'خيارات الآية',
-                        onTap: () => _options(verse),
-                      ),
-                      QCircleButton(
-                        icon: Icons.play_arrow,
-                        label: 'تشغيل الآية',
-                        onTap: () => controller.audio.playVerse(verse),
-                      ),
-                      QCircleButton(
-                        icon: Icons.repeat,
-                        label: 'تكرار الآية',
-                        onTap: () =>
-                            chooseVerseRange(context, controller.audio, verse),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 15),
-            if (!fullscreen) ...[
-              QuranVerseInsight(
-                key: ValueKey('insight-${verse.key}'),
-                controller: controller,
-                verse: verse,
-                onOpen: (meanings) => _explanation(verse, meanings: meanings),
-              ),
-              const SizedBox(height: 15),
-            ],
-            Row(
+  Widget _single(BuildContext context, QuranVerse verse) => GestureDetector(
+    key: const ValueKey('quran-ayah-swipe'),
+    behavior: HitTestBehavior.opaque,
+    onHorizontalDragStart: (_) => _ayahDrag = 0,
+    onHorizontalDragUpdate: (details) => _ayahDrag += details.delta.dx,
+    onHorizontalDragEnd: (details) {
+      if (_ayahDrag.abs() >= 48 ||
+          (_ayahDrag.abs() >= 18 && details.primaryVelocity!.abs() >= 350)) {
+        _step(_ayahDrag > 0 ? 1 : -1);
+      }
+    },
+    child: SingleChildScrollView(
+      key: ValueKey('quran-ayah-scroll-${verse.key}'),
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        children: [
+          QCard(
+            key: ValueKey('quran-ayah-${verse.key}'),
+            onTap: () => _options(verse),
+            color: _paper(context),
+            child: Column(
               children: [
-                Expanded(
-                  child: QCard(
-                    onTap: () => _step(1),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.chevron_right, color: qTeal),
-                        Text('الآية التالية', style: qText(context, size: 12)),
-                      ],
-                    ),
+                QMedallion(
+                  number: verse.ayah,
+                  size: 42,
+                  textColor: _ink(context),
+                ),
+                const SizedBox(height: 15),
+                Text(
+                  verse.text,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'AmiriQuran',
+                    fontSize: controller.fontSize + 3,
+                    height: 1.85,
+                    color: _ink(context),
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: QCard(
-                    onTap: () => _step(-1),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('الآية السابقة', style: qText(context, size: 12)),
-                        const Icon(Icons.chevron_left, color: qTeal),
-                      ],
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    QCircleButton(
+                      icon: Icons.share_outlined,
+                      label: 'مشاركة الآية',
+                      onTap: () => _share(verse),
                     ),
-                  ),
+                    QCircleButton(
+                      icon: controller.favorites.containsKey(verse.key)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      label: 'المفضلة',
+                      onTap: () => controller.toggleFavorite(verse.key),
+                      color: qTeal,
+                    ),
+                    QCircleButton(
+                      icon: Icons.more_horiz,
+                      label: 'خيارات الآية',
+                      onTap: () => _options(verse),
+                    ),
+                    QCircleButton(
+                      icon: Icons.play_arrow,
+                      label: 'تشغيل الآية',
+                      onTap: () => controller.audio.playVerse(verse),
+                    ),
+                    QCircleButton(
+                      icon: Icons.repeat,
+                      label: 'تكرار الآية',
+                      onTap: () =>
+                          chooseVerseRange(context, controller.audio, verse),
+                    ),
+                  ],
                 ),
               ],
             ),
+          ),
+          const SizedBox(height: 15),
+          if (!fullscreen) ...[
+            QuranVerseInsight(
+              key: ValueKey('insight-${verse.key}'),
+              controller: controller,
+              verse: verse,
+              onOpen: (meanings) => _explanation(verse, meanings: meanings),
+            ),
+            const SizedBox(height: 15),
           ],
-        ),
-      );
+          QuranVerseNavigation(
+            onPrevious: verse.key == repo.verses.first.key
+                ? null
+                : () => _step(-1),
+            onNext: verse.key == repo.verses.last.key ? null : () => _step(1),
+          ),
+        ],
+      ),
+    ),
+  );
 
   String _shareText(QuranVerse verse) =>
       '${verse.text}\n[سورة ${repo.surah(verse.surah).name}: ${verse.ayah}]';
@@ -683,146 +745,159 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     }
   }
 
-  void _options(QuranVerse verse) => showModalBottomSheet<void>(
-    context: context,
-    backgroundColor: AppPalette.of(context).surface,
-    showDragHandle: true,
-    isScrollControlled: true,
-    builder: (sheetContext) => ListenableBuilder(
-      listenable: controller,
-      builder: (context, _) => SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'خيارات الآية',
-                  style: qText(context, size: 20, weight: FontWeight.w800),
-                ),
-                Text(
-                  'سورة ${repo.surah(verse.surah).name} • الآية ${verse.ayah}',
-                  style: qText(
-                    context,
-                    size: 12,
-                    color: AppPalette.of(context).muted,
+  void _options(QuranVerse verse) {
+    active.value = verse;
+    controller.remember(
+      verse,
+      page: controller.mode == QuranReadingMode.pages ? fixedPage : null,
+    );
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppPalette.of(context).surface,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (sheetContext) => ListenableBuilder(
+        listenable: controller,
+        builder: (context, _) => SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'خيارات الآية',
+                    style: qText(context, size: 20, weight: FontWeight.w800),
                   ),
-                ),
-                const SizedBox(height: 12),
-                ListTile(
-                  leading: const Icon(Icons.play_arrow, color: qTeal),
-                  title: const Text('استماع إلى الآية'),
-                  onTap: () {
-                    Navigator.pop(sheetContext);
-                    controller.audio.playVerse(verse);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.menu_book_outlined, color: qNavy),
-                  title: const Text('تفسير الآية'),
-                  onTap: () {
-                    Navigator.pop(sheetContext);
-                    _explanation(verse);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.description_outlined, color: qNavy),
-                  title: const Text('معاني الكلمات'),
-                  onTap: () {
-                    Navigator.pop(sheetContext);
-                    _explanation(verse, meanings: true);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.repeat, color: qTeal),
-                  title: const Text('استماع وتكرار نطاق آيات'),
-                  onTap: () {
-                    Navigator.pop(sheetContext);
-                    chooseVerseRange(this.context, controller.audio, verse);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.headphones, color: qTeal),
-                  title: const Text('اختيار قارئ الآيات'),
-                  onTap: () {
-                    Navigator.pop(sheetContext);
-                    _reciter();
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.favorite_border, color: qTeal),
-                  title: Text(
-                    controller.favorites.containsKey(verse.key)
-                        ? 'إزالة من المفضلة'
-                        : 'إضافة إلى المفضلة',
+                  Text(
+                    'سورة ${repo.surah(verse.surah).name} • الآية ${verse.ayah}',
+                    style: qText(
+                      context,
+                      size: 12,
+                      color: AppPalette.of(context).muted,
+                    ),
                   ),
-                  onTap: () => controller.toggleFavorite(verse.key),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.bookmark_outline, color: qGold),
-                  title: Text(
-                    controller.bookmarks.containsKey(verse.key)
-                        ? 'إزالة العلامة المرجعية'
-                        : 'حفظ علامة مرجعية',
+                  const SizedBox(height: 12),
+                  ListTile(
+                    leading: const Icon(Icons.play_arrow, color: qTeal),
+                    title: const Text('استماع إلى الآية'),
+                    onTap: () {
+                      Navigator.pop(sheetContext);
+                      controller.audio.playVerse(verse);
+                    },
                   ),
-                  onTap: () => controller.toggleBookmark(verse.key),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.copy_outlined, color: qNavy),
-                  title: const Text('نسخ الآية'),
-                  onTap: () async {
-                    await Clipboard.setData(
-                      ClipboardData(text: _shareText(verse)),
-                    );
-                    if (sheetContext.mounted) Navigator.pop(sheetContext);
-                    if (mounted) qNotice(this.context, 'تم نسخ الآية');
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.share_outlined, color: qNavy),
-                  title: const Text('مشاركة الآية'),
-                  onTap: () {
-                    Navigator.pop(sheetContext);
-                    _share(verse);
-                  },
-                ),
-              ],
+                  ListTile(
+                    leading: const Icon(Icons.menu_book_outlined, color: qNavy),
+                    title: const Text('تفسير الآية'),
+                    onTap: () {
+                      Navigator.pop(sheetContext);
+                      _explanation(verse);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(
+                      Icons.description_outlined,
+                      color: qNavy,
+                    ),
+                    title: const Text('معاني الكلمات'),
+                    onTap: () {
+                      Navigator.pop(sheetContext);
+                      _explanation(verse, meanings: true);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.repeat, color: qTeal),
+                    title: const Text('استماع وتكرار نطاق آيات'),
+                    onTap: () {
+                      Navigator.pop(sheetContext);
+                      chooseVerseRange(this.context, controller.audio, verse);
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.headphones, color: qTeal),
+                    title: const Text('اختيار قارئ الآيات'),
+                    onTap: () {
+                      Navigator.pop(sheetContext);
+                      _reciter();
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.favorite_border, color: qTeal),
+                    title: Text(
+                      controller.favorites.containsKey(verse.key)
+                          ? 'إزالة من المفضلة'
+                          : 'إضافة إلى المفضلة',
+                    ),
+                    onTap: () => controller.toggleFavorite(verse.key),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.bookmark_outline, color: qGold),
+                    title: Text(
+                      controller.bookmarks.containsKey(verse.key)
+                          ? 'إزالة العلامة المرجعية'
+                          : 'حفظ علامة مرجعية',
+                    ),
+                    onTap: () => controller.toggleBookmark(verse.key),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.copy_outlined, color: qNavy),
+                    title: const Text('نسخ الآية'),
+                    onTap: () async {
+                      await Clipboard.setData(
+                        ClipboardData(text: _shareText(verse)),
+                      );
+                      if (sheetContext.mounted) Navigator.pop(sheetContext);
+                      if (mounted) qNotice(this.context, 'تم نسخ الآية');
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.share_outlined, color: qNavy),
+                    title: const Text('مشاركة الآية'),
+                    onTap: () {
+                      Navigator.pop(sheetContext);
+                      _share(verse);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 
-  void _chooseMode() => showModalBottomSheet<void>(
-    context: context,
-    backgroundColor: AppPalette.of(context).surface,
-    showDragHandle: true,
-    builder: (context) => SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'طريقة عرض المصحف',
-              style: qText(context, size: 18, weight: FontWeight.w800),
-            ),
-            const SizedBox(height: 14),
-            QSegments(
-              labels: const ['نص متصل', 'آية بآية', 'صفحات المصحف'],
-              selected: controller.mode.index,
-              onSelect: (value) {
-                _mode(QuranReadingMode.values[value]);
-                Navigator.pop(context);
-              },
-            ),
-          ],
+  Future<void> _chooseMode() async {
+    final choice = await showModalBottomSheet<QuranReadingMode>(
+      context: context,
+      backgroundColor: AppPalette.of(context).surface,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'طريقة عرض المصحف',
+                style: qText(context, size: 18, weight: FontWeight.w800),
+              ),
+              const SizedBox(height: 14),
+              QSegments(
+                labels: const ['نص متصل', 'آية بآية', 'صفحات المصحف'],
+                selected: controller.mode.index,
+                onSelect: (value) {
+                  Navigator.pop(context, QuranReadingMode.values[value]);
+                },
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+    if (mounted && choice != null) _mode(choice);
+  }
+
   void _explanation(QuranVerse verse, {bool meanings = false}) =>
       Navigator.push(
         context,
@@ -874,9 +949,9 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     }
   }
 
-  void _settings() {
+  Future<void> _settings() async {
     if (fullscreen) _setFullscreen(false);
-    Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute<void>(
         builder: (context) => Scaffold(
@@ -888,6 +963,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
         ),
       ),
     );
+    if (mounted) _schedulePageDownloadOffer();
   }
 }
 

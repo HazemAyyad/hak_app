@@ -265,6 +265,26 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                   ).contains(normalizeQuranSearch(query)),
                 )
                 .toList();
+            final pending = media.downloads.entries.values
+                .where(
+                  (entry) =>
+                      entry.track.recitation == recitation.id &&
+                      (entry.state == QuranDownloadState.queued ||
+                          entry.state == QuranDownloadState.downloading),
+                )
+                .map((entry) => entry.track.id)
+                .toList();
+            final hasPending = pending.isNotEmpty;
+            final hasPaused = media.downloads.entries.values.any(
+              (entry) =>
+                  entry.track.recitation == recitation.id &&
+                  entry.state == QuranDownloadState.paused,
+            );
+            final hasAnyPending = media.downloads.entries.values.any(
+              (entry) =>
+                  entry.state == QuranDownloadState.queued ||
+                  entry.state == QuranDownloadState.downloading,
+            );
             saved.sort(
               (a, b) => switch (sort) {
                 1 => a.track.surah.compareTo(b.track.surah),
@@ -316,17 +336,27 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                       ),
                                     ),
                                     TextButton.icon(
-                                      onPressed: () => _downloadAll(
-                                        chapters,
-                                        parts,
-                                        recitation,
-                                      ),
-                                      icon: const Icon(
-                                        Icons.download_outlined,
+                                      onPressed: hasPending
+                                          ? () => media.downloads.pauseAll(
+                                              pending,
+                                            )
+                                          : () => _downloadAll(
+                                              chapters,
+                                              parts,
+                                              recitation,
+                                            ),
+                                      icon: Icon(
+                                        hasPending
+                                            ? Icons.pause_circle_outline
+                                            : Icons.download_outlined,
                                         size: 19,
                                       ),
                                       label: Text(
-                                        'تحميل الكل',
+                                        hasPending
+                                            ? 'إيقاف الكل'
+                                            : hasPaused
+                                            ? 'استئناف الكل'
+                                            : 'تحميل الكل',
                                         style: qText(
                                           context,
                                           size: 12,
@@ -393,6 +423,15 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                   ),
                                 ),
                               ],
+                            ),
+                          ),
+                        if (tab == 2 && hasAnyPending)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: QPrimaryButton(
+                              label: 'إيقاف جميع التنزيلات',
+                              icon: Icons.pause_circle_outline,
+                              onTap: () => media.downloads.pauseAll(),
                             ),
                           ),
                         if (tab == 2)
@@ -499,10 +538,24 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                   QuranDownloadState.complete,
                             )
                             .length;
+                        final pendingTracks = tracks
+                            .where(
+                              (track) =>
+                                  media.downloads.entries[track.id]?.state ==
+                                      QuranDownloadState.queued ||
+                                  media.downloads.entries[track.id]?.state ==
+                                      QuranDownloadState.downloading,
+                            )
+                            .map((track) => track.id)
+                            .toList();
+                        final running = pendingTracks.isNotEmpty;
+                        Future<void> toggle() => running
+                            ? media.downloads.pauseAll(pendingTracks)
+                            : media.downloads.enqueueAll(tracks);
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8),
                           child: QCard(
-                            onTap: () => media.downloads.enqueueAll(tracks),
+                            onTap: toggle,
                             child: Row(
                               children: [
                                 QMedallion(
@@ -541,11 +594,14 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                   ),
                                 ),
                                 IconButton(
-                                  tooltip: 'تنزيل ${juzName(part.id)}',
-                                  onPressed: () =>
-                                      media.downloads.enqueueAll(tracks),
+                                  tooltip: running
+                                      ? 'إيقاف تنزيل ${juzName(part.id)}'
+                                      : 'تنزيل أو استئناف ${juzName(part.id)}',
+                                  onPressed: toggle,
                                   icon: Icon(
-                                    completed == tracks.length
+                                    running
+                                        ? Icons.pause_circle_outline
+                                        : completed == tracks.length
                                         ? Icons.check_circle
                                         : Icons.download_outlined,
                                     color: qTeal,
