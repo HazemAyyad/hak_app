@@ -7,6 +7,8 @@ import 'app_appearance.dart';
 import 'settings_pages.dart';
 import 'features/quran/data/quran_controller.dart';
 import 'features/quran/presentation/quran_host.dart';
+import 'features/religious_content/data/religious_controller.dart';
+import 'features/religious_content/presentation/religious_host.dart';
 import 'startup/startup_flow.dart';
 
 part 'home_widgets.dart';
@@ -32,10 +34,12 @@ class HaqApp extends StatefulWidget {
     super.key,
     this.appearance,
     this.quranController,
+    this.religiousController,
     this.showStartup = true,
   });
   final AppAppearance? appearance;
   final QuranController? quranController;
+  final ReligiousController? religiousController;
   final bool showStartup;
 
   @override
@@ -100,11 +104,13 @@ class _HaqAppState extends State<HaqApp> {
                   child: HomePage(
                     onToggleTheme: _toggleTheme,
                     quranController: widget.quranController,
+                    religiousController: widget.religiousController,
                   ),
                 )
               : HomePage(
                   onToggleTheme: _toggleTheme,
                   quranController: widget.quranController,
+                  religiousController: widget.religiousController,
                 ),
         ),
       ),
@@ -171,10 +177,12 @@ class HomePage extends StatefulWidget {
     super.key,
     required this.onToggleTheme,
     this.quranController,
+    this.religiousController,
   });
 
   final VoidCallback onToggleTheme;
   final QuranController? quranController;
+  final ReligiousController? religiousController;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -185,16 +193,29 @@ class _HomePageState extends State<HomePage> {
   bool _quranFullscreen = false;
   late final QuranController _quran;
   final _quranKey = GlobalKey<QuranHostState>();
+  final _religiousKey = GlobalKey<ReligiousHostState>();
+  late final ReligiousController _religious;
+  bool _religiousOpen = false;
+  String? _religiousInitialCategory;
 
   @override
   void initState() {
     super.initState();
     _quran = widget.quranController ?? QuranController();
-    if (_quran.repository == null) _quran.load();
+    _religious =
+        widget.religiousController ?? ReligiousController(quran: _quran);
+    if (_quran.repository == null) {
+      _quran.load().then((_) {
+        if (mounted && _religious.catalog == null) _religious.load();
+      });
+    } else if (_religious.catalog == null) {
+      _religious.load();
+    }
   }
 
   @override
   void dispose() {
+    if (widget.religiousController == null) _religious.dispose();
     if (widget.quranController == null) _quran.dispose();
     super.dispose();
   }
@@ -206,6 +227,19 @@ class _HomePageState extends State<HomePage> {
         if (mounted) _quranKey.currentState?.openLastReading();
       });
     }
+  }
+
+  void _openReligious([String? category]) {
+    if (_religiousOpen &&
+        _religiousKey.currentState != null &&
+        category != null) {
+      _religiousKey.currentState!.openCategory(category);
+    }
+    setState(() {
+      _religiousInitialCategory = category;
+      _religiousOpen = true;
+      _currentIndex = 4;
+    });
   }
 
   void _openQuranSettings() {
@@ -239,12 +273,20 @@ class _HomePageState extends State<HomePage> {
           index: _currentIndex == 1 ? 1 : 0,
           children: [
             _currentIndex == 4
-                ? MorePage(
-                    onQuranTap: () => _openQuran(),
-                    onQuranSettings: _openQuranSettings,
-                    onQuranAccount: _openQuranAccount,
-                    onQuranDownloads: _openQuranDownloads,
-                  )
+                ? _religiousOpen
+                      ? ReligiousHost(
+                          key: _religiousKey,
+                          controller: _religious,
+                          initialCategory: _religiousInitialCategory,
+                          onClose: () => setState(() => _religiousOpen = false),
+                        )
+                      : MorePage(
+                          onReligiousTap: _openReligious,
+                          onQuranTap: () => _openQuran(),
+                          onQuranSettings: _openQuranSettings,
+                          onQuranAccount: _openQuranAccount,
+                          onQuranDownloads: _openQuranDownloads,
+                        )
                 : CustomScrollView(
                     slivers: [
                       SliverToBoxAdapter(child: _HeroHeader()),
@@ -255,6 +297,7 @@ class _HomePageState extends State<HomePage> {
                             PrayerCard(),
                             SizedBox(height: 14),
                             QuickServices(
+                              onDuasTap: () => _openReligious(),
                               onQuranTap: () => _openQuran(),
                               onMoreTap: () =>
                                   setState(() => _currentIndex = 4),
@@ -276,7 +319,7 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(height: 10),
                             JourneyCards(),
                             SizedBox(height: 20),
-                            FridayCard(),
+                            FridayCard(onTap: () => _openReligious('friday')),
                             SizedBox(height: 20),
                             SectionHeader(
                               title: 'مقالات ومعلومات',
@@ -307,6 +350,13 @@ class _HomePageState extends State<HomePage> {
         extendBody: true,
         bottomNavigationBar: _quranFullscreen
             ? null
+            : _religiousOpen && _currentIndex == 4
+            ? ReligiousNavigationBar(
+                onSelected: (value) => setState(() {
+                  _currentIndex = value;
+                  if (value == 4) _religiousOpen = false;
+                }),
+              )
             : ClipRRect(
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(30),
@@ -358,12 +408,15 @@ class MorePage extends StatelessWidget {
     this.onQuranSettings,
     this.onQuranAccount,
     this.onQuranDownloads,
+    this.onReligiousTap,
   });
   final VoidCallback? onQuranTap;
   final VoidCallback? onQuranSettings;
   final VoidCallback? onQuranAccount, onQuranDownloads;
+  final void Function(String?)? onReligiousTap;
 
   static const _items = [
+    ('الأدعية والمحتوى الديني', Icons.front_hand_outlined),
     ('ادعُ معي', Icons.people_alt_outlined),
     ('حلقات الذكر', Icons.auto_awesome_outlined),
     ('الإعدادات', Icons.settings_outlined),
@@ -497,7 +550,31 @@ class MorePage extends StatelessWidget {
                       )
                     : item.$1 == 'قرآن'
                     ? onQuranTap
-                    : null,
+                    : switch (item.$1) {
+                        'أسماء الله الحسنى' => () => onReligiousTap?.call(
+                          'names',
+                        ),
+                        'الرقية الشرعية' => () => onReligiousTap?.call('ruqya'),
+                        'الأربعون النووية' => () => onReligiousTap?.call(
+                          'nawawi',
+                        ),
+                        'أدعية نبوية' => () => onReligiousTap?.call(
+                          'prophetic-duas',
+                        ),
+                        'أدعية قرآنية' => () => onReligiousTap?.call(
+                          'quran-duas',
+                        ),
+                        'سنن الجمعة' => () => onReligiousTap?.call('friday'),
+                        'بماذا تشعر؟' => () => onReligiousTap?.call('feelings'),
+                        'أذكاري' => () => onReligiousTap?.call(
+                          'personal-adhkar',
+                        ),
+                        'سنن النبي ﷺ' => () => onReligiousTap?.call('sunnah'),
+                        'الأدعية والمحتوى الديني' => () => onReligiousTap?.call(
+                          null,
+                        ),
+                        _ => null,
+                      },
               );
             },
           ),

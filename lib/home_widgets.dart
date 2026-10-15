@@ -334,8 +334,13 @@ class PrayerCard extends StatelessWidget {
 }
 
 class QuickServices extends StatelessWidget {
-  const QuickServices({super.key, this.onQuranTap, this.onMoreTap});
-  final VoidCallback? onQuranTap, onMoreTap;
+  const QuickServices({
+    super.key,
+    this.onQuranTap,
+    this.onMoreTap,
+    this.onDuasTap,
+  });
+  final VoidCallback? onQuranTap, onMoreTap, onDuasTap;
   @override
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
@@ -394,6 +399,8 @@ class QuickServices extends StatelessWidget {
                   ? onQuranTap
                   : index == 4
                   ? onMoreTap
+                  : index == 5
+                  ? onDuasTap
                   : null,
               borderRadius: BorderRadius.circular(15),
               child: Column(
@@ -732,7 +739,8 @@ class JourneyCards extends StatelessWidget {
 }
 
 class FridayCard extends StatelessWidget {
-  const FridayCard({super.key});
+  const FridayCard({super.key, this.onTap});
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) => _PhotoCard(
     image:
@@ -768,7 +776,11 @@ class FridayCard extends StatelessWidget {
                 style: _homeText(context, 10),
               ),
               const Spacer(),
-              _HomeButton(label: 'عرض المحتوى', gold: true, onPressed: () {}),
+              _HomeButton(
+                label: 'عرض المحتوى',
+                gold: true,
+                onPressed: onTap ?? () {},
+              ),
             ],
           ),
         ),

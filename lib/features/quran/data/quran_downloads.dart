@@ -45,17 +45,21 @@ class QuranDownload {
 }
 
 class QuranDownloads extends ChangeNotifier {
-  QuranDownloads({Directory? directory, Dio? dio})
-    : _directory = directory,
-      dio =
-          dio ??
-          Dio(
-            BaseOptions(
-              connectTimeout: const Duration(seconds: 25),
-              receiveTimeout: const Duration(seconds: 40),
-            ),
-          );
+  QuranDownloads({
+    Directory? directory,
+    Dio? dio,
+    this.storageFolder = 'quran_audio_v1',
+  }) : _directory = directory,
+       dio =
+           dio ??
+           Dio(
+             BaseOptions(
+               connectTimeout: const Duration(seconds: 25),
+               receiveTimeout: const Duration(seconds: 40),
+             ),
+           );
   final Dio dio;
+  final String storageFolder;
   Directory? _directory;
   final entries = <String, QuranDownload>{};
   Future<void>? _initialization, _worker;
@@ -69,7 +73,7 @@ class QuranDownloads extends ChangeNotifier {
   DateTime? _usageTime;
   Future<Directory> directory() async {
     _directory ??= await getApplicationSupportDirectory().then(
-      (dir) => Directory('${dir.path}/quran_audio_v1').create(recursive: true),
+      (dir) => Directory('${dir.path}/$storageFolder').create(recursive: true),
     );
     await _directory!.create(recursive: true);
     return _directory!;

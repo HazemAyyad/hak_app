@@ -217,11 +217,13 @@ class QuranMedia extends ChangeNotifier {
     required this.repository,
     required this.preferences,
     QuranDownloads? downloads,
+    this.storageKey = 'quran.audio.v1',
   }) : downloads = downloads ?? QuranDownloads() {
     this.downloads.addListener(_notify);
   }
   final QuranRepository Function() repository;
   final SharedPreferences Function() preferences;
+  final String storageKey;
   final QuranDownloads downloads;
   QuranAudioCatalog? catalog;
   QuranAudioHandler? handler;
@@ -263,7 +265,7 @@ class QuranMedia extends ChangeNotifier {
     try {
       catalog ??= await QuranAudioCatalog.load();
       await downloads.initialize();
-      final raw = preferences().getString('quran.audio.v1');
+      final raw = preferences().getString(storageKey);
       if (raw != null) {
         try {
           final state = jsonDecode(raw) as Map<String, dynamic>;
@@ -313,7 +315,7 @@ class QuranMedia extends ChangeNotifier {
 
   Future<void> _persist() async {
     await preferences().setString(
-      'quran.audio.v1',
+      storageKey,
       jsonEncode({
         'chapter': selectedChapter,
         'verse': selectedVerse,
