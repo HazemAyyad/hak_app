@@ -211,6 +211,60 @@ void main() {
       restored.dispose();
     },
   );
+  testWidgets('playback controls appear only for content with recordings', (
+    tester,
+  ) async {
+    await pump(tester);
+    for (final id in [
+      'hisn-002',
+      'nawawi-01',
+      'name-01',
+      'sunnah-hands',
+      'hisn-001',
+      'qdua-goodness',
+      'ruqya-kursi',
+    ]) {
+      final item = catalog.byId[id]!;
+      final playable = [
+        'hisn-001',
+        'qdua-goodness',
+        'ruqya-kursi',
+      ].contains(id);
+      expect(controller.hasAudio(item), playable, reason: id);
+      hostKey.currentState!.openItem(item);
+      await tester.pumpAndSettle();
+      expect(
+        find.byTooltip('استماع'),
+        playable ? findsOneWidget : findsNothing,
+        reason: id,
+      );
+      expect(
+        find.byIcon(Icons.play_arrow),
+        playable ? findsOneWidget : findsNothing,
+        reason: id,
+      );
+      hostKey.currentState!.back();
+      await tester.pumpAndSettle();
+    }
+    final silent = ReligiousItem({
+      'id': 'silent-list',
+      'type': 'playlist',
+      'title': 'قائمة بلا صوت',
+      'text': 'قراءة فقط',
+      'source': 'مصدر',
+      'sourceUrl': 'https://example.com',
+      'categories': ['ruqya'],
+      'related': ['nawawi-01'],
+    });
+    expect(controller.hasAudio(silent), isFalse);
+    expect(controller.hasAudio(catalog.byId['ruqya-complete']!), isTrue);
+    hostKey.currentState!.openItem(silent);
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.play_arrow), findsNothing);
+    expect(find.text('تحميل الرقية كاملة'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets(
     'copy actions omit source metadata for every content type',
     (tester) async {

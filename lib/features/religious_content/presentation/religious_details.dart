@@ -259,20 +259,22 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                             'مشاركة',
                             () => host.share(context, item),
                           ),
-                          _detailAction(
-                            context,
-                            Icons.play_arrow,
-                            'استماع',
-                            () => host.play(context, item),
-                            filled: true,
-                          ),
+                          if (host.controller.hasAudio(item))
+                            _detailAction(
+                              context,
+                              Icons.play_arrow,
+                              'استماع',
+                              () => host.play(context, item),
+                              filled: true,
+                            ),
                         ],
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 8),
-                if (host.controller.activeItem == item.id)
+                if (host.controller.hasAudio(item) &&
+                    host.controller.activeItem == item.id)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: _ReligiousPlayer(host: host, compact: true),
@@ -557,7 +559,8 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                             ),
                           ],
                         ),
-                        if (host.controller.media.current == null)
+                        if (host.controller.hasAudio(item) &&
+                            host.controller.media.current == null)
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             child: FilledButton.icon(
@@ -573,7 +576,8 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  _ReligiousPlayer(host: host),
+                  if (host.controller.hasAudio(item))
+                    _ReligiousPlayer(host: host),
                   const SizedBox(height: 16),
                   Text(
                     'محتويات الرقية',
@@ -614,33 +618,35 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                               ],
                             ),
                           ),
-                          ReligiousRoundButton(
-                            icon: Icons.play_arrow,
-                            label: 'تشغيل ${part.title}',
-                            onTap: () => host.play(context, part),
-                            filled: true,
-                            size: 28,
-                          ),
+                          if (host.controller.hasAudio(part))
+                            ReligiousRoundButton(
+                              icon: Icons.play_arrow,
+                              label: 'تشغيل ${part.title}',
+                              onTap: () => host.play(context, part),
+                              filled: true,
+                              size: 28,
+                            ),
                           const Icon(Icons.expand_more, color: rTeal, size: 18),
                         ],
                       ),
                     ),
                   const SizedBox(height: 12),
-                  FilledButton.icon(
-                    style: FilledButton.styleFrom(backgroundColor: rTeal),
-                    onPressed: () async {
-                      await host.controller.download(item);
-                      if (context.mounted) {
-                        host.message(
-                          context,
-                          host.controller.error ??
-                              'أضيفت الملفات إلى قائمة التنزيل',
-                        );
-                      }
-                    },
-                    icon: const Icon(Icons.download_outlined),
-                    label: const Text('تحميل الرقية كاملة'),
-                  ),
+                  if (host.controller.hasAudio(item))
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(backgroundColor: rTeal),
+                      onPressed: () async {
+                        await host.controller.download(item);
+                        if (context.mounted) {
+                          host.message(
+                            context,
+                            host.controller.error ??
+                                'أضيفت الملفات إلى قائمة التنزيل',
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.download_outlined),
+                      label: const Text('تحميل الرقية كاملة'),
+                    ),
                   OutlinedButton.icon(
                     onPressed: () => host.controller.toggleQueue(item.id),
                     icon: const Icon(Icons.playlist_add),

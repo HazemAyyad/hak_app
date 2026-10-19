@@ -356,6 +356,7 @@ class _ItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = ReligiousColors(context);
+    final canPlay = verse && host.controller.hasAudio(item);
     return ReligiousCard(
       margin: const EdgeInsets.only(bottom: 7),
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
@@ -467,11 +468,12 @@ class _ItemTile extends StatelessWidget {
             ),
           ],
           ReligiousRoundButton(
-            icon: verse ? Icons.play_arrow : Icons.chevron_left,
-            label: verse ? 'استماع ${item.title}' : 'تفاصيل ${item.title}',
+            icon: canPlay ? Icons.play_arrow : Icons.chevron_left,
+            label: canPlay ? 'استماع ${item.title}' : 'تفاصيل ${item.title}',
             size: verse ? 29 : 24,
-            filled: verse,
-            onTap: () => verse ? host.play(context, item) : host.openItem(item),
+            filled: canPlay,
+            onTap: () =>
+                canPlay ? host.play(context, item) : host.openItem(item),
           ),
         ],
       ),

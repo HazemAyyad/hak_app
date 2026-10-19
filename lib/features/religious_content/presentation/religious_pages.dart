@@ -850,12 +850,13 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                         Expanded(
                           child: Text(queued.title, style: rText(context, 12)),
                         ),
-                        ReligiousRoundButton(
-                          icon: Icons.play_arrow,
-                          label: 'تشغيل قائمة الاستماع',
-                          filled: true,
-                          onTap: () => host.play(context, queued),
-                        ),
+                        if (host.controller.hasAudio(queued))
+                          ReligiousRoundButton(
+                            icon: Icons.play_arrow,
+                            label: 'تشغيل قائمة الاستماع',
+                            filled: true,
+                            onTap: () => host.play(context, queued),
+                          ),
                       ],
                     ),
                   ),
@@ -879,12 +880,13 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                           ),
                           style: rText(context, 10),
                         ),
-                        ReligiousRoundButton(
-                          icon: Icons.play_arrow,
-                          label: 'استئناف الاستماع',
-                          filled: true,
-                          onTap: () => host.play(context, item),
-                        ),
+                        if (host.controller.hasAudio(item))
+                          ReligiousRoundButton(
+                            icon: Icons.play_arrow,
+                            label: 'استئناف الاستماع',
+                            filled: true,
+                            onTap: () => host.play(context, item),
+                          ),
                       ],
                     ),
                   ),

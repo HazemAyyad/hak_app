@@ -297,6 +297,22 @@ class ReligiousController extends ChangeNotifier {
     }
   }
 
+  bool hasAudio(ReligiousItem item, [Set<String>? visited]) {
+    final seen = visited ?? <String>{};
+    if (!seen.add(item.id)) return false;
+    if (item.audioUrl?.trim().isNotEmpty == true) return true;
+    if (item.verseKeys.any(
+      (key) => quran.repository?.byKey.containsKey(key) == true,
+    )) {
+      return true;
+    }
+    return item.type == 'playlist' &&
+        item.related.any((id) {
+          final part = catalog?.byId[id];
+          return part != null && hasAudio(part, seen);
+        });
+  }
+
   List<QuranAudioTrack> tracks(ReligiousItem item) {
     if (item.type == 'playlist') {
       return [
