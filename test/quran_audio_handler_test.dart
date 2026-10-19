@@ -152,6 +152,17 @@ QuranAudioTrack recording(String id) => QuranAudioTrack(
   quality: '128kbps',
 );
 
+class PreparingMedia extends QuranMedia {
+  PreparingMedia()
+    : super(
+        repository: () => throw UnimplementedError(),
+        preferences: () => throw UnimplementedError(),
+      );
+  final ready = Completer<void>();
+  @override
+  Future<void> initialize() => ready.future;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late TestAudioPlayer player;
@@ -164,6 +175,41 @@ void main() {
 
   Future<void> load(List<QuranAudioTrack> tracks) =>
       handler.load(tracks, tracks.map((t) => Uri.parse(t.url)).toList());
+
+  test(
+    'chapter taps show loading before catalog initialization and can be cancelled',
+    () async {
+      final media = PreparingMedia();
+      addTearDown(media.dispose);
+      final pending = media.playChapter(1);
+      expect(media.loading, isTrue);
+      expect(media.buffering, isTrue);
+      await media.stop();
+      media.ready.complete();
+      await pending;
+      expect(media.loading, isFalse);
+      expect(media.handler, isNull);
+      expect(media.current, isNull);
+      expect(media.error, isNull);
+    },
+  );
+
+  test(
+    'pending track metadata appears immediately and clears when cancelled',
+    () async {
+      final media = PreparingMedia();
+      addTearDown(media.dispose);
+      final pending = media.playTracks([recording('pending')]);
+      expect(media.current?.id, 'pending');
+      expect(media.loading, isTrue);
+      await media.stop();
+      expect(media.current, isNull);
+      media.ready.complete();
+      await pending;
+      expect(media.handler, isNull);
+      expect(media.loading, isFalse);
+    },
+  );
 
   test(
     'stop while loading prevents late source completion from restarting audio',

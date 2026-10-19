@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
 import '../../../app_experience.dart';
+import '../../../app_loading.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
 import 'quran_reader.dart';
@@ -176,7 +177,7 @@ class QuranHostState extends State<QuranHost> {
     listenable: controller,
     builder: (context, _) {
       if (controller.loading) {
-        return const Center(child: CircularProgressIndicator(color: qTeal));
+        return const AppLoadingSkeleton(label: 'جارٍ تحميل القرآن الكريم');
       }
       if (controller.loadError != null || controller.repository == null) {
         return Center(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../app_appearance.dart';
+import '../../../app_experience.dart';
 import '../data/quran_audio.dart';
 import '../data/quran_audio_models.dart';
 import '../data/quran_repository.dart';
@@ -29,31 +30,52 @@ class QuranPlayerPanel extends StatelessWidget {
     this.onOpen,
     this.onStart,
     this.initialTitle,
+    this.floating = false,
+    this.collapsed = false,
+    this.onToggleCollapsed,
+    this.onMinimize,
+    this.onClose,
   });
   final QuranMedia media;
   final QuranRepository repository;
   final bool compact;
   final VoidCallback? onReciter, onOpen, onStart;
   final String? initialTitle;
+  final bool floating, collapsed;
+  final VoidCallback? onToggleCollapsed, onMinimize, onClose;
 
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: media,
-    builder: (context, _) {
-      final track = media.current;
-      if (compact &&
-          track == null &&
-          onStart == null &&
-          !media.loading &&
-          media.error == null) {
-        return const SizedBox();
-      }
-      return QCard(
-        padding: EdgeInsets.all(compact ? 8 : 15),
-        child: compact ? _compact(context) : _full(context),
-      );
-    },
-  );
+  Widget build(BuildContext context) {
+    final experience = AppExperienceScope.maybeOf(context);
+    return ListenableBuilder(
+      listenable: Listenable.merge([media, experience]),
+      builder: (context, _) {
+        if (!floating && experience?.isDocked(media) == true) {
+          return const SizedBox.shrink();
+        }
+        final track = media.current;
+        if (compact &&
+            track == null &&
+            onStart == null &&
+            !media.loading &&
+            media.error == null) {
+          return const SizedBox();
+        }
+        return QCard(
+          padding: EdgeInsets.all(compact ? 8 : 15),
+          child: compact ? _compact(context) : _full(context),
+        );
+      },
+    );
+  }
+
+  VoidCallback? _minimize(BuildContext context) {
+    if (onMinimize != null) return onMinimize;
+    final experience = AppExperienceScope.maybeOf(context);
+    return experience != null && (media.current != null || media.loading)
+        ? () => experience.minimize(media)
+        : null;
+  }
 
   String get _reciter =>
       media.current?.reciter ??
@@ -64,140 +86,182 @@ class QuranPlayerPanel extends StatelessWidget {
   Widget _compact(BuildContext context) => Column(
     mainAxisSize: MainAxisSize.min,
     children: [
-      SizedBox(
-        height: 26,
-        child: Row(
+      if (floating || _minimize(context) != null)
+        Row(
           children: [
-            _AudioPortrait(name: _reciter, size: 26),
-            const SizedBox(width: 7),
+            IconButton(
+              tooltip: onToggleCollapsed == null
+                  ? 'تصغير المشغل'
+                  : collapsed
+                  ? 'توسيع المشغل'
+                  : 'طي المشغل',
+              icon: Icon(
+                collapsed ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+              ),
+              onPressed: onToggleCollapsed ?? _minimize(context),
+            ),
             Expanded(
               child: InkWell(
-                onTap: onReciter,
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Flexible(
-                        child: Text(
-                          _reciter,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: qText(
-                            context,
-                            size: 10.5,
-                            weight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                      if (onReciter != null)
-                        const Icon(Icons.expand_more, size: 16, color: qNavy),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            _smallButton(
-              Icons.timer_outlined,
-              media.stopAt == null ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
-              () => chooseAudioTimer(context, media),
-              active: media.stopAt != null,
-            ),
-            SizedBox(
-              width: 37,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: const Size(0, 26),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                onPressed: () => chooseAudioSpeed(context, media),
+                onTap:
+                    onOpen ?? AppExperienceScope.maybeOf(context)?.openPlayer,
                 child: Text(
-                  '${media.speed.toStringAsFixed(1)}x',
-                  textDirection: TextDirection.ltr,
-                  style: qText(context, size: 10.5, weight: FontWeight.w800),
+                  media.current?.title ?? initialTitle ?? 'جارٍ تحميل التلاوة…',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: qText(context, size: 12, weight: FontWeight.w800),
                 ),
               ),
             ),
-            SizedBox(
-              width: 26,
-              child: PopupMenuButton<String>(
-                tooltip: 'قائمة التشغيل وخيارات التلاوة',
-                padding: EdgeInsets.zero,
-                icon: const Icon(Icons.playlist_play, size: 23, color: qNavy),
-                onSelected: (value) {
-                  if (value == 'queue') _showQueue(context);
-                  if (value == 'open') onOpen?.call();
-                  if (value == 'stop') unawaited(media.stop());
-                },
-                itemBuilder: (_) => [
-                  const PopupMenuItem(
-                    value: 'queue',
-                    child: Text('قائمة التشغيل'),
-                  ),
-                  if (onOpen != null)
-                    const PopupMenuItem(
-                      value: 'open',
-                      child: Text('فتح المشغل'),
-                    ),
-                  PopupMenuItem(
-                    value: 'stop',
-                    enabled: media.current != null || media.loading,
-                    child: const Text('إيقاف التلاوة'),
-                  ),
-                ],
+            if (collapsed) _playButton(size: 32),
+            if (onClose != null)
+              IconButton(
+                tooltip: 'إغلاق المشغل وإيقاف الصوت',
+                icon: const Icon(Icons.close, size: 20),
+                onPressed: onClose,
               ),
-            ),
           ],
         ),
-      ),
-      SizedBox(height: 20, child: _timeline(context, small: true)),
-      SizedBox(
-        height: 36,
-        child: Directionality(
-          textDirection: TextDirection.rtl,
+      if (!collapsed) ...[
+        SizedBox(
+          height: 26,
           child: Row(
             children: [
-              _timeLabel(context, media.position),
-              const Spacer(),
-              _smallButton(
-                Icons.skip_previous,
-                'التلاوة السابقة',
-                media.handler?.player.hasPrevious == true
-                    ? () => media.skip(-1)
-                    : null,
-                size: 30,
+              _AudioPortrait(name: _reciter, size: 26),
+              const SizedBox(width: 7),
+              Expanded(
+                child: InkWell(
+                  onTap: onReciter,
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            _reciter,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: qText(
+                              context,
+                              size: 10.5,
+                              weight: FontWeight.w800,
+                            ),
+                          ),
+                        ),
+                        if (onReciter != null)
+                          const Icon(Icons.expand_more, size: 16, color: qNavy),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(width: 8),
-              _playButton(size: 36),
-              const SizedBox(width: 8),
               _smallButton(
-                Icons.skip_next,
-                'التلاوة التالية',
-                media.handler?.player.hasNext == true
-                    ? () => media.skip(1)
-                    : null,
-                size: 30,
+                Icons.timer_outlined,
+                media.stopAt == null ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
+                () => chooseAudioTimer(context, media),
+                active: media.stopAt != null,
               ),
-              const Spacer(),
-              _smallButton(
-                Icons.repeat,
-                'التكرار',
-                () => chooseAudioRepeat(context, media),
-                active: media.repeat != AudioServiceRepeatMode.none,
+              SizedBox(
+                width: 37,
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: const Size(0, 26),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  onPressed: () => chooseAudioSpeed(context, media),
+                  child: Text(
+                    '${media.speed.toStringAsFixed(1)}x',
+                    textDirection: TextDirection.ltr,
+                    style: qText(context, size: 10.5, weight: FontWeight.w800),
+                  ),
+                ),
               ),
-              _timeLabel(context, media.duration),
+              SizedBox(
+                width: 26,
+                child: PopupMenuButton<String>(
+                  tooltip: 'قائمة التشغيل وخيارات التلاوة',
+                  padding: EdgeInsets.zero,
+                  icon: const Icon(Icons.playlist_play, size: 23, color: qNavy),
+                  onSelected: (value) {
+                    if (value == 'queue') _showQueue(context);
+                    if (value == 'open') onOpen?.call();
+                    if (value == 'stop') unawaited(media.stop());
+                  },
+                  itemBuilder: (_) => [
+                    const PopupMenuItem(
+                      value: 'queue',
+                      child: Text('قائمة التشغيل'),
+                    ),
+                    if (onOpen != null)
+                      const PopupMenuItem(
+                        value: 'open',
+                        child: Text('فتح المشغل'),
+                      ),
+                    PopupMenuItem(
+                      value: 'stop',
+                      enabled: media.current != null || media.loading,
+                      child: const Text('إيقاف التلاوة'),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
-      ),
-      if (media.error != null) _error(context),
+        SizedBox(height: 20, child: _timeline(context, small: true)),
+        SizedBox(
+          height: 36,
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Row(
+              children: [
+                _timeLabel(context, media.position),
+                const Spacer(),
+                _smallButton(
+                  Icons.skip_previous,
+                  'التلاوة السابقة',
+                  media.handler?.player.hasPrevious == true
+                      ? () => media.skip(-1)
+                      : null,
+                  size: 30,
+                ),
+                const SizedBox(width: 8),
+                _playButton(size: 36),
+                const SizedBox(width: 8),
+                _smallButton(
+                  Icons.skip_next,
+                  'التلاوة التالية',
+                  media.handler?.player.hasNext == true
+                      ? () => media.skip(1)
+                      : null,
+                  size: 30,
+                ),
+                const Spacer(),
+                _smallButton(
+                  Icons.repeat,
+                  'التكرار',
+                  () => chooseAudioRepeat(context, media),
+                  active: media.repeat != AudioServiceRepeatMode.none,
+                ),
+                _timeLabel(context, media.duration),
+              ],
+            ),
+          ),
+        ),
+        if (media.error != null) _error(context),
+      ],
     ],
   );
 
   Widget _full(BuildContext context) {
     final track = media.current;
-    final verse = track == null
+    final isQuran =
+        track != null &&
+        (track.recitation.startsWith('mp3quran:') ||
+            track.recitation.startsWith('everyayah:') ||
+            track.recitation.startsWith('qurancom:'));
+    final verse = !isQuran
         ? null
         : repository.byKey['${track.surah}:${track.ayah ?? 1}'];
     return Column(
@@ -244,6 +308,12 @@ class QuranPlayerPanel extends StatelessWidget {
                   ],
                 ),
               ),
+              if (_minimize(context) != null)
+                IconButton(
+                  tooltip: 'تصغير المشغل',
+                  icon: const Icon(Icons.keyboard_arrow_down),
+                  onPressed: _minimize(context),
+                ),
             ],
           ),
         ),
@@ -340,8 +410,9 @@ class QuranPlayerPanel extends StatelessWidget {
             ],
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        Wrap(
+          alignment: WrapAlignment.center,
+          spacing: 8,
           children: [
             TextButton.icon(
               onPressed: () => chooseAudioSpeed(context, media),
@@ -382,6 +453,7 @@ class QuranPlayerPanel extends StatelessWidget {
           child: Directionality(
             textDirection: TextDirection.rtl,
             child: Slider(
+              key: floating ? const ValueKey('app-playback-seek') : null,
               value: max > 0
                   ? media.position.inMilliseconds.toDouble().clamp(0, max)
                   : 0,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../app_experience.dart';
+import '../../../app_loading.dart';
 import '../../quran/presentation/quran_reader.dart';
 import '../../quran/presentation/quran_tafsir.dart';
 import '../../quran/data/quran_content.dart' show TafsirText;
@@ -139,7 +140,7 @@ class ReligiousHostState extends State<ReligiousHost> {
     listenable: controller,
     builder: (context, _) {
       if (controller.loading) {
-        return const Center(child: CircularProgressIndicator(color: rTeal));
+        return const AppLoadingSkeleton(label: 'جارٍ تحميل المحتوى الديني');
       }
       if (controller.catalog == null) {
         return ReligiousEmpty(

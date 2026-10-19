@@ -920,17 +920,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
         ),
       );
   Future<void> _reciter() async {
-    try {
-      await controller.audio.initialize();
-    } catch (_) {
-      if (mounted) {
-        qNotice(
-          context,
-          'تعذّر فتح قائمة القراء؛ تحقق من مساحة الجهاز وأعد المحاولة',
-        );
-      }
-      return;
-    }
     if (mounted) {
       await Navigator.push(
         context,

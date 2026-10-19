@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
+import '../../../app_loading.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
 import '../data/quran_cached_search.dart';
@@ -352,7 +353,14 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
             ),
           ),
         ),
-        if (executedQuery.isNotEmpty && results.isEmpty)
+        if (searching)
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: AppLoadingSkeleton(label: 'جارٍ البحث', page: false),
+            ),
+          ),
+        if (!searching && executedQuery.isNotEmpty && results.isEmpty)
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 35),

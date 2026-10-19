@@ -8,11 +8,25 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
+import 'package:haq_app/features/quran/data/quran_content.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/quran/presentation/quran_host.dart';
 import 'package:haq_app/features/quran/presentation/quran_reader.dart';
 import 'package:haq_app/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Navigation tests resolve preview requests without real network or disk I/O.
+class NavigationQuranContent extends QuranContent {
+  @override
+  Future<TafsirText> tafsir(String key, int source) async => TafsirText(
+    source,
+    tafsirSources[source]!,
+    '<p>نص اختبار التنقّل</p>',
+    [key],
+  );
+  @override
+  Future<VerseMeanings> meanings(String key) async => VerseMeanings('', null);
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -59,6 +73,7 @@ void main() {
     controller = QuranController(
       initialRepository: repo,
       preferences: preferences,
+      content: NavigationQuranContent(),
     );
     await controller.load();
     appearance = AppAppearance(preferences);

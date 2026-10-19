@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../app_appearance.dart';
+import '../../../app_loading.dart';
 import '../data/quran_content.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
@@ -61,15 +62,22 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
             const SizedBox(height: 8),
             FutureBuilder<TafsirText>(
               future: tafsir,
-              builder: (context, snapshot) => Text(
-                snapshot.data?.text ??
-                    (snapshot.hasError
-                        ? 'التفسير غير محمّل؛ افتح التفاصيل لإعادة المحاولة'
-                        : 'جارٍ تحميل التفسير…'),
-                maxLines: 4,
-                overflow: TextOverflow.ellipsis,
-                style: qText(context, size: 13),
-              ),
+              builder: (context, snapshot) =>
+                  !snapshot.hasData && !snapshot.hasError
+                  ? const AppLoadingSkeleton(
+                      label: 'جارٍ تحميل التفسير',
+                      page: false,
+                      lines: 3,
+                    )
+                  : Text(
+                      snapshot.data?.text ??
+                          (snapshot.hasError
+                              ? 'التفسير غير محمّل؛ افتح التفاصيل لإعادة المحاولة'
+                              : 'جارٍ تحميل التفسير…'),
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                      style: qText(context, size: 13),
+                    ),
             ),
             Text(
               'عرض التفسير الكامل',
@@ -129,11 +137,15 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
                           ),
                       ],
                     )
-                  : Text(
-                      snapshot.hasError
-                          ? 'المعاني غير محمّلة؛ افتح التفاصيل لإعادة المحاولة'
-                          : 'جارٍ تحميل المعاني…',
+                  : snapshot.hasError
+                  ? Text(
+                      'المعاني غير محمّلة؛ افتح التفاصيل لإعادة المحاولة',
                       style: qText(context, size: 12),
+                    )
+                  : const AppLoadingSkeleton(
+                      label: 'جارٍ تحميل المعاني',
+                      page: false,
+                      lines: 2,
                     ),
             ),
             Text(
@@ -350,9 +362,9 @@ class _QuranExplanationState extends State<QuranExplanation> {
                     );
                   }
                   if (!snapshot.hasData) {
-                    return const Padding(
-                      padding: EdgeInsets.all(28),
-                      child: CircularProgressIndicator(color: qTeal),
+                    return const AppLoadingSkeleton(
+                      label: 'جارٍ تحميل التفسير والمعاني',
+                      page: false,
                     );
                   }
                   if (snapshot.data is TafsirText) {

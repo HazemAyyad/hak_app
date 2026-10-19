@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../app_loading.dart';
 import '../data/quran_content.dart';
 import '../data/quran_repository.dart';
 import '../data/quran_page_downloads.dart';
@@ -57,7 +58,11 @@ class _QuranMushafState extends State<QuranMushaf> {
     super.didUpdateWidget(oldWidget);
     if (widget.page != current) {
       current = widget.page;
-      if (pages.hasClients) pages.jumpToPage(current - 1);
+      zoomed = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || !pages.hasClients) return;
+        pages.jumpToPage(widget.page - 1);
+      });
     }
   }
 
@@ -127,6 +132,8 @@ class _QuranMushafState extends State<QuranMushaf> {
           physics: zoomed ? const NeverScrollableScrollPhysics() : null,
           itemCount: 604,
           onPageChanged: (index) {
+            // Parent-driven jumps already selected this page and verse.
+            if (index + 1 == current) return;
             current = index + 1;
             zoomed = false;
             cachedVisible = visibleCached;
@@ -141,8 +148,9 @@ class _QuranMushafState extends State<QuranMushaf> {
               future: _offlinePage(index + 1),
               builder: (context, offline) {
                 if (offline.connectionState != ConnectionState.done) {
-                  return const Center(
-                    child: CircularProgressIndicator(color: qTeal),
+                  return const AppLoadingSkeleton(
+                    label: 'جارٍ تحميل صفحة المصحف',
+                    lines: 10,
                   );
                 }
                 if (offline.data != null) {
@@ -198,8 +206,9 @@ class _QuranMushafState extends State<QuranMushaf> {
                       );
                     }
                     if (!snapshot.hasData) {
-                      return const Center(
-                        child: CircularProgressIndicator(color: qTeal),
+                      return const AppLoadingSkeleton(
+                        label: 'جارٍ تحميل صفحة المصحف',
+                        lines: 10,
                       );
                     }
                     final data = snapshot.data!;

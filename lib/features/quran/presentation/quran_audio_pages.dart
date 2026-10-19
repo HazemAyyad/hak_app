@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
+import '../../../app_loading.dart';
 import '../data/quran_audio.dart';
 import '../data/quran_audio_models.dart';
 import '../data/quran_controller.dart';
@@ -58,12 +59,14 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
         return Center(
           child: QPrimaryButton(
             label: 'إعادة تحميل قائمة القراء',
-            onTap: () => setState(() => request = media.initialize()),
+            onTap: () => setState(() {
+              request = media.initialize();
+            }),
           ),
         );
       }
       if (snapshot.connectionState != ConnectionState.done) {
-        return const Center(child: CircularProgressIndicator(color: qTeal));
+        return const AppLoadingSkeleton(label: 'جارٍ تحميل القراء والتلاوات');
       }
       return ListenableBuilder(
         listenable: media,
@@ -308,6 +311,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                   ? Icons.pause
                                   : Icons.play_arrow,
                               label: 'استماع إلى سورة ${chapter.name}',
+                              loading: current && media.buffering,
                               color: qTeal,
                               onTap: () => current
                                   ? media.toggle()
@@ -468,15 +472,42 @@ class QuranReciterPicker extends StatefulWidget {
 }
 
 class _QuranReciterPickerState extends State<QuranReciterPicker> {
+  late Future<void> request;
   String query = '';
   int filter = 0;
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
+  void initState() {
+    super.initState();
+    request = widget.media.initialize();
+  }
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<void>(
+    future: request,
+    builder: (context, snapshot) {
+      if (snapshot.connectionState != ConnectionState.done) {
+        return const AppLoadingSkeleton(label: 'جارٍ تحميل القراء والتلاوات');
+      }
+      if (snapshot.hasError || widget.media.catalog == null) {
+        return Center(
+          child: QPrimaryButton(
+            label: 'إعادة تحميل قائمة القراء',
+            onTap: () => setState(() {
+              request = widget.media.initialize();
+            }),
+          ),
+        );
+      }
+      return _content(context);
+    },
+  );
+
+  Widget _content(BuildContext context) => ListenableBuilder(
     listenable: widget.media,
     builder: (context, _) {
       final catalog = widget.media.catalog;
       if (catalog == null) {
-        return const Center(child: CircularProgressIndicator(color: qTeal));
+        return const AppLoadingSkeleton(label: 'جارٍ تحميل القراء والتلاوات');
       }
       final recitations = catalog.recitations
           .where(

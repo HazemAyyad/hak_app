@@ -1,17 +1,25 @@
 import 'dart:io';
+import 'dart:convert';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_experience.dart';
+import 'package:haq_app/app_appearance.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haq_app/features/quran/data/quran_audio.dart';
 import 'package:haq_app/features/quran/data/quran_audio_models.dart';
+import 'package:haq_app/features/quran/data/quran_repository.dart';
+import 'package:haq_app/features/quran/presentation/quran_audio_widgets.dart';
 
 class NavigationTestMedia extends QuranMedia {
   NavigationTestMedia()
     : super(
-        repository: () => throw UnimplementedError(),
+        repository: () => QuranRepository.fromJson(
+          jsonDecode(File('assets/quran/quran.json').readAsStringSync())
+              as Map<String, dynamic>,
+        ),
         preferences: () => throw UnimplementedError(),
       );
   bool started = false, paused = false;
@@ -73,6 +81,12 @@ void main() {
     await (FontLoader(
       'Tajawal',
     )..addFont(rootBundle.load('assets/fonts/Tajawal-Regular.ttf'))).load();
+    await (FontLoader(
+      'QuranUI',
+    )..addFont(rootBundle.load('assets/fonts/Cairo.ttf'))).load();
+    await (FontLoader(
+      'AmiriQuran',
+    )..addFont(rootBundle.load('assets/fonts/AmiriQuran.ttf'))).load();
     final icons = File(
       'C:/src/flutter/bin/cache/artifacts/material_fonts/materialicons-regular.otf',
     );
@@ -85,6 +99,7 @@ void main() {
   });
   late AppExperienceController controller;
   late NavigationTestMedia audio;
+  late AppAppearance appearance;
   late NavigatorObserver rootObserver, nestedObserver;
   final nested = GlobalKey<NavigatorState>();
   final previewKey = GlobalKey();
@@ -117,7 +132,9 @@ void main() {
     }
   }
 
-  setUp(() {
+  setUp(() async {
+    SharedPreferences.setMockInitialValues({});
+    appearance = AppAppearance(await SharedPreferences.getInstance());
     controller = AppExperienceController();
     audio = NavigationTestMedia();
     rootObserver = controller.observer('root');
@@ -128,12 +145,14 @@ void main() {
   tearDown(() {
     controller.dispose();
     audio.dispose();
+    appearance.dispose();
   });
 
   Future<void> pump(
     WidgetTester tester, {
     double width = 426,
     double scale = 1,
+    bool withPlayer = false,
   }) async {
     tester.view.physicalSize = Size(width, 922);
     tester.view.devicePixelRatio = 1;
@@ -147,13 +166,19 @@ void main() {
         ),
         navigatorKey: controller.navigatorKey,
         navigatorObservers: [rootObserver],
-        builder: (context, child) => MediaQuery(
-          data: MediaQuery.of(
-            context,
-          ).copyWith(textScaler: TextScaler.linear(scale)),
-          child: RepaintBoundary(
-            key: previewKey,
-            child: AppExperienceOverlay(controller: controller, child: child!),
+        builder: (context, child) => AppearanceScope(
+          controller: appearance,
+          child: MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.linear(scale)),
+            child: RepaintBoundary(
+              key: previewKey,
+              child: AppExperienceOverlay(
+                controller: controller,
+                child: child!,
+              ),
+            ),
           ),
         ),
         home: Scaffold(
@@ -161,17 +186,26 @@ void main() {
             key: nested,
             observers: [nestedObserver],
             onGenerateRoute: (_) => MaterialPageRoute<void>(
-              builder: (context) => Center(
-                child: TextButton(
-                  child: const Text('الانتقال'),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (_) => const Scaffold(
-                        body: Center(child: Text('صفحة ثانية')),
+              builder: (context) => SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TextButton(
+                      child: const Text('الانتقال'),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (_) => const Scaffold(
+                            body: Center(child: Text('صفحة ثانية')),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    if (withPlayer)
+                      QuranPlayerPanel(
+                        media: audio,
+                        repository: audio.repository(),
+                      ),
+                  ],
                 ),
               ),
             ),
@@ -190,6 +224,7 @@ void main() {
     await tester.pump();
     await tester.pump();
     expect(find.byKey(const ValueKey('app-navigation-loader')), findsOneWidget);
+    await capture(tester, 'navigation-loader');
     await tester.pumpAndSettle();
     expect(find.text('صفحة ثانية'), findsOneWidget);
     nested.currentState!.pop();
@@ -207,6 +242,63 @@ void main() {
     expect(find.byKey(const ValueKey('app-navigation-loader')), findsOneWidget);
     await tester.pumpAndSettle();
     expect(controller.hasBottomBar, isFalse);
+  });
+
+  testWidgets('minimize and leaving share one player and preserve playback', (
+    tester,
+  ) async {
+    await pump(tester, width: 320, scale: 1.3, withPlayer: true);
+    audio.begin();
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('تصغير المشغل'));
+    await tester.pumpAndSettle();
+    final dock = find.byKey(const ValueKey('app-playback-dock'));
+    expect(dock, findsOneWidget);
+    final before = tester.widget<QuranPlayerPanel>(
+      find.descendant(of: dock, matching: find.byType(QuranPlayerPanel)),
+    );
+    expect(before.media, same(audio));
+    expect(before.compact, isTrue);
+    await audio.seek(const Duration(seconds: 37));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.descendant(of: dock, matching: find.text('المقطع الجاري')),
+    );
+    await tester.pumpAndSettle();
+    expect(dock, findsNothing);
+    expect(find.byTooltip('تصغير المشغل'), findsOneWidget);
+    await capture(tester, 'audio-full-sheet');
+    await tester.tap(find.byTooltip('تصغير المشغل').last);
+    await tester.pumpAndSettle();
+    expect(dock, findsOneWidget);
+    expect(audio.elapsed.inSeconds, 37);
+    expect(audio.serial, 1);
+    await tester.tap(find.text('الانتقال'));
+    await tester.pumpAndSettle();
+    expect(find.text('متابعة الاستماع؟'), findsNothing);
+    expect(dock, findsOneWidget);
+    expect(audio.elapsed.inSeconds, 37);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('minimizing on the original page survives navigation and pause', (
+    tester,
+  ) async {
+    await pump(tester);
+    audio.begin();
+    await tester.pumpAndSettle();
+    controller.minimize(audio);
+    await tester.pumpAndSettle();
+    expect(find.byType(AppPlaybackDock), findsOneWidget);
+    await audio.toggle();
+    await tester.tap(find.text('الانتقال'));
+    await tester.pumpAndSettle();
+    expect(find.text('متابعة الاستماع؟'), findsNothing);
+    expect(find.byType(AppPlaybackDock), findsOneWidget);
+    expect(audio.playing, isFalse);
+    nested.currentState!.pop();
+    await tester.pumpAndSettle();
+    expect(find.byType(AppPlaybackDock), findsOneWidget);
   });
 
   testWidgets(

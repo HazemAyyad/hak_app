@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'features/quran/data/quran_audio.dart';
+import 'features/quran/presentation/quran_audio_widgets.dart';
 
 /// Shared by the root navigator, feature navigators and bottom destinations.
 class AppExperienceController extends ChangeNotifier {
@@ -18,7 +19,9 @@ class AppExperienceController extends ChangeNotifier {
   int? _session;
   Object? _origin;
   bool _approved = false;
+  bool _minimized = false;
   Future<bool?> Function()? askToContinue;
+  VoidCallback? openPlayer;
 
   QuranMedia? get media => _media;
   Object get location {
@@ -35,11 +38,23 @@ class AppExperienceController extends ChangeNotifier {
       (_media!.playing || _media!.buffering) &&
       _origin != location &&
       !_approved;
-  bool get showDock =>
+  bool isDocked(QuranMedia audio) =>
+      _media == audio &&
       _approved &&
-      _media?.current != null &&
-      _origin != location &&
-      _popups == 0;
+      (_media?.current != null || _media?.loading == true) &&
+      (_minimized || _origin != location);
+  bool get showDock => _media != null && isDocked(_media!) && _popups == 0;
+
+  void minimize(QuranMedia audio) {
+    if (audio.current == null && !audio.loading) return;
+    _media = audio;
+    _session = audio.playbackSession;
+    _origin ??= location;
+    _approved = true;
+    _minimized = true;
+    collapsed = false;
+    _update();
+  }
 
   NavigatorObserver observer(String name) => _AppNavigatorObserver(this, name);
 
@@ -60,10 +75,12 @@ class AppExperienceController extends ChangeNotifier {
   void _audioChanged(QuranMedia audio) {
     if (audio.current != null || audio.loading) {
       if (_media != audio || _session != audio.playbackSession) {
+        final keepMinimized = _media == audio && _minimized;
         _media = audio;
         _session = audio.playbackSession;
         _origin = location;
-        _approved = false;
+        _minimized = keepMinimized;
+        _approved = keepMinimized;
         collapsed = false;
       }
     } else if (_media == audio) {
@@ -77,6 +94,7 @@ class AppExperienceController extends ChangeNotifier {
     _session = null;
     _origin = null;
     _approved = false;
+    _minimized = false;
     collapsed = false;
     _update();
   }
@@ -121,7 +139,7 @@ class AppExperienceController extends ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _queued = false;
       if (_disposed) return;
-      if (_approved && _origin == location) {
+      if (_approved && !_minimized && _origin == location) {
         _approved = false;
         collapsed = false;
       }
@@ -132,6 +150,16 @@ class AppExperienceController extends ChangeNotifier {
   }
 
   Future<void> _decide() async {
+    if (!_asking &&
+        !_approved &&
+        _media?.current != null &&
+        !_media!.playing &&
+        !_media!.buffering &&
+        _origin != location) {
+      _approved = true;
+      _update();
+      return;
+    }
     if (_asking || !needsDecision || askToContinue == null) return;
     _asking = true;
     final audio = _media, serial = _session;
@@ -248,6 +276,36 @@ class _AppExperienceOverlayState extends State<AppExperienceOverlay> {
   void initState() {
     super.initState();
     widget.controller.askToContinue = _ask;
+    widget.controller.openPlayer = _openPlayer;
+  }
+
+  void _openPlayer() {
+    final context = widget.controller.navigatorKey.currentContext;
+    final audio = widget.controller.media;
+    if (context == null || audio == null) return;
+    showModalBottomSheet<void>(
+      context: context,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: QuranPlayerPanel(
+              media: audio,
+              repository: audio.repository(),
+              floating: true,
+              onMinimize: () {
+                widget.controller.minimize(audio);
+                Navigator.pop(context);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Future<bool?> _ask() async {
@@ -284,6 +342,7 @@ class _AppExperienceOverlayState extends State<AppExperienceOverlay> {
   @override
   void dispose() {
     widget.controller.askToContinue = null;
+    widget.controller.openPlayer = null;
     super.dispose();
   }
 
@@ -300,16 +359,37 @@ class _AppExperienceOverlayState extends State<AppExperienceOverlay> {
               widget.child,
               if (widget.controller.transitioning)
                 Positioned(
-                  top: MediaQuery.paddingOf(context).top,
-                  left: 0,
-                  right: 0,
+                  top: MediaQuery.paddingOf(context).top + 8,
+                  left: 24,
+                  right: 24,
                   child: IgnorePointer(
                     child: Semantics(
                       label: 'جارٍ الانتقال',
                       liveRegion: true,
-                      child: const LinearProgressIndicator(
+                      child: Material(
                         key: ValueKey('app-navigation-loader'),
-                        minHeight: 3,
+                        elevation: 4,
+                        borderRadius: BorderRadius.circular(16),
+                        color: Theme.of(context).colorScheme.surface,
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox.square(
+                                dimension: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                              SizedBox(width: 12),
+                              Flexible(child: Text('جارٍ فتح الصفحة…')),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -340,127 +420,27 @@ class _AppExperienceOverlayState extends State<AppExperienceOverlay> {
 class AppPlaybackDock extends StatelessWidget {
   const AppPlaybackDock({super.key, required this.controller});
   final AppExperienceController controller;
-  String time(Duration value) =>
-      '${value.inMinutes}:${(value.inSeconds % 60).toString().padLeft(2, '0')}';
   @override
   Widget build(BuildContext context) {
     final audio = controller.media!;
-    final duration = audio.duration;
-    final total = duration?.inMilliseconds.toDouble() ?? 0;
     return Material(
       key: const ValueKey('app-playback-dock'),
       elevation: 5,
-      color: Theme.of(context).colorScheme.surface,
       borderRadius: BorderRadius.circular(18),
       clipBehavior: Clip.antiAlias,
       child: AnimatedSize(
         duration: const Duration(milliseconds: 180),
         alignment: Alignment.bottomCenter,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    tooltip: controller.collapsed
-                        ? 'توسيع المشغل'
-                        : 'طي المشغل',
-                    icon: Icon(
-                      controller.collapsed
-                          ? Icons.keyboard_arrow_up
-                          : Icons.keyboard_arrow_down,
-                    ),
-                    onPressed: () =>
-                        controller.setCollapsed(!controller.collapsed),
-                  ),
-                  Expanded(
-                    child: Text(
-                      audio.current?.title ?? 'المقطع الصوتي',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    tooltip: audio.playing ? 'إيقاف مؤقت' : 'متابعة التشغيل',
-                    icon: audio.buffering
-                        ? const SizedBox.square(
-                            dimension: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          )
-                        : Icon(audio.playing ? Icons.pause : Icons.play_arrow),
-                    onPressed: audio.toggle,
-                  ),
-                  IconButton(
-                    tooltip: 'إغلاق المشغل وإيقاف الصوت',
-                    icon: const Icon(Icons.close, size: 20),
-                    onPressed: controller.stop,
-                  ),
-                ],
-              ),
-              if (!controller.collapsed) ...[
-                if (audio.current?.reciter.isNotEmpty == true)
-                  Text(
-                    audio.current!.reciter,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 10),
-                  ),
-                Row(
-                  children: [
-                    Text(
-                      time(audio.position),
-                      textDirection: TextDirection.ltr,
-                      style: const TextStyle(fontSize: 10),
-                    ),
-                    Expanded(
-                      child: Slider(
-                        key: const ValueKey('app-playback-seek'),
-                        min: 0,
-                        max: total > 0 ? total : 1,
-                        value: total > 0
-                            ? audio.position.inMilliseconds.toDouble().clamp(
-                                0,
-                                total,
-                              )
-                            : 0,
-                        onChanged: total <= 0
-                            ? null
-                            : (v) =>
-                                  audio.seek(Duration(milliseconds: v.round())),
-                      ),
-                    ),
-                    Text(
-                      duration == null ? '—' : time(duration),
-                      textDirection: TextDirection.ltr,
-                      style: const TextStyle(fontSize: 10),
-                    ),
-                    IconButton(
-                      tooltip: 'المقطع السابق',
-                      icon: Transform.flip(
-                        flipX: true,
-                        child: const Icon(Icons.skip_previous),
-                      ),
-                      onPressed: () => audio.skip(-1),
-                    ),
-                    IconButton(
-                      tooltip: 'المقطع التالي',
-                      icon: Transform.flip(
-                        flipX: true,
-                        child: const Icon(Icons.skip_next),
-                      ),
-                      onPressed: () => audio.skip(1),
-                    ),
-                  ],
-                ),
-              ],
-            ],
-          ),
+        child: QuranPlayerPanel(
+          media: audio,
+          repository: audio.repository(),
+          compact: true,
+          floating: true,
+          collapsed: controller.collapsed,
+          onToggleCollapsed: () =>
+              controller.setCollapsed(!controller.collapsed),
+          onOpen: controller.openPlayer,
+          onClose: controller.stop,
         ),
       ),
     );

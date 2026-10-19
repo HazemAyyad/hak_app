@@ -227,6 +227,65 @@ void main() {
   );
 
   testWidgets(
+    'parent page changes do not notify the reader during build or reset its verse',
+    (tester) async {
+      var page = 2;
+      var selected = '2:3';
+      final notifications = <int>[];
+      late StateSetter update;
+      await tester.pumpWidget(
+        AppearanceScope(
+          controller: appearance,
+          child: MaterialApp(
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, setState) {
+                  update = setState;
+                  return QuranMushaf(
+                    content: controller.content,
+                    repository: repository,
+                    page: page,
+                    selected: selected,
+                    paper: Colors.white,
+                    ink: Colors.black,
+                    downloads: pages,
+                    onPage: (value) => setState(() {
+                      notifications.add(value);
+                      page = value;
+                      selected = repository.verses
+                          .firstWhere((verse) => verse.page == value)
+                          .key;
+                    }),
+                    onSelect: (_) {},
+                    onOptions: (_) {},
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      update(() {
+        page = 3;
+        selected = '2:17';
+      });
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(notifications, isEmpty);
+      expect(selected, '2:17');
+      await tester.drag(
+        find.byKey(const ValueKey('quran-mushaf-pages')),
+        const Offset(-600, 0),
+      );
+      await tester.pumpAndSettle();
+      expect(notifications, isNotEmpty);
+      expect(page, greaterThan(3));
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
     'page tap opens options, page swipes and labels agree, and RTL controls stay at the right edge',
     (tester) async {
       await open(tester, '2:2', QuranReadingMode.pages);
