@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../../app_experience.dart';
 import '../../quran/presentation/quran_reader.dart';
 import '../../quran/presentation/quran_tafsir.dart';
 import '../../quran/data/quran_content.dart' show TafsirText;
@@ -32,6 +33,13 @@ class ReligiousHostState extends State<ReligiousHost> {
   ReligiousController get controller => widget.controller;
   ReligiousCatalog get catalog => controller.catalog!;
   bool _requestedRefresh = false;
+  NavigatorObserver? _observer;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _observer ??= AppExperienceScope.maybeOf(context)?.observer('religious');
+  }
+
   void openCategory(String id) {
     if (id == 'feelings') {
       _push(_ReligiousTopicsPage(host: this), '/religious/feelings');
@@ -80,8 +88,8 @@ class ReligiousHostState extends State<ReligiousHost> {
   }
 
   Future<void> copy(BuildContext context, ReligiousItem item) async {
-    await Clipboard.setData(ClipboardData(text: item.shareText));
-    if (context.mounted) message(context, 'تم نسخ النص مع المصدر');
+    await Clipboard.setData(ClipboardData(text: item.copyText));
+    if (context.mounted) message(context, 'تم نسخ النص');
   }
 
   void share(BuildContext context, ReligiousItem item) {
@@ -155,6 +163,7 @@ class ReligiousHostState extends State<ReligiousHost> {
           },
           child: Navigator(
             key: navigator,
+            observers: [?_observer],
             onGenerateInitialRoutes: (_, _) => [
               MaterialPageRoute<void>(
                 builder: (_) => _ReligiousHomePage(host: this),
@@ -309,11 +318,18 @@ class _CategoryTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Icon(
-                    Icons.chevron_left,
-                    textDirection: TextDirection.ltr,
-                    size: 21,
-                    color: colors.heading,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: colors.subtle,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: const EdgeInsets.all(3),
+                    child: Icon(
+                      Icons.chevron_left,
+                      textDirection: TextDirection.ltr,
+                      size: 18,
+                      color: colors.heading,
+                    ),
                   ),
                 ],
               ),
@@ -410,7 +426,14 @@ class _ItemTile extends StatelessWidget {
                       : item.text.replaceAll('\n', ' '),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: rText(context, 10, color: colors.text),
+                  style: !verse && item.type == 'quran'
+                      ? TextStyle(
+                          fontFamily: 'AmiriQuran',
+                          fontSize: 16,
+                          height: 1.5,
+                          color: colors.text,
+                        )
+                      : rText(context, 10, color: colors.text),
                 ),
                 if (!verse && ['dua', 'hadith', 'quran'].contains(item.type))
                   Text(
@@ -426,7 +449,7 @@ class _ItemTile extends StatelessWidget {
             const SizedBox(width: 6),
             SizedBox(
               width: 94,
-              height: 60,
+              height: 90,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(9),
                 child: ShaderMask(
@@ -503,7 +526,7 @@ class _ReligiousPlayer extends StatelessWidget {
                 ],
               ),
               Directionality(
-                textDirection: TextDirection.ltr,
+                textDirection: TextDirection.rtl,
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     trackHeight: 2,

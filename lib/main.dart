@@ -4,6 +4,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_appearance.dart';
+import 'app_experience.dart';
 import 'settings_pages.dart';
 import 'features/quran/data/quran_controller.dart';
 import 'features/quran/presentation/quran_host.dart';
@@ -48,6 +49,8 @@ class HaqApp extends StatefulWidget {
 
 class _HaqAppState extends State<HaqApp> {
   AppAppearance? _appearance;
+  final _experience = AppExperienceController();
+  late final _navigationObserver = _experience.observer('root');
 
   @override
   void initState() {
@@ -70,6 +73,7 @@ class _HaqAppState extends State<HaqApp> {
 
   @override
   void dispose() {
+    _experience.dispose();
     if (widget.appearance == null) _appearance?.dispose();
     super.dispose();
   }
@@ -83,6 +87,8 @@ class _HaqAppState extends State<HaqApp> {
       child: ListenableBuilder(
         listenable: appearance,
         builder: (context, _) => MaterialApp(
+          navigatorKey: _experience.navigatorKey,
+          navigatorObservers: [_navigationObserver],
           debugShowCheckedModeBanner: false,
           title: 'حق',
           themeMode: appearance.mode,
@@ -96,7 +102,7 @@ class _HaqAppState extends State<HaqApp> {
                     appearance.fontScale,
               ),
             ),
-            child: child!,
+            child: AppExperienceOverlay(controller: _experience, child: child!),
           ),
           home: widget.showStartup
               ? StartupFlow(
@@ -197,6 +203,37 @@ class _HomePageState extends State<HomePage> {
   late final ReligiousController _religious;
   bool _religiousOpen = false;
   String? _religiousInitialCategory;
+  AppExperienceController? _experience;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final next = AppExperienceScope.maybeOf(context);
+    if (next != _experience) {
+      _experience?.unregister(_quran.audio);
+      _experience?.unregister(_religious.media);
+      _experience = next;
+      next?.register(_quran.audio);
+      next?.register(_religious.media);
+    }
+  }
+
+  void _switchIndex(int value) {
+    if (value != 1 && _quranFullscreen) {
+      _quranFullscreen = false;
+      _experience?.setBottomBarVisible(true);
+    }
+    _experience?.changeSurface(
+      value == 1
+          ? 'quran'
+          : value == 4 && _religiousOpen
+          ? 'religious'
+          : value == 4
+          ? 'more'
+          : 'home-$value',
+    );
+    setState(() => _currentIndex = value);
+  }
 
   @override
   void initState() {
@@ -215,13 +252,15 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    _experience?.unregister(_quran.audio);
+    _experience?.unregister(_religious.media);
     if (widget.religiousController == null) _religious.dispose();
     if (widget.quranController == null) _quran.dispose();
     super.dispose();
   }
 
   void _openQuran({bool resume = false}) {
-    setState(() => _currentIndex = 1);
+    _switchIndex(1);
     if (resume) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _quranKey.currentState?.openLastReading();
@@ -230,6 +269,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _openReligious([String? category]) {
+    _experience?.changeSurface('religious');
     if (_religiousOpen &&
         _religiousKey.currentState != null &&
         category != null) {
@@ -278,7 +318,10 @@ class _HomePageState extends State<HomePage> {
                           key: _religiousKey,
                           controller: _religious,
                           initialCategory: _religiousInitialCategory,
-                          onClose: () => setState(() => _religiousOpen = false),
+                          onClose: () {
+                            _experience?.changeSurface('more');
+                            setState(() => _religiousOpen = false);
+                          },
                         )
                       : MorePage(
                           onReligiousTap: _openReligious,
@@ -299,8 +342,7 @@ class _HomePageState extends State<HomePage> {
                             QuickServices(
                               onDuasTap: () => _openReligious(),
                               onQuranTap: () => _openQuran(),
-                              onMoreTap: () =>
-                                  setState(() => _currentIndex = 4),
+                              onMoreTap: () => _switchIndex(4),
                             ),
                             SizedBox(height: 18),
                             DhikrCard(),
@@ -339,6 +381,7 @@ class _HomePageState extends State<HomePage> {
                 controller: _quran,
                 active: _currentIndex == 1,
                 onFullscreenChanged: (value) {
+                  _experience?.setBottomBarVisible(!value);
                   if (mounted && value != _quranFullscreen) {
                     setState(() => _quranFullscreen = value);
                   }
@@ -352,10 +395,10 @@ class _HomePageState extends State<HomePage> {
             ? null
             : _religiousOpen && _currentIndex == 4
             ? ReligiousNavigationBar(
-                onSelected: (value) => setState(() {
-                  _currentIndex = value;
+                onSelected: (value) {
                   if (value == 4) _religiousOpen = false;
-                }),
+                  _switchIndex(value);
+                },
               )
             : ClipRRect(
                 borderRadius: const BorderRadius.vertical(
@@ -366,8 +409,7 @@ class _HomePageState extends State<HomePage> {
                   height: 72,
                   backgroundColor: dark ? Color(0xF2132331) : Color(0xF9FFFFFF),
                   indicatorColor: Colors.transparent,
-                  onDestinationSelected: (value) =>
-                      setState(() => _currentIndex = value),
+                  onDestinationSelected: _switchIndex,
                   destinations: [
                     NavigationDestination(
                       icon: Icon(Icons.home_outlined),

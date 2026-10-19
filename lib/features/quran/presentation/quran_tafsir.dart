@@ -493,7 +493,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                         await Clipboard.setData(
                                           ClipboardData(
                                             text:
-                                                '${entry.word}: ${entry.meaning}\nالسراج في بيان غريب القرآن • QuranEnc.com',
+                                                '${entry.word}: ${entry.meaning}',
                                           ),
                                         );
                                         if (context.mounted) {

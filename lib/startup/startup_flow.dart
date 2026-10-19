@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../app_experience.dart';
 
 import 'onboarding_screen.dart';
 import 'splash_screen.dart';
@@ -25,6 +26,7 @@ class _StartupFlowState extends State<StartupFlow> {
 
   void _finishSplash() {
     if (!mounted || _stage != _StartupStage.splash) return;
+    AppExperienceScope.maybeOf(context)?.transition();
     setState(
       () =>
           _stage = widget.preferences.getBool(StartupFlow.onboardingKey) == true
@@ -39,7 +41,10 @@ class _StartupFlowState extends State<StartupFlow> {
       true,
     );
     if (!saved) throw StateError('Unable to save onboarding preference.');
-    if (mounted) setState(() => _stage = _StartupStage.ready);
+    if (mounted) {
+      AppExperienceScope.maybeOf(context)?.transition();
+      setState(() => _stage = _StartupStage.ready);
+    }
   }
 
   @override

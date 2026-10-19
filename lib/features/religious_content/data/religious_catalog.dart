@@ -54,6 +54,15 @@ class ReligiousItem {
   String get searchable =>
       normalizeQuranSearch('$title $text $summary $source ${tags.join(' ')}');
   String get shareText => '$title\n\n$text\n\n$source\n$sourceUrl';
+  String get copyText {
+    if (type == 'name' && summary.isNotEmpty) return '$text\n$summary';
+    // A few source files put the collection reference at the end of the body.
+    // Keep the narration intact; omit only that trailing bibliographic note.
+    if (type == 'hadith') {
+      return text.replaceFirst(RegExp(r'\s*\(رواه[\s\S]*\)\.?\s*$'), '').trim();
+    }
+    return text;
+  }
 }
 
 /// Versioned content with stable IDs; displayed scripture is never normalized.

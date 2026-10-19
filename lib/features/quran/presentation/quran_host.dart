@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
+import '../../../app_experience.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
 import 'quran_reader.dart';
@@ -32,6 +33,13 @@ class QuranHostState extends State<QuranHost> {
   final navigator = GlobalKey<NavigatorState>();
   bool _pendingResume = false;
   Widget? _pendingPage;
+  NavigatorObserver? _observer;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _observer ??= AppExperienceScope.maybeOf(context)?.observer('quran');
+  }
+
   QuranController get controller => widget.controller;
   Future<void> openReader(QuranVerse verse, {String? highlight}) async {
     await navigator.currentState?.push(
@@ -134,7 +142,8 @@ class QuranHostState extends State<QuranHost> {
             child: Column(
               children: [
                 Expanded(child: child),
-                if (child is! QuranReader &&
+                if (AppExperienceScope.maybeOf(context) == null &&
+                    child is! QuranReader &&
                     child is! QuranAudioPage &&
                     child is! QuranExplanation)
                   ListenableBuilder(
@@ -199,6 +208,7 @@ class QuranHostState extends State<QuranHost> {
         onPopWithResult: (_) => navigator.currentState?.maybePop(),
         child: Navigator(
           key: navigator,
+          observers: [?_observer],
           onGenerateRoute: (settings) => MaterialPageRoute<void>(
             settings: settings,
             builder: (_) => _frame(

@@ -22,6 +22,7 @@ class TestAudioPlayer implements AudioPlayer {
   final errors = StreamController<PlayerException>.broadcast(sync: true);
   PlaybackEvent event = PlaybackEvent();
   bool isPlaying = false;
+  Completer<void>? loadGate, loadEntered;
   @override
   LoopMode loopMode = LoopMode.off;
   final seeks = <(Duration, int?)>[];
@@ -83,6 +84,8 @@ class TestAudioPlayer implements AudioPlayer {
     Duration? initialPosition,
     ShuffleOrder? shuffleOrder,
   }) async {
+    loadEntered?.complete();
+    await loadGate?.future;
     sequence = sources.cast<IndexedAudioSource>();
     emit(index: initialIndex ?? 0);
     return null;
@@ -161,6 +164,21 @@ void main() {
 
   Future<void> load(List<QuranAudioTrack> tracks) =>
       handler.load(tracks, tracks.map((t) => Uri.parse(t.url)).toList());
+
+  test(
+    'stop while loading prevents late source completion from restarting audio',
+    () async {
+      player.loadGate = Completer<void>();
+      player.loadEntered = Completer<void>();
+      final pending = load([recording('loading')]);
+      await player.loadEntered!.future;
+      await handler.stop();
+      player.loadGate!.complete();
+      await pending;
+      expect(player.playing, isFalse);
+      expect(handler.playbackState.value.playing, isFalse);
+    },
+  );
 
   test(
     'notification duration stays attached to its queue item across changes',
@@ -254,7 +272,7 @@ void main() {
   );
 
   testWidgets(
-    'Arabic player keeps seek directions physical and reciter arrow adjacent',
+    'Arabic player uses RTL timeline and controls with reciter arrow adjacent',
     (tester) async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
@@ -301,7 +319,11 @@ void main() {
       await show(compact: false);
       expect(
         tester.getCenter(find.byTooltip('إرجاع 10 ثوانٍ')).dx,
-        lessThan(tester.getCenter(find.byTooltip('تقديم 10 ثوانٍ')).dx),
+        greaterThan(tester.getCenter(find.byTooltip('تقديم 10 ثوانٍ')).dx),
+      );
+      expect(
+        Directionality.of(tester.element(find.byType(Slider))),
+        TextDirection.rtl,
       );
       await tester.tap(find.byTooltip('تقديم 10 ثوانٍ'));
       expect(player.seeks.last.$1, const Duration(seconds: 25));

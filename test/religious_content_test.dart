@@ -212,6 +212,54 @@ void main() {
     },
   );
   testWidgets(
+    'copy actions omit source metadata for every content type',
+    (tester) async {
+      String? clipboardText;
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'Clipboard.setData') {
+            clipboardText = (call.arguments as Map)['text'] as String;
+          }
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+      await pump(tester);
+      for (final id in [
+        'qdua-goodness',
+        'hisn-001',
+        'nawawi-02',
+        'name-01',
+        'sunnah-hands',
+      ]) {
+        final item = catalog.byId[id]!;
+        hostKey.currentState!.openItem(item);
+        await tester.pumpAndSettle();
+        final button = find.byTooltip('نسخ');
+        await Scrollable.ensureVisible(tester.element(button), alignment: .3);
+        await tester.pumpAndSettle();
+        await tester.tap(button);
+        await tester.pumpAndSettle();
+        expect(clipboardText, item.copyText);
+        expect(clipboardText, isNot(contains(item.sourceUrl)));
+        expect(clipboardText, isNot(contains(item.source)));
+        if (item.type == 'hadith') {
+          expect(clipboardText, isNot(contains('(رواه')));
+        }
+        hostKey.currentState!.back();
+        await tester.pumpAndSettle();
+      }
+      await tester.pumpWidget(const SizedBox());
+    },
+    timeout: const Timeout(Duration(seconds: 45)),
+  );
+  testWidgets(
     'disposing while local catalog is loading leaves no background timer',
     (tester) async {
       await tester.runAsync(() async {

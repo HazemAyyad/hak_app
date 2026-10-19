@@ -155,7 +155,7 @@ class QuranPlayerPanel extends StatelessWidget {
       SizedBox(
         height: 36,
         child: Directionality(
-          textDirection: TextDirection.ltr,
+          textDirection: TextDirection.rtl,
           child: Row(
             children: [
               _timeLabel(context, media.position),
@@ -273,7 +273,7 @@ class QuranPlayerPanel extends StatelessWidget {
         const SizedBox(height: 10),
         SizedBox(height: 24, child: _timeline(context)),
         Directionality(
-          textDirection: TextDirection.ltr,
+          textDirection: TextDirection.rtl,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -290,7 +290,7 @@ class QuranPlayerPanel extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Directionality(
-          textDirection: TextDirection.ltr,
+          textDirection: TextDirection.rtl,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -380,7 +380,7 @@ class QuranPlayerPanel extends StatelessWidget {
             overlayShape: const RoundSliderOverlayShape(overlayRadius: 8),
           ),
           child: Directionality(
-            textDirection: TextDirection.ltr,
+            textDirection: TextDirection.rtl,
             child: Slider(
               value: max > 0
                   ? media.position.inMilliseconds.toDouble().clamp(0, max)
@@ -450,14 +450,17 @@ class QuranPlayerPanel extends StatelessWidget {
       style: IconButton.styleFrom(
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
-      icon: Icon(
-        icon,
-        color: onTap == null
-            ? null
-            : active
-            ? qTeal
-            : qNavy,
-        size: 21,
+      icon: Transform.flip(
+        flipX: icon == Icons.skip_previous || icon == Icons.skip_next,
+        child: Icon(
+          icon,
+          color: onTap == null
+              ? null
+              : active
+              ? qTeal
+              : qNavy,
+          size: 21,
+        ),
       ),
     ),
   );

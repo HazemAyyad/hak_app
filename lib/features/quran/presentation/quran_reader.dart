@@ -843,9 +843,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                     leading: const Icon(Icons.copy_outlined, color: qNavy),
                     title: const Text('نسخ الآية'),
                     onTap: () async {
-                      await Clipboard.setData(
-                        ClipboardData(text: _shareText(verse)),
-                      );
+                      await Clipboard.setData(ClipboardData(text: verse.text));
                       if (sheetContext.mounted) Navigator.pop(sheetContext);
                       if (mounted) qNotice(this.context, 'تم نسخ الآية');
                     },

@@ -30,6 +30,7 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
     });
   }
   final AudioPlayer player;
+  int _loadGeneration = 0;
   AudioServiceRepeatMode _repeatMode = AudioServiceRepeatMode.none;
   void _broadcast([PlaybackEvent? event]) {
     final currentEvent = event ?? player.playbackEvent;
@@ -101,7 +102,9 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
       throw ArgumentError('A recording URI is required for every track');
     }
     RangeError.checkValidIndex(start, tracks, 'start');
+    final generation = ++_loadGeneration;
     await player.stop();
+    if (generation != _loadGeneration) return;
     queue.add(
       tracks.asMap().entries.map((entry) {
         final track = entry.value;
@@ -124,6 +127,7 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
     );
     mediaItem.add(queue.value[start]);
     await player.setLoopMode(LoopMode.off);
+    if (generation != _loadGeneration) return;
     _repeatMode = AudioServiceRepeatMode.none;
     await player.setAudioSources(
       [
@@ -133,6 +137,7 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
       initialIndex: start,
       initialPosition: Duration.zero,
     );
+    if (generation != _loadGeneration) return;
     _broadcast();
     unawaited(
       play().catchError((Object error) {
@@ -206,6 +211,7 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> stop() async {
+    ++_loadGeneration;
     await seekForward(false);
     await player.stop();
     await super.stop();
@@ -235,6 +241,7 @@ class QuranMedia extends ChangeNotifier {
   String? error;
   bool loading = false, _disposed = false;
   int _generation = 0;
+  int get playbackSession => _generation;
   Timer? _timer;
   DateTime? stopAt;
   AudioServiceRepeatMode repeat = AudioServiceRepeatMode.none;

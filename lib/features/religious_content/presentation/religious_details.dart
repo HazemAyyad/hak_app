@@ -66,6 +66,15 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
       final quran = item.type == 'quran';
       final saved = host.controller.favorites.contains(item.id);
       final sections = item.sections;
+      final narrationBreak = item.type == 'hadith'
+          ? item.text.indexOf('يقول:')
+          : -1;
+      final narration = narrationBreak < 0
+          ? null
+          : item.text.substring(0, narrationBreak + 5);
+      final mainText = narrationBreak < 0
+          ? item.text
+          : item.text.substring(narrationBreak + 5).trim();
       return ListView(
         padding: EdgeInsets.zero,
         key: PageStorageKey('religious-details-${item.id}'),
@@ -115,10 +124,17 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                       if (!quran && !name)
                         Row(
                           children: [
-                            const Icon(
-                              Icons.menu_book_outlined,
-                              color: rGold,
-                              size: 19,
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: ReligiousColors(context).subtle,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.menu_book_outlined,
+                                color: rGold,
+                                size: 20,
+                              ),
                             ),
                             const SizedBox(width: 7),
                             Text(
@@ -136,8 +152,19 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                           ],
                         ),
                       const SizedBox(height: 8),
+                      if (narration != null)
+                        Text(
+                          narration,
+                          textAlign: TextAlign.right,
+                          style: rText(
+                            context,
+                            13,
+                            color: ReligiousColors(context).text,
+                            height: 1.7,
+                          ),
+                        ),
                       SelectableText(
-                        item.text,
+                        mainText,
                         textAlign: name || quran
                             ? TextAlign.center
                             : TextAlign.right,
@@ -307,18 +334,46 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                   ),
                 ],
                 for (final section in sections)
-                  ReligiousSectionCard(
-                    title: section.title,
-                    text: section.text,
-                    source: section.source,
-                    icon: section.title.contains('وقت')
-                        ? Icons.schedule
-                        : section.title.contains('تطبيق')
-                        ? Icons.settings_outlined
-                        : section.title.contains('فوائد')
-                        ? Icons.spa_outlined
-                        : Icons.menu_book_outlined,
-                  ),
+                  if (section.title == 'الشرح المطول' ||
+                      section.title == 'التخريج')
+                    ReligiousCard(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: EdgeInsets.zero,
+                      child: ExpansionTile(
+                        title: Text(
+                          section.title,
+                          style: rText(context, 14, weight: FontWeight.w800),
+                        ),
+                        childrenPadding: const EdgeInsets.all(12),
+                        children: [
+                          SelectableText(
+                            section.text,
+                            style: rText(
+                              context,
+                              13,
+                              color: ReligiousColors(context).text,
+                            ),
+                          ),
+                          if (section.source != null)
+                            Text(section.source!, style: rText(context, 9)),
+                        ],
+                      ),
+                    )
+                  else
+                    ReligiousSectionCard(
+                      title: section.title,
+                      text: section.text,
+                      source: section.source?.startsWith('فوائد موجزة') == true
+                          ? null
+                          : section.source,
+                      icon: section.title.contains('وقت')
+                          ? Icons.schedule
+                          : section.title.contains('تطبيق')
+                          ? Icons.settings_outlined
+                          : section.title.contains('فوائد')
+                          ? Icons.spa_outlined
+                          : Icons.menu_book_outlined,
+                    ),
                 if (item.type == 'dua')
                   ReligiousSectionCard(title: 'المصدر', text: item.source),
                 if (name && item.related.isNotEmpty) ...[
@@ -399,10 +454,10 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
         icon: icon,
         label: label,
         onTap: onTap,
-        size: 30,
+        size: 34,
         filled: filled,
       ),
-      Text(label, style: rText(context, 8)),
+      Text(label, style: rText(context, 10)),
     ],
   );
 }
