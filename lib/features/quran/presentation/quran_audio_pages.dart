@@ -161,68 +161,68 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                         action: 'عرض الكل',
                         onAction: _readers,
                       ),
-                      SizedBox(
-                        height: 116 * MediaQuery.textScalerOf(context).scale(1),
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: spotlight.length,
-                          separatorBuilder: (_, index) =>
-                              const SizedBox(width: 8),
-                          itemBuilder: (context, index) {
-                            final entry = spotlight[index];
-                            return SizedBox(
-                              width: 105,
-                              child: QCard(
-                                color: entry.id == recitation.id
-                                    ? AppPalette.of(context).paleTeal
-                                    : null,
-                                padding: const EdgeInsets.all(8),
-                                onTap: () => _select(entry),
-                                child: Column(
-                                  children: [
-                                    Stack(
-                                      clipBehavior: Clip.none,
-                                      children: [
-                                        ReciterAvatar(recitation: entry),
-                                        if (entry.id == recitation.id)
-                                          const Positioned(
-                                            top: -4,
-                                            right: -8,
-                                            child: Icon(
-                                              Icons.check_circle,
-                                              color: qTeal,
-                                              size: 16,
+                      SingleChildScrollView(
+                        key: const ValueKey('quran-reciter-spotlight'),
+                        scrollDirection: Axis.horizontal,
+                        child: IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            spacing: 8,
+                            children: spotlight.map((entry) {
+                              return SizedBox(
+                                width: 105,
+                                child: QCard(
+                                  color: entry.id == recitation.id
+                                      ? AppPalette.of(context).paleTeal
+                                      : null,
+                                  padding: const EdgeInsets.all(8),
+                                  onTap: () => _select(entry),
+                                  child: Column(
+                                    children: [
+                                      Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          ReciterAvatar(recitation: entry),
+                                          if (entry.id == recitation.id)
+                                            const Positioned(
+                                              top: -4,
+                                              right: -8,
+                                              child: Icon(
+                                                Icons.check_circle,
+                                                color: qTeal,
+                                                size: 16,
+                                              ),
                                             ),
-                                          ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      entry.name,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                      style: qText(
-                                        context,
-                                        size: 11,
-                                        weight: FontWeight.w800,
+                                        ],
                                       ),
-                                    ),
-                                    Text(
-                                      entry.style,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: qText(
-                                        context,
-                                        size: 9,
-                                        color: qTeal,
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        entry.name,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                        style: qText(
+                                          context,
+                                          size: 11,
+                                          weight: FontWeight.w800,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        entry.style,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: qText(
+                                          context,
+                                          size: 9,
+                                          color: qTeal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 14),

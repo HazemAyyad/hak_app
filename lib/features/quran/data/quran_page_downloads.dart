@@ -10,6 +10,8 @@ import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'quran_repository.dart';
+import 'haq_api.dart';
+import 'quran_page_compressed_manifest.dart';
 
 enum QuranPageDownloadState { queued, downloading, paused, failed, complete }
 
@@ -22,10 +24,25 @@ class QuranPageAssetSpec {
     required this.svgBlob,
     required this.jsonLength,
     required this.jsonBlob,
+    this.svgGzipLength,
+    this.svgGzipSha256,
+    this.jsonGzipLength,
+    this.jsonGzipSha256,
   });
   final int page, svgLength, jsonLength;
   final String svgBlob, jsonBlob;
-  int get bytes => svgLength + jsonLength;
+  final int? svgGzipLength, jsonGzipLength;
+  final String? svgGzipSha256, jsonGzipSha256;
+  bool get compressed => svgGzipLength != null && jsonGzipLength != null;
+  int get originalBytes => svgLength + jsonLength;
+  int get bytes =>
+      (svgGzipLength ?? svgLength) + (jsonGzipLength ?? jsonLength);
+  int originalLength(String type) => type == 'svg' ? svgLength : jsonLength;
+  String originalBlob(String type) => type == 'svg' ? svgBlob : jsonBlob;
+  int transferLength(String type) =>
+      type == 'svg' ? svgGzipLength ?? svgLength : jsonGzipLength ?? jsonLength;
+  String? transferDigest(String type) =>
+      type == 'svg' ? svgGzipSha256 : jsonGzipSha256;
 }
 
 class QuranPageDownload {
@@ -208,7 +225,9 @@ class QuranPageDownloads extends ChangeNotifier {
     Dio? dio,
     Map<int, QuranPageAssetSpec>? manifest,
     this.baseUrl = sourceBase,
+    String? compressedBaseUrl,
   }) : _directory = directory,
+       compressedBaseUrl = compressedBaseUrl ?? compressedSourceBase,
        manifest = manifest ?? _sourceManifest(),
        dio =
            dio ??
@@ -224,8 +243,11 @@ class QuranPageDownloads extends ChangeNotifier {
   static const sourceBase =
       'https://raw.githubusercontent.com/quran-ws/quran-svg/'
       '$sourceRevision/mushafs/hafs/kfqc';
+  static String get compressedSourceBase =>
+      '${haqApiBase.replaceFirst(RegExp(r'/api/?$'), '')}/quran-pages/$sourceRevision';
   final Dio dio;
   final String baseUrl;
+  final String compressedBaseUrl;
   final Map<int, QuranPageAssetSpec> manifest;
   Directory? _directory;
   final entries = <int, QuranPageDownload>{};
@@ -334,12 +356,31 @@ class QuranPageDownloads extends ChangeNotifier {
   Future<int> _existingBytes(int page) async {
     var total = 0;
     for (final type in ['svg', 'json']) {
+      final spec = manifest[page]!;
+      if (spec.compressed) {
+        final packed = await _file(page, '$type.gz');
+        final partial = await _file(page, '$type.gz', partial: true);
+        if (await packed.exists()) {
+          total += spec.transferLength(type);
+          continue;
+        }
+        if (await partial.exists()) {
+          total += (await partial.length()).clamp(0, spec.transferLength(type));
+          continue;
+        }
+      }
       final complete = await _file(page, type);
       final partial = await _file(page, type, partial: true);
       if (await complete.exists()) {
-        total += await complete.length();
+        total += spec.compressed
+            ? spec.transferLength(type)
+            : await complete.length();
       } else if (await partial.exists()) {
-        total += await partial.length();
+        final length = await partial.length();
+        total += spec.compressed
+            ? (length / spec.originalLength(type) * spec.transferLength(type))
+                  .floor()
+            : length;
       }
     }
     return total;
@@ -426,8 +467,8 @@ class QuranPageDownloads extends ChangeNotifier {
         if (data == null) {
           throw const FormatException('Invalid downloaded Mushaf page');
         }
-        final svg = await (await _file(entry.page, 'svg')).readAsBytes();
-        final json = await (await _file(entry.page, 'json')).readAsBytes();
+        final svg = (await _assetBytes(entry.page, 'svg'))!;
+        final json = (await _assetBytes(entry.page, 'json'))!;
         entry.svgSha256 = sha256.convert(svg).toString();
         entry.jsonSha256 = sha256.convert(json).toString();
         entry.received = manifest[entry.page]!.bytes;
@@ -464,6 +505,17 @@ class QuranPageDownloads extends ChangeNotifier {
   }
 
   Future<void> _download(
+    QuranPageDownload entry,
+    String type,
+    CancelToken token,
+  ) async {
+    if (manifest[entry.page]!.compressed) {
+      return _downloadCompressed(entry, type, token);
+    }
+    return _downloadOriginal(entry, type, token);
+  }
+
+  Future<void> _downloadOriginal(
     QuranPageDownload entry,
     String type,
     CancelToken token,
@@ -510,7 +562,14 @@ class QuranPageDownloads extends ChangeNotifier {
     );
     final otherType = type == 'svg' ? 'json' : 'svg';
     final other = await _file(entry.page, otherType);
-    final otherSize = await other.exists() ? await other.length() : 0;
+    final otherSize = spec.compressed
+        ? ((await (await _file(entry.page, '$otherType.gz')).exists() ||
+                  await other.exists())
+              ? spec.transferLength(otherType)
+              : 0)
+        : await other.exists()
+        ? await other.length()
+        : 0;
     var received = offset;
     var lastEmit = DateTime.fromMillisecondsSinceEpoch(0);
     try {
@@ -521,7 +580,10 @@ class QuranPageDownloads extends ChangeNotifier {
           throw const FormatException('Oversized Mushaf asset');
         }
         sink.add(chunk);
-        entry.received = otherSize + received;
+        entry.received = spec.compressed
+            ? otherSize +
+                  (received / length * spec.transferLength(type)).floor()
+            : otherSize + received;
         if (DateTime.now().difference(lastEmit).inMilliseconds >= 100) {
           _emit();
           lastEmit = DateTime.now();
@@ -537,17 +599,229 @@ class QuranPageDownloads extends ChangeNotifier {
       throw const FormatException('Mushaf asset checksum mismatch');
     }
     await partial.rename(file.path);
+    entry.received = otherSize + spec.transferLength(type);
+  }
+
+  Future<void> _downloadCompressed(
+    QuranPageDownload entry,
+    String type,
+    CancelToken token,
+  ) async {
+    final page = entry.page, spec = manifest[entry.page]!;
+    if (await _assetBytes(page, type) != null) return;
+    final file = await _file(page, '$type.gz');
+    if (await file.exists()) await file.delete();
+    // Resume pre-upgrade raw downloads rather than discarding saved bytes.
+    final legacyPartial = await _file(page, type, partial: true);
+    if (await legacyPartial.exists()) {
+      await _downloadOriginal(entry, type, token);
+      if (await _assetBytes(page, type) == null) {
+        throw const FormatException('Invalid migrated page');
+      }
+      return;
+    }
+    final partial = await _file(page, '$type.gz', partial: true);
+    final length = spec.transferLength(type);
+    var offset = await partial.exists() ? await partial.length() : 0;
+    if (offset >= length) {
+      if (await _validPacked(partial, spec, type)) {
+        await partial.rename(file.path);
+        return;
+      }
+      await partial.delete();
+      offset = 0;
+    }
+    Response<ResponseBody> response;
+    try {
+      response = await dio.get<ResponseBody>(
+        '$compressedBaseUrl/$type/${_name(page)}.$type.qgz',
+        options: Options(
+          responseType: ResponseType.stream,
+          headers: {
+            'Accept-Encoding': 'identity',
+            if (offset > 0) 'Range': 'bytes=$offset-',
+          },
+        ),
+        cancelToken: token,
+      );
+      if (response.statusCode != 200 && response.statusCode != 206) {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+        );
+      }
+    } on DioException catch (exception) {
+      final status = exception.response?.statusCode;
+      if (token.isCancelled ||
+          (status != null && status != 404 && status < 500)) {
+        rethrow;
+      }
+      final responseData = exception.response?.data;
+      if (responseData is ResponseBody) await responseData.stream.drain<void>();
+      // Old hosts remain usable until the static compressed bundle is uploaded.
+      // Store the verified fallback locally compressed; never show a false size
+      // for device storage or discard an existing resumable original download.
+      await _downloadOriginal(entry, type, token);
+      if (await _assetBytes(page, type) == null) {
+        throw const FormatException('Invalid fallback page');
+      }
+      if (await partial.exists()) await partial.delete();
+      return;
+    }
+    final resume = response.statusCode == 206 && offset > 0;
+    if (response.statusCode == 206 &&
+        response.headers.value('content-range') !=
+            'bytes $offset-${length - 1}/$length') {
+      await response.data!.stream.drain<void>();
+      throw const FormatException('Invalid compressed page range');
+    }
+    if (!resume) offset = 0;
+    final otherType = type == 'svg' ? 'json' : 'svg';
+    final otherFile = await _file(page, '$otherType.gz');
+    final otherSize = await otherFile.exists()
+        ? spec.transferLength(otherType)
+        : 0;
+    final sink = partial.openWrite(
+      mode: resume ? FileMode.append : FileMode.write,
+    );
+    var received = offset;
+    var lastEmit = DateTime.fromMillisecondsSinceEpoch(0);
+    try {
+      await for (final chunk in response.data!.stream) {
+        if (token.isCancelled) throw const _PageDownloadPaused();
+        received += chunk.length;
+        if (received > length) {
+          throw const FormatException('Oversized compressed page');
+        }
+        sink.add(chunk);
+        entry.received = otherSize + received;
+        if (DateTime.now().difference(lastEmit).inMilliseconds >= 100) {
+          _emit();
+          lastEmit = DateTime.now();
+        }
+      }
+      await sink.flush();
+    } finally {
+      await sink.close();
+    }
+    if (token.isCancelled) throw const _PageDownloadPaused();
+    if (!await _validPacked(partial, spec, type)) {
+      await partial.delete();
+      throw const FormatException('Compressed page checksum mismatch');
+    }
+    await partial.rename(file.path);
     entry.received = otherSize + length;
+  }
+
+  Uint8List _unpack(List<int> packed, int expectedLength) {
+    final output = _LimitedPageBytes(expectedLength);
+    final decoder = gzip.decoder.startChunkedConversion(output);
+    decoder.add(packed);
+    decoder.close();
+    final bytes = output.bytes.takeBytes();
+    if (bytes.length != expectedLength) {
+      throw const FormatException('Unexpected page length');
+    }
+    return bytes;
+  }
+
+  bool _matchesBytes(List<int> bytes, int length, String blob) {
+    if (bytes.length != length) return false;
+    final builder = BytesBuilder(copy: false)
+      ..add(utf8.encode('blob ${bytes.length}\u0000'))
+      ..add(bytes);
+    return sha1.convert(builder.takeBytes()).toString() == blob;
+  }
+
+  Future<bool> _validPacked(
+    File file,
+    QuranPageAssetSpec spec,
+    String type,
+  ) async {
+    try {
+      if (!await file.exists() ||
+          await file.length() != spec.transferLength(type)) {
+        return false;
+      }
+      final packed = await file.readAsBytes();
+      if (sha256.convert(packed).toString() != spec.transferDigest(type)) {
+        return false;
+      }
+      final raw = _unpack(packed, spec.originalLength(type));
+      return _matchesBytes(
+        raw,
+        spec.originalLength(type),
+        spec.originalBlob(type),
+      );
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<Uint8List?> _assetBytes(int page, String type) async {
+    final spec = manifest[page]!;
+    final original = await _file(page, type);
+    if (spec.compressed) {
+      final packed = await _file(page, '$type.gz');
+      if (await packed.exists()) {
+        try {
+          // Migrated files may use a different gzip header. The immutable
+          // original Git identity, not encoder-specific bytes, authenticates them.
+          if (await packed.length() > spec.originalLength(type) + 128) {
+            throw const FormatException('Oversized stored page');
+          }
+          final raw = _unpack(
+            await packed.readAsBytes(),
+            spec.originalLength(type),
+          );
+          if (_matchesBytes(
+            raw,
+            spec.originalLength(type),
+            spec.originalBlob(type),
+          )) {
+            try {
+              if (await original.exists()) await original.delete();
+            } on FileSystemException {
+              /* Keep reading if legacy cleanup is blocked. */
+            }
+            return raw;
+          }
+        } catch (_) {
+          /* A valid original may still be available for migration. */
+        }
+      }
+    }
+    if (!await _matches(
+      original,
+      spec.originalLength(type),
+      spec.originalBlob(type),
+    )) {
+      return null;
+    }
+    final raw = await original.readAsBytes();
+    if (spec.compressed) {
+      final packed = await _file(page, '$type.gz');
+      final temporary = File('${packed.path}.tmp');
+      try {
+        await temporary.writeAsBytes(
+          GZipCodec(level: 9).encode(raw),
+          flush: true,
+        );
+        await temporary.rename(packed.path);
+        // Delete only after the replacement is safely on disk.
+        await original.delete();
+      } on FileSystemException {
+        // A full or read-only disk must not make an already verified page unreadable.
+        // Leave the original intact and retry migration on a later read.
+      }
+    }
+    return raw;
   }
 
   Future<bool> _matches(File file, int length, String blob) async {
     if (!await file.exists() || await file.length() != length) return false;
     final bytes = await file.readAsBytes();
-    final builder = BytesBuilder(copy: false)
-      ..add(utf8.encode('blob ${bytes.length}\u0000'))
-      ..add(bytes);
-    final actual = sha1.convert(builder.takeBytes()).toString();
-    return actual == blob;
+    return _matchesBytes(bytes, length, blob);
   }
 
   Future<QuranOfflinePageData?> _loadVerified(
@@ -558,14 +832,9 @@ class QuranPageDownloads extends ChangeNotifier {
     if (spec == null) return null;
     final entry = entries[page];
     try {
-      final svgFile = await _file(page, 'svg'),
-          jsonFile = await _file(page, 'json');
-      if (!await _matches(svgFile, spec.svgLength, spec.svgBlob) ||
-          !await _matches(jsonFile, spec.jsonLength, spec.jsonBlob)) {
-        return null;
-      }
-      final svg = await svgFile.readAsBytes(),
-          json = await jsonFile.readAsBytes();
+      final svg = await _assetBytes(page, 'svg'),
+          json = await _assetBytes(page, 'json');
+      if (svg == null || json == null) return null;
       if (requireLocalDigest &&
           (entry?.svgSha256 != sha256.convert(svg).toString() ||
               entry?.jsonSha256 != sha256.convert(json).toString())) {
@@ -640,18 +909,43 @@ class _PageDownloadPaused implements Exception {
   const _PageDownloadPaused();
 }
 
+class _LimitedPageBytes extends ByteConversionSink {
+  _LimitedPageBytes(this.limit);
+  final int limit;
+  final bytes = BytesBuilder(copy: false);
+  @override
+  void add(List<int> chunk) {
+    if (bytes.length + chunk.length > limit) {
+      throw const FormatException('Expanded page exceeds pinned length');
+    }
+    bytes.add(chunk);
+  }
+
+  @override
+  void close() {}
+}
+
 // Expected object IDs and lengths from the immutable v1.1.1 Git tree.
 Map<int, QuranPageAssetSpec> _sourceManifest() {
   final result = <int, QuranPageAssetSpec>{};
+  final compressed = <int, List<String>>{
+    for (final row in quranCompressedPageManifest.trim().split('\n'))
+      int.parse(row.split(' ')[0]): row.split(' '),
+  };
   for (final line in _pageManifest.trim().split('\n')) {
     final parts = line.trim().split(' ');
     final page = int.parse(parts[0]);
+    final packed = compressed[page]!;
     result[page] = QuranPageAssetSpec(
       page: page,
       svgLength: int.parse(parts[1]),
       svgBlob: parts[2],
       jsonLength: int.parse(parts[3]),
       jsonBlob: parts[4],
+      svgGzipLength: int.parse(packed[1]),
+      svgGzipSha256: packed[2],
+      jsonGzipLength: int.parse(packed[3]),
+      jsonGzipSha256: packed[4],
     );
   }
   return Map.unmodifiable(result);

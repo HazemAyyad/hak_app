@@ -49,6 +49,24 @@ ResponseBody fullPage(RequestOptions options) => ResponseBody.fromString(
   200,
 );
 
+List<int> packedSvg() => GZipCodec(level: 9).encode(utf8.encode(pageSvg));
+List<int> packedJson() => GZipCodec(level: 9).encode(utf8.encode(pageJson));
+QuranPageAssetSpec compressedSpec(int page) => QuranPageAssetSpec(
+  page: page,
+  svgLength: utf8.encode(pageSvg).length,
+  svgBlob: blob(pageSvg),
+  jsonLength: utf8.encode(pageJson).length,
+  jsonBlob: blob(pageJson),
+  svgGzipLength: packedSvg().length,
+  svgGzipSha256: sha256.convert(packedSvg()).toString(),
+  jsonGzipLength: packedJson().length,
+  jsonGzipSha256: sha256.convert(packedJson()).toString(),
+);
+ResponseBody compressedPage(RequestOptions options) => ResponseBody.fromBytes(
+  options.uri.path.endsWith('.svg.qgz') ? packedSvg() : packedJson(),
+  200,
+);
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late Directory directory;
@@ -61,6 +79,7 @@ void main() {
       directory: directory,
       dio: dio,
       manifest: manifest ?? {1: spec(1), 2: spec(2)},
+      compressedBaseUrl: 'https://compressed.test/pages',
     );
     stores.add(store);
     return store;
@@ -76,6 +95,331 @@ void main() {
     }
     stores.clear();
     if (await directory.exists()) await directory.delete(recursive: true);
+  });
+
+  test(
+    'compressed pages stay compressed across restart, preserve exact artwork and reject corruption',
+    () async {
+      var requests = 0;
+      final store = create(
+        manifest: {1: compressedSpec(1)},
+        dio: Dio()
+          ..httpClientAdapter = PageHttp((options) {
+            requests++;
+            expect(options.headers['Accept-Encoding'], 'identity');
+            return compressedPage(options);
+          }),
+      );
+      await store.enqueue([1]);
+      await store.flush();
+      expect(store.completed, 1);
+      expect(store.progress, 1);
+      expect(requests, 2);
+      expect(await File('${directory.path}/001.svg').exists(), isFalse);
+      expect(await File('${directory.path}/001.json').exists(), isFalse);
+      final image = File('${directory.path}/001.svg.gz');
+      expect(gzip.decode(await image.readAsBytes()), utf8.encode(pageSvg));
+      final restored = create(
+        manifest: {1: compressedSpec(1)},
+        dio: Dio()
+          ..httpClientAdapter = PageHttp(
+            (_) => throw StateError('Unexpected network'),
+          ),
+      );
+      await restored.initialize();
+      final page = (await restored.offlinePage(1))!;
+      expect(page.svg, pageSvg);
+      expect(page.verseAt(const Offset(20, 20)), '1:1');
+      await image.writeAsBytes(
+        gzip.encode(utf8.encode(pageSvg.replaceFirst('#111111', '#222222'))),
+      );
+      expect(await restored.offlinePage(1), isNull);
+      expect(restored.hasPage(1), isFalse);
+    },
+  );
+
+  test(
+    'published page fixture matches the pinned compressed manifest and original real artwork',
+    () async {
+      final dio = Dio()
+        ..httpClientAdapter = PageHttp((options) {
+          final type = options.uri.path.endsWith('.svg.qgz') ? 'svg' : 'json';
+          return ResponseBody.fromBytes(
+            File('test/fixtures/quran/offline001.$type.qgz').readAsBytesSync(),
+            200,
+          );
+        });
+      final store = QuranPageDownloads(directory: directory, dio: dio);
+      stores.add(store);
+      await store.enqueue([1]);
+      await store.flush();
+      expect(store.hasPage(1), isTrue);
+      final page = (await store.offlinePage(1))!;
+      expect(
+        page.svg,
+        File('test/fixtures/quran/offline001.svg').readAsStringSync(),
+      );
+      expect(page.regions.first.key, '1:1');
+      expect(store.progress, 1);
+      expect(await File('${directory.path}/001.svg').exists(), isFalse);
+      expect(
+        await File('${directory.path}/001.svg.gz').length(),
+        store.manifest[1]!.svgGzipLength,
+      );
+    },
+  );
+
+  for (final alreadyCompressedSvg in [false, true]) {
+    test(
+      'legacy page migration is offline and handles mixed files: $alreadyCompressedSvg',
+      () async {
+        final old = create(dio: Dio()..httpClientAdapter = PageHttp(fullPage));
+        await old.enqueue([1]);
+        await old.flush();
+        if (alreadyCompressedSvg) {
+          await File('${directory.path}/001.svg.gz').writeAsBytes(packedSvg());
+          await File('${directory.path}/001.svg').delete();
+        }
+        final migrated = create(
+          manifest: {1: compressedSpec(1)},
+          dio: Dio()
+            ..httpClientAdapter = PageHttp(
+              (_) => throw StateError('Migration attempted network'),
+            ),
+        );
+        await migrated.initialize();
+        expect(migrated.hasPage(1), isTrue);
+        expect((await migrated.offlinePage(1))!.svg, pageSvg);
+        for (final type in ['svg', 'json']) {
+          expect(await File('${directory.path}/001.$type').exists(), isFalse);
+          expect(await File('${directory.path}/001.$type.gz').exists(), isTrue);
+        }
+        expect(migrated.progress, 1);
+      },
+    );
+  }
+
+  test(
+    'compressed ranges resume against compressed bytes and ignored ranges restart safely',
+    () async {
+      final bytes = packedSvg();
+      await File(
+        '${directory.path}/001.svg.gz.part',
+      ).writeAsBytes(bytes.take(25).toList());
+      final dio = Dio()
+        ..httpClientAdapter = PageHttp((options) {
+          if (options.uri.path.endsWith('.svg.qgz')) {
+            expect(options.headers['Range'], 'bytes=25-');
+            return ResponseBody.fromBytes(
+              bytes.skip(25).toList(),
+              206,
+              headers: {
+                'content-range': [
+                  'bytes 25-${bytes.length - 1}/${bytes.length}',
+                ],
+              },
+            );
+          }
+          return compressedPage(options);
+        });
+      final store = create(
+        dio: dio,
+        manifest: {1: compressedSpec(1), 2: compressedSpec(2)},
+      );
+      await store.enqueue([1]);
+      await store.flush();
+      expect(store.hasPage(1), isTrue);
+      await File(
+        '${directory.path}/002.svg.gz.part',
+      ).writeAsBytes(bytes.take(25).toList());
+      dio.httpClientAdapter = PageHttp(compressedPage);
+      await store.enqueue([2]);
+      await store.flush();
+      expect(store.completed, 2);
+      expect(
+        gzip.decode(await File('${directory.path}/002.svg.gz').readAsBytes()),
+        utf8.encode(pageSvg),
+      );
+    },
+  );
+
+  test(
+    'a blocked migration keeps verified legacy pages readable and retries later',
+    () async {
+      final old = create(dio: Dio()..httpClientAdapter = PageHttp(fullPage));
+      await old.enqueue([1]);
+      await old.flush();
+      final blocker = Directory('${directory.path}/001.svg.gz.tmp');
+      await blocker.create();
+      final migrated = create(
+        manifest: {1: compressedSpec(1)},
+        dio: Dio()
+          ..httpClientAdapter = PageHttp(
+            (_) => throw StateError('Unexpected network'),
+          ),
+      );
+      await migrated.initialize();
+      expect(migrated.hasPage(1), isTrue);
+      expect((await migrated.offlinePage(1))!.svg, pageSvg);
+      expect(await File('${directory.path}/001.svg').exists(), isTrue);
+      await blocker.delete();
+      expect((await migrated.offlinePage(1))!.svg, pageSvg);
+      expect(await File('${directory.path}/001.svg').exists(), isFalse);
+      expect(await File('${directory.path}/001.svg.gz').exists(), isTrue);
+    },
+  );
+
+  test(
+    'old hosts fall back to verified originals but store only compressed pages',
+    () async {
+      var packedRequests = 0, originalRequests = 0;
+      final store = create(
+        manifest: {1: compressedSpec(1)},
+        dio: Dio()
+          ..httpClientAdapter = PageHttp((options) {
+            if (options.uri.host == 'compressed.test') {
+              packedRequests++;
+              return ResponseBody.fromString('Not published', 404);
+            }
+            originalRequests++;
+            return fullPage(options);
+          }),
+      );
+      await store.enqueue([1]);
+      await store.flush();
+      expect(store.hasPage(1), isTrue);
+      expect(packedRequests, 2);
+      expect(originalRequests, 2);
+      expect(await File('${directory.path}/001.svg').exists(), isFalse);
+      expect(await File('${directory.path}/001.svg.gz').exists(), isTrue);
+      expect((await store.offlinePage(1))!.svg, pageSvg);
+    },
+  );
+
+  test(
+    'compressed downloads pause without starting the next page and resume saved bytes',
+    () async {
+      final bytes = packedSvg();
+      final started = Completer<void>(), finish = Completer<void>();
+      var requests = 0;
+      Stream<Uint8List> slow() async* {
+        yield Uint8List.fromList(bytes.take(25).toList());
+        started.complete();
+        await finish.future;
+        yield Uint8List.fromList(bytes.skip(25).toList());
+      }
+
+      final dio = Dio()
+        ..httpClientAdapter = PageHttp((_) {
+          requests++;
+          return ResponseBody(slow(), 200);
+        });
+      final store = create(
+        dio: dio,
+        manifest: {1: compressedSpec(1), 2: compressedSpec(2)},
+      );
+      await store.enqueue([1, 2]);
+      await started.future;
+      final deadline = DateTime.now().add(const Duration(seconds: 3));
+      while (store.entries[1]!.received < 25) {
+        if (DateTime.now().isAfter(deadline)) {
+          throw TimeoutException('No compressed bytes saved');
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 5));
+      }
+      final pausing = store.pauseAll();
+      finish.complete();
+      await pausing;
+      expect(requests, 1);
+      expect(await File('${directory.path}/001.svg.gz.part').length(), 25);
+      expect(store.isActive, isFalse);
+      dio.httpClientAdapter = PageHttp((options) {
+        if (options.headers['Range'] == 'bytes=25-') {
+          return ResponseBody.fromBytes(
+            bytes.skip(25).toList(),
+            206,
+            headers: {
+              'content-range': ['bytes 25-${bytes.length - 1}/${bytes.length}'],
+            },
+          );
+        }
+        return compressedPage(options);
+      });
+      await store.resumeAll();
+      await store.flush();
+      expect(store.completed, 2);
+      expect(store.progress, 1);
+    },
+  );
+
+  test(
+    'legacy partial downloads resume their original offset before compression',
+    () async {
+      final bytes = utf8.encode(pageSvg);
+      await File(
+        '${directory.path}/001.svg.part',
+      ).writeAsBytes(bytes.take(25).toList());
+      final store = create(
+        manifest: {1: compressedSpec(1)},
+        dio: Dio()
+          ..httpClientAdapter = PageHttp((options) {
+            if (options.uri.path.endsWith('.svg')) {
+              expect(options.headers['Range'], 'bytes=25-');
+              return ResponseBody.fromBytes(
+                bytes.skip(25).toList(),
+                206,
+                headers: {
+                  'content-range': [
+                    'bytes 25-${bytes.length - 1}/${bytes.length}',
+                  ],
+                },
+              );
+            }
+            return compressedPage(options);
+          }),
+      );
+      await store.enqueue([1]);
+      await store.flush();
+      expect(store.hasPage(1), isTrue);
+      expect(await File('${directory.path}/001.svg').exists(), isFalse);
+      expect(
+        gzip.decode(await File('${directory.path}/001.svg.gz').readAsBytes()),
+        bytes,
+      );
+    },
+  );
+
+  test('stored gzip cannot expand past the pinned page length', () async {
+    final store = create(
+      manifest: {1: compressedSpec(1)},
+      dio: Dio()..httpClientAdapter = PageHttp(compressedPage),
+    );
+    await store.enqueue([1]);
+    await store.flush();
+    await File(
+      '${directory.path}/001.svg.gz',
+    ).writeAsBytes(gzip.encode(List.filled(10000, 65)));
+    expect(await store.offlinePage(1), isNull);
+    expect(store.hasPage(1), isFalse);
+  });
+
+  test('bad compressed checksums fail without silently falling back', () async {
+    var requests = 0;
+    final store = create(
+      manifest: {1: compressedSpec(1), 2: compressedSpec(2)},
+      dio: Dio()
+        ..httpClientAdapter = PageHttp((options) {
+          requests++;
+          final data = packedSvg()..[10] ^= 1;
+          return ResponseBody.fromBytes(data, 200);
+        }),
+    );
+    await store.enqueue([1, 2]);
+    await store.flush();
+    expect(store.completed, 0);
+    expect(requests, 1);
+    expect(store.entries[1]!.state, QuranPageDownloadState.failed);
+    expect(store.entries[2]!.state, QuranPageDownloadState.paused);
   });
 
   test(
@@ -239,6 +583,12 @@ void main() {
       expect(store.manifest.length, 604);
       expect(store.manifest[1]!.svgBlob, matches(RegExp(r'^[a-f0-9]{40}$')));
       expect(store.manifest[604]!.jsonLength, greaterThan(0));
+      final bytes = store.manifest.values.fold(
+        0,
+        (sum, page) => sum + page.bytes,
+      );
+      expect(bytes, lessThan(120 * 1024 * 1024));
+      expect(store.manifest.values.every((page) => page.compressed), isTrue);
       final repo = QuranRepository.fromJson(
         jsonDecode(File('assets/quran/quran.json').readAsStringSync())
             as Map<String, dynamic>,

@@ -127,7 +127,7 @@ class _QuranPageDownloadSheet extends StatelessWidget {
                       child: Text(
                         saved == pages.length
                             ? 'سورة ${repository.surah(surahId).name} محفوظة'
-                            : 'هذه السورة • ${pages.length} صفحة • ${_size(currentSize)}',
+                            : 'هذه السورة • ${pages.length} صفحة • حجم الحفظ ${_size(currentSize)}',
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -144,7 +144,7 @@ class _QuranPageDownloadSheet extends StatelessWidget {
                       child: Text(
                         downloads.completed == 604
                             ? 'المصحف كاملًا محفوظ'
-                            : 'المصحف كاملًا • 604 صفحات • ${_size(allSize)}',
+                            : 'المصحف كاملًا • 604 صفحات • حجم الحفظ ${_size(allSize)}',
                         textAlign: TextAlign.center,
                       ),
                     ),
