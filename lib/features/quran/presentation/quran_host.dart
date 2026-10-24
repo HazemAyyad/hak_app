@@ -20,10 +20,12 @@ class QuranHost extends StatefulWidget {
     required this.controller,
     required this.onFullscreenChanged,
     this.active = true,
+    this.onExit,
   });
   final QuranController controller;
   final ValueChanged<bool> onFullscreenChanged;
   final bool active;
+  final VoidCallback? onExit;
   @override
   State<QuranHost> createState() => QuranHostState();
 }
@@ -201,19 +203,25 @@ class QuranHostState extends State<QuranHost> {
           key: navigator,
           onGenerateRoute: (settings) => MaterialPageRoute<void>(
             settings: settings,
-            builder: (_) => _frame(
-              QuranHomePage(
-                controller: controller,
-                onIndex: openIndex,
-                onResume: openLastReading,
-                onSaved: openSaved,
-                onSearch: openSearch,
-                onAudio: openAudio,
-                onDownloads: openDownloads,
-                onExplain: () => openExplanation(),
-                onVerseExplain: (verse) => openExplanation(verse: verse),
-                onSettings: () =>
-                    _push(QuranReadingSettings(controller: controller)),
+            builder: (_) => PopScope<Object?>(
+              canPop: widget.onExit == null,
+              onPopInvokedWithResult: (didPop, _) {
+                if (!didPop && widget.active) widget.onExit?.call();
+              },
+              child: _frame(
+                QuranHomePage(
+                  controller: controller,
+                  onIndex: openIndex,
+                  onResume: openLastReading,
+                  onSaved: openSaved,
+                  onSearch: openSearch,
+                  onAudio: openAudio,
+                  onDownloads: openDownloads,
+                  onExplain: () => openExplanation(),
+                  onVerseExplain: (verse) => openExplanation(verse: verse),
+                  onSettings: () =>
+                      _push(QuranReadingSettings(controller: controller)),
+                ),
               ),
             ),
           ),

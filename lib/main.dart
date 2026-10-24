@@ -11,6 +11,11 @@ import 'features/religious_content/data/religious_controller.dart';
 import 'features/religious_content/presentation/religious_host.dart';
 import 'startup/startup_flow.dart';
 
+import 'navigation/app_section.dart';
+import 'navigation/feature_routes.dart';
+import 'navigation/more_page.dart';
+import 'navigation/section_entry_page.dart';
+
 part 'home_widgets.dart';
 
 Future<void> main() async {
@@ -189,7 +194,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
+  AppSection _section = AppSection.home;
+  final _visited = <AppSection>{AppSection.home, AppSection.quran};
   bool _quranFullscreen = false;
   late final QuranController _quran;
   final _quranKey = GlobalKey<QuranHostState>();
@@ -220,8 +226,13 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void _selectSection(AppSection section) => setState(() {
+    _section = section;
+    _visited.add(section);
+  });
+
   void _openQuran({bool resume = false}) {
-    setState(() => _currentIndex = 1);
+    _selectSection(AppSection.quran);
     if (resume) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _quranKey.currentState?.openLastReading();
@@ -238,7 +249,8 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _religiousInitialCategory = category;
       _religiousOpen = true;
-      _currentIndex = 4;
+      _section = AppSection.more;
+      _visited.add(AppSection.more);
     });
   }
 
@@ -263,414 +275,217 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _openFeature(AppFeature feature) {
+    switch (feature) {
+      case AppFeature.quran:
+        _openQuran();
+      case AppFeature.adhkar:
+        _selectSection(AppSection.adhkar);
+      case AppFeature.qibla:
+        _selectSection(AppSection.qibla);
+      case AppFeature.settings:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => SettingsPage(
+              onQuranSettings: () {
+                Navigator.of(context).pop();
+                _openQuranSettings();
+              },
+              onQuranAccount: () {
+                Navigator.of(context).pop();
+                _openQuranAccount();
+              },
+              onQuranDownloads: () {
+                Navigator.of(context).pop();
+                _openQuranDownloads();
+              },
+            ),
+          ),
+        );
+      case AppFeature.appearance:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) =>
+                const SettingsDetailPage(kind: SettingKind.appearance),
+          ),
+        );
+      default:
+        if (feature.category != null ||
+            feature == AppFeature.religiousLibrary) {
+          if (_section == AppSection.adhkar) {
+            Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                settings: RouteSettings(name: feature.routeName),
+                builder: (routeContext) => Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Scaffold(
+                    body: ReligiousHost(
+                      controller: _religious,
+                      initialCategory: feature.category,
+                      initialCategoryAsRoot: true,
+                      onClose: () => Navigator.of(routeContext).pop(),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          } else {
+            _openReligious(feature.category);
+          }
+        } else {
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              settings: RouteSettings(name: feature.routeName),
+              builder: (_) => FeaturePreparationPage(feature: feature),
+            ),
+          );
+        }
+    }
+  }
+
+  Widget _buildHome() => CustomScrollView(
+    key: const PageStorageKey('home-feed'),
+    slivers: [
+      SliverToBoxAdapter(child: _HeroHeader()),
+      SliverPadding(
+        padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
+        sliver: SliverList(
+          delegate: SliverChildListDelegate.fixed([
+            PrayerCard(),
+            SizedBox(height: 14),
+            QuickServices(
+              onDuasTap: () => _openReligious(),
+              onQuranTap: () => _openQuran(),
+              onMoreTap: () => _selectSection(AppSection.more),
+            ),
+            SizedBox(height: 18),
+            DhikrCard(onTap: () => _selectSection(AppSection.adhkar)),
+            SizedBox(height: 14),
+            ReadingCard(
+              controller: _quran,
+              onContinue: () => _openQuran(resume: true),
+            ),
+            SizedBox(height: 14),
+            DailyVerseCard(),
+            SizedBox(height: 20),
+            SectionHeader(title: 'رحلتك اليوم', action: 'عرض الكل'),
+            SizedBox(height: 10),
+            JourneyCards(),
+            SizedBox(height: 20),
+            FridayCard(onTap: () => _openReligious('friday')),
+            SizedBox(height: 20),
+            SectionHeader(title: 'مقالات ومعلومات', action: 'عرض الكل'),
+            SizedBox(height: 10),
+            ArticlesRow(),
+          ]),
+        ),
+      ),
+    ],
+  );
+
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
+    final religiousHandlesBack = _section == AppSection.more && _religiousOpen;
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
-        body: IndexedStack(
-          index: _currentIndex == 1 ? 1 : 0,
-          children: [
-            _currentIndex == 4
-                ? _religiousOpen
-                      ? ReligiousHost(
-                          key: _religiousKey,
-                          controller: _religious,
-                          initialCategory: _religiousInitialCategory,
-                          onClose: () => setState(() => _religiousOpen = false),
-                        )
-                      : MorePage(
-                          onReligiousTap: _openReligious,
-                          onQuranTap: () => _openQuran(),
-                          onQuranSettings: _openQuranSettings,
-                          onQuranAccount: _openQuranAccount,
-                          onQuranDownloads: _openQuranDownloads,
-                        )
-                : CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(child: _HeroHeader()),
-                      SliverPadding(
-                        padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
-                        sliver: SliverList(
-                          delegate: SliverChildListDelegate.fixed([
-                            PrayerCard(),
-                            SizedBox(height: 14),
-                            QuickServices(
-                              onDuasTap: () => _openReligious(),
-                              onQuranTap: () => _openQuran(),
-                              onMoreTap: () =>
-                                  setState(() => _currentIndex = 4),
-                            ),
-                            SizedBox(height: 18),
-                            DhikrCard(),
-                            SizedBox(height: 14),
-                            ReadingCard(
-                              controller: _quran,
-                              onContinue: () => _openQuran(resume: true),
-                            ),
-                            SizedBox(height: 14),
-                            DailyVerseCard(),
-                            SizedBox(height: 20),
-                            SectionHeader(
-                              title: 'رحلتك اليوم',
-                              action: 'عرض الكل',
-                            ),
-                            SizedBox(height: 10),
-                            JourneyCards(),
-                            SizedBox(height: 20),
-                            FridayCard(onTap: () => _openReligious('friday')),
-                            SizedBox(height: 20),
-                            SectionHeader(
-                              title: 'مقالات ومعلومات',
-                              action: 'عرض الكل',
-                            ),
-                            SizedBox(height: 10),
-                            ArticlesRow(),
-                          ]),
+      child: PopScope<Object?>(
+        canPop:
+            _section == AppSection.home ||
+            _section == AppSection.quran ||
+            religiousHandlesBack,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop &&
+              !religiousHandlesBack &&
+              _section != AppSection.quran &&
+              _section != AppSection.home) {
+            _selectSection(AppSection.home);
+          }
+        },
+        child: Scaffold(
+          body: IndexedStack(
+            index: _section.index,
+            children: [
+              _buildHome(),
+              TickerMode(
+                enabled: _section == AppSection.quran,
+                child: QuranHost(
+                  key: _quranKey,
+                  controller: _quran,
+                  active: _section == AppSection.quran,
+                  onExit: () => _selectSection(AppSection.home),
+                  onFullscreenChanged: (value) {
+                    if (mounted && value != _quranFullscreen) {
+                      setState(() => _quranFullscreen = value);
+                    }
+                  },
+                ),
+              ),
+              _visited.contains(AppSection.adhkar)
+                  ? AdhkarSectionPage(
+                      controller: _religious,
+                      onFeature: _openFeature,
+                    )
+                  : const SizedBox.shrink(),
+              _visited.contains(AppSection.qibla)
+                  ? const FeaturePreparationPage(
+                      feature: AppFeature.qibla,
+                      embedded: true,
+                    )
+                  : const SizedBox.shrink(),
+              !_visited.contains(AppSection.more)
+                  ? const SizedBox.shrink()
+                  : _religiousOpen
+                  ? ReligiousHost(
+                      key: _religiousKey,
+                      controller: _religious,
+                      active: _section == AppSection.more,
+                      initialCategory: _religiousInitialCategory,
+                      onClose: () => setState(() => _religiousOpen = false),
+                    )
+                  : MorePage(onFeature: _openFeature),
+            ],
+          ),
+          extendBody: true,
+          bottomNavigationBar: _quranFullscreen && _section == AppSection.quran
+              ? null
+              : religiousHandlesBack
+              ? ReligiousNavigationBar(
+                  onSelected: (index) {
+                    setState(() {
+                      _section = AppSection.values[index];
+                      _visited.add(_section);
+                      if (_section == AppSection.more) _religiousOpen = false;
+                    });
+                  },
+                )
+              : ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(30),
+                  ),
+                  child: NavigationBar(
+                    selectedIndex: _section.index,
+                    height: 72,
+                    backgroundColor: dark
+                        ? const Color(0xF2132331)
+                        : const Color(0xF9FFFFFF),
+                    indicatorColor: Colors.transparent,
+                    onDestinationSelected: (index) =>
+                        _selectSection(AppSection.values[index]),
+                    destinations: [
+                      for (final section in AppSection.values)
+                        NavigationDestination(
+                          icon: Icon(section.icon),
+                          selectedIcon: Icon(section.selectedIcon),
+                          label: section.label,
                         ),
-                      ),
                     ],
                   ),
-            TickerMode(
-              enabled: _currentIndex == 1,
-              child: QuranHost(
-                key: _quranKey,
-                controller: _quran,
-                active: _currentIndex == 1,
-                onFullscreenChanged: (value) {
-                  if (mounted && value != _quranFullscreen) {
-                    setState(() => _quranFullscreen = value);
-                  }
-                },
-              ),
-            ),
-          ],
+                ),
         ),
-        extendBody: true,
-        bottomNavigationBar: _quranFullscreen
-            ? null
-            : _religiousOpen && _currentIndex == 4
-            ? ReligiousNavigationBar(
-                onSelected: (value) => setState(() {
-                  _currentIndex = value;
-                  if (value == 4) _religiousOpen = false;
-                }),
-              )
-            : ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(30),
-                ),
-                child: NavigationBar(
-                  selectedIndex: _currentIndex,
-                  height: 72,
-                  backgroundColor: dark ? Color(0xF2132331) : Color(0xF9FFFFFF),
-                  indicatorColor: Colors.transparent,
-                  onDestinationSelected: (value) =>
-                      setState(() => _currentIndex = value),
-                  destinations: [
-                    NavigationDestination(
-                      icon: Icon(Icons.home_outlined),
-                      selectedIcon: Icon(Icons.home),
-                      label: 'الرئيسية',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.menu_book_outlined),
-                      selectedIcon: Icon(Icons.menu_book),
-                      label: 'القرآن',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.eco_outlined),
-                      selectedIcon: Icon(Icons.eco),
-                      label: 'الأذكار',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.explore_outlined),
-                      selectedIcon: Icon(Icons.explore),
-                      label: 'القبلة',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.more_horiz),
-                      label: 'المزيد',
-                    ),
-                  ],
-                ),
-              ),
       ),
     );
   }
-}
-
-class MorePage extends StatelessWidget {
-  const MorePage({
-    super.key,
-    this.onQuranTap,
-    this.onQuranSettings,
-    this.onQuranAccount,
-    this.onQuranDownloads,
-    this.onReligiousTap,
-  });
-  final VoidCallback? onQuranTap;
-  final VoidCallback? onQuranSettings;
-  final VoidCallback? onQuranAccount, onQuranDownloads;
-  final void Function(String?)? onReligiousTap;
-
-  static const _items = [
-    ('الأدعية والمحتوى الديني', Icons.front_hand_outlined),
-    ('ادعُ معي', Icons.people_alt_outlined),
-    ('حلقات الذكر', Icons.auto_awesome_outlined),
-    ('الإعدادات', Icons.settings_outlined),
-    ('المسبحة الإلكترونية', Icons.mosque_outlined),
-    ('أسماء الله الحسنى', Icons.brightness_7_outlined),
-    ('بماذا تشعر؟', Icons.emoji_emotions_outlined),
-    ('أذكار المسلم', Icons.volunteer_activism_outlined),
-    ('إحصائيات', Icons.query_stats_outlined),
-    ('أذكاري', Icons.edit_note_outlined),
-    ('قرآن', Icons.menu_book_outlined),
-    ('بوصلة القبلة', Icons.explore_outlined),
-    ('متعقب العادة', Icons.fact_check_outlined),
-    ('الرقية الشرعية', Icons.health_and_safety_outlined),
-    ('استغفار', Icons.self_improvement_outlined),
-    ('الحمد', Icons.front_hand_outlined),
-    ('تسبيح', Icons.radio_button_checked),
-    ('الأربعون النووية', Icons.book_outlined),
-    ('أدعية الأنبياء', Icons.self_improvement_outlined),
-    ('أدعية نبوية', Icons.volunteer_activism_outlined),
-    ('أدعية قرآنية', Icons.auto_stories_outlined),
-    ('ختمة', Icons.menu_book_rounded),
-    ('سنن الجمعة', Icons.groups_outlined),
-    ('رمضان', Icons.nightlight_outlined),
-    ('سنن النبي ﷺ', Icons.import_contacts_outlined),
-    ('مظهر التطبيق', Icons.palette_outlined),
-    ('سكينة', Icons.air_outlined),
-    ('الأحاديث النبوية', Icons.menu_book_outlined),
-    ('أقرب المساجد', Icons.mosque_outlined),
-    ('تطبيقاتنا', Icons.account_balance_outlined),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final dark = Theme.of(context).brightness == Brightness.dark;
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Container(
-            height: 265,
-            padding: EdgeInsets.fromLTRB(
-              18,
-              MediaQuery.paddingOf(context).top + 12,
-              18,
-              18,
-            ),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/home_header.png'),
-                fit: BoxFit.cover,
-                alignment: Alignment.topCenter,
-                colorFilter: dark
-                    ? ColorFilter.mode(Color(0xB3102A43), BlendMode.darken)
-                    : null,
-              ),
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
-            ),
-            child: Column(
-              children: [
-                Image.asset(
-                  'assets/branding/haq_logo_transparent.png',
-                  color: dark ? AppPalette.of(context).heading : null,
-                  width: 90,
-                  height: 90,
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'المزيد',
-                  style: TextStyle(
-                    color: AppPalette.of(context).heading,
-                    fontSize: 30,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                Text(
-                  'كل ما تحتاجه في مكان واحد',
-                  style: TextStyle(
-                    color: AppPalette.of(context).heading,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.fromLTRB(18, 18, 18, 24),
-          sliver: SliverGrid.builder(
-            itemCount: _items.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: 18,
-              crossAxisSpacing: 10,
-              childAspectRatio: .72,
-            ),
-            itemBuilder: (context, index) {
-              final item = _items[index];
-              return _MoreItem(
-                title: item.$1,
-                icon: item.$2,
-                onTap: item.$1 == 'الإعدادات'
-                    ? () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => SettingsPage(
-                            onQuranAccount: onQuranAccount == null
-                                ? null
-                                : () {
-                                    Navigator.of(context).pop();
-                                    onQuranAccount?.call();
-                                  },
-                            onQuranDownloads: onQuranDownloads == null
-                                ? null
-                                : () {
-                                    Navigator.of(context).pop();
-                                    onQuranDownloads?.call();
-                                  },
-                            onQuranSettings: () {
-                              Navigator.of(context).pop();
-                              onQuranSettings?.call();
-                            },
-                          ),
-                        ),
-                      )
-                    : item.$1 == 'مظهر التطبيق'
-                    ? () => Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (_) => const SettingsDetailPage(
-                            kind: SettingKind.appearance,
-                          ),
-                        ),
-                      )
-                    : item.$1 == 'قرآن'
-                    ? onQuranTap
-                    : switch (item.$1) {
-                        'أسماء الله الحسنى' => () => onReligiousTap?.call(
-                          'names',
-                        ),
-                        'الرقية الشرعية' => () => onReligiousTap?.call('ruqya'),
-                        'الأربعون النووية' => () => onReligiousTap?.call(
-                          'nawawi',
-                        ),
-                        'أدعية نبوية' => () => onReligiousTap?.call(
-                          'prophetic-duas',
-                        ),
-                        'أدعية قرآنية' => () => onReligiousTap?.call(
-                          'quran-duas',
-                        ),
-                        'سنن الجمعة' => () => onReligiousTap?.call('friday'),
-                        'بماذا تشعر؟' => () => onReligiousTap?.call('feelings'),
-                        'أذكاري' => () => onReligiousTap?.call(
-                          'personal-adhkar',
-                        ),
-                        'سنن النبي ﷺ' => () => onReligiousTap?.call('sunnah'),
-                        'الأدعية والمحتوى الديني' => () => onReligiousTap?.call(
-                          null,
-                        ),
-                        _ => null,
-                      },
-              );
-            },
-          ),
-        ),
-        SliverToBoxAdapter(child: _MoreSocialLinks()),
-        SliverToBoxAdapter(child: SizedBox(height: 108)),
-      ],
-    );
-  }
-}
-
-class _MoreItem extends StatelessWidget {
-  const _MoreItem({required this.title, required this.icon, this.onTap});
-  final String title;
-  final IconData icon;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) => InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(18),
-    child: Column(
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: AppColors.deepTeal,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: Colors.white, size: 34),
-        ),
-        SizedBox(height: 8),
-        Text(
-          title,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: AppPalette.of(context).heading,
-            fontSize: 12,
-            height: 1.25,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-class _MoreSocialLinks extends StatelessWidget {
-  const _MoreSocialLinks();
-
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.fromLTRB(24, 6, 24, 18),
-    child: Column(
-      children: [
-        Divider(color: AppPalette.of(context).border),
-        SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Icon(
-              Icons.edit_outlined,
-              color: AppPalette.of(context).heading,
-              size: 30,
-            ),
-            Icon(
-              Icons.share_outlined,
-              color: AppPalette.of(context).heading,
-              size: 30,
-            ),
-            Icon(
-              Icons.play_circle_outline,
-              color: AppPalette.of(context).heading,
-              size: 34,
-            ),
-            Icon(
-              Icons.camera_alt_outlined,
-              color: AppPalette.of(context).heading,
-              size: 31,
-            ),
-            Text(
-              'f',
-              style: TextStyle(
-                color: AppPalette.of(context).heading,
-                fontSize: 34,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
 }
 
 class SocialMediaSection extends StatelessWidget {

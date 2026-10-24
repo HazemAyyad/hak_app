@@ -78,6 +78,7 @@ flutter:
     - assets/images/home_header.png
     - assets/quran/
     - assets/home/
+    - assets/navigation/
     - assets/religious/
     - assets/animations/
 

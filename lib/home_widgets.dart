@@ -434,7 +434,8 @@ class QuickServices extends StatelessWidget {
 }
 
 class DhikrCard extends StatelessWidget {
-  const DhikrCard({super.key});
+  const DhikrCard({super.key, this.onTap});
+  final VoidCallback? onTap;
   @override
   Widget build(BuildContext context) => _PhotoCard(
     image: 'assets/home/dawn.png',
@@ -466,7 +467,7 @@ class DhikrCard extends StatelessWidget {
                 style: _homeText(context, 10, weight: FontWeight.w500),
               ),
               const Spacer(),
-              _HomeButton(label: 'عرض الأذكار', gold: true, onPressed: () {}),
+              _HomeButton(label: 'عرض الأذكار', gold: true, onPressed: onTap),
             ],
           ),
         ),

@@ -100,7 +100,7 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.more_horiz).last);
     await tester.pumpAndSettle();
-    expect(find.text('كل ما تحتاجه في مكان واحد'), findsOneWidget);
+    expect(find.textContaining('خدمات ومحتوى إيماني'), findsOneWidget);
 
     await tester.tap(find.text('الإعدادات'));
     await tester.pumpAndSettle();
@@ -157,7 +157,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       Theme.of(
-        tester.element(find.text('كل ما تحتاجه في مكان واحد')),
+        tester.element(find.textContaining('خدمات ومحتوى إيماني')),
       ).brightness,
       Brightness.dark,
     );

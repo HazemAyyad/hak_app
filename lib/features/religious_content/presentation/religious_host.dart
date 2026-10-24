@@ -18,10 +18,14 @@ class ReligiousHost extends StatefulWidget {
     super.key,
     required this.controller,
     required this.onClose,
+    this.active = true,
+    this.initialCategoryAsRoot = false,
     this.initialCategory,
   });
   final ReligiousController controller;
   final VoidCallback onClose;
+  final bool active;
+  final bool initialCategoryAsRoot;
   final String? initialCategory;
   @override
   State<ReligiousHost> createState() => ReligiousHostState();
@@ -149,16 +153,20 @@ class ReligiousHostState extends State<ReligiousHost> {
       return ColoredBox(
         color: ReligiousColors(context).background,
         child: PopScope<Object?>(
-          canPop: false,
+          canPop: !widget.active,
           onPopInvokedWithResult: (didPop, result) {
-            if (!didPop) back();
+            if (!didPop && widget.active) back();
           },
           child: Navigator(
             key: navigator,
             onGenerateInitialRoutes: (_, _) => [
-              MaterialPageRoute<void>(
-                builder: (_) => _ReligiousHomePage(host: this),
-              ),
+              if (!widget.initialCategoryAsRoot ||
+                  (catalog.byCategory[widget.initialCategory] == null &&
+                      widget.initialCategory != 'feelings' &&
+                      widget.initialCategory != 'personal-adhkar'))
+                MaterialPageRoute<void>(
+                  builder: (_) => _ReligiousHomePage(host: this),
+                ),
               if (widget.initialCategory != null &&
                   catalog.byCategory[widget.initialCategory] != null)
                 MaterialPageRoute<void>(
