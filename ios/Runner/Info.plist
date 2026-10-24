@@ -49,6 +49,10 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>التعرف على الذكر المختار لعدّه بالصوت عند تشغيل الميكروفون.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>استخدام الميكروفون للعدّ الصوتي في المسبحة عند طلبك فقط.</string>
 	<key>UIBackgroundModes</key>
 	<array><string>audio</string></array>
 	<key>UILaunchStoryboardName</key>

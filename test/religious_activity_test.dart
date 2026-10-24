@@ -329,4 +329,93 @@ void main() {
       ]);
     },
   );
+
+  test(
+    'v1 database upgrades without losing pending IDs, device identity or legacy snapshots',
+    () async {
+      final folder = await Directory.systemTemp.createTemp(
+        'haq-activity-v1-test-',
+      );
+      final path = '${folder.path}/activity.sqlite';
+      final schemas = await store.database.rawQuery(
+        "SELECT sql FROM sqlite_master WHERE sql IS NOT NULL AND name NOT LIKE 'sqlite_%' ORDER BY type DESC",
+      );
+      final event = tap();
+      final entity = PersonalDhikr(
+        id: operationId(),
+        text: 'ذكر قديم',
+        target: 3,
+      );
+      await store.save('account.1', entity);
+      await store.append('account.1', event);
+      await store.database.insert('activity_meta', {
+        'scope': 'account.1',
+        'name': 'activity.cursor',
+        'value': '7',
+      });
+      await store.database.insert('activity_meta', {
+        'scope': 'account.1',
+        'name': 'legacy.v1',
+        'value': '{"saved":true}',
+      });
+      final v1 = await databaseFactoryFfiNoIsolate.openDatabase(
+        path,
+        options: OpenDatabaseOptions(
+          version: 1,
+          onCreate: (db, _) async {
+            for (final row in schemas) {
+              await db.execute(
+                (row['sql'] as String).replaceAll(
+                  ', remote_revision INTEGER',
+                  '',
+                ),
+              );
+            }
+          },
+        ),
+      );
+      for (final table in [
+        'activity_meta',
+        'personal_server',
+        'personal_pending',
+        'activity_events',
+      ]) {
+        for (final row in await store.database.query(table)) {
+          final data = Map<String, Object?>.from(row)
+            ..remove('remote_revision');
+          await v1.insert(table, data);
+        }
+      }
+      await v1.close();
+      final upgraded = await ReligiousActivityStore.open(
+        factory: databaseFactoryFfiNoIsolate,
+        path: path,
+      );
+      try {
+        expect(await upgraded.deviceId, device);
+        expect(await upgraded.activityCursor('account.1'), 0);
+        expect(
+          (await upgraded.events('account.1', pendingOnly: true)).single.id,
+          event.id,
+        );
+        expect(
+          (await upgraded.entity('account.1', entity.key))!.toJson(),
+          entity.toJson(),
+        );
+        expect(await upgraded.legacySnapshot('account.1'), {'saved': true});
+        await upgraded.acceptActivity('account.1', page([event]));
+        expect(await upgraded.events('account.1', pendingOnly: true), isEmpty);
+        expect(
+          (await upgraded.database.query(
+            'activity_events',
+          )).single['remote_revision'],
+          1,
+        );
+      } finally {
+        await upgraded.close();
+        // This is the exact temporary directory created by this test above.
+        await folder.delete(recursive: true);
+      }
+    },
+  );
 }

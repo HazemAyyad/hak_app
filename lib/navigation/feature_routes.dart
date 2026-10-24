@@ -16,6 +16,7 @@ enum AppFeature {
     Icons.radio_button_checked,
     subtitle: 'المسبحة الإلكترونية لذكرك الدائم',
     image: 'beads',
+    ready: true,
   ),
   names(
     'أسماء الله الحسنى',

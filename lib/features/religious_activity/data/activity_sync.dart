@@ -76,7 +76,7 @@ class ReligiousActivitySync {
           (await dio.get<Map<String, dynamic>>('/capabilities')).data!['data']
               as Map;
       if (!_current(captured)) return false;
-      if (capabilities['schema_version'] != 1 ||
+      if (capabilities['schema_version'] != 2 ||
           capabilities['personal_sync'] != true ||
           capabilities['activity_sync'] != true) {
         errors[scope] =

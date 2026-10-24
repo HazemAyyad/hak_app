@@ -29,7 +29,7 @@ class ModuleCloud implements HttpClientAdapter {
     Map<String, dynamic> body;
     if (options.path == '/capabilities') {
       body = {
-        'schema_version': 1,
+        'schema_version': 2,
         'personal_sync': enabled,
         'activity_sync': enabled,
       };

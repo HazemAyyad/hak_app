@@ -1,4 +1,6 @@
-enum PersonalEntityKind { group, dhikr, session, habit, khatma }
+enum PersonalEntityKind { group, dhikr, session, habit, khatma, tasbih }
+
+enum TasbihStyle { buttons, fullscreen, circular, horizontal, classic, digital }
 
 enum DhikrReadingMode { cards, list, focus }
 
@@ -77,6 +79,7 @@ sealed class PersonalEntity {
     PersonalEntityKind.session => DhikrSession.fromJson(data),
     PersonalEntityKind.habit => ReligiousHabit.fromJson(data),
     PersonalEntityKind.khatma => QuranKhatma.fromJson(data),
+    PersonalEntityKind.tasbih => PersonalTasbih.fromJson(data),
   };
 }
 
@@ -285,6 +288,62 @@ class QuranKhatma extends PersonalEntity {
     endDate: data['end_date'] as String,
     firstPage: _number(data['first_page'], 1, 604),
     lastPage: _number(data['last_page'], 1, 604),
+  );
+}
+
+class PersonalTasbih extends PersonalEntity {
+  PersonalTasbih({
+    required String id,
+    required String text,
+    required int goal,
+    required String epoch,
+    String benefit = '',
+    this.style = TasbihStyle.classic,
+    int order = 0,
+  }) : text = _text(text, 1000),
+       benefit = _text(benefit, 2000, empty: true),
+       goal = _number(goal, 1, 1000000),
+       epoch = activityUuid(epoch),
+       order = _number(order, 0, 1000000),
+       super(id);
+  final String text, benefit, epoch;
+  final int goal, order;
+  final TasbihStyle style;
+  @override
+  PersonalEntityKind get kind => PersonalEntityKind.tasbih;
+  PersonalTasbih copyWith({
+    String? text,
+    String? benefit,
+    String? epoch,
+    int? goal,
+    TasbihStyle? style,
+  }) => PersonalTasbih(
+    id: id,
+    text: text ?? this.text,
+    benefit: benefit ?? this.benefit,
+    epoch: epoch ?? this.epoch,
+    goal: goal ?? this.goal,
+    style: style ?? this.style,
+    order: order,
+  );
+  @override
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'text': text,
+    'benefit': benefit,
+    'goal': goal,
+    'epoch': epoch,
+    'style': style.name,
+    'sort_order': order,
+  };
+  factory PersonalTasbih.fromJson(Map<String, dynamic> data) => PersonalTasbih(
+    id: data['id'] as String,
+    text: _text(data['text'], 1000),
+    benefit: _text(data['benefit'], 2000, empty: true),
+    goal: _number(data['goal'], 1, 1000000),
+    epoch: data['epoch'] as String,
+    style: TasbihStyle.values.byName(data['style'] as String),
+    order: _number(data['sort_order'], 0, 1000000),
   );
 }
 

@@ -1,4 +1,4 @@
-# عقد الأقسام الدينية — schema 1
+# عقد الأقسام الدينية — schema 2
 
 ## التخزين والملكية
 
@@ -11,6 +11,7 @@
 | session | id، group_id، day، epoch، targets المرتبة، mode، catalog_version، auto_advance، cursor |
 | habit | id، title، weekdays من1 إلى7، target، enabled |
 | khatma | id، title، start_date، end_date، first_page، last_page حتى604 |
+| tasbih | id, text, benefit, goal, epoch, style (six values), sort_order |
 
 الهوية في المزامنة `kind:UUID`؛ لا تُرسل قيم JSON حرة خارج هذه الحقول. وضع القراءة cards/list/focus. الجلسة تحتفظ بأهداف نسختها من المحتوى؛ عدد المتبقي يُحسب من الأحداث ولا يُخزّن كنسخة ثانية متعارضة.
 
@@ -51,3 +52,9 @@
 النسختان المضمّنتان متطابقتان في2026-10-24.1: 310 عناصر و22 قسمًا. حُلّ اختلاف16 صورة باستبقاء صور Flutter المعتمدة، وحُفظ تحرير الباك الموجود لعنوان وشرح الحديث الأول. النصوص القرآنية والمصادر الأصلية دون تغيير. ملف editorial-overrides يحفظ التحرير عند إعادة التوليد. مولّد الكتالوج يكتب Flutter فقط افتراضيًا؛ تحديث الباك يحتاج --backend-root صريحًا إلى checkout موجود، دون أي مسار F ثابت.
 
 القرآن والمحتوى الديني يستخدمان المشغل الأصلي المشترك مع ملكية واضحة: أوامر ومؤقت القسم السابق لا تتحكم بالتلاوة الجديدة، والتحميل السابق لا يبدأ صوتًا متأخرًا بعد سحب ملكيته. طول Future التشغيل لا يحبس أمر الإيقاف المؤقت. غياب صوت حقيقي يعطّل أزرار الاستماع والتنزيل والإضافة للقائمة قبل تهيئة المشغل؛ إزالة عنصر قديم من القائمة تبقى ممكنة.
+
+## P04 protocol and ordering
+
+Capabilities now require schema_version=2 for the sixth typed entity. The old Quran/content sync endpoints remain unchanged. The backend is still disabled by default; no deployment or real database migration was performed.
+SQLite version2 retains the existing filename and all records. Upgrade adds nullable remote_revision and rewinds activity.cursor to zero for one safe backfill. Server revisions precede local pending sequence; reset/count folding therefore converges across devices. Personal definitions and reset markers can commit atomically.
+Tasbih current-reset keeps totals and completed rounds. A new overall epoch resets visible totals while retaining historical events. Goal changes start a new segment. See docs/tasbih-implementation.md for UI behavior and voice validation boundaries.

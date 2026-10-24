@@ -39,7 +39,22 @@ class ReligiousActivityStore {
     final database = await driver.openDatabase(
       location,
       options: sql.OpenDatabaseOptions(
-        version: 1,
+        version: 2,
+        onUpgrade: (db, oldVersion, _) async {
+          if (oldVersion < 2) {
+            await db.execute(
+              'ALTER TABLE activity_events ADD COLUMN remote_revision INTEGER',
+            );
+            // Replay the server stream once to backfill ordering; pending IDs,
+            // personal records, device ID and legacy snapshots stay intact.
+            await db.update(
+              'activity_meta',
+              {'value': '0'},
+              where: 'name = ?',
+              whereArgs: ['activity.cursor'],
+            );
+          }
+        },
         onConfigure: (db) async {
           await db.execute('PRAGMA foreign_keys = ON');
           await db.execute('PRAGMA busy_timeout = 5000');
@@ -59,7 +74,7 @@ class ReligiousActivityStore {
           scope TEXT NOT NULL, event_id TEXT NOT NULL, session_id TEXT NOT NULL,
           subject_id TEXT NOT NULL, epoch TEXT NOT NULL, kind TEXT NOT NULL, amount INTEGER NOT NULL,
           local_day TEXT NOT NULL, reverses TEXT, payload TEXT NOT NULL,
-          acknowledged INTEGER NOT NULL DEFAULT 0,
+          acknowledged INTEGER NOT NULL DEFAULT 0, remote_revision INTEGER,
           UNIQUE (scope, event_id), UNIQUE (scope, reverses)
         )''');
           await db.execute(
@@ -269,12 +284,30 @@ class ReligiousActivityStore {
     });
   }
 
+  /// Defaults never resurrect a deleted server or pending entity.
+  Future<void> seed(String scope, List<PersonalEntity> defaults) async {
+    _scope(scope);
+    await database.transaction((tx) async {
+      final ledger = await _ledger(tx, scope);
+      final values = ledger.visible;
+      for (final entity in defaults) {
+        if (!ledger.server.containsKey(entity.key) &&
+            !ledger.pending.containsKey(entity.key)) {
+          values[entity.key] = entity.toJson();
+        }
+      }
+      ledger.record(values);
+      await _saveLedger(tx, scope, ledger);
+    });
+  }
+
   /// Membership changes and deletion share one transaction. No orphaned custom
   /// references are left behind if a write fails halfway through an edit.
   Future<void> apply(
     String scope, {
     List<PersonalEntity> upserts = const [],
     List<String> deletes = const [],
+    List<ReligiousActivityEvent> events = const [],
   }) async {
     _scope(scope);
     for (final key in deletes) {
@@ -296,6 +329,9 @@ class ReligiousActivityStore {
       }
       ledger.record(values);
       await _saveLedger(tx, scope, ledger);
+      for (final event in events) {
+        await _append(tx, scope, event);
+      }
     });
   }
 
@@ -395,6 +431,7 @@ class ReligiousActivityStore {
     String scope,
     ReligiousActivityEvent event, {
     bool acknowledged = false,
+    int? remoteRevision,
   }) async {
     final payload = jsonEncode(event.toJson());
     final rows = await tx.query(
@@ -409,7 +446,7 @@ class ReligiousActivityStore {
       if (acknowledged) {
         await tx.update(
           'activity_events',
-          {'acknowledged': 1},
+          {'acknowledged': 1, 'remote_revision': ?remoteRevision},
           where: 'scope = ? AND event_id = ?',
           whereArgs: [scope, event.id],
         );
@@ -465,6 +502,7 @@ class ReligiousActivityStore {
       'reverses': event.reverses,
       'payload': payload,
       'acknowledged': acknowledged ? 1 : 0,
+      'remote_revision': remoteRevision,
     });
     return true;
   }
@@ -565,7 +603,8 @@ class ReligiousActivityStore {
       columns: ['payload'],
       where: conditions.join(' AND '),
       whereArgs: args,
-      orderBy: 'sequence',
+      orderBy:
+          'CASE WHEN remote_revision IS NULL THEN 1 ELSE 0 END, remote_revision, sequence',
       limit: limit,
     );
     return rows
@@ -618,8 +657,14 @@ class ReligiousActivityStore {
           throw const FormatException('Missing activity revision');
         }
       }
-      for (final event in records) {
-        await _append(tx, scope, event, acknowledged: true);
+      for (var index = 0; index < records.length; index++) {
+        await _append(
+          tx,
+          scope,
+          records[index],
+          acknowledged: true,
+          remoteRevision: previousCursor + index + 1,
+        );
       }
       for (final id in acknowledged) {
         await tx.update(

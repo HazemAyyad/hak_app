@@ -9,6 +9,7 @@ import 'features/quran/data/quran_controller.dart';
 import 'features/quran/presentation/quran_host.dart';
 import 'features/religious_content/data/religious_controller.dart';
 import 'features/religious_content/presentation/religious_host.dart';
+import 'features/tasbih/presentation/tasbih_page.dart';
 import 'startup/startup_flow.dart';
 
 import 'navigation/app_section.dart';
@@ -278,6 +279,13 @@ class _HomePageState extends State<HomePage> {
 
   void _openFeature(AppFeature feature) {
     switch (feature) {
+      case AppFeature.tasbih:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            settings: RouteSettings(name: feature.routeName),
+            builder: (_) => TasbihPage(controller: _religious),
+          ),
+        );
       case AppFeature.quran:
         _openQuran();
       case AppFeature.adhkar:

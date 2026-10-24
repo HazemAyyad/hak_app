@@ -277,7 +277,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       await capture(tester, 'more-${mode.name}');
-      final planned = find.byKey(const ValueKey('feature-tasbih'));
+      final planned = find.byKey(const ValueKey('feature-khatma'));
       await tester.ensureVisible(planned);
       await tester.tap(planned);
       await tester.pumpAndSettle();
