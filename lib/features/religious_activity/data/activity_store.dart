@@ -232,6 +232,34 @@ class ReligiousActivityStore {
     ];
   }
 
+  Future<PersonalEntity?> entity(String scope, String key) async {
+    _scope(scope);
+    final pending = await database.query(
+      'personal_pending',
+      columns: ['operation'],
+      where: 'scope = ? AND entity_key = ?',
+      whereArgs: [scope, key],
+    );
+    final server = pending.isEmpty
+        ? await database.query(
+            'personal_server',
+            columns: ['record'],
+            where: 'scope = ? AND entity_key = ?',
+            whereArgs: [scope, key],
+          )
+        : const <Map<String, Object?>>[];
+    if (pending.isEmpty && server.isEmpty) return null;
+    final record =
+        jsonDecode(
+              (pending.isNotEmpty
+                      ? pending.single['operation']
+                      : server.single['record'])
+                  as String,
+            )
+            as Map<String, dynamic>;
+    return record['deleted'] == true ? null : _entity(key, record['value']);
+  }
+
   Future<void> save(String scope, PersonalEntity entity) async {
     _scope(scope);
     await database.transaction((tx) async {
@@ -239,6 +267,78 @@ class ReligiousActivityStore {
       ledger.record({...ledger.visible, entity.key: entity.toJson()});
       await _saveLedger(tx, scope, ledger);
     });
+  }
+
+  /// Membership changes and deletion share one transaction. No orphaned custom
+  /// references are left behind if a write fails halfway through an edit.
+  Future<void> apply(
+    String scope, {
+    List<PersonalEntity> upserts = const [],
+    List<String> deletes = const [],
+  }) async {
+    _scope(scope);
+    for (final key in deletes) {
+      final parts = key.split(':');
+      if (parts.length != 2 ||
+          !PersonalEntityKind.values.any((v) => v.name == parts.first)) {
+        throw const FormatException('Invalid deletion key');
+      }
+      activityUuid(parts.last);
+    }
+    await database.transaction((tx) async {
+      final ledger = await _ledger(tx, scope);
+      final values = ledger.visible;
+      for (final key in deletes) {
+        values.remove(key);
+      }
+      for (final entity in upserts) {
+        values[entity.key] = entity.toJson();
+      }
+      ledger.record(values);
+      await _saveLedger(tx, scope, ledger);
+    });
+  }
+
+  Future<void> updateGroup(
+    String scope,
+    String id,
+    PersonalDhikrGroup Function(PersonalDhikrGroup?) change,
+  ) async {
+    _scope(scope);
+    final key = 'group:${activityUuid(id)}';
+    await database.transaction((tx) async {
+      final ledger = await _ledger(tx, scope);
+      final visible = ledger.visible;
+      final previous = visible[key];
+      final updated = change(
+        previous == null
+            ? null
+            : PersonalDhikrGroup.fromJson(
+                Map<String, dynamic>.from(previous as Map),
+              ),
+      );
+      if (updated.key != key) throw StateError('Group identity changed');
+      ledger.record({...visible, key: updated.toJson()});
+      await _saveLedger(tx, scope, ledger);
+    });
+  }
+
+  Future<Map<String, int>> counts(
+    String scope,
+    String sessionId,
+    String epoch,
+  ) async {
+    _scope(scope);
+    final rows = await database.rawQuery(
+      '''SELECT e.subject_id, SUM(e.amount) AS total FROM activity_events e
+      WHERE e.scope = ? AND e.session_id = ? AND e.epoch = ? AND e.kind = 'count'
+      AND NOT EXISTS (SELECT 1 FROM activity_events u WHERE u.scope = e.scope AND u.reverses = e.event_id)
+      GROUP BY e.subject_id''',
+      [scope, activityUuid(sessionId), activityUuid(epoch)],
+    );
+    return {
+      for (final row in rows) row['subject_id'] as String: row['total'] as int,
+    };
   }
 
   Future<void> remove(String scope, PersonalEntityKind kind, String id) async {

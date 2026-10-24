@@ -1,5 +1,6 @@
 # Preserve downloaded sources, licenses and canonical data byte for byte.
 tool/quran_sources/*.xml -text -whitespace
+tool/religious_sources/hisn-api/*.json -text -whitespace
 assets/fonts/*-OFL.txt -text -whitespace
 assets/quran/quran.json -text
 test/fixtures/quran/offline*.svg -text

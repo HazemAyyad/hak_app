@@ -10,28 +10,46 @@ import 'activity_sync.dart';
 /// Created only when a new religious feature is opened. Startup and the
 /// existing Quran/preferences paths do not need to initialize another DB.
 class ReligiousActivityController extends ChangeNotifier {
-  ReligiousActivityController._(this.quran, this.store) {
+  ReligiousActivityController._(
+    this.quran,
+    this.store,
+    this.enableSync,
+    this._ownsStore,
+  ) {
     syncClient = ReligiousActivitySync(store: store, session: _session);
     quran.account.addListener(_accountChanged);
-    _retry = Timer.periodic(
-      const Duration(minutes: 1),
-      (_) => unawaited(sync()),
-    );
+    if (enableSync) {
+      _retry = Timer.periodic(
+        const Duration(minutes: 1),
+        (_) => unawaited(sync()),
+      );
+    }
   }
   final QuranController quran;
   final ReligiousActivityStore store;
+  final bool enableSync;
+  final bool _ownsStore;
   late final ReligiousActivitySync syncClient;
-  Timer? _retry;
+  Timer? _retry, _debounce;
   bool _disposed = false;
   String get scope =>
       religiousActivityScope(quran.account.profile?['id'].toString());
   String? get syncError => syncClient.errors[scope];
 
-  static Future<ReligiousActivityController> open(QuranController quran) async {
-    final store = await ReligiousActivityStore.open();
-    final controller = ReligiousActivityController._(quran, store);
+  static Future<ReligiousActivityController> open(
+    QuranController quran, {
+    ReligiousActivityStore? store,
+    bool enableSync = true,
+  }) async {
+    final storage = store ?? await ReligiousActivityStore.open();
+    final controller = ReligiousActivityController._(
+      quran,
+      storage,
+      enableSync,
+      store == null,
+    );
     try {
-      await store.snapshotLegacy(controller.scope, quran.preferences!);
+      await storage.snapshotLegacy(controller.scope, quran.preferences!);
       unawaited(controller.sync());
       return controller;
     } catch (_) {
@@ -60,8 +78,18 @@ class ReligiousActivityController extends ChangeNotifier {
   }
 
   Future<void> sync() async {
+    if (!enableSync) return;
     await syncClient.sync();
     if (!_disposed) notifyListeners();
+  }
+
+  void changed(String capturedScope) {
+    if (_disposed || scope != capturedScope) return;
+    notifyListeners();
+    _debounce?.cancel();
+    if (enableSync) {
+      _debounce = Timer(const Duration(seconds: 2), () => unawaited(sync()));
+    }
   }
 
   Future<void> save(PersonalEntity entity) async {
@@ -69,8 +97,7 @@ class ReligiousActivityController extends ChangeNotifier {
     await store.snapshotLegacy(captured, quran.preferences!);
     await store.save(captured, entity);
     if (!_disposed && scope == captured) {
-      notifyListeners();
-      unawaited(sync());
+      changed(captured);
     }
   }
 
@@ -80,8 +107,9 @@ class ReligiousActivityController extends ChangeNotifier {
     syncClient.disposed = true;
     syncClient.dio.close(force: true);
     _retry?.cancel();
+    _debounce?.cancel();
     quran.account.removeListener(_accountChanged);
-    unawaited(store.close());
+    if (_ownsStore) unawaited(store.close());
     super.dispose();
   }
 }

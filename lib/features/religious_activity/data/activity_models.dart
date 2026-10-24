@@ -121,11 +121,13 @@ class PersonalDhikr extends PersonalEntity {
     required String text,
     required int target,
     String source = '',
+    String preface = '',
   }) : text = _text(text, 10000),
        target = _number(target, 1, 1000000),
        source = _text(source, 500, empty: true),
+       preface = _text(preface, 500, empty: true),
        super(id);
-  final String text, source;
+  final String text, source, preface;
   final int target;
   @override
   PersonalEntityKind get kind => PersonalEntityKind.dhikr;
@@ -135,12 +137,14 @@ class PersonalDhikr extends PersonalEntity {
     'text': text,
     'target': target,
     'source': source,
+    if (preface.isNotEmpty) 'preface': preface,
   };
   factory PersonalDhikr.fromJson(Map<String, dynamic> data) => PersonalDhikr(
     id: data['id'] as String,
     text: _text(data['text'], 10000),
     target: _number(data['target'], 1, 1000000),
     source: _text(data['source'], 500, empty: true),
+    preface: _text(data['preface'] ?? '', 500, empty: true),
   );
 }
 

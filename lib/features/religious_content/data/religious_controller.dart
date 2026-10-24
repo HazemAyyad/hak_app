@@ -11,13 +11,16 @@ import '../../quran/data/quran_downloads.dart';
 import '../../quran/data/quran_sync.dart';
 import 'religious_catalog.dart';
 import '../../religious_activity/data/activity_controller.dart';
+import '../../adhkar/data/adhkar_repository.dart';
 
 class ReligiousController extends ChangeNotifier {
   ReligiousController({
     required this.quran,
     this.initialCatalog,
+    this.initialAdhkarCatalog,
     Dio? dio,
     QuranMedia? media,
+    this.activityFactory,
   }) : dio =
            dio ??
            Dio(
@@ -30,7 +33,9 @@ class ReligiousController extends ChangeNotifier {
        _media = media;
   final QuranController quran;
   final ReligiousCatalog? initialCatalog;
+  final AdhkarRepository? initialAdhkarCatalog;
   final Dio dio;
+  final Future<ReligiousActivityController> Function()? activityFactory;
   ReligiousCatalog? catalog;
   QuranMedia? _media;
   Future<ReligiousActivityController>? _activity;
@@ -39,7 +44,9 @@ class ReligiousController extends ChangeNotifier {
   Future<ReligiousActivityController> _openActivity() async {
     try {
       if (_disposed) throw StateError('Religious section disposed');
-      final value = await ReligiousActivityController.open(quran);
+      final value =
+          await (activityFactory?.call() ??
+              ReligiousActivityController.open(quran));
       if (_disposed) {
         value.dispose();
         throw StateError('Religious section disposed');
@@ -384,6 +391,13 @@ class ReligiousController extends ChangeNotifier {
       );
 
   String? activeItem;
+  Future<void> playExternal(List<QuranAudioTrack> tracks) async {
+    _progressTimer?.cancel();
+    activeItem = null;
+    media.setTimer(null);
+    await media.playTracks(tracks);
+  }
+
   Future<void> play(ReligiousItem item, {bool resume = true}) async {
     if (!hasAudio(item)) {
       error = 'التسجيل الصوتي لهذا المحتوى غير متاح حاليًا';

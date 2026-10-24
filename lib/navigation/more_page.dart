@@ -163,8 +163,10 @@ class DirectoryHeader extends StatelessWidget {
     super.key,
     required this.title,
     required this.subtitle,
+    this.maxTitleLines,
   });
   final String title, subtitle;
+  final int? maxTitleLines;
 
   @override
   Widget build(BuildContext context) {
@@ -207,6 +209,10 @@ class DirectoryHeader extends StatelessWidget {
                   children: [
                     Text(
                       title,
+                      maxLines: maxTitleLines,
+                      overflow: maxTitleLines == null
+                          ? null
+                          : TextOverflow.ellipsis,
                       style: TextStyle(
                         color: palette.heading,
                         fontSize: 29,

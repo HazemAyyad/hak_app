@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/features/adhkar/data/adhkar_repository.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/religious_content/data/religious_catalog.dart';
@@ -24,6 +25,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late QuranRepository repository;
   late ReligiousCatalog catalog;
+  late AdhkarRepository adhkar;
   late QuranController quran;
   late ReligiousController religious;
   late AppAppearance appearance;
@@ -37,6 +39,11 @@ void main() {
     catalog = ReligiousCatalog.fromJson(
       jsonDecode(File('assets/religious/catalog.json').readAsStringSync())
           as Map<String, dynamic>,
+    );
+    adhkar = AdhkarRepository.fromJson(
+      jsonDecode(File('assets/religious/adhkar.json').readAsStringSync())
+          as Map<String, dynamic>,
+      repository,
     );
     for (final (family, asset) in [
       ('QuranUI', 'assets/fonts/Cairo.ttf'),
@@ -65,7 +72,11 @@ void main() {
       preferences: preferences,
     );
     await quran.load();
-    religious = ReligiousController(quran: quran, initialCatalog: catalog);
+    religious = ReligiousController(
+      quran: quran,
+      initialCatalog: catalog,
+      initialAdhkarCatalog: adhkar,
+    );
     await religious.load();
   });
   tearDown(() {

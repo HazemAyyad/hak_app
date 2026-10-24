@@ -200,6 +200,7 @@ class _HomePageState extends State<HomePage> {
   late final QuranController _quran;
   final _quranKey = GlobalKey<QuranHostState>();
   final _religiousKey = GlobalKey<ReligiousHostState>();
+  final _adhkarKey = GlobalKey<AdhkarSectionPageState>();
   late final ReligiousController _religious;
   bool _religiousOpen = false;
   String? _religiousInitialCategory;
@@ -281,6 +282,11 @@ class _HomePageState extends State<HomePage> {
         _openQuran();
       case AppFeature.adhkar:
         _selectSection(AppSection.adhkar);
+      case AppFeature.personalAdhkar when _section != AppSection.adhkar:
+        _selectSection(AppSection.adhkar);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _adhkarKey.currentState?.openPersonal();
+        });
       case AppFeature.qibla:
         _selectSection(AppSection.qibla);
       case AppFeature.settings:
@@ -393,11 +399,13 @@ class _HomePageState extends State<HomePage> {
         canPop:
             _section == AppSection.home ||
             _section == AppSection.quran ||
+            _section == AppSection.adhkar ||
             religiousHandlesBack,
         onPopInvokedWithResult: (didPop, _) {
           if (!didPop &&
               !religiousHandlesBack &&
               _section != AppSection.quran &&
+              _section != AppSection.adhkar &&
               _section != AppSection.home) {
             _selectSection(AppSection.home);
           }
@@ -423,8 +431,11 @@ class _HomePageState extends State<HomePage> {
               ),
               _visited.contains(AppSection.adhkar)
                   ? AdhkarSectionPage(
+                      key: _adhkarKey,
                       controller: _religious,
                       onFeature: _openFeature,
+                      active: _section == AppSection.adhkar,
+                      onExit: () => _selectSection(AppSection.home),
                     )
                   : const SizedBox.shrink(),
               _visited.contains(AppSection.qibla)

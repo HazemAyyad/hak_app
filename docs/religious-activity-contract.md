@@ -7,7 +7,7 @@
 | النوع | القيمة |
 | --- | --- |
 | group | id، title، item_ids المرتبة والفريدة، sort_order |
-| dhikr | id، text، target الموجب، source الاختياري |
+| dhikr | id، text، target الموجب، source الاختياري, preface (optional) |
 | session | id، group_id، day، epoch، targets المرتبة، mode، catalog_version، auto_advance، cursor |
 | habit | id، title، weekdays من1 إلى7، target، enabled |
 | khatma | id، title، start_date، end_date، first_page، last_page حتى604 |

@@ -37,6 +37,7 @@ enum AppFeature {
     Icons.eco_outlined,
     subtitle: 'أذكار من الكتاب والسنة',
     image: 'beads',
+    ready: true,
   ),
   statistics('إحصائيات', Icons.query_stats_outlined),
   personalAdhkar(
