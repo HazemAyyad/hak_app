@@ -2,7 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../sharing/share_card.dart';
+import '../../../app_appearance.dart';
+import '../../../navigation/more_page.dart';
+import '../../adhkar/data/adhkar_repository.dart';
+import '../../adhkar/data/adhkar_session_controller.dart';
 import '../../quran/presentation/quran_reader.dart';
+import '../../quran/presentation/quran_audio_widgets.dart'
+    show chooseAudioTimer;
 import '../../quran/presentation/quran_tafsir.dart';
 import '../../quran/data/quran_content.dart' show TafsirText;
 import '../data/religious_catalog.dart';
@@ -12,6 +19,8 @@ export 'religious_widgets.dart' show ReligiousNavigationBar;
 
 part 'religious_pages.dart';
 part 'religious_details.dart';
+part 'religious_moods.dart';
+part 'religious_collections.dart';
 
 class ReligiousHost extends StatefulWidget {
   const ReligiousHost({
@@ -37,6 +46,18 @@ class ReligiousHostState extends State<ReligiousHost> {
   ReligiousCatalog get catalog => controller.catalog!;
   bool _requestedRefresh = false;
   void openCategory(String id) {
+    if (['istighfar', 'praise', 'glorification'].contains(id)) {
+      _push(_MoodReadingPage(host: this, collectionId: id), '/religious/$id');
+      return;
+    }
+    if (id == 'ramadan-duas') {
+      _push(_RamadanDaysPage(host: this), '/religious/ramadan/duas');
+      return;
+    }
+    if (id == 'hadith') {
+      _push(_HadithLibraryPage(host: this), '/religious/hadith');
+      return;
+    }
     if (id == 'feelings') {
       _push(_ReligiousTopicsPage(host: this), '/religious/feelings');
       return;
@@ -89,13 +110,20 @@ class ReligiousHostState extends State<ReligiousHost> {
   }
 
   void share(BuildContext context, ReligiousItem item) {
-    final box = context.findRenderObject() as RenderBox?;
-    SharePlus.instance.share(
-      ShareParams(
-        text: item.shareText,
-        sharePositionOrigin: box == null
-            ? null
-            : box.localToGlobal(Offset.zero) & box.size,
+    unawaited(
+      chooseContentShare(
+        context,
+        item.verseKeys.isEmpty
+            ? ShareCardContent(
+                text: item.text,
+                source: item.source,
+                attribution: item.sourceUrl,
+              )
+            : ShareCardContent.quran(
+                controller.quran.repository!,
+                item.verseKeys,
+              ),
+        repository: controller.quran.repository,
       ),
     );
   }
@@ -168,7 +196,15 @@ class ReligiousHostState extends State<ReligiousHost> {
                   builder: (_) => _ReligiousHomePage(host: this),
                 ),
               if (widget.initialCategory != null &&
-                  catalog.byCategory[widget.initialCategory] != null)
+                  catalog.byCategory[widget.initialCategory] != null &&
+                  ![
+                    'feelings',
+                    'hadith',
+                    'ramadan-duas',
+                    'istighfar',
+                    'praise',
+                    'glorification',
+                  ].contains(widget.initialCategory))
                 MaterialPageRoute<void>(
                   builder: (_) => _ReligiousCategoryPage(
                     host: this,
@@ -178,6 +214,25 @@ class ReligiousHostState extends State<ReligiousHost> {
               if (widget.initialCategory == 'feelings')
                 MaterialPageRoute<void>(
                   builder: (_) => _ReligiousTopicsPage(host: this),
+                ),
+              if ([
+                'istighfar',
+                'praise',
+                'glorification',
+              ].contains(widget.initialCategory))
+                MaterialPageRoute<void>(
+                  builder: (_) => _MoodReadingPage(
+                    host: this,
+                    collectionId: widget.initialCategory,
+                  ),
+                ),
+              if (widget.initialCategory == 'hadith')
+                MaterialPageRoute<void>(
+                  builder: (_) => _HadithLibraryPage(host: this),
+                ),
+              if (widget.initialCategory == 'ramadan-duas')
+                MaterialPageRoute<void>(
+                  builder: (_) => _RamadanDaysPage(host: this),
                 ),
               if (widget.initialCategory == 'personal-adhkar')
                 MaterialPageRoute<void>(
@@ -569,32 +624,7 @@ class _ReligiousPlayer extends StatelessWidget {
                     ReligiousRoundButton(
                       icon: Icons.bedtime_outlined,
                       label: 'مؤقت النوم',
-                      onTap: () => showModalBottomSheet<void>(
-                        context: context,
-                        builder: (context) => SafeArea(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              for (final minutes in [0, 10, 20, 30, 60])
-                                ListTile(
-                                  title: Text(
-                                    minutes == 0
-                                        ? 'إلغاء المؤقت'
-                                        : 'بعد $minutes دقيقة',
-                                  ),
-                                  onTap: () {
-                                    media.setTimer(
-                                      minutes == 0
-                                          ? null
-                                          : Duration(minutes: minutes),
-                                    );
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      onTap: () => chooseAudioTimer(context, media),
                     ),
                   ],
                 ),

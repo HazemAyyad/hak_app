@@ -245,14 +245,15 @@ class _AdhkarReaderState extends State<_AdhkarReader>
   }
 
   void _share(DhikrEntry item) {
-    final box = context.findRenderObject() as RenderBox?;
     unawaited(
-      SharePlus.instance.share(
-        ShareParams(
-          text: '${item.text}\n\n${item.source}\n${item.sourceUrl ?? ''}',
-          sharePositionOrigin: box == null
-              ? null
-              : box.localToGlobal(Offset.zero) & box.size,
+      _overlay(
+        () => chooseContentShare(
+          context,
+          ShareCardContent(
+            text: item.text,
+            source: item.source,
+            attribution: item.sourceUrl ?? '',
+          ),
         ),
       ),
     );

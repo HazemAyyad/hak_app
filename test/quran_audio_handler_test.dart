@@ -52,6 +52,16 @@ class TestAudioPlayer implements AudioPlayer {
   @override
   double get speed => 1;
   @override
+  double volume = 1;
+  @override
+  Future<void> setVolume(double value) async {
+    volume = value;
+  }
+
+  @override
+  Stream<Duration> get positionStream =>
+      events.stream.map((event) => event.updatePosition);
+  @override
   bool get hasNext =>
       currentIndex != null &&
       (currentIndex! + 1 < sequence.length || loopMode == LoopMode.all);

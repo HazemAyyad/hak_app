@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../../app_appearance.dart';
 import '../data/quran_controller.dart';
@@ -13,6 +12,7 @@ import 'quran_audio_widgets.dart';
 import 'quran_audio_pages.dart';
 import 'quran_tafsir.dart';
 import 'quran_page_download_sheet.dart';
+import '../../sharing/share_card.dart';
 
 class QuranReader extends StatefulWidget {
   const QuranReader({
@@ -730,19 +730,11 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
       '${verse.text}\n[سورة ${repo.surah(verse.surah).name}: ${verse.ayah}]';
 
   Future<void> _share(QuranVerse verse) async {
-    final box = context.findRenderObject() as RenderBox?;
-    try {
-      await SharePlus.instance.share(
-        ShareParams(
-          text: _shareText(verse),
-          sharePositionOrigin: box == null
-              ? null
-              : box.localToGlobal(Offset.zero) & box.size,
-        ),
-      );
-    } catch (_) {
-      if (mounted) qNotice(context, 'تعذّرت المشاركة. يمكنك نسخ الآية.');
-    }
+    await chooseContentShare(
+      context,
+      ShareCardContent.quran(repo, [verse.key]),
+      repository: repo,
+    );
   }
 
   void _options(QuranVerse verse) {

@@ -37,6 +37,7 @@ class ReligiousController extends ChangeNotifier {
   final Dio dio;
   final Future<ReligiousActivityController> Function()? activityFactory;
   ReligiousCatalog? catalog;
+  ReligiousCatalog? _bundledCatalog;
   QuranMedia? _media;
   Future<ReligiousActivityController>? _activity;
   Future<ReligiousActivityController> get activity =>
@@ -84,11 +85,12 @@ class ReligiousController extends ChangeNotifier {
     error = null;
     try {
       catalog = initialCatalog ?? await ReligiousCatalog.load();
+      _bundledCatalog = catalog;
       if (_disposed) return;
       final cached = quran.preferences!.getString('religious.catalog.v1');
       if (initialCatalog == null && cached != null) {
         try {
-          catalog = ReligiousCatalog.fromJson(
+          catalog = _bundledCatalog!.extendLegacy(
             jsonDecode(cached) as Map<String, dynamic>,
           );
         } catch (_) {
@@ -300,7 +302,7 @@ class ReligiousController extends ChangeNotifier {
       final manifest =
           (await dio.get<Map<String, dynamic>>('/manifest')).data!['data']
               as Map;
-      if (manifest['version'] == catalog!.version) return;
+      if (manifest['version'] == catalog!.sourceVersion) return;
       final bytes = (await dio.get<List<int>>(
         '/dataset',
         options: Options(responseType: ResponseType.bytes),
@@ -309,10 +311,10 @@ class ReligiousController extends ChangeNotifier {
         throw const FormatException('Catalog checksum mismatch');
       }
       final decoded = utf8.decode(bytes);
-      final next = ReligiousCatalog.fromJson(
+      final next = (_bundledCatalog ?? catalog!).extendLegacy(
         jsonDecode(decoded) as Map<String, dynamic>,
       );
-      if (next.version != manifest['version']) {
+      if (next.sourceVersion != manifest['version']) {
         throw const FormatException('Version mismatch');
       }
       if (_disposed) return;

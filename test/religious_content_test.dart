@@ -7,6 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/features/adhkar/data/adhkar_repository.dart';
+import 'package:haq_app/features/religious_activity/data/activity_controller.dart';
+import 'package:haq_app/features/religious_activity/data/activity_store.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/religious_content/data/religious_catalog.dart';
@@ -14,11 +17,16 @@ import 'package:haq_app/features/religious_content/data/religious_controller.dar
 import 'package:haq_app/features/religious_content/presentation/religious_host.dart';
 import 'package:haq_app/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  sqfliteFfiInit();
   late QuranRepository quranData;
   late ReligiousCatalog catalog;
+  late AdhkarRepository adhkar;
+  late ReligiousActivityStore activityStore;
+  late ReligiousActivityController activity;
   late QuranController quran;
   late ReligiousController controller;
   late AppAppearance appearance;
@@ -33,6 +41,7 @@ void main() {
       jsonDecode(File('assets/religious/catalog.json').readAsStringSync())
           as Map<String, dynamic>,
     );
+    adhkar = await AdhkarRepository.load(quranData);
     for (final (name, path) in [
       ('QuranUI', 'assets/fonts/Cairo.ttf'),
       ('Tajawal', 'assets/fonts/Tajawal-Regular.ttf'),
@@ -57,13 +66,30 @@ void main() {
     appearance = AppAppearance(prefs);
     quran = QuranController(initialRepository: quranData, preferences: prefs);
     await quran.load();
-    controller = ReligiousController(quran: quran, initialCatalog: catalog);
+    activityStore = await ReligiousActivityStore.open(
+      factory: databaseFactoryFfiNoIsolate,
+      path: inMemoryDatabasePath,
+    );
+    activity = await ReligiousActivityController.open(
+      quran,
+      store: activityStore,
+      enableSync: false,
+    );
+    controller = ReligiousController(
+      quran: quran,
+      initialCatalog: catalog,
+      initialAdhkarCatalog: adhkar,
+      activityFactory: () async => activity,
+    );
     await controller.load();
   });
-  tearDown(() {
+  tearDown(() async {
     controller.dispose();
     quran.dispose();
     appearance.dispose();
+    await Future<void>.delayed(Duration.zero);
+    if (!activity.syncClient.disposed) activity.dispose();
+    await activityStore.close();
   });
 
   test(
@@ -182,7 +208,7 @@ void main() {
   test(
     'canonical catalog, references, complete collections and nested search',
     () {
-      expect(catalog.children(null).length, 7);
+      expect(catalog.children(null).length, 14);
       expect(catalog.search(category: 'names').length, 99);
       expect(catalog.search(category: 'nawawi').length, 42);
       expect(
@@ -333,6 +359,12 @@ void main() {
         reset();
         await tester.pumpAndSettle();
         host.openCategory(category.id);
+        for (var i = 0; i < 10; i++) {
+          await tester.pump(const Duration(milliseconds: 50));
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 8)),
+          );
+        }
         await tester.pumpAndSettle();
         expect(tester.takeException(), isNull, reason: category.id);
       }

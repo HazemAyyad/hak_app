@@ -63,9 +63,19 @@ enum AppFeature {
     ready: true,
     image: 'ruqya',
   ),
-  istighfar('استغفار', Icons.self_improvement_outlined),
-  praise('الحمد', Icons.front_hand_outlined),
-  glorification('تسبيح', Icons.radio_button_checked),
+  istighfar(
+    'استغفار',
+    Icons.self_improvement_outlined,
+    category: 'istighfar',
+    ready: true,
+  ),
+  praise('الحمد', Icons.front_hand_outlined, category: 'praise', ready: true),
+  glorification(
+    'تسبيح',
+    Icons.radio_button_checked,
+    category: 'glorification',
+    ready: true,
+  ),
   nawawi(
     'الأربعون النووية',
     Icons.book_outlined,
@@ -73,7 +83,12 @@ enum AppFeature {
     ready: true,
     image: 'books',
   ),
-  prophets('أدعية الأنبياء', Icons.self_improvement_outlined),
+  prophets(
+    'أدعية الأنبياء',
+    Icons.self_improvement_outlined,
+    category: 'prophets',
+    ready: true,
+  ),
   propheticDuas(
     'أدعية نبوية',
     Icons.volunteer_activism_outlined,
@@ -101,7 +116,7 @@ enum AppFeature {
     ready: true,
     image: 'minbar',
   ),
-  ramadan('رمضان', Icons.nightlight_outlined),
+  ramadan('رمضان', Icons.nightlight_outlined, category: 'ramadan', ready: true),
   sunnah(
     'سنن النبي ﷺ',
     Icons.import_contacts_outlined,
@@ -116,7 +131,12 @@ enum AppFeature {
     subtitle: 'تمارين التنفس والطمأنينة',
     image: 'sakinah',
   ),
-  hadith('الأحاديث النبوية', Icons.menu_book_outlined),
+  hadith(
+    'الأحاديث النبوية',
+    Icons.menu_book_outlined,
+    category: 'hadith',
+    ready: true,
+  ),
   mosques('أقرب المساجد', Icons.mosque_outlined),
   ourApps('تطبيقاتنا', Icons.account_balance_outlined);
 

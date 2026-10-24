@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:share_plus/share_plus.dart';
+import '../../sharing/share_card.dart';
 
 import '../../../app_appearance.dart';
 import '../../../navigation/feature_routes.dart';

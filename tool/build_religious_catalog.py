@@ -143,8 +143,86 @@ overrides=json.loads((SOURCES/'catalog-editorial-overrides.json').read_text(enco
 for record in ITEMS:
     record.update(overrides.get(record['id'], {}))
 
+# P05 selections are reviewed stable IDs, never runtime keyword matches.
+legacy_item_ids={r['id'] for r in ITEMS}
+legacy_category_ids={r['id'] for r in CATEGORIES}
+curation=json.loads((SOURCES/'haq-content-curation.json').read_text(encoding='utf-8'))
+for slug,title,key in [
+    ('believers','دعاء المؤمنين بالمغفرة','3:16'),
+    ('steadfastness','دعاء الثبات والنصر','3:147'),
+    ('faithful','دعاء المؤمنين بتمام المغفرة','3:193'),
+    ('promise','دعاء المؤمنين بوعد الله','3:194'),
+    ('safety','الدعاء بالسلامة من الظلم','7:47'),
+    ('justice','الدعاء بالحق','7:89'),
+    ('trust','دعاء التوكل والثبات','10:85'),
+    ('deliverance','الدعاء بالنجاة والرحمة','10:86'),
+    ('yusuf','دعاء يوسف عليه السلام','12:101'),
+    ('ibrahim','دعاء إبراهيم بالأمن','14:35'),
+    ('entrance','دعاء الصدق في الدخول والخروج','17:80'),
+    ('mercy-believers','دعاء عباد الله المؤمنين','23:109'),
+    ('angels','دعاء الملائكة للمؤمنين','40:7'),
+    ('brothers','الدعاء للمؤمنين وصفاء القلوب','59:10'),
+    ('isa','دعاء عيسى عليه السلام','5:114'),
+]:
+    qitem('qdua-'+slug,title,[key],['quran-duas'],['أدعية قرآنية'])
+qitem('ramadan-quran-verse','شهر رمضان ونزول القرآن',['2:185'],['quran-duas'],['رمضان'])
+qitem('ramadan-fasting-verse','وقت السحور والإفطار والاعتكاف',['2:187'],['quran-duas'],['رمضان'])
+qitem('ramadan-qadr-verses','سورة القدر',[f'97:{n}' for n in range(1,6)],['quran-duas'],['رمضان'])
+qadr=json.loads((SOURCES/'ramadan-qadr-dua.json').read_text(encoding='utf-8'))
+item(qadr['id'],'dua',qadr['title'],qadr['text'],qadr['source'],qadr['source_url'],['prophetic-duas'],image='lantern')
+ramadan_hadiths=json.loads((SOURCES/'ramadan-hadiths.json').read_text(encoding='utf-8'))
+for hadith in ramadan_hadiths['items']:
+    record=item(hadith['id'],'hadith',hadith['title'],hadith['text'],hadith['source'],hadith['source_url'],['sunnah-fasting'],image='lantern')
+    record['sections']=[dict(title='المعنى الموجز',text=hadith['explanation'],source='تلخيص لمعنى المتن المرفق، وليس نصًا منسوبًا للمصدر')]
+by_id={r['id']:r for r in ITEMS}
+def attach(ids, category_id):
+    for id in ids:
+        assert id in by_id, f'Unknown curated record {id}'
+        if category_id not in by_id[id]['categories']:
+            by_id[id]['categories'].append(category_id)
+
+category('feelings','بماذا تشعر؟','اختر شعورك في هذه اللحظة','hands','medina',kind='categories')
+assert len(curation['moods'])==17
+for mood in curation['moods']:
+    cid='mood-'+mood['id']
+    category(cid,mood['title'],'دعاء وذكر يرافقان لحظتك','hands','medina',parent='feelings')
+    attach(mood['item_ids'],cid)
+for collection in curation['collections']:
+    category(collection['id'],collection['title'],'نصوص موثقة من القرآن والسنة',collection['image'],'medina')
+    attach(collection['item_ids'],collection['id'])
+category('ramadan','رمضان','القرآن والدعاء وأعمال الشهر','lantern','medina',kind='categories')
+for section in curation['ramadan']:
+    cid='ramadan-'+section['id']
+    category(cid,section['title'],'نصوص من القرآن والسنة مع المصدر','lantern','medina',parent='ramadan')
+    attach(section['item_ids'],cid)
+category('hadith','الأحاديث النبوية','مكتبة حق الموثقة: المتن والشرح والمصدر','books',kind='categories')
+hadith_groups=[
+    ('creed','العقيدة',[2,3,4,19,21,22,38,41,42]),
+    ('worship','العبادات',[1,3,5,9,10,23,25,26,28,29,30,37]),
+    ('dealings','المعاملات',[6,8,11,12,13,14,24,32,33,35,39]),
+    ('ethics','الأخلاق والآداب',[7,13,15,16,17,18,20,27,31,34,35,36,40]),
+    ('sciences','الحديث وعلومه',[1,5,9,28]),
+    ('comprehensive','جوامع الكلم',list(range(1,43))),
+]
+for slug,title,numbers in hadith_groups:
+    cid='hadith-'+slug
+    category(cid,title,'أحاديث من الكتالوج الموثق الموجود في حق','books',parent='hadith')
+    attach([f'nawawi-{n:02d}' for n in numbers],cid)
+attach([entry['id'] for entry in ramadan_hadiths['items']],'hadith-worship')
+
 payload=dict(version='2026-10-24.1',sources=[dict(name='القرآن الكريم',url=QURAN.get('sourceUrl','https://tanzil.net'),license=QURAN['textLicense']),dict(name='حصن المسلم',url='https://github.com/rn0x/hisn_almuslim_json'),dict(name='الأربعون النووية',url='https://github.com/osamayy/40-hadith-nawawi-db',license='CC0 - see upstream LICENSE'),dict(name='قائمة الأسماء ومعانيها الموجزة',url='https://aladhan.com/asma-al-husna')],categories=CATEGORIES,items=ITEMS)
 assert len({r['id'] for r in ITEMS})==len(ITEMS)
+payload['schema_version']=2
+payload['version']=curation['version']
+payload['bundled_extensions']={'category_ids':[r['id'] for r in CATEGORIES if r['id'] not in legacy_category_ids],
+    'item_ids':[r['id'] for r in ITEMS if r['id'] not in legacy_item_ids]}
+payload['moods']=curation['moods']
+daily_ids=[r['id'] for r in ITEMS if r['id'].startswith('qdua-')][:30]
+assert len(daily_ids)==30
+payload['ramadan_days']=[dict(day=n+1,item_id=id) for n,id in enumerate(daily_ids)]
+payload['ramadan_days_note']='مقترحات لتنظيم القراءة والدعاء؛ لا تثبت سنة تخصيص كل يوم بدعاء بعينه أو فضل خاص.'
+payload['sources'].append(dict(name=qadr['source'],url=qadr['source_url'],checked_at=qadr['checked_at']))
+payload['sources'].extend(dict(name=entry['source'],url=entry['source_url'],checked_at=ramadan_hadiths['checked_at']) for entry in ramadan_hadiths['items'])
 targets = [ROOT/'assets/religious/catalog.json']
 if args.backend_root is not None:
     backend = args.backend_root.resolve(strict=True)

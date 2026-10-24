@@ -53,6 +53,10 @@
 	<string>التعرف على الذكر المختار لعدّه بالصوت عند تشغيل الميكروفون.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>استخدام الميكروفون للعدّ الصوتي في المسبحة عند طلبك فقط.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>حفظ صورة الآية أو الدعاء في الصور عندما تختار حفظ الصورة.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>حفظ صورة الآية أو الدعاء في الصور على أجهزة iOS القديمة عند اختيارك الحفظ.</string>
 	<key>UIBackgroundModes</key>
 	<array><string>audio</string></array>
 	<key>UILaunchStoryboardName</key>

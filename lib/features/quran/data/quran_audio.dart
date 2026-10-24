@@ -110,6 +110,8 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
         generation == _loadGeneration && (isCurrent?.call() ?? true);
     await player.stop();
     if (!valid()) return;
+    await player.setVolume(1);
+    if (!valid()) return;
     queue.add(
       tracks.asMap().entries.map((entry) {
         final track = entry.value;
@@ -250,6 +252,17 @@ class QuranMedia extends ChangeNotifier {
   int _generation = 0;
   bool _lostOwnership = false;
   Timer? _timer;
+  Timer? _fade;
+  StreamSubscription<PlaybackEvent>? _endSubscription;
+  StreamSubscription<Duration>? _endPositionSubscription;
+  bool _endVolumeWriting = false, _endFading = false;
+  int _timerGeneration = 0;
+  int? _endIndex;
+  int? _endStartIndex;
+  Duration? _endDuration;
+  bool fadeTimer = false;
+  bool get sleepTimerActive => stopAt != null || _endIndex != null;
+  bool get stoppingAfterSurah => _endIndex != null;
   DateTime? stopAt;
   AudioServiceRepeatMode repeat = AudioServiceRepeatMode.none;
   double _preferredSpeed = 1;
@@ -356,23 +369,24 @@ class QuranMedia extends ChangeNotifier {
       handler = await handlerFactory!();
       if (_disposed) throw StateError('Audio facade disposed');
       return handler!;
-    }
-    _sharedHandler ??= AudioService.init<QuranAudioHandler>(
-      builder: QuranAudioHandler.new,
-      config: const AudioServiceConfig(
-        androidNotificationChannelId: 'com.haqfoundation.haq_app.quran',
-        androidNotificationChannelName: 'تلاوة القرآن الكريم',
-        androidNotificationIcon: 'drawable/ic_quran_notification',
-        notificationColor: Color(0xFF006570),
-        androidNotificationOngoing: false,
-        androidStopForegroundOnPause: false,
-      ),
-    );
-    try {
-      handler = await _sharedHandler;
-    } catch (_) {
-      _sharedHandler = null;
-      rethrow;
+    } else {
+      _sharedHandler ??= AudioService.init<QuranAudioHandler>(
+        builder: QuranAudioHandler.new,
+        config: const AudioServiceConfig(
+          androidNotificationChannelId: 'com.haqfoundation.haq_app.quran',
+          androidNotificationChannelName: 'تلاوة القرآن الكريم',
+          androidNotificationIcon: 'drawable/ic_quran_notification',
+          notificationColor: Color(0xFF006570),
+          androidNotificationOngoing: false,
+          androidStopForegroundOnPause: false,
+        ),
+      );
+      try {
+        handler = await _sharedHandler;
+      } catch (_) {
+        _sharedHandler = null;
+        rethrow;
+      }
     }
     if (_disposed) throw StateError('Audio facade disposed');
     final session = await AudioSession.instance;
@@ -404,6 +418,7 @@ class QuranMedia extends ChangeNotifier {
       final audio = await _audioHandler();
       if (generation != _generation || _disposed) return;
       audio.ownership.claim(this, _lostPlayback);
+      _cancelSleep(restore: true);
       _lostOwnership = false;
       final uris = <Uri>[];
       for (var index = 0; index < tracks.length; index++) {
@@ -549,38 +564,250 @@ class QuranMedia extends ChangeNotifier {
   }
 
   Future<void> setRepeat(AudioServiceRepeatMode value) async {
+    if (value != AudioServiceRepeatMode.none && stoppingAfterSurah) {
+      _cancelSleep(restore: true);
+    }
     repeat = value;
     await _control(() => handler!.setRepeatMode(value));
     _notify();
   }
 
   void setTimer(Duration? duration) {
+    _cancelSleep(restore: true);
+    if (!ownsPlayback || duration == null || duration <= Duration.zero) {
+      _notify();
+      return;
+    }
+    final generation = _timerGeneration;
+    stopAt = DateTime.now().add(duration);
+    final fadeDuration = fadeTimer
+        ? Duration(milliseconds: duration.inMilliseconds.clamp(0, 5000))
+        : Duration.zero;
+    _timer = Timer(
+      duration - fadeDuration,
+      () => _finishSleep(generation, fadeDuration),
+    );
+    _notify();
+  }
+
+  void setTimerFade(bool value) {
+    fadeTimer = value;
+    final deadline = stopAt;
+    if (deadline != null) setTimer(deadline.difference(DateTime.now()));
+    if (!value && _endFading && ownsPlayback) {
+      _endFading = false;
+      unawaited(
+        _control(() => handler!.player.setVolume(1)).catchError((Object _) {}),
+      );
+    }
+    _notify();
+  }
+
+  void _cancelSleep({bool restore = false}) {
+    _timerGeneration++;
     _timer?.cancel();
-    if (!ownsPlayback || duration != null && duration <= Duration.zero) {
-      duration = null;
+    _fade?.cancel();
+    _timer = null;
+    final wasFading = _fade != null || _endFading;
+    _endFading = false;
+    _fade = null;
+    unawaited(_endSubscription?.cancel());
+    _endSubscription = null;
+    unawaited(_endPositionSubscription?.cancel());
+    _endPositionSubscription = null;
+    stopAt = null;
+    _endIndex = null;
+    _endStartIndex = null;
+    _endDuration = null;
+    if (restore && wasFading && ownsPlayback) {
+      unawaited(
+        _control(() => handler!.player.setVolume(1)).catchError((Object _) {}),
+      );
     }
-    stopAt = duration == null ? null : DateTime.now().add(duration);
-    if (duration != null) {
-      _timer = Timer(duration, () {
-        unawaited(
-          _control(() => handler!.pause()).catchError((Object _) {
-            if (!ownsPlayback || _disposed) return;
-            error = 'تعذّر إيقاف التشغيل';
-            _notify();
-          }),
-        );
-        stopAt = null;
-        _notify();
+  }
+
+  void _finishSleep(int generation, Duration fadeDuration) {
+    if (_disposed || generation != _timerGeneration || !ownsPlayback) return;
+    if (fadeDuration == Duration.zero) {
+      unawaited(_pauseForSleep(generation));
+      return;
+    }
+    var tick = 0;
+    final steps = (fadeDuration.inMilliseconds / 100).ceil().clamp(1, 50);
+    bool writing = false;
+    _fade = Timer.periodic(
+      Duration(milliseconds: (fadeDuration.inMilliseconds / steps).ceil()),
+      (timer) async {
+        tick++;
+        if (_disposed || generation != _timerGeneration || !ownsPlayback) {
+          timer.cancel();
+          return;
+        }
+        if (tick >= steps) {
+          timer.cancel();
+          await _pauseForSleep(generation);
+          return;
+        }
+        if (writing) return;
+        writing = true;
+        try {
+          await _control(() async {
+            if (generation == _timerGeneration) {
+              await handler!.player.setVolume((1 - tick / steps).clamp(0, 1));
+            }
+          });
+        } catch (_) {
+          if (generation == _timerGeneration) error = 'تعذّر تلاشي الصوت';
+        } finally {
+          writing = false;
+        }
+      },
+    );
+  }
+
+  Future<void> _pauseForSleep(int generation) async {
+    if (_disposed || generation != _timerGeneration || !ownsPlayback) return;
+    try {
+      await _control(() async {
+        if (generation != _timerGeneration) return;
+        await handler!.pause();
+        if (generation == _timerGeneration && ownsPlayback) {
+          await handler!.player.setVolume(1);
+        }
       });
+    } catch (_) {
+      if (ownsPlayback) error = 'تعذّر إيقاف التشغيل';
     }
+    if (generation == _timerGeneration) {
+      _cancelSleep();
+      _notify();
+    }
+  }
+
+  void setTimerAfterSurah() {
+    _cancelSleep(restore: true);
+    final index = handler?.player.currentIndex;
+    if (!ownsPlayback || index == null || index >= playingTracks.length) {
+      _notify();
+      return;
+    }
+    final surah = playingTracks[index].surah;
+    // A stop boundary must be reachable even when the user previously looped
+    // one verse. A later explicit repeat selection cancels this boundary.
+    repeat = AudioServiceRepeatMode.none;
+    unawaited(
+      _control(
+        () => handler!.setRepeatMode(AudioServiceRepeatMode.none),
+      ).catchError((Object _) {}),
+    );
+    var end = index;
+    // For non-Quran recordings the boundary is the current recording.
+    if (surah > 0) {
+      while (end + 1 < playingTracks.length &&
+          playingTracks[end + 1].surah == surah) {
+        end++;
+      }
+    }
+    _endStartIndex = index;
+    _endIndex = end;
+    final generation = _timerGeneration;
+    _endPositionSubscription = handler!.player.positionStream.listen((
+      position,
+    ) {
+      if (!ownsPlayback ||
+          generation != _timerGeneration ||
+          _endIndex == null ||
+          handler!.player.currentIndex != _endIndex) {
+        return;
+      }
+      final duration = handler!.player.duration;
+      if (duration != null) _endDuration = duration;
+      if (fadeTimer &&
+          duration != null &&
+          duration > Duration.zero &&
+          handler!.player.playing &&
+          !_endVolumeWriting) {
+        final remaining = duration - position;
+        if (remaining <= const Duration(seconds: 5)) {
+          _endVolumeWriting = true;
+          _endFading = true;
+          unawaited(
+            _control(() async {
+                  if (generation == _timerGeneration) {
+                    await handler!.player.setVolume(
+                      (remaining.inMilliseconds / 5000).clamp(0, 1),
+                    );
+                  }
+                })
+                .catchError((Object _) {})
+                .whenComplete(() => _endVolumeWriting = false),
+          );
+        }
+      }
+      if (duration != null &&
+          duration > Duration.zero &&
+          position >= duration) {
+        _finishSleep(generation, Duration.zero);
+      }
+    });
+    _endSubscription = handler!.player.playbackEventStream.listen((event) {
+      if (!ownsPlayback ||
+          generation != _timerGeneration ||
+          _endIndex == null) {
+        return;
+      }
+      final index = event.currentIndex;
+      if (index == _endIndex && event.duration != null) {
+        _endDuration = event.duration;
+      }
+      if (index != null &&
+          (index > _endIndex! ||
+              index < _endStartIndex! ||
+              event.processingState == ProcessingState.completed ||
+              index == _endIndex &&
+                  event.duration != null &&
+                  event.duration! > Duration.zero &&
+                  event.updatePosition >= event.duration!)) {
+        final boundary = _endIndex!, duration = _endDuration;
+        // Clear the listener before seek emits another event. Serial ownership
+        // ensures this boundary cannot pause a later owner's recording.
+        _endIndex = null;
+        unawaited(_endSubscription?.cancel());
+        _endSubscription = null;
+        unawaited(
+          _control(() async {
+                if (generation != _timerGeneration) return;
+                await handler!.pause();
+                if (generation != _timerGeneration || !ownsPlayback) return;
+                await handler!.player.setVolume(1);
+                await handler!.player.seek(
+                  duration ?? Duration.zero,
+                  index: boundary,
+                );
+              })
+              .then((_) {
+                if (generation == _timerGeneration) {
+                  _cancelSleep();
+                  _notify();
+                }
+              })
+              .catchError((Object _) {
+                if (ownsPlayback && generation == _timerGeneration) {
+                  _cancelSleep();
+                  error = 'تعذّر إيقاف التشغيل بعد السورة';
+                  _notify();
+                }
+              }),
+        );
+      }
+    });
     _notify();
   }
 
   Future<void> stop() async {
     ++_generation;
     loading = false;
-    _timer?.cancel();
-    stopAt = null;
+    _cancelSleep(restore: true);
     await _control(() => handler!.stop());
     playingTracks = [];
     error = null;
@@ -589,13 +816,13 @@ class QuranMedia extends ChangeNotifier {
 
   @override
   void dispose() {
+    _cancelSleep(restore: true);
     _disposed = true;
     for (final subscription in subscriptions) {
       unawaited(subscription.cancel());
     }
     downloads.removeListener(_notify);
     downloads.dispose();
-    _timer?.cancel();
     handler?.ownership.release(this);
     super.dispose();
   }
@@ -603,8 +830,7 @@ class QuranMedia extends ChangeNotifier {
   void _lostPlayback() {
     _lostOwnership = true;
     ++_generation;
-    _timer?.cancel();
-    stopAt = null;
+    _cancelSleep();
     loading = false;
     playingTracks = [];
     error = null;

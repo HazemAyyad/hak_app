@@ -245,7 +245,7 @@ class AdhkarSessionController extends ChangeNotifier {
     activity.changed(scope);
   });
 
-  Future<void> undo() => _enqueue(() async {
+  Future<void> undo({String? subjectId}) => _enqueue(() async {
     _device ??= await activity.store.deviceId;
     final events = (await activity.store.events(
       scope,
@@ -260,6 +260,7 @@ class AdhkarSessionController extends ChangeNotifier {
           (e) =>
               e.kind == ActivityKind.count &&
               session.targets.containsKey(e.subjectId) &&
+              (subjectId == null || e.subjectId == subjectId) &&
               !reversed.contains(e.id),
         )
         .toList();

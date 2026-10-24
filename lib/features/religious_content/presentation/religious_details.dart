@@ -1,14 +1,20 @@
 part of 'religious_host.dart';
 
 class _ReligiousDetailsPage extends StatefulWidget {
-  const _ReligiousDetailsPage({required this.host, required this.item});
+  const _ReligiousDetailsPage({
+    required this.host,
+    required this.item,
+    this.hadithTabs = false,
+  });
   final ReligiousHostState host;
   final ReligiousItem item;
+  final bool hadithTabs;
   @override
   State<_ReligiousDetailsPage> createState() => _ReligiousDetailsPageState();
 }
 
 class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
+  bool _explanationOnly = false;
   ReligiousHostState get host => widget.host;
   ReligiousItem get item => widget.item;
   String get fontPreference => 'religious.fontSize.${item.type}';
@@ -107,6 +113,27 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                if (widget.hadithTabs)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: SegmentedButton<bool>(
+                      segments: const [
+                        ButtonSegment(
+                          value: false,
+                          label: Text('المتن'),
+                          icon: Icon(Icons.menu_book_outlined),
+                        ),
+                        ButtonSegment(
+                          value: true,
+                          label: Text('الشرح'),
+                          icon: Icon(Icons.article_outlined),
+                        ),
+                      ],
+                      selected: {_explanationOnly},
+                      onSelectionChanged: (selection) =>
+                          setState(() => _explanationOnly = selection.single),
+                    ),
+                  ),
                 ReligiousCard(
                   ornament: quran,
                   child: Column(
@@ -125,7 +152,9 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                               item.type == 'sunnah'
                                   ? 'نص السنة'
                                   : item.type == 'hadith'
-                                  ? 'نص الحديث'
+                                  ? (widget.hadithTabs && _explanationOnly
+                                        ? 'بيانات الحديث'
+                                        : 'نص الحديث')
                                   : 'نص الدعاء',
                               style: rText(
                                 context,
@@ -136,22 +165,23 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                           ],
                         ),
                       const SizedBox(height: 8),
-                      SelectableText(
-                        item.text,
-                        textAlign: name || quran
-                            ? TextAlign.center
-                            : TextAlign.right,
-                        style: TextStyle(
-                          fontFamily: 'AmiriQuran',
-                          fontSize: name ? 42 : fontSize,
-                          color: ReligiousColors(context).heading,
-                          height: name
-                              ? 1.8
-                              : item.type == 'hadith'
-                              ? 1.7
-                              : 2,
+                      if (!widget.hadithTabs || !_explanationOnly)
+                        SelectableText(
+                          item.text,
+                          textAlign: name || quran
+                              ? TextAlign.center
+                              : TextAlign.right,
+                          style: TextStyle(
+                            fontFamily: 'AmiriQuran',
+                            fontSize: name ? 42 : fontSize,
+                            color: ReligiousColors(context).heading,
+                            height: name
+                                ? 1.8
+                                : item.type == 'hadith'
+                                ? 1.7
+                                : 2,
+                          ),
                         ),
-                      ),
                       if (name && item.transliteration.isNotEmpty)
                         Text(
                           item.transliteration,
@@ -307,7 +337,10 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                     label: const Text('عرض في المصحف'),
                   ),
                 ],
-                for (final section in sections)
+                for (final section
+                    in !widget.hadithTabs || _explanationOnly
+                        ? sections
+                        : <ReligiousSection>[])
                   ReligiousSectionCard(
                     title: section.title,
                     text: section.text,

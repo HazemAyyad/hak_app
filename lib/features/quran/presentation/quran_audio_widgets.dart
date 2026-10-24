@@ -99,7 +99,7 @@ class QuranPlayerPanel extends StatelessWidget {
             ),
             _smallButton(
               Icons.timer_outlined,
-              media.stopAt == null ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
+              !media.sleepTimerActive ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
               () => chooseAudioTimer(context, media),
               active: media.stopAt != null,
             ),
@@ -355,7 +355,7 @@ class QuranPlayerPanel extends StatelessWidget {
               onPressed: () => chooseAudioTimer(context, media),
               icon: const Icon(Icons.timer_outlined, size: 17),
               label: Text(
-                media.stopAt == null ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
+                !media.sleepTimerActive ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
                 style: qText(context, size: 11, color: qTeal),
               ),
             ),
@@ -607,29 +607,57 @@ Future<void> chooseAudioTimer(BuildContext context, QuranMedia media) =>
       context: context,
       showDragHandle: true,
       builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'مؤقت إيقاف التلاوة',
-              style: qText(context, size: 18, weight: FontWeight.w800),
+        child: StatefulBuilder(
+          builder: (context, update) => SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'مؤقت إيقاف التلاوة',
+                  style: qText(context, size: 18, weight: FontWeight.w800),
+                ),
+                SwitchListTile(
+                  title: const Text('تلاشي الصوت في آخر 5 ثوانٍ'),
+                  value: media.fadeTimer,
+                  onChanged: (value) {
+                    media.setTimerFade(value);
+                    update(() {});
+                  },
+                ),
+                ListTile(
+                  title: const Text('إلغاء المؤقت'),
+                  onTap: () {
+                    media.setTimer(null);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    media.current?.surah == 0
+                        ? 'بعد التسجيل الحالي'
+                        : 'بعد السورة الحالية',
+                  ),
+                  subtitle: const Text(
+                    'حتى نهاية السورة أو النطاق المحمّل؛ يلغي التكرار الحالي',
+                  ),
+                  enabled: media.ownsPlayback && media.current != null,
+                  onTap: () {
+                    media.setTimerAfterSurah();
+                    Navigator.pop(context);
+                  },
+                ),
+                for (final minutes in [5, 10, 15, 20, 30, 60])
+                  ListTile(
+                    title: Text('بعد $minutes دقيقة'),
+                    enabled: media.ownsPlayback,
+                    onTap: () {
+                      media.setTimer(Duration(minutes: minutes));
+                      Navigator.pop(context);
+                    },
+                  ),
+              ],
             ),
-            ListTile(
-              title: const Text('إلغاء المؤقت'),
-              onTap: () {
-                media.setTimer(null);
-                Navigator.pop(context);
-              },
-            ),
-            for (final minutes in [5, 10, 15, 30, 60])
-              ListTile(
-                title: Text('بعد $minutes دقيقة'),
-                onTap: () {
-                  media.setTimer(Duration(minutes: minutes));
-                  Navigator.pop(context);
-                },
-              ),
-          ],
+          ),
         ),
       ),
     );

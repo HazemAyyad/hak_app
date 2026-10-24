@@ -164,19 +164,27 @@ class DirectoryHeader extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.maxTitleLines,
+    this.imageAsset = 'assets/navigation/more_header.png',
   });
   final String title, subtitle;
+  final String imageAsset;
   final int? maxTitleLines;
 
   @override
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
     return SizedBox(
-      height: 218 + MediaQuery.paddingOf(context).top,
+      height:
+          218 +
+          MediaQuery.paddingOf(context).top +
+          (imageAsset == 'assets/navigation/more_header.png'
+              ? 0
+              : (MediaQuery.textScalerOf(context).scale(1) - 1).clamp(0, 3) *
+                    110),
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset('assets/navigation/more_header.png', fit: BoxFit.cover),
+          Image.asset(imageAsset, fit: BoxFit.cover),
           if (palette.dark)
             DecoratedBox(
               decoration: BoxDecoration(

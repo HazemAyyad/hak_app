@@ -254,4 +254,78 @@ void main() {
       expect(await leases.run(second, () async {}), isTrue);
     },
   );
+  testWidgets(
+    'timed fade pauses and restores volume, cancellation and a new owner cancel the old fade',
+    (tester) async {
+      final tracks = [
+        quran.selection(verse: true).track(quran.repository(), 1, ayah: 1),
+      ];
+      await tester.runAsync(() => quran.playTracks(tracks));
+      quran.setTimerFade(true);
+      quran.setTimer(const Duration(seconds: 6));
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 2));
+      expect(player.volume, lessThan(1));
+      expect(player.playing, true);
+      quran.setTimer(null);
+      await tester.pump();
+      expect(player.volume, 1);
+      quran.setTimer(const Duration(seconds: 6));
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pump(const Duration(seconds: 2));
+      expect(player.volume, lessThan(1));
+      await tester.runAsync(() => religious.playTracks(tracks));
+      await tester.pump(const Duration(seconds: 10));
+      expect(player.volume, 1);
+      expect(player.playing, true);
+      expect(quran.sleepTimerActive, false);
+      religious.setTimerFade(true);
+      religious.setTimer(const Duration(seconds: 2));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 2));
+      await tester.pump();
+      expect(player.playing, false);
+      expect(player.volume, 1);
+      expect(religious.sleepTimerActive, false);
+    },
+  );
+  testWidgets(
+    'after-surah waits through the final ayah and stops at the boundary before the next chapter',
+    (tester) async {
+      final recitation = quran.selection(verse: true);
+      final tracks = [
+        recitation.track(quran.repository(), 1, ayah: 6),
+        recitation.track(quran.repository(), 1, ayah: 7),
+        recitation.track(quran.repository(), 2, ayah: 1),
+      ];
+      await tester.runAsync(() => quran.playTracks(tracks));
+      quran.setTimerFade(true);
+      await quran.setRepeat(AudioServiceRepeatMode.one);
+      quran.setTimerAfterSurah();
+      await tester.pump();
+      expect(player.loopMode, LoopMode.off);
+      player.emit(
+        index: 0,
+        duration: const Duration(seconds: 10),
+        position: const Duration(seconds: 10),
+      );
+      await tester.pump();
+      expect(player.playing, true);
+      player.emit(
+        index: 1,
+        duration: const Duration(seconds: 10),
+        position: const Duration(seconds: 7),
+      );
+      await tester.pump();
+      expect(player.volume, closeTo(.6, .01));
+      expect(player.playing, true);
+      player.emit(index: 2, duration: const Duration(seconds: 10));
+      await tester.pump();
+      await tester.pump();
+      expect(player.playing, false);
+      expect(player.currentIndex, 1);
+      expect(player.volume, 1);
+      expect(quran.sleepTimerActive, false);
+    },
+  );
 }

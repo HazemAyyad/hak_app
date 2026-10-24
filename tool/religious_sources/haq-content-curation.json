@@ -1,0 +1,38 @@
+{
+  "version": "2026-10-24.2",
+  "selection_note": "اختيارات موضوعية من مصادر حق الموجودة؛ ليست وصفة لعلاج شعور ولا فضائل أو أعداد مستنبطة من صور التصميم.",
+  "moods": [
+    {"id":"happy","title":"السعادة","image":"happy","icon":"sun","item_ids":["qdua-thankfulness","hisn-106","hisn-123"]},
+    {"id":"sad","title":"الحزن","image":"sad","icon":"rain","item_ids":["hisn-034","hisn-035","qdua-reliance"]},
+    {"id":"anxiety","title":"القلق","image":"anxiety","icon":"air","item_ids":["hisn-034","hisn-030","qdua-ease"]},
+    {"id":"rest","title":"الراحة","image":"rest","icon":"leaf","item_ids":["qdua-goodness","hisn-028"]},
+    {"id":"love","title":"الحب","image":"love","icon":"heart","item_ids":["hisn-089","qdua-family"]},
+    {"id":"contentment","title":"الرضا","image":"contentment","icon":"flower","item_ids":["hisn-046","qdua-thankfulness"]},
+    {"id":"anger","title":"الغضب","image":"anxiety","icon":"fire","item_ids":["hisn-082","hisn-075"]},
+    {"id":"confusion","title":"الحيرة","image":"sad","icon":"question","item_ids":["hisn-026","qdua-mercy"]},
+    {"id":"curiosity","title":"الفضول","image":"happy","icon":"search","item_ids":["qdua-knowledge"]},
+    {"id":"faith","title":"ضعف الإيمان","image":"rest","icon":"mosque","item_ids":["hisn-040","qdua-mercy"]},
+    {"id":"illness","title":"المرض","image":"love","icon":"health","item_ids":["hisn-049","hisn-124"]},
+    {"id":"impatience","title":"عدم الصبر","image":"anxiety","icon":"hourglass","item_ids":["qdua-patience","hisn-046"]},
+    {"id":"worry","title":"الهم","image":"sad","icon":"cloud","item_ids":["hisn-034","hisn-041"]},
+    {"id":"weakness","title":"الضعف","image":"rest","icon":"hands","item_ids":["qdua-need","hisn-035"]},
+    {"id":"fear","title":"الخوف","image":"sad","icon":"shield","item_ids":["hisn-039","hisn-036","qdua-reliance"]},
+    {"id":"study","title":"الدراسة","image":"happy","icon":"book","item_ids":["qdua-knowledge","qdua-ease","hisn-043"]},
+    {"id":"laziness","title":"الكسل","image":"contentment","icon":"sun","item_ids":["hisn-034","qdua-prayer"]}
+  ],
+  "collections": [
+    {"id":"istighfar","title":"الاستغفار","image":"prayer","item_ids":["hisn-129","hisn-084","hisn-085","hisn-044","qdua-forgiveness","qdua-parents"]},
+    {"id":"praise","title":"الحمد","image":"beads","item_ids":["hisn-106","hisn-070","hisn-130","qdua-thankfulness"]},
+    {"id":"glorification","title":"التسبيح","image":"beads","item_ids":["hisn-130","hisn-131","qdua-distress"]},
+    {"id":"prophets","title":"أدعية الأنبياء","image":"prophetic","item_ids":["qdua-forgiveness","qdua-acceptance","qdua-prayer","qdua-parents","qdua-ease","qdua-need","qdua-distress","qdua-offspring","qdua-thankfulness","qdua-yusuf","qdua-isa"]}
+  ],
+  "ramadan": [
+    {"id":"quran","title":"القرآن في رمضان","item_ids":["ramadan-quran-verse","ramadan-qadr-verses"]},
+    {"id":"duas","title":"الأدعية الرمضانية","item_ids":["qdua-goodness","qdua-acceptance","qdua-forgiveness","qdua-mercy","qdua-thankfulness"]},
+    {"id":"suhur","title":"السحور","item_ids":["ramadan-suhur-hadith","ramadan-fasting-verse"]},
+    {"id":"iftar","title":"الإفطار","item_ids":["hisn-068","hisn-073","ramadan-iftar-hadith"]},
+    {"id":"itikaf","title":"الاعتكاف","item_ids":["ramadan-itikaf-hadith","ramadan-fasting-verse"]},
+    {"id":"last-ten","title":"العشر الأواخر","item_ids":["ramadan-last-ten-hadith","ramadan-qadr-verses","ramadan-qadr-dua"]},
+    {"id":"qadr","title":"ليلة القدر","item_ids":["ramadan-qadr-verses","ramadan-qadr-dua"]}
+  ]
+}

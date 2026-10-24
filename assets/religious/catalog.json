@@ -1,5 +1,5 @@
 {
-  "version": "2026-10-24.1",
+  "version": "2026-10-24.2",
   "sources": [
     {
       "name": "القرآن الكريم",
@@ -18,6 +18,31 @@
     {
       "name": "قائمة الأسماء ومعانيها الموجزة",
       "url": "https://aladhan.com/asma-al-husna"
+    },
+    {
+      "name": "جامع الترمذي • 3513 • صحيح (دار السلام)، باللفظ المعروض في المصدر",
+      "url": "https://sunnah.com/tirmidhi:3513",
+      "checked_at": "2026-10-24"
+    },
+    {
+      "name": "صحيح البخاري • 1923",
+      "url": "https://sunnah.com/bukhari:1923",
+      "checked_at": "2026-10-24"
+    },
+    {
+      "name": "جامع الترمذي • 807 • صحيح (دار السلام)",
+      "url": "https://sunnah.com/tirmidhi:807",
+      "checked_at": "2026-10-24"
+    },
+    {
+      "name": "صحيح البخاري • 2026 • عن عائشة رضي الله عنها",
+      "url": "https://sunnah.com/bukhari:2026",
+      "checked_at": "2026-10-24"
+    },
+    {
+      "name": "صحيح البخاري • 2024 • عن عائشة رضي الله عنها",
+      "url": "https://sunnah.com/bukhari:2024",
+      "checked_at": "2026-10-24"
     }
   ],
   "categories": [
@@ -240,6 +265,376 @@
       "parent": "ruqya",
       "kind": "list",
       "published": true
+    },
+    {
+      "id": "feelings",
+      "title": "بماذا تشعر؟",
+      "description": "اختر شعورك في هذه اللحظة",
+      "image": "hands",
+      "header": "medina",
+      "parent": null,
+      "kind": "categories",
+      "published": true
+    },
+    {
+      "id": "mood-happy",
+      "title": "السعادة",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-sad",
+      "title": "الحزن",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-anxiety",
+      "title": "القلق",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-rest",
+      "title": "الراحة",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-love",
+      "title": "الحب",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-contentment",
+      "title": "الرضا",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-anger",
+      "title": "الغضب",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-confusion",
+      "title": "الحيرة",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-curiosity",
+      "title": "الفضول",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-faith",
+      "title": "ضعف الإيمان",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-illness",
+      "title": "المرض",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-impatience",
+      "title": "عدم الصبر",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-worry",
+      "title": "الهم",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-weakness",
+      "title": "الضعف",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-fear",
+      "title": "الخوف",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-study",
+      "title": "الدراسة",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "mood-laziness",
+      "title": "الكسل",
+      "description": "دعاء وذكر يرافقان لحظتك",
+      "image": "hands",
+      "header": "medina",
+      "parent": "feelings",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "istighfar",
+      "title": "الاستغفار",
+      "description": "نصوص موثقة من القرآن والسنة",
+      "image": "prayer",
+      "header": "medina",
+      "parent": null,
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "praise",
+      "title": "الحمد",
+      "description": "نصوص موثقة من القرآن والسنة",
+      "image": "beads",
+      "header": "medina",
+      "parent": null,
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "glorification",
+      "title": "التسبيح",
+      "description": "نصوص موثقة من القرآن والسنة",
+      "image": "beads",
+      "header": "medina",
+      "parent": null,
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "prophets",
+      "title": "أدعية الأنبياء",
+      "description": "نصوص موثقة من القرآن والسنة",
+      "image": "prophetic",
+      "header": "medina",
+      "parent": null,
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "ramadan",
+      "title": "رمضان",
+      "description": "القرآن والدعاء وأعمال الشهر",
+      "image": "lantern",
+      "header": "medina",
+      "parent": null,
+      "kind": "categories",
+      "published": true
+    },
+    {
+      "id": "ramadan-quran",
+      "title": "القرآن في رمضان",
+      "description": "نصوص من القرآن والسنة مع المصدر",
+      "image": "lantern",
+      "header": "medina",
+      "parent": "ramadan",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "ramadan-duas",
+      "title": "الأدعية الرمضانية",
+      "description": "نصوص من القرآن والسنة مع المصدر",
+      "image": "lantern",
+      "header": "medina",
+      "parent": "ramadan",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "ramadan-suhur",
+      "title": "السحور",
+      "description": "نصوص من القرآن والسنة مع المصدر",
+      "image": "lantern",
+      "header": "medina",
+      "parent": "ramadan",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "ramadan-iftar",
+      "title": "الإفطار",
+      "description": "نصوص من القرآن والسنة مع المصدر",
+      "image": "lantern",
+      "header": "medina",
+      "parent": "ramadan",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "ramadan-itikaf",
+      "title": "الاعتكاف",
+      "description": "نصوص من القرآن والسنة مع المصدر",
+      "image": "lantern",
+      "header": "medina",
+      "parent": "ramadan",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "ramadan-last-ten",
+      "title": "العشر الأواخر",
+      "description": "نصوص من القرآن والسنة مع المصدر",
+      "image": "lantern",
+      "header": "medina",
+      "parent": "ramadan",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "ramadan-qadr",
+      "title": "ليلة القدر",
+      "description": "نصوص من القرآن والسنة مع المصدر",
+      "image": "lantern",
+      "header": "medina",
+      "parent": "ramadan",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "hadith",
+      "title": "الأحاديث النبوية",
+      "description": "مكتبة حق الموثقة: المتن والشرح والمصدر",
+      "image": "books",
+      "header": "sunnah",
+      "parent": null,
+      "kind": "categories",
+      "published": true
+    },
+    {
+      "id": "hadith-creed",
+      "title": "العقيدة",
+      "description": "أحاديث من الكتالوج الموثق الموجود في حق",
+      "image": "books",
+      "header": "sunnah",
+      "parent": "hadith",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "hadith-worship",
+      "title": "العبادات",
+      "description": "أحاديث من الكتالوج الموثق الموجود في حق",
+      "image": "books",
+      "header": "sunnah",
+      "parent": "hadith",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "hadith-dealings",
+      "title": "المعاملات",
+      "description": "أحاديث من الكتالوج الموثق الموجود في حق",
+      "image": "books",
+      "header": "sunnah",
+      "parent": "hadith",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "hadith-ethics",
+      "title": "الأخلاق والآداب",
+      "description": "أحاديث من الكتالوج الموثق الموجود في حق",
+      "image": "books",
+      "header": "sunnah",
+      "parent": "hadith",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "hadith-sciences",
+      "title": "الحديث وعلومه",
+      "description": "أحاديث من الكتالوج الموثق الموجود في حق",
+      "image": "books",
+      "header": "sunnah",
+      "parent": "hadith",
+      "kind": "list",
+      "published": true
+    },
+    {
+      "id": "hadith-comprehensive",
+      "title": "جوامع الكلم",
+      "description": "أحاديث من الكتالوج الموثق الموجود في حق",
+      "image": "books",
+      "header": "sunnah",
+      "parent": "hadith",
+      "kind": "list",
+      "published": true
     }
   ],
   "items": [
@@ -251,7 +646,9 @@
       "source": "سورة البقرة • الآية 201",
       "sourceUrl": "https://quran.com/2/201",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "mood-rest",
+        "ramadan-duas"
       ],
       "tags": [
         "أدعية عامة"
@@ -272,7 +669,9 @@
       "source": "سورة ابراهيم • الآية 41",
       "sourceUrl": "https://quran.com/14/41",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "istighfar",
+        "prophets"
       ],
       "tags": [
         "أدعية المغفرة"
@@ -293,7 +692,10 @@
       "source": "سورة طه • الآيات 25–28",
       "sourceUrl": "https://quran.com/20/25",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "mood-anxiety",
+        "mood-study",
+        "prophets"
       ],
       "tags": [
         "أدعية التوفيق"
@@ -317,7 +719,9 @@
       "source": "سورة البقرة • الآية 127",
       "sourceUrl": "https://quran.com/2/127",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "prophets",
+        "ramadan-duas"
       ],
       "tags": [
         "أدعية عامة"
@@ -338,7 +742,8 @@
       "source": "سورة آل عمران • الآية 38",
       "sourceUrl": "https://quran.com/3/38",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "prophets"
       ],
       "tags": [
         "أدعية الذرية"
@@ -359,7 +764,9 @@
       "source": "سورة طه • الآية 114",
       "sourceUrl": "https://quran.com/20/114",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "mood-curiosity",
+        "mood-study"
       ],
       "tags": [
         "أدعية العلم"
@@ -380,7 +787,10 @@
       "source": "سورة الأعراف • الآية 23",
       "sourceUrl": "https://quran.com/7/23",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "istighfar",
+        "prophets",
+        "ramadan-duas"
       ],
       "tags": [
         "أدعية الاستغفار"
@@ -401,7 +811,10 @@
       "source": "سورة آل عمران • الآية 8",
       "sourceUrl": "https://quran.com/3/8",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "mood-confusion",
+        "mood-faith",
+        "ramadan-duas"
       ],
       "tags": [
         "أدعية الهداية"
@@ -422,7 +835,9 @@
       "source": "سورة القصص • الآية 24",
       "sourceUrl": "https://quran.com/28/24",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "mood-weakness",
+        "prophets"
       ],
       "tags": [
         "أدعية الرزق"
@@ -443,7 +858,9 @@
       "source": "سورة الأنبياء • الآية 87",
       "sourceUrl": "https://quran.com/21/87",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "glorification",
+        "prophets"
       ],
       "tags": [
         "أدعية الاستغفار"
@@ -464,7 +881,8 @@
       "source": "سورة البقرة • الآية 250",
       "sourceUrl": "https://quran.com/2/250",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "mood-impatience"
       ],
       "tags": [
         "أدعية الصبر"
@@ -485,7 +903,8 @@
       "source": "سورة الفرقان • الآية 74",
       "sourceUrl": "https://quran.com/25/74",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "mood-love"
       ],
       "tags": [
         "أدعية الذرية"
@@ -506,7 +925,9 @@
       "source": "سورة التوبة • الآية 129",
       "sourceUrl": "https://quran.com/9/129",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "mood-sad",
+        "mood-fear"
       ],
       "tags": [
         "أدعية التوكل"
@@ -527,7 +948,12 @@
       "source": "سورة النمل • الآية 19",
       "sourceUrl": "https://quran.com/27/19",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "mood-happy",
+        "mood-contentment",
+        "praise",
+        "prophets",
+        "ramadan-duas"
       ],
       "tags": [
         "أدعية الشكر"
@@ -548,7 +974,9 @@
       "source": "سورة ابراهيم • الآية 40",
       "sourceUrl": "https://quran.com/14/40",
       "categories": [
-        "quran-duas"
+        "quran-duas",
+        "mood-laziness",
+        "prophets"
       ],
       "tags": [
         "أدعية الهداية"
@@ -1237,7 +1665,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-confusion"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -1288,7 +1717,8 @@
       "categories": [
         "prophetic-duas",
         "sunnah-daily-life",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-rest"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -1339,7 +1769,8 @@
       "categories": [
         "prophetic-duas",
         "sunnah-daily-life",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-anxiety"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -1439,7 +1870,11 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-sad",
+        "mood-anxiety",
+        "mood-worry",
+        "mood-laziness"
       ],
       "tags": [
         "أدعية عامة"
@@ -1464,7 +1899,9 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-sad",
+        "mood-weakness"
       ],
       "tags": [
         "أدعية عامة"
@@ -1489,7 +1926,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-fear"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -1564,7 +2002,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-fear"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -1589,7 +2028,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-faith"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -1615,7 +2055,8 @@
       "categories": [
         "prophetic-duas",
         "sunnah-manners",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-worry"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -1666,7 +2107,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-study"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -1691,7 +2133,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "istighfar"
       ],
       "tags": [
         "أدعية الاستغفار"
@@ -1741,7 +2184,9 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-contentment",
+        "mood-impatience"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -1819,7 +2264,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-illness"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -2302,7 +2748,8 @@
       "categories": [
         "prophetic-duas",
         "sunnah-fasting",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "ramadan-iftar"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -2354,7 +2801,8 @@
       "categories": [
         "prophetic-duas",
         "sunnah-daily-life",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "praise"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -2431,7 +2879,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "ramadan-iftar"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -2484,7 +2933,8 @@
       "categories": [
         "prophetic-duas",
         "sunnah-fasting",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-anger"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -2660,7 +3110,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-anger"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -2710,7 +3161,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "istighfar"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -2735,7 +3187,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "istighfar"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -2835,7 +3288,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-love"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -3260,7 +3714,9 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-happy",
+        "praise"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -3690,7 +4146,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-happy"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -3715,7 +4172,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "mood-illness"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -3840,7 +4298,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "istighfar"
       ],
       "tags": [
         "أدعية الاستغفار"
@@ -3865,7 +4324,9 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "praise",
+        "glorification"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -3890,7 +4351,8 @@
       "sourceUrl": "https://www.hisnmuslim.com/",
       "categories": [
         "prophetic-duas",
-        "sunnah-supplication"
+        "sunnah-supplication",
+        "glorification"
       ],
       "tags": [
         "أدعية متفرقة"
@@ -3939,7 +4401,10 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 1",
       "sourceUrl": "https://sunnah.com/nawawi40:1",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-sciences",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -3983,7 +4448,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 2",
       "sourceUrl": "https://sunnah.com/nawawi40:2",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-creed",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العقيدة"
@@ -4007,7 +4474,10 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 3",
       "sourceUrl": "https://sunnah.com/nawawi40:3",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-creed",
+        "hadith-worship",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العقيدة"
@@ -4031,7 +4501,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 4",
       "sourceUrl": "https://sunnah.com/nawawi40:4",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-creed",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العقيدة"
@@ -4055,7 +4527,10 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 5",
       "sourceUrl": "https://sunnah.com/nawawi40:5",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-sciences",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -4079,7 +4554,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 6",
       "sourceUrl": "https://sunnah.com/nawawi40:6",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -4103,7 +4580,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 7",
       "sourceUrl": "https://sunnah.com/nawawi40:7",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4127,7 +4606,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 8",
       "sourceUrl": "https://sunnah.com/nawawi40:8",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -4151,7 +4632,10 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 9",
       "sourceUrl": "https://sunnah.com/nawawi40:9",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-sciences",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -4175,7 +4659,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 10",
       "sourceUrl": "https://sunnah.com/nawawi40:10",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -4199,7 +4685,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 11",
       "sourceUrl": "https://sunnah.com/nawawi40:11",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4223,7 +4711,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 12",
       "sourceUrl": "https://sunnah.com/nawawi40:12",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4247,7 +4737,10 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 13",
       "sourceUrl": "https://sunnah.com/nawawi40:13",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4271,7 +4764,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 14",
       "sourceUrl": "https://sunnah.com/nawawi40:14",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -4295,7 +4790,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 15",
       "sourceUrl": "https://sunnah.com/nawawi40:15",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4319,7 +4816,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 16",
       "sourceUrl": "https://sunnah.com/nawawi40:16",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4343,7 +4842,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 17",
       "sourceUrl": "https://sunnah.com/nawawi40:17",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4367,7 +4868,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 18",
       "sourceUrl": "https://sunnah.com/nawawi40:18",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4391,7 +4894,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 19",
       "sourceUrl": "https://sunnah.com/nawawi40:19",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-creed",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العقيدة"
@@ -4415,7 +4920,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 20",
       "sourceUrl": "https://sunnah.com/nawawi40:20",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4439,7 +4946,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 21",
       "sourceUrl": "https://sunnah.com/nawawi40:21",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-creed",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -4463,7 +4972,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 22",
       "sourceUrl": "https://sunnah.com/nawawi40:22",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-creed",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -4487,7 +4998,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 23",
       "sourceUrl": "https://sunnah.com/nawawi40:23",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -4511,7 +5024,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 24",
       "sourceUrl": "https://sunnah.com/nawawi40:24",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العقيدة"
@@ -4535,7 +5050,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 25",
       "sourceUrl": "https://sunnah.com/nawawi40:25",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -4559,7 +5076,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 26",
       "sourceUrl": "https://sunnah.com/nawawi40:26",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -4583,7 +5102,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 27",
       "sourceUrl": "https://sunnah.com/nawawi40:27",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4607,7 +5128,10 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 28",
       "sourceUrl": "https://sunnah.com/nawawi40:28",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-sciences",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -4631,7 +5155,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 29",
       "sourceUrl": "https://sunnah.com/nawawi40:29",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العبادات"
@@ -4655,7 +5181,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 30",
       "sourceUrl": "https://sunnah.com/nawawi40:30",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -4679,7 +5207,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 31",
       "sourceUrl": "https://sunnah.com/nawawi40:31",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4703,7 +5233,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 32",
       "sourceUrl": "https://sunnah.com/nawawi40:32",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -4727,7 +5259,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 33",
       "sourceUrl": "https://sunnah.com/nawawi40:33",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -4751,7 +5285,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 34",
       "sourceUrl": "https://sunnah.com/nawawi40:34",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -4775,7 +5311,10 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 35",
       "sourceUrl": "https://sunnah.com/nawawi40:35",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4799,7 +5338,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 36",
       "sourceUrl": "https://sunnah.com/nawawi40:36",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "الأخلاق"
@@ -4823,7 +5364,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 37",
       "sourceUrl": "https://sunnah.com/nawawi40:37",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-worship",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العقيدة"
@@ -4847,7 +5390,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 38",
       "sourceUrl": "https://sunnah.com/nawawi40:38",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-creed",
+        "hadith-comprehensive"
       ],
       "tags": [
         "العقيدة"
@@ -4871,7 +5416,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 39",
       "sourceUrl": "https://sunnah.com/nawawi40:39",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-dealings",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -4895,7 +5442,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 40",
       "sourceUrl": "https://sunnah.com/nawawi40:40",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-ethics",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -4919,7 +5468,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 41",
       "sourceUrl": "https://sunnah.com/nawawi40:41",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-creed",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -4943,7 +5494,9 @@
       "source": "الأربعون النووية • الإمام النووي • الحديث 42",
       "sourceUrl": "https://sunnah.com/nawawi40:42",
       "categories": [
-        "nawawi"
+        "nawawi",
+        "hadith-creed",
+        "hadith-comprehensive"
       ],
       "tags": [
         "المعاملات"
@@ -8901,6 +9454,853 @@
         "name-01",
         "name-02"
       ]
+    },
+    {
+      "id": "qdua-believers",
+      "type": "quran",
+      "title": "دعاء المؤمنين بالمغفرة",
+      "text": "ٱلَّذِينَ يَقُولُونَ رَبَّنَآ إِنَّنَآ ءَامَنَّا فَٱغْفِرْ لَنَا ذُنُوبَنَا وَقِنَا عَذَابَ ٱلنَّارِ",
+      "source": "سورة آل عمران • الآية 16",
+      "sourceUrl": "https://quran.com/3/16",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "3:16"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-steadfastness",
+      "type": "quran",
+      "title": "دعاء الثبات والنصر",
+      "text": "وَمَا كَانَ قَوْلَهُمْ إِلَّآ أَن قَالُوا۟ رَبَّنَا ٱغْفِرْ لَنَا ذُنُوبَنَا وَإِسْرَافَنَا فِىٓ أَمْرِنَا وَثَبِّتْ أَقْدَامَنَا وَٱنصُرْنَا عَلَى ٱلْقَوْمِ ٱلْكَـٰفِرِينَ",
+      "source": "سورة آل عمران • الآية 147",
+      "sourceUrl": "https://quran.com/3/147",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "3:147"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-faithful",
+      "type": "quran",
+      "title": "دعاء المؤمنين بتمام المغفرة",
+      "text": "رَّبَّنَآ إِنَّنَا سَمِعْنَا مُنَادِيًا يُنَادِى لِلْإِيمَـٰنِ أَنْ ءَامِنُوا۟ بِرَبِّكُمْ فَـَٔامَنَّا ۚ رَبَّنَا فَٱغْفِرْ لَنَا ذُنُوبَنَا وَكَفِّرْ عَنَّا سَيِّـَٔاتِنَا وَتَوَفَّنَا مَعَ ٱلْأَبْرَارِ",
+      "source": "سورة آل عمران • الآية 193",
+      "sourceUrl": "https://quran.com/3/193",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "3:193"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-promise",
+      "type": "quran",
+      "title": "دعاء المؤمنين بوعد الله",
+      "text": "رَبَّنَا وَءَاتِنَا مَا وَعَدتَّنَا عَلَىٰ رُسُلِكَ وَلَا تُخْزِنَا يَوْمَ ٱلْقِيَـٰمَةِ ۗ إِنَّكَ لَا تُخْلِفُ ٱلْمِيعَادَ",
+      "source": "سورة آل عمران • الآية 194",
+      "sourceUrl": "https://quran.com/3/194",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "3:194"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-safety",
+      "type": "quran",
+      "title": "الدعاء بالسلامة من الظلم",
+      "text": "وَإِذَا صُرِفَتْ أَبْصَـٰرُهُمْ تِلْقَآءَ أَصْحَـٰبِ ٱلنَّارِ قَالُوا۟ رَبَّنَا لَا تَجْعَلْنَا مَعَ ٱلْقَوْمِ ٱلظَّـٰلِمِينَ",
+      "source": "سورة الأعراف • الآية 47",
+      "sourceUrl": "https://quran.com/7/47",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "7:47"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-justice",
+      "type": "quran",
+      "title": "الدعاء بالحق",
+      "text": "قَدِ ٱفْتَرَيْنَا عَلَى ٱللَّهِ كَذِبًا إِنْ عُدْنَا فِى مِلَّتِكُم بَعْدَ إِذْ نَجَّىٰنَا ٱللَّهُ مِنْهَا ۚ وَمَا يَكُونُ لَنَآ أَن نَّعُودَ فِيهَآ إِلَّآ أَن يَشَآءَ ٱللَّهُ رَبُّنَا ۚ وَسِعَ رَبُّنَا كُلَّ شَىْءٍ عِلْمًا ۚ عَلَى ٱللَّهِ تَوَكَّلْنَا ۚ رَبَّنَا ٱفْتَحْ بَيْنَنَا وَبَيْنَ قَوْمِنَا بِٱلْحَقِّ وَأَنتَ خَيْرُ ٱلْفَـٰتِحِينَ",
+      "source": "سورة الأعراف • الآية 89",
+      "sourceUrl": "https://quran.com/7/89",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "7:89"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-trust",
+      "type": "quran",
+      "title": "دعاء التوكل والثبات",
+      "text": "فَقَالُوا۟ عَلَى ٱللَّهِ تَوَكَّلْنَا رَبَّنَا لَا تَجْعَلْنَا فِتْنَةً لِّلْقَوْمِ ٱلظَّـٰلِمِينَ",
+      "source": "سورة يونس • الآية 85",
+      "sourceUrl": "https://quran.com/10/85",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "10:85"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-deliverance",
+      "type": "quran",
+      "title": "الدعاء بالنجاة والرحمة",
+      "text": "وَنَجِّنَا بِرَحْمَتِكَ مِنَ ٱلْقَوْمِ ٱلْكَـٰفِرِينَ",
+      "source": "سورة يونس • الآية 86",
+      "sourceUrl": "https://quran.com/10/86",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "10:86"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-yusuf",
+      "type": "quran",
+      "title": "دعاء يوسف عليه السلام",
+      "text": "رَبِّ قَدْ ءَاتَيْتَنِى مِنَ ٱلْمُلْكِ وَعَلَّمْتَنِى مِن تَأْوِيلِ ٱلْأَحَادِيثِ ۚ فَاطِرَ ٱلسَّمَـٰوَٰتِ وَٱلْأَرْضِ أَنتَ وَلِىِّۦ فِى ٱلدُّنْيَا وَٱلْـَٔاخِرَةِ ۖ تَوَفَّنِى مُسْلِمًا وَأَلْحِقْنِى بِٱلصَّـٰلِحِينَ",
+      "source": "سورة يوسف • الآية 101",
+      "sourceUrl": "https://quran.com/12/101",
+      "categories": [
+        "quran-duas",
+        "prophets"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "12:101"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-ibrahim",
+      "type": "quran",
+      "title": "دعاء إبراهيم بالأمن",
+      "text": "وَإِذْ قَالَ إِبْرَٰهِيمُ رَبِّ ٱجْعَلْ هَـٰذَا ٱلْبَلَدَ ءَامِنًا وَٱجْنُبْنِى وَبَنِىَّ أَن نَّعْبُدَ ٱلْأَصْنَامَ",
+      "source": "سورة ابراهيم • الآية 35",
+      "sourceUrl": "https://quran.com/14/35",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "14:35"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-entrance",
+      "type": "quran",
+      "title": "دعاء الصدق في الدخول والخروج",
+      "text": "وَقُل رَّبِّ أَدْخِلْنِى مُدْخَلَ صِدْقٍ وَأَخْرِجْنِى مُخْرَجَ صِدْقٍ وَٱجْعَل لِّى مِن لَّدُنكَ سُلْطَـٰنًا نَّصِيرًا",
+      "source": "سورة الإسراء • الآية 80",
+      "sourceUrl": "https://quran.com/17/80",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "17:80"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-mercy-believers",
+      "type": "quran",
+      "title": "دعاء عباد الله المؤمنين",
+      "text": "إِنَّهُۥ كَانَ فَرِيقٌ مِّنْ عِبَادِى يَقُولُونَ رَبَّنَآ ءَامَنَّا فَٱغْفِرْ لَنَا وَٱرْحَمْنَا وَأَنتَ خَيْرُ ٱلرَّٰحِمِينَ",
+      "source": "سورة المؤمنون • الآية 109",
+      "sourceUrl": "https://quran.com/23/109",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "23:109"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-angels",
+      "type": "quran",
+      "title": "دعاء الملائكة للمؤمنين",
+      "text": "ٱلَّذِينَ يَحْمِلُونَ ٱلْعَرْشَ وَمَنْ حَوْلَهُۥ يُسَبِّحُونَ بِحَمْدِ رَبِّهِمْ وَيُؤْمِنُونَ بِهِۦ وَيَسْتَغْفِرُونَ لِلَّذِينَ ءَامَنُوا۟ رَبَّنَا وَسِعْتَ كُلَّ شَىْءٍ رَّحْمَةً وَعِلْمًا فَٱغْفِرْ لِلَّذِينَ تَابُوا۟ وَٱتَّبَعُوا۟ سَبِيلَكَ وَقِهِمْ عَذَابَ ٱلْجَحِيمِ",
+      "source": "سورة غافر • الآية 7",
+      "sourceUrl": "https://quran.com/40/7",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "40:7"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-brothers",
+      "type": "quran",
+      "title": "الدعاء للمؤمنين وصفاء القلوب",
+      "text": "وَٱلَّذِينَ جَآءُو مِنۢ بَعْدِهِمْ يَقُولُونَ رَبَّنَا ٱغْفِرْ لَنَا وَلِإِخْوَٰنِنَا ٱلَّذِينَ سَبَقُونَا بِٱلْإِيمَـٰنِ وَلَا تَجْعَلْ فِى قُلُوبِنَا غِلًّا لِّلَّذِينَ ءَامَنُوا۟ رَبَّنَآ إِنَّكَ رَءُوفٌ رَّحِيمٌ",
+      "source": "سورة الحشر • الآية 10",
+      "sourceUrl": "https://quran.com/59/10",
+      "categories": [
+        "quran-duas"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "59:10"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "qdua-isa",
+      "type": "quran",
+      "title": "دعاء عيسى عليه السلام",
+      "text": "قَالَ عِيسَى ٱبْنُ مَرْيَمَ ٱللَّهُمَّ رَبَّنَآ أَنزِلْ عَلَيْنَا مَآئِدَةً مِّنَ ٱلسَّمَآءِ تَكُونُ لَنَا عِيدًا لِّأَوَّلِنَا وَءَاخِرِنَا وَءَايَةً مِّنكَ ۖ وَٱرْزُقْنَا وَأَنتَ خَيْرُ ٱلرَّٰزِقِينَ",
+      "source": "سورة المائدة • الآية 114",
+      "sourceUrl": "https://quran.com/5/114",
+      "categories": [
+        "quran-duas",
+        "prophets"
+      ],
+      "tags": [
+        "أدعية قرآنية"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "5:114"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "ramadan-quran-verse",
+      "type": "quran",
+      "title": "شهر رمضان ونزول القرآن",
+      "text": "شَهْرُ رَمَضَانَ ٱلَّذِىٓ أُنزِلَ فِيهِ ٱلْقُرْءَانُ هُدًى لِّلنَّاسِ وَبَيِّنَـٰتٍ مِّنَ ٱلْهُدَىٰ وَٱلْفُرْقَانِ ۚ فَمَن شَهِدَ مِنكُمُ ٱلشَّهْرَ فَلْيَصُمْهُ ۖ وَمَن كَانَ مَرِيضًا أَوْ عَلَىٰ سَفَرٍ فَعِدَّةٌ مِّنْ أَيَّامٍ أُخَرَ ۗ يُرِيدُ ٱللَّهُ بِكُمُ ٱلْيُسْرَ وَلَا يُرِيدُ بِكُمُ ٱلْعُسْرَ وَلِتُكْمِلُوا۟ ٱلْعِدَّةَ وَلِتُكَبِّرُوا۟ ٱللَّهَ عَلَىٰ مَا هَدَىٰكُمْ وَلَعَلَّكُمْ تَشْكُرُونَ",
+      "source": "سورة البقرة • الآية 185",
+      "sourceUrl": "https://quran.com/2/185",
+      "categories": [
+        "quran-duas",
+        "ramadan-quran"
+      ],
+      "tags": [
+        "رمضان"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "2:185"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "ramadan-fasting-verse",
+      "type": "quran",
+      "title": "وقت السحور والإفطار والاعتكاف",
+      "text": "أُحِلَّ لَكُمْ لَيْلَةَ ٱلصِّيَامِ ٱلرَّفَثُ إِلَىٰ نِسَآئِكُمْ ۚ هُنَّ لِبَاسٌ لَّكُمْ وَأَنتُمْ لِبَاسٌ لَّهُنَّ ۗ عَلِمَ ٱللَّهُ أَنَّكُمْ كُنتُمْ تَخْتَانُونَ أَنفُسَكُمْ فَتَابَ عَلَيْكُمْ وَعَفَا عَنكُمْ ۖ فَٱلْـَٔـٰنَ بَـٰشِرُوهُنَّ وَٱبْتَغُوا۟ مَا كَتَبَ ٱللَّهُ لَكُمْ ۚ وَكُلُوا۟ وَٱشْرَبُوا۟ حَتَّىٰ يَتَبَيَّنَ لَكُمُ ٱلْخَيْطُ ٱلْأَبْيَضُ مِنَ ٱلْخَيْطِ ٱلْأَسْوَدِ مِنَ ٱلْفَجْرِ ۖ ثُمَّ أَتِمُّوا۟ ٱلصِّيَامَ إِلَى ٱلَّيْلِ ۚ وَلَا تُبَـٰشِرُوهُنَّ وَأَنتُمْ عَـٰكِفُونَ فِى ٱلْمَسَـٰجِدِ ۗ تِلْكَ حُدُودُ ٱللَّهِ فَلَا تَقْرَبُوهَا ۗ كَذَٰلِكَ يُبَيِّنُ ٱللَّهُ ءَايَـٰتِهِۦ لِلنَّاسِ لَعَلَّهُمْ يَتَّقُونَ",
+      "source": "سورة البقرة • الآية 187",
+      "sourceUrl": "https://quran.com/2/187",
+      "categories": [
+        "quran-duas",
+        "ramadan-suhur",
+        "ramadan-itikaf"
+      ],
+      "tags": [
+        "رمضان"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "2:187"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "ramadan-qadr-verses",
+      "type": "quran",
+      "title": "سورة القدر",
+      "text": "إِنَّآ أَنزَلْنَـٰهُ فِى لَيْلَةِ ٱلْقَدْرِ\nوَمَآ أَدْرَىٰكَ مَا لَيْلَةُ ٱلْقَدْرِ\nلَيْلَةُ ٱلْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ\nتَنَزَّلُ ٱلْمَلَـٰٓئِكَةُ وَٱلرُّوحُ فِيهَا بِإِذْنِ رَبِّهِم مِّن كُلِّ أَمْرٍ\nسَلَـٰمٌ هِىَ حَتَّىٰ مَطْلَعِ ٱلْفَجْرِ",
+      "source": "سورة القدر • الآيات 1–5",
+      "sourceUrl": "https://quran.com/97/1",
+      "categories": [
+        "quran-duas",
+        "ramadan-quran",
+        "ramadan-last-ten",
+        "ramadan-qadr"
+      ],
+      "tags": [
+        "رمضان"
+      ],
+      "sections": [],
+      "published": true,
+      "verseKeys": [
+        "97:1",
+        "97:2",
+        "97:3",
+        "97:4",
+        "97:5"
+      ],
+      "image": "quran"
+    },
+    {
+      "id": "ramadan-qadr-dua",
+      "type": "dua",
+      "title": "دعاء ليلة القدر",
+      "text": "اللَّهُمَّ إِنَّكَ عَفُوٌّ كَرِيمٌ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
+      "source": "جامع الترمذي • 3513 • صحيح (دار السلام)، باللفظ المعروض في المصدر",
+      "sourceUrl": "https://sunnah.com/tirmidhi:3513",
+      "categories": [
+        "prophetic-duas",
+        "ramadan-last-ten",
+        "ramadan-qadr"
+      ],
+      "tags": [],
+      "sections": [],
+      "published": true,
+      "image": "lantern"
+    },
+    {
+      "id": "ramadan-suhur-hadith",
+      "type": "hadith",
+      "title": "بركة السحور",
+      "text": "تَسَحَّرُوا فَإِنَّ فِي السَّحُورِ بَرَكَةً",
+      "source": "صحيح البخاري • 1923",
+      "sourceUrl": "https://sunnah.com/bukhari:1923",
+      "categories": [
+        "sunnah-fasting",
+        "ramadan-suhur",
+        "hadith-worship"
+      ],
+      "tags": [],
+      "sections": [
+        {
+          "title": "المعنى الموجز",
+          "text": "يحث الحديث على السحور ويذكر بركته. لا يتضمن دعاءً خاصًا للسحور.",
+          "source": "تلخيص لمعنى المتن المرفق، وليس نصًا منسوبًا للمصدر"
+        }
+      ],
+      "published": true,
+      "image": "lantern"
+    },
+    {
+      "id": "ramadan-iftar-hadith",
+      "type": "hadith",
+      "title": "فضل تفطير الصائم",
+      "text": "مَنْ فَطَّرَ صَائِمًا كَانَ لَهُ مِثْلُ أَجْرِهِ غَيْرَ أَنَّهُ لاَ يَنْقُصُ مِنْ أَجْرِ الصَّائِمِ شَيْئًا",
+      "source": "جامع الترمذي • 807 • صحيح (دار السلام)",
+      "sourceUrl": "https://sunnah.com/tirmidhi:807",
+      "categories": [
+        "sunnah-fasting",
+        "ramadan-iftar",
+        "hadith-worship"
+      ],
+      "tags": [],
+      "sections": [
+        {
+          "title": "المعنى الموجز",
+          "text": "يبين الحديث فضل تفطير الصائم وأن ذلك لا ينقص من أجر الصائم.",
+          "source": "تلخيص لمعنى المتن المرفق، وليس نصًا منسوبًا للمصدر"
+        }
+      ],
+      "published": true,
+      "image": "lantern"
+    },
+    {
+      "id": "ramadan-itikaf-hadith",
+      "type": "hadith",
+      "title": "الاعتكاف في العشر الأواخر",
+      "text": "أَنَّ النَّبِيَّ صلى الله عليه وسلم كَانَ يَعْتَكِفُ الْعَشْرَ الأَوَاخِرَ مِنْ رَمَضَانَ حَتَّى تَوَفَّاهُ اللَّهُ، ثُمَّ اعْتَكَفَ أَزْوَاجُهُ مِنْ بَعْدِهِ.",
+      "source": "صحيح البخاري • 2026 • عن عائشة رضي الله عنها",
+      "sourceUrl": "https://sunnah.com/bukhari:2026",
+      "categories": [
+        "sunnah-fasting",
+        "ramadan-itikaf",
+        "hadith-worship"
+      ],
+      "tags": [],
+      "sections": [
+        {
+          "title": "المعنى الموجز",
+          "text": "تصف عائشة استمرار اعتكاف النبي ﷺ في العشر الأواخر، ثم اعتكاف أزواجه بعده.",
+          "source": "تلخيص لمعنى المتن المرفق، وليس نصًا منسوبًا للمصدر"
+        }
+      ],
+      "published": true,
+      "image": "lantern"
+    },
+    {
+      "id": "ramadan-last-ten-hadith",
+      "type": "hadith",
+      "title": "الاجتهاد في العشر الأواخر",
+      "text": "كَانَ النَّبِيُّ صلى الله عليه وسلم إِذَا دَخَلَ الْعَشْرُ شَدَّ مِئْزَرَهُ، وَأَحْيَا لَيْلَهُ، وَأَيْقَظَ أَهْلَهُ.",
+      "source": "صحيح البخاري • 2024 • عن عائشة رضي الله عنها",
+      "sourceUrl": "https://sunnah.com/bukhari:2024",
+      "categories": [
+        "sunnah-fasting",
+        "ramadan-last-ten",
+        "hadith-worship"
+      ],
+      "tags": [],
+      "sections": [
+        {
+          "title": "المعنى الموجز",
+          "text": "تصف عائشة اجتهاد النبي ﷺ في العبادة وإحياء الليل وإيقاظ أهله في العشر الأواخر.",
+          "source": "تلخيص لمعنى المتن المرفق، وليس نصًا منسوبًا للمصدر"
+        }
+      ],
+      "published": true,
+      "image": "lantern"
     }
-  ]
+  ],
+  "schema_version": 2,
+  "bundled_extensions": {
+    "category_ids": [
+      "feelings",
+      "mood-happy",
+      "mood-sad",
+      "mood-anxiety",
+      "mood-rest",
+      "mood-love",
+      "mood-contentment",
+      "mood-anger",
+      "mood-confusion",
+      "mood-curiosity",
+      "mood-faith",
+      "mood-illness",
+      "mood-impatience",
+      "mood-worry",
+      "mood-weakness",
+      "mood-fear",
+      "mood-study",
+      "mood-laziness",
+      "istighfar",
+      "praise",
+      "glorification",
+      "prophets",
+      "ramadan",
+      "ramadan-quran",
+      "ramadan-duas",
+      "ramadan-suhur",
+      "ramadan-iftar",
+      "ramadan-itikaf",
+      "ramadan-last-ten",
+      "ramadan-qadr",
+      "hadith",
+      "hadith-creed",
+      "hadith-worship",
+      "hadith-dealings",
+      "hadith-ethics",
+      "hadith-sciences",
+      "hadith-comprehensive"
+    ],
+    "item_ids": [
+      "qdua-believers",
+      "qdua-steadfastness",
+      "qdua-faithful",
+      "qdua-promise",
+      "qdua-safety",
+      "qdua-justice",
+      "qdua-trust",
+      "qdua-deliverance",
+      "qdua-yusuf",
+      "qdua-ibrahim",
+      "qdua-entrance",
+      "qdua-mercy-believers",
+      "qdua-angels",
+      "qdua-brothers",
+      "qdua-isa",
+      "ramadan-quran-verse",
+      "ramadan-fasting-verse",
+      "ramadan-qadr-verses",
+      "ramadan-qadr-dua",
+      "ramadan-suhur-hadith",
+      "ramadan-iftar-hadith",
+      "ramadan-itikaf-hadith",
+      "ramadan-last-ten-hadith"
+    ]
+  },
+  "moods": [
+    {
+      "id": "happy",
+      "title": "السعادة",
+      "image": "happy",
+      "icon": "sun",
+      "item_ids": [
+        "qdua-thankfulness",
+        "hisn-106",
+        "hisn-123"
+      ]
+    },
+    {
+      "id": "sad",
+      "title": "الحزن",
+      "image": "sad",
+      "icon": "rain",
+      "item_ids": [
+        "hisn-034",
+        "hisn-035",
+        "qdua-reliance"
+      ]
+    },
+    {
+      "id": "anxiety",
+      "title": "القلق",
+      "image": "anxiety",
+      "icon": "air",
+      "item_ids": [
+        "hisn-034",
+        "hisn-030",
+        "qdua-ease"
+      ]
+    },
+    {
+      "id": "rest",
+      "title": "الراحة",
+      "image": "rest",
+      "icon": "leaf",
+      "item_ids": [
+        "qdua-goodness",
+        "hisn-028"
+      ]
+    },
+    {
+      "id": "love",
+      "title": "الحب",
+      "image": "love",
+      "icon": "heart",
+      "item_ids": [
+        "hisn-089",
+        "qdua-family"
+      ]
+    },
+    {
+      "id": "contentment",
+      "title": "الرضا",
+      "image": "contentment",
+      "icon": "flower",
+      "item_ids": [
+        "hisn-046",
+        "qdua-thankfulness"
+      ]
+    },
+    {
+      "id": "anger",
+      "title": "الغضب",
+      "image": "anxiety",
+      "icon": "fire",
+      "item_ids": [
+        "hisn-082",
+        "hisn-075"
+      ]
+    },
+    {
+      "id": "confusion",
+      "title": "الحيرة",
+      "image": "sad",
+      "icon": "question",
+      "item_ids": [
+        "hisn-026",
+        "qdua-mercy"
+      ]
+    },
+    {
+      "id": "curiosity",
+      "title": "الفضول",
+      "image": "happy",
+      "icon": "search",
+      "item_ids": [
+        "qdua-knowledge"
+      ]
+    },
+    {
+      "id": "faith",
+      "title": "ضعف الإيمان",
+      "image": "rest",
+      "icon": "mosque",
+      "item_ids": [
+        "hisn-040",
+        "qdua-mercy"
+      ]
+    },
+    {
+      "id": "illness",
+      "title": "المرض",
+      "image": "love",
+      "icon": "health",
+      "item_ids": [
+        "hisn-049",
+        "hisn-124"
+      ]
+    },
+    {
+      "id": "impatience",
+      "title": "عدم الصبر",
+      "image": "anxiety",
+      "icon": "hourglass",
+      "item_ids": [
+        "qdua-patience",
+        "hisn-046"
+      ]
+    },
+    {
+      "id": "worry",
+      "title": "الهم",
+      "image": "sad",
+      "icon": "cloud",
+      "item_ids": [
+        "hisn-034",
+        "hisn-041"
+      ]
+    },
+    {
+      "id": "weakness",
+      "title": "الضعف",
+      "image": "rest",
+      "icon": "hands",
+      "item_ids": [
+        "qdua-need",
+        "hisn-035"
+      ]
+    },
+    {
+      "id": "fear",
+      "title": "الخوف",
+      "image": "sad",
+      "icon": "shield",
+      "item_ids": [
+        "hisn-039",
+        "hisn-036",
+        "qdua-reliance"
+      ]
+    },
+    {
+      "id": "study",
+      "title": "الدراسة",
+      "image": "happy",
+      "icon": "book",
+      "item_ids": [
+        "qdua-knowledge",
+        "qdua-ease",
+        "hisn-043"
+      ]
+    },
+    {
+      "id": "laziness",
+      "title": "الكسل",
+      "image": "contentment",
+      "icon": "sun",
+      "item_ids": [
+        "hisn-034",
+        "qdua-prayer"
+      ]
+    }
+  ],
+  "ramadan_days": [
+    {
+      "day": 1,
+      "item_id": "qdua-goodness"
+    },
+    {
+      "day": 2,
+      "item_id": "qdua-parents"
+    },
+    {
+      "day": 3,
+      "item_id": "qdua-ease"
+    },
+    {
+      "day": 4,
+      "item_id": "qdua-acceptance"
+    },
+    {
+      "day": 5,
+      "item_id": "qdua-offspring"
+    },
+    {
+      "day": 6,
+      "item_id": "qdua-knowledge"
+    },
+    {
+      "day": 7,
+      "item_id": "qdua-forgiveness"
+    },
+    {
+      "day": 8,
+      "item_id": "qdua-mercy"
+    },
+    {
+      "day": 9,
+      "item_id": "qdua-need"
+    },
+    {
+      "day": 10,
+      "item_id": "qdua-distress"
+    },
+    {
+      "day": 11,
+      "item_id": "qdua-patience"
+    },
+    {
+      "day": 12,
+      "item_id": "qdua-family"
+    },
+    {
+      "day": 13,
+      "item_id": "qdua-reliance"
+    },
+    {
+      "day": 14,
+      "item_id": "qdua-thankfulness"
+    },
+    {
+      "day": 15,
+      "item_id": "qdua-prayer"
+    },
+    {
+      "day": 16,
+      "item_id": "qdua-protection"
+    },
+    {
+      "day": 17,
+      "item_id": "qdua-believers"
+    },
+    {
+      "day": 18,
+      "item_id": "qdua-steadfastness"
+    },
+    {
+      "day": 19,
+      "item_id": "qdua-faithful"
+    },
+    {
+      "day": 20,
+      "item_id": "qdua-promise"
+    },
+    {
+      "day": 21,
+      "item_id": "qdua-safety"
+    },
+    {
+      "day": 22,
+      "item_id": "qdua-justice"
+    },
+    {
+      "day": 23,
+      "item_id": "qdua-trust"
+    },
+    {
+      "day": 24,
+      "item_id": "qdua-deliverance"
+    },
+    {
+      "day": 25,
+      "item_id": "qdua-yusuf"
+    },
+    {
+      "day": 26,
+      "item_id": "qdua-ibrahim"
+    },
+    {
+      "day": 27,
+      "item_id": "qdua-entrance"
+    },
+    {
+      "day": 28,
+      "item_id": "qdua-mercy-believers"
+    },
+    {
+      "day": 29,
+      "item_id": "qdua-angels"
+    },
+    {
+      "day": 30,
+      "item_id": "qdua-brothers"
+    }
+  ],
+  "ramadan_days_note": "مقترحات لتنظيم القراءة والدعاء؛ لا تثبت سنة تخصيص كل يوم بدعاء بعينه أو فضل خاص."
 }

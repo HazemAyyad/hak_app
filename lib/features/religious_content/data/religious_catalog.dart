@@ -24,6 +24,17 @@ class ReligiousSection {
   final String? source;
 }
 
+class ReligiousMood {
+  ReligiousMood(Map<String, dynamic> data)
+    : id = data['id'] as String,
+      title = data['title'] as String,
+      image = data['image'] as String,
+      icon = data['icon'] as String,
+      itemIds = List<String>.from(data['item_ids'] as List);
+  final String id, title, image, icon;
+  final List<String> itemIds;
+}
+
 class ReligiousItem {
   ReligiousItem(Map<String, dynamic> data)
     : id = data['id'] as String,
@@ -59,13 +70,24 @@ class ReligiousItem {
 /// Versioned content with stable IDs; displayed scripture is never normalized.
 class ReligiousCatalog {
   ReligiousCatalog.fromJson(Map<String, dynamic> data)
-    : version = data['version'] as String,
+    : _raw = Map<String, dynamic>.from(data),
+      version = data['version'] as String,
+      sourceVersion =
+          data['upstream_version'] as String? ?? data['version'] as String,
       categories = (data['categories'] as List)
           .map((v) => ReligiousCategory(Map<String, dynamic>.from(v as Map)))
           .toList(),
       items = (data['items'] as List)
           .map((v) => ReligiousItem(Map<String, dynamic>.from(v as Map)))
-          .toList() {
+          .toList(),
+      moods = (data['moods'] as List? ?? [])
+          .map((v) => ReligiousMood(Map<String, dynamic>.from(v as Map)))
+          .toList(),
+      ramadanDays = {
+        for (final value in data['ramadan_days'] as List? ?? [])
+          value['day'] as int: value['item_id'] as String,
+      },
+      ramadanDaysNote = data['ramadan_days_note'] as String? ?? '' {
     byId = {for (final item in items) item.id: item};
     byCategory = {for (final category in categories) category.id: category};
     if (byId.length != items.length ||
@@ -93,6 +115,26 @@ class ReligiousCatalog {
         throw const FormatException('Invalid related religious content');
       }
     }
+    if (moods.map((mood) => mood.id).toSet().length != moods.length ||
+        moods.any(
+          (mood) =>
+              ![
+                'happy',
+                'sad',
+                'anxiety',
+                'rest',
+                'love',
+                'contentment',
+              ].contains(mood.image) ||
+              !byCategory.containsKey('mood-${mood.id}') ||
+              !mood.itemIds.every(byId.containsKey),
+        ) ||
+        ramadanDays.entries.any(
+          (entry) =>
+              entry.key < 1 || entry.key > 30 || !byId.containsKey(entry.value),
+        )) {
+      throw const FormatException('Invalid curated content');
+    }
     for (final category in categories) {
       final visited = <String>{category.id};
       var parent = category.parent;
@@ -109,8 +151,80 @@ class ReligiousCatalog {
         as Map<String, dynamic>,
   );
   final String version;
+  final String sourceVersion;
+  final Map<String, dynamic> _raw;
+
+  /// Keep new bundled features with an old server/cache, preserving editorial
+  /// changes and never resurrecting unpublished legacy item IDs.
+  ReligiousCatalog extendLegacy(Map<String, dynamic> candidate) {
+    if ((candidate['schema_version'] as int? ?? 1) >= 2 ||
+        _raw['bundled_extensions'] == null) {
+      return ReligiousCatalog.fromJson(candidate);
+    }
+    final extensions = _raw['bundled_extensions'] as Map;
+    final newCategories = Set<String>.from(extensions['category_ids'] as List);
+    final newItems = Set<String>.from(extensions['item_ids'] as List);
+    final categories = {
+      for (final record in candidate['categories'] as List)
+        record['id'] as String: Map<String, dynamic>.from(record as Map),
+    };
+    for (final category in _raw['categories'] as List) {
+      if (newCategories.contains(category['id'])) {
+        categories.putIfAbsent(
+          category['id'] as String,
+          () => Map<String, dynamic>.from(category as Map),
+        );
+      }
+    }
+    final fresh = {
+      for (final record in _raw['items'] as List)
+        record['id'] as String: record as Map,
+    };
+    final records = {
+      for (final record in candidate['items'] as List)
+        record['id'] as String: Map<String, dynamic>.from(record as Map),
+    };
+    for (final record in records.values) {
+      record['categories'] = {
+        ...List<String>.from(record['categories'] as List),
+        ...List<String>.from(
+          fresh[record['id']]?['categories'] as List? ?? [],
+        ).where(newCategories.contains),
+      }.where(categories.containsKey).toList();
+    }
+    for (final id in newItems) {
+      records.putIfAbsent(id, () => Map<String, dynamic>.from(fresh[id]!));
+    }
+    return ReligiousCatalog.fromJson({
+      ...candidate,
+      'schema_version': 2,
+      'version': '${candidate['version']}+bundle:$version',
+      'upstream_version': candidate['version'],
+      'categories': categories.values.toList(),
+      'items': records.values.toList(),
+      'moods': [
+        for (final mood in _raw['moods'] as List)
+          if (categories.containsKey('mood-${mood['id']}'))
+            {
+              ...Map<String, dynamic>.from(mood as Map),
+              'item_ids': List<String>.from(
+                mood['item_ids'] as List,
+              ).where(records.containsKey).toList(),
+            },
+      ],
+      'ramadan_days': [
+        for (final day in _raw['ramadan_days'] as List)
+          if (records.containsKey(day['item_id'])) day,
+      ],
+      'ramadan_days_note': _raw['ramadan_days_note'],
+    });
+  }
+
   final List<ReligiousCategory> categories;
   final List<ReligiousItem> items;
+  final List<ReligiousMood> moods;
+  final Map<int, String> ramadanDays;
+  final String ramadanDaysNote;
   late final Map<String, ReligiousItem> byId;
   late final Map<String, ReligiousCategory> byCategory;
   List<ReligiousCategory> children(String? parent) =>
