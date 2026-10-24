@@ -1114,7 +1114,7 @@ class _Panel extends StatelessWidget {
       border: Border.all(color: AppPalette.of(context).border),
       borderRadius: BorderRadius.circular(20),
     ),
-    child: child,
+    child: Material(type: MaterialType.transparency, child: child),
   );
 }
 
