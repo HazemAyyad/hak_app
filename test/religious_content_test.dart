@@ -66,6 +66,30 @@ void main() {
     appearance.dispose();
   });
 
+  test(
+    'audio availability comes from actual catalog sources before player initialization',
+    () async {
+      for (final id in ['nawawi-01', 'name-01', 'sunnah-hands']) {
+        expect(controller.hasAudio(catalog.byId[id]!), isFalse, reason: id);
+      }
+      for (final id in ['qdua-goodness', 'hisn-001', 'ruqya-complete']) {
+        expect(controller.hasAudio(catalog.byId[id]!), isTrue, reason: id);
+      }
+      final item = catalog.byId['nawawi-01']!;
+      await controller.play(item);
+      await controller.download(item);
+      await controller.toggleQueue(item.id);
+      expect(controller.listeningQueue, isEmpty);
+      expect(controller.media.catalog, isNull);
+      expect(controller.media.handler, isNull);
+      expect(controller.error, isNotNull);
+      // Old saved queues can still remove entries that have no recording now.
+      controller.listeningQueue.add(item.id);
+      await controller.toggleQueue(item.id);
+      expect(controller.listeningQueue, isEmpty);
+    },
+  );
+
   Future<void> pump(
     WidgetTester tester, {
     double width = 426,

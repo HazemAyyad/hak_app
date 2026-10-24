@@ -144,6 +144,7 @@ class ReligiousRoundButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
+    enabled: onTap != null,
     label: label,
     child: Tooltip(
       message: label,

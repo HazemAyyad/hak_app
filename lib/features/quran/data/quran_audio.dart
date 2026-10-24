@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'quran_audio_models.dart';
 import 'quran_downloads.dart';
 import 'quran_repository.dart';
+import 'quran_playback_ownership.dart';
 
 class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
   QuranAudioHandler({AudioPlayer? player})
@@ -30,6 +31,8 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
     });
   }
   final AudioPlayer player;
+  final ownership = QuranPlaybackOwnership();
+  int _loadGeneration = 0;
   AudioServiceRepeatMode _repeatMode = AudioServiceRepeatMode.none;
   void _broadcast([PlaybackEvent? event]) {
     final currentEvent = event ?? player.playbackEvent;
@@ -96,12 +99,17 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
     List<QuranAudioTrack> tracks,
     List<Uri> uris, {
     int start = 0,
+    bool Function()? isCurrent,
   }) async {
     if (tracks.isEmpty || tracks.length != uris.length) {
       throw ArgumentError('A recording URI is required for every track');
     }
     RangeError.checkValidIndex(start, tracks, 'start');
+    final generation = ++_loadGeneration;
+    bool valid() =>
+        generation == _loadGeneration && (isCurrent?.call() ?? true);
     await player.stop();
+    if (!valid()) return;
     queue.add(
       tracks.asMap().entries.map((entry) {
         final track = entry.value;
@@ -124,6 +132,7 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
     );
     mediaItem.add(queue.value[start]);
     await player.setLoopMode(LoopMode.off);
+    if (!valid()) return;
     _repeatMode = AudioServiceRepeatMode.none;
     await player.setAudioSources(
       [
@@ -133,9 +142,11 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
       initialIndex: start,
       initialPosition: Duration.zero,
     );
+    if (!valid()) return;
     _broadcast();
     unawaited(
       play().catchError((Object error) {
+        if (!valid()) return;
         playbackState.add(
           playbackState.value.copyWith(
             processingState: AudioProcessingState.error,
@@ -218,6 +229,7 @@ class QuranMedia extends ChangeNotifier {
     required this.preferences,
     QuranDownloads? downloads,
     this.storageKey = 'quran.audio.v1',
+    this.handlerFactory,
   }) : downloads = downloads ?? QuranDownloads() {
     this.downloads.addListener(_notify);
   }
@@ -225,6 +237,7 @@ class QuranMedia extends ChangeNotifier {
   final SharedPreferences Function() preferences;
   final String storageKey;
   final QuranDownloads downloads;
+  final Future<QuranAudioHandler> Function()? handlerFactory;
   QuranAudioCatalog? catalog;
   QuranAudioHandler? handler;
   static Future<QuranAudioHandler>? _sharedHandler;
@@ -235,27 +248,38 @@ class QuranMedia extends ChangeNotifier {
   String? error;
   bool loading = false, _disposed = false;
   int _generation = 0;
+  bool _lostOwnership = false;
   Timer? _timer;
   DateTime? stopAt;
   AudioServiceRepeatMode repeat = AudioServiceRepeatMode.none;
   double _preferredSpeed = 1;
   List<QuranAudioTrack> playingTracks = [];
+  bool get ownsPlayback =>
+      !_disposed &&
+      handler != null &&
+      (handler!.ownership.owns(this) ||
+          !_lostOwnership && handler!.ownership.unclaimed);
   QuranAudioTrack? get current {
+    if (!ownsPlayback) return null;
     final item = handler?.mediaItem.value;
     final id = item?.extras?['trackId'] ?? item?.id;
     final found = playingTracks.where((track) => track.id == id);
     return found.isEmpty ? null : found.first;
   }
 
-  bool get playing => handler?.playbackState.value.playing ?? false;
-  double get speed => handler?.player.speed ?? _preferredSpeed;
-  Duration get position => handler?.player.position ?? Duration.zero;
-  Duration? get duration =>
-      handler?.player.duration ?? handler?.mediaItem.value?.duration;
+  bool get playing =>
+      ownsPlayback && (handler?.playbackState.value.playing ?? false);
+  double get speed => ownsPlayback ? handler!.player.speed : _preferredSpeed;
+  Duration get position =>
+      ownsPlayback ? handler!.player.position : Duration.zero;
+  Duration? get duration => ownsPlayback
+      ? handler?.player.duration ?? handler?.mediaItem.value?.duration
+      : null;
   bool get buffering =>
       loading ||
-      handler?.player.processingState == ProcessingState.loading ||
-      handler?.player.processingState == ProcessingState.buffering;
+      (ownsPlayback &&
+          (handler?.player.processingState == ProcessingState.loading ||
+              handler?.player.processingState == ProcessingState.buffering));
   void _notify() {
     if (!_disposed) notifyListeners();
   }
@@ -326,7 +350,13 @@ class QuranMedia extends ChangeNotifier {
   }
 
   Future<QuranAudioHandler> _audioHandler() async {
+    if (_disposed) throw StateError('Audio facade disposed');
     if (handler != null) return handler!;
+    if (handlerFactory != null) {
+      handler = await handlerFactory!();
+      if (_disposed) throw StateError('Audio facade disposed');
+      return handler!;
+    }
     _sharedHandler ??= AudioService.init<QuranAudioHandler>(
       builder: QuranAudioHandler.new,
       config: const AudioServiceConfig(
@@ -344,11 +374,13 @@ class QuranMedia extends ChangeNotifier {
       _sharedHandler = null;
       rethrow;
     }
+    if (_disposed) throw StateError('Audio facade disposed');
     final session = await AudioSession.instance;
     await session.configure(const AudioSessionConfiguration.speech());
+    if (_disposed) throw StateError('Audio facade disposed');
     subscriptions.add(
       handler!.playbackState.listen((state) {
-        error = state.errorMessage;
+        if (ownsPlayback) error = state.errorMessage;
         _notify();
       }),
     );
@@ -360,6 +392,9 @@ class QuranMedia extends ChangeNotifier {
   }
 
   Future<void> playTracks(List<QuranAudioTrack> tracks, {int start = 0}) async {
+    if (tracks.isEmpty || start < 0 || start >= tracks.length) {
+      throw ArgumentError('A valid nonempty recording queue is required');
+    }
     final generation = ++_generation;
     loading = true;
     error = null;
@@ -367,17 +402,29 @@ class QuranMedia extends ChangeNotifier {
     try {
       await initialize();
       final audio = await _audioHandler();
+      if (generation != _generation || _disposed) return;
+      audio.ownership.claim(this, _lostPlayback);
+      _lostOwnership = false;
       final uris = <Uri>[];
       for (var index = 0; index < tracks.length; index++) {
         final track = tracks[index];
         final file = await downloads.localFile(track, verify: index == start);
         uris.add(file?.uri ?? Uri.parse(track.url));
       }
-      if (generation != _generation || _disposed) return;
-      playingTracks = tracks;
-      repeat = AudioServiceRepeatMode.none;
-      await audio.load(tracks, uris, start: start);
-      await audio.setSpeed(_preferredSpeed);
+      if (generation != _generation || _disposed || !ownsPlayback) return;
+      await audio.ownership.run(this, () async {
+        if (generation != _generation || _disposed) return;
+        playingTracks = List.unmodifiable(tracks);
+        repeat = AudioServiceRepeatMode.none;
+        await audio.load(
+          tracks,
+          uris,
+          start: start,
+          isCurrent: () =>
+              generation == _generation && !_disposed && ownsPlayback,
+        );
+        if (ownsPlayback) await audio.setSpeed(_preferredSpeed);
+      });
     } catch (_) {
       if (generation == _generation) {
         error = 'تعذّر تشغيل التلاوة؛ تحقق من الاتصال وأعد المحاولة';
@@ -455,15 +502,20 @@ class QuranMedia extends ChangeNotifier {
   }
 
   Future<void> toggle() async {
-    if (handler == null) return;
+    if (!ownsPlayback) return;
     try {
       if (playing) {
-        await handler!.pause();
+        await _control(handler!.pause);
       } else {
         unawaited(
-          handler!.play().catchError((Object _) {
-            error = 'تعذّر استئناف التشغيل';
-            _notify();
+          _control(() async {
+            unawaited(
+              handler!.play().catchError((Object _) {
+                if (!ownsPlayback || _disposed) return;
+                error = 'تعذّر استئناف التشغيل';
+                _notify();
+              }),
+            );
           }),
         );
       }
@@ -474,40 +526,49 @@ class QuranMedia extends ChangeNotifier {
   }
 
   Future<void> seek(Duration value) async {
-    if (handler != null) {
-      await handler!.seek(value);
+    if (ownsPlayback) {
+      await _control(() => handler!.seek(value));
     }
   }
 
   Future<void> skip(int delta) async {
-    if (handler != null) {
+    if (ownsPlayback) {
       if (delta > 0) {
-        await handler!.skipToNext();
+        await _control(handler!.skipToNext);
       } else {
-        await handler!.skipToPrevious();
+        await _control(handler!.skipToPrevious);
       }
     }
   }
 
   Future<void> setSpeed(double value) async {
     _preferredSpeed = value.clamp(.5, 2);
-    await handler?.setSpeed(_preferredSpeed);
+    await _control(() => handler!.setSpeed(_preferredSpeed));
     await _persist();
     _notify();
   }
 
   Future<void> setRepeat(AudioServiceRepeatMode value) async {
     repeat = value;
-    await handler?.setRepeatMode(value);
+    await _control(() => handler!.setRepeatMode(value));
     _notify();
   }
 
   void setTimer(Duration? duration) {
     _timer?.cancel();
+    if (!ownsPlayback || duration != null && duration <= Duration.zero) {
+      duration = null;
+    }
     stopAt = duration == null ? null : DateTime.now().add(duration);
     if (duration != null) {
       _timer = Timer(duration, () {
-        unawaited(handler?.pause() ?? Future.value());
+        unawaited(
+          _control(() => handler!.pause()).catchError((Object _) {
+            if (!ownsPlayback || _disposed) return;
+            error = 'تعذّر إيقاف التشغيل';
+            _notify();
+          }),
+        );
         stopAt = null;
         _notify();
       });
@@ -520,7 +581,7 @@ class QuranMedia extends ChangeNotifier {
     loading = false;
     _timer?.cancel();
     stopAt = null;
-    await handler?.stop();
+    await _control(() => handler!.stop());
     playingTracks = [];
     error = null;
     _notify();
@@ -535,6 +596,25 @@ class QuranMedia extends ChangeNotifier {
     downloads.removeListener(_notify);
     downloads.dispose();
     _timer?.cancel();
+    handler?.ownership.release(this);
     super.dispose();
+  }
+
+  void _lostPlayback() {
+    _lostOwnership = true;
+    ++_generation;
+    _timer?.cancel();
+    stopAt = null;
+    loading = false;
+    playingTracks = [];
+    error = null;
+    _notify();
+  }
+
+  Future<void> _control(Future<void> Function() command) async {
+    if (!ownsPlayback || _disposed) return;
+    final audio = handler!;
+    if (audio.ownership.unclaimed) audio.ownership.claim(this, _lostPlayback);
+    await audio.ownership.run(this, command);
   }
 }

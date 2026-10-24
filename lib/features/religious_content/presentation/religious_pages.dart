@@ -827,7 +827,9 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                           icon: Icons.play_arrow,
                           label: 'تشغيل قائمة الاستماع',
                           filled: true,
-                          onTap: () => host.play(context, queued),
+                          onTap: host.controller.hasAudio(queued)
+                              ? () => host.play(context, queued)
+                              : null,
                         ),
                       ],
                     ),
@@ -856,7 +858,9 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                           icon: Icons.play_arrow,
                           label: 'استئناف الاستماع',
                           filled: true,
-                          onTap: () => host.play(context, item),
+                          onTap: host.controller.hasAudio(item)
+                              ? () => host.play(context, item)
+                              : null,
                         ),
                       ],
                     ),

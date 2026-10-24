@@ -304,8 +304,10 @@ void main() {
         lessThan(tester.getCenter(find.byTooltip('تقديم 10 ثوانٍ')).dx),
       );
       await tester.tap(find.byTooltip('تقديم 10 ثوانٍ'));
+      await tester.pump();
       expect(player.seeks.last.$1, const Duration(seconds: 25));
       await tester.tap(find.byTooltip('إرجاع 10 ثوانٍ'));
+      await tester.pump();
       expect(player.seeks.last.$1, const Duration(seconds: 15));
       await show(compact: true);
       final name = tester.getRect(find.text('قارئ الاختبار'));

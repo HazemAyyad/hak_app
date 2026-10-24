@@ -207,6 +207,10 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
       await controller.flushReading();
       token = newToken;
       profile = Map<String, dynamic>.from(data['account'] as Map);
+      await controller.preferences!.setBool(
+        'religious.activity.mergeGuest.${profile!['id']}',
+        mergeGuest,
+      );
       await controller.preferences!.setString(
         'quran.account.profile',
         jsonEncode(profile),

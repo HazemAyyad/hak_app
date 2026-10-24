@@ -455,7 +455,9 @@ class _ItemTile extends StatelessWidget {
             label: verse ? 'استماع ${item.title}' : 'تفاصيل ${item.title}',
             size: verse ? 29 : 24,
             filled: verse,
-            onTap: () => verse ? host.play(context, item) : host.openItem(item),
+            onTap: verse && !host.controller.hasAudio(item)
+                ? null
+                : () => verse ? host.play(context, item) : host.openItem(item),
           ),
         ],
       ),

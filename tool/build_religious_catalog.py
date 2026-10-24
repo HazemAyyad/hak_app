@@ -1,8 +1,12 @@
 """Reproducible offline catalog. Read downloaded sources; never OCR scripture."""
+import argparse
 import json
 import re
 from pathlib import Path
 
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--backend-root', type=Path, help='Explicit existing Laravel checkout to update as well')
+args = parser.parse_args()
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = ROOT / 'tool/religious_sources'
 QURAN = json.loads((ROOT / 'assets/quran/quran.json').read_text(encoding='utf-8'))
@@ -135,9 +139,19 @@ for i,n in enumerate(names):
     r['sections']=sections
     r['tags']=['الرحمة' if i in [0,1,15,29,41,43,44,46,78,79,81,82] else 'المغفرة' if i in [13,33,79,81] else 'القوة' if i in [7,8,14,19,20,52,53,68,69] else 'الصفات']
 
-payload=dict(version='2026-10-15.1',sources=[dict(name='القرآن الكريم',url=QURAN.get('sourceUrl','https://tanzil.net'),license=QURAN['textLicense']),dict(name='حصن المسلم',url='https://github.com/rn0x/hisn_almuslim_json'),dict(name='الأربعون النووية',url='https://github.com/osamayy/40-hadith-nawawi-db',license='CC0 - see upstream LICENSE'),dict(name='قائمة الأسماء ومعانيها الموجزة',url='https://aladhan.com/asma-al-husna')],categories=CATEGORIES,items=ITEMS)
+overrides=json.loads((SOURCES/'catalog-editorial-overrides.json').read_text(encoding='utf-8'))
+for record in ITEMS:
+    record.update(overrides.get(record['id'], {}))
+
+payload=dict(version='2026-10-24.1',sources=[dict(name='القرآن الكريم',url=QURAN.get('sourceUrl','https://tanzil.net'),license=QURAN['textLicense']),dict(name='حصن المسلم',url='https://github.com/rn0x/hisn_almuslim_json'),dict(name='الأربعون النووية',url='https://github.com/osamayy/40-hadith-nawawi-db',license='CC0 - see upstream LICENSE'),dict(name='قائمة الأسماء ومعانيها الموجزة',url='https://aladhan.com/asma-al-husna')],categories=CATEGORIES,items=ITEMS)
 assert len({r['id'] for r in ITEMS})==len(ITEMS)
-for p in [ROOT/'assets/religious/catalog.json',Path(r'F:\laragon\www\haq-foundation\resources/religious/catalog.json')]:
+targets = [ROOT/'assets/religious/catalog.json']
+if args.backend_root is not None:
+    backend = args.backend_root.resolve(strict=True)
+    if not (backend/'composer.json').is_file() or not (backend/'resources/religious').is_dir():
+        parser.error('--backend-root must point to the intended existing Laravel checkout')
+    targets.append(backend/'resources/religious/catalog.json')
+for p in targets:
     p.parent.mkdir(parents=True,exist_ok=True)
     p.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(f'Built {len(CATEGORIES)} categories and {len(ITEMS)} sourced records')

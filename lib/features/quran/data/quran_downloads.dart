@@ -140,6 +140,9 @@ class QuranDownloads extends ChangeNotifier {
     return _writes;
   }
 
+  /// Wait for already queued manifest writes, including the final dispose save.
+  Future<void> flush() => _writes;
+
   void _save() {
     unawaited(
       _persist().catchError((Object _) {

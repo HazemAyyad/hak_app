@@ -238,6 +238,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                             'استماع',
                             () => host.play(context, item),
                             filled: true,
+                            enabled: host.controller.hasAudio(item),
                           ),
                         ],
                       ),
@@ -392,15 +393,19 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
     String label,
     VoidCallback onTap, {
     bool filled = false,
+    bool enabled = true,
   }) => Column(
     mainAxisSize: MainAxisSize.min,
     children: [
-      ReligiousRoundButton(
-        icon: icon,
-        label: label,
-        onTap: onTap,
-        size: 30,
-        filled: filled,
+      Opacity(
+        opacity: enabled ? 1 : .4,
+        child: ReligiousRoundButton(
+          icon: icon,
+          label: label,
+          onTap: enabled ? onTap : null,
+          size: 30,
+          filled: filled,
+        ),
       ),
       Text(label, style: rText(context, 8)),
     ],
@@ -509,7 +514,9 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                               style: FilledButton.styleFrom(
                                 backgroundColor: rTeal,
                               ),
-                              onPressed: () => host.play(context, item),
+                              onPressed: host.controller.hasAudio(item)
+                                  ? () => host.play(context, item)
+                                  : null,
                               icon: const Icon(Icons.play_arrow),
                               label: const Text('بدء الاستماع'),
                             ),
@@ -562,7 +569,9 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                           ReligiousRoundButton(
                             icon: Icons.play_arrow,
                             label: 'تشغيل ${part.title}',
-                            onTap: () => host.play(context, part),
+                            onTap: host.controller.hasAudio(part)
+                                ? () => host.play(context, part)
+                                : null,
                             filled: true,
                             size: 28,
                           ),
@@ -573,21 +582,27 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                   const SizedBox(height: 12),
                   FilledButton.icon(
                     style: FilledButton.styleFrom(backgroundColor: rTeal),
-                    onPressed: () async {
-                      await host.controller.download(item);
-                      if (context.mounted) {
-                        host.message(
-                          context,
-                          host.controller.error ??
-                              'أضيفت الملفات إلى قائمة التنزيل',
-                        );
-                      }
-                    },
+                    onPressed: !host.controller.hasAudio(item)
+                        ? null
+                        : () async {
+                            await host.controller.download(item);
+                            if (context.mounted) {
+                              host.message(
+                                context,
+                                host.controller.error ??
+                                    'أضيفت الملفات إلى قائمة التنزيل',
+                              );
+                            }
+                          },
                     icon: const Icon(Icons.download_outlined),
                     label: const Text('تحميل الرقية كاملة'),
                   ),
                   OutlinedButton.icon(
-                    onPressed: () => host.controller.toggleQueue(item.id),
+                    onPressed:
+                        host.controller.hasAudio(item) ||
+                            host.controller.listeningQueue.contains(item.id)
+                        ? () => host.controller.toggleQueue(item.id)
+                        : null,
                     icon: const Icon(Icons.playlist_add),
                     label: Text(
                       host.controller.listeningQueue.contains(item.id)

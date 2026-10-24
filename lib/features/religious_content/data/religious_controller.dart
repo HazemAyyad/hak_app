@@ -10,6 +10,7 @@ import '../../quran/data/quran_controller.dart';
 import '../../quran/data/quran_downloads.dart';
 import '../../quran/data/quran_sync.dart';
 import 'religious_catalog.dart';
+import '../../religious_activity/data/activity_controller.dart';
 
 class ReligiousController extends ChangeNotifier {
   ReligiousController({
@@ -32,6 +33,24 @@ class ReligiousController extends ChangeNotifier {
   final Dio dio;
   ReligiousCatalog? catalog;
   QuranMedia? _media;
+  Future<ReligiousActivityController>? _activity;
+  Future<ReligiousActivityController> get activity =>
+      _activity ??= _openActivity();
+  Future<ReligiousActivityController> _openActivity() async {
+    try {
+      if (_disposed) throw StateError('Religious section disposed');
+      final value = await ReligiousActivityController.open(quran);
+      if (_disposed) {
+        value.dispose();
+        throw StateError('Religious section disposed');
+      }
+      return value;
+    } catch (_) {
+      _activity = null;
+      rethrow;
+    }
+  }
+
   QuranMedia get media => _media ??= QuranMedia(
     repository: () => quran.repository!,
     preferences: () => quran.preferences!,
@@ -148,6 +167,11 @@ class ReligiousController extends ChangeNotifier {
 
   Future<void> toggleQueue(String id) async {
     if (catalog?.byId.containsKey(id) != true) return;
+    if (!listeningQueue.contains(id) && !hasAudio(catalog!.byId[id]!)) {
+      error = 'التسجيل الصوتي لهذا المحتوى غير متاح حاليًا';
+      _emit();
+      return;
+    }
     if (!listeningQueue.remove(id)) listeningQueue.add(id);
     _changed();
     await _persist();
@@ -297,6 +321,22 @@ class ReligiousController extends ChangeNotifier {
     }
   }
 
+  bool hasAudio(ReligiousItem item, [Set<String>? visited]) {
+    final seen = visited ?? <String>{};
+    if (!seen.add(item.id)) return false;
+    if (item.type == 'playlist') {
+      for (final id in item.related) {
+        final part = catalog?.byId[id];
+        if (part != null && hasAudio(part, seen)) return true;
+      }
+      return false;
+    }
+    return item.audioUrl?.isNotEmpty == true ||
+        item.verseKeys.any(
+          (key) => quran.repository?.byKey.containsKey(key) == true,
+        );
+  }
+
   List<QuranAudioTrack> tracks(ReligiousItem item) {
     if (item.type == 'playlist') {
       return [
@@ -345,6 +385,11 @@ class ReligiousController extends ChangeNotifier {
 
   String? activeItem;
   Future<void> play(ReligiousItem item, {bool resume = true}) async {
+    if (!hasAudio(item)) {
+      error = 'التسجيل الصوتي لهذا المحتوى غير متاح حاليًا';
+      _emit();
+      return;
+    }
     try {
       await media.initialize();
       final queue = tracks(item);
@@ -386,6 +431,11 @@ class ReligiousController extends ChangeNotifier {
   }
 
   Future<void> download(ReligiousItem item) async {
+    if (!hasAudio(item)) {
+      error = 'لا يوجد تسجيل متاح للتنزيل';
+      _emit();
+      return;
+    }
     try {
       await media.initialize();
       final queue = tracks(item);
@@ -413,6 +463,14 @@ class ReligiousController extends ChangeNotifier {
     _retryTimer?.cancel();
     if (_listening) quran.account.removeListener(_accountChanged);
     _media?.dispose();
+    if (_activity != null) {
+      unawaited(
+        _activity!.then<void>(
+          (value) => value.dispose(),
+          onError: (Object _) {},
+        ),
+      );
+    }
     dio.close();
     super.dispose();
   }
