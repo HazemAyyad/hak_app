@@ -1,16 +1,16 @@
-# عقد الأقسام الدينية — schema 2
+# عقد الأقسام الدينية — schema 3
 
 ## التخزين والملكية
 
-`haq_religious_activity_v1.sqlite` ملف مستقل عن تخزين القرآن والتنزيلات. يُفتح عند طلب أول ميزة جديدة عبر `ReligiousController.activity`. لكل صف نطاق `guest` أو `account.<id>`، ومعرّف UUID للجهاز محفوظ مرة واحدة. العمليات والسجلات ثابتة الهوية عند إعادة الإرسال.
+`haq_religious_activity_v1.sqlite` ملف مستقل عن تخزين القرآن والتنزيلات. يُفتح عند حاجة قسم ديني أو بطاقة «رحلتك اليوم» عبر `ReligiousController.activity`. لكل صف نطاق `guest` أو `account.<id>`، ومعرّف UUID للجهاز محفوظ مرة واحدة. العمليات والسجلات ثابتة الهوية عند إعادة الإرسال.
 
 | النوع | القيمة |
 | --- | --- |
 | group | id، title، item_ids المرتبة والفريدة، sort_order |
 | dhikr | id، text، target الموجب، source الاختياري, preface (optional) |
 | session | id، group_id، day، epoch، targets المرتبة، mode، catalog_version، auto_advance، cursor |
-| habit | id، title، weekdays من1 إلى7، target، enabled |
-| khatma | id، title، start_date، end_date، first_page، last_page حتى604 |
+| habit | id، title، weekdays من1 إلى7، target، enabled؛ icon وepoch اختياريان |
+| khatma | id، title، start_date، end_date، first_page، last_page حتى604؛ epoch وarchived وreminder_minutes اختياريًا |
 | tasbih | id, text, benefit, goal, epoch, style (six values), sort_order |
 
 الهوية في المزامنة `kind:UUID`؛ لا تُرسل قيم JSON حرة خارج هذه الحقول. وضع القراءة cards/list/focus. الجلسة تحتفظ بأهداف نسختها من المحتوى؛ عدد المتبقي يُحسب من الأحداث ولا يُخزّن كنسخة ثانية متعارضة.
@@ -58,3 +58,13 @@
 Capabilities now require schema_version=2 for the sixth typed entity. The old Quran/content sync endpoints remain unchanged. The backend is still disabled by default; no deployment or real database migration was performed.
 SQLite version2 retains the existing filename and all records. Upgrade adds nullable remote_revision and rewinds activity.cursor to zero for one safe backfill. Server revisions precede local pending sequence; reset/count folding therefore converges across devices. Personal definitions and reset markers can commit atomically.
 Tasbih current-reset keeps totals and completed rounds. A new overall epoch resets visible totals while retaining historical events. Goal changes start a new segment. See docs/tasbih-implementation.md for UI behavior and voice validation boundaries.
+
+## P06 — schema3 والختمات والعادات
+
+schema_version3 هو العقد الحالي. يُعلن لأن عميل schema2 لا يحتفظ بامتدادات التعريفات عند تحريرها؛ العميل الجديد يمتنع عن إرسال المعلق إلى خادم2، والعميل القديم يمتنع عند3. الحقول الاختيارية لا تضاف عند قراءة سجل قديم، لتبقى عمليات P02/P04 وبصمات إيصالاتها صالحة. icon واحد من12 رمزًا معروفًا، وepoch UUID؛ archived قيمة منطقية وreminder_minutes بين0 و1439. لا ترحيل أو عمود جديد، والتفعيل الافتراضي ما زال false.
+
+جلسة العادة هي UUID تعريفها، ودورتها epoch أو UUID التعريف القديم، وعنوان الحدث `habit:<id>:<target>`. يحتسب الإنجاز بحسب اليوم المحلي، مع سقف الهدف بعد دمج أحداث الجهازين وتطبيق التراجع. تغيير الهدف يبدأ epoch جديدة ويحفظ التاريخ. التعريفات والأحداث تستعمل مساري personal/activity الحاليين؛ لا نسخة إحصاءات قابلة للكتابة من العميل.
+
+جلسة الختمة هي UUID تعريفها. `quran-verse:<surah>:<ayah>` يحفظ آخر آية مؤكدة بمقدار رقم الصفحة؛ لا يُجمع هذا المقدار كعدد صفحات. `quran-page:<page>` بمقدار1 يحفظ الصفحة المكتملة فقط بعد بلوغ آخر آية فيها. عند الدمج تُختار أبعد آية وتُحتسب الصفحات الفريدة في الدورة، فلا يكررها جهازان. تنسب الصفحة في التقارير اليومية لأول تأكيد زمني، مع UUID لكسر التعادل. الدورة الجديدة تترك القديمة في السجل. تأكيد قارئ من epoch قديمة لا يكتب تقدم الدورة الجديدة.
+
+`statistics:all` مع reset يحدد بدء عرض جديد حسب ترتيب السجل (مراجعات الخادم ثم المعلق) ولا يحذف الأحداث أو تقدم العادات والختمات. بيانات القراءة والتسبيح محسوبة من الأحداث الفعلية بعد التراجع؛ لا مدة قراءة مستنتجة من فتح الشاشة. الموعد المحفوظ للختمة إعداد فقط؛ جدولة إشعار الجهاز ضمن P08 ولم تُفعّل هنا. تفاصيل الخطة اليومية والتقسيم والتصميم في docs/progress-implementation.md.

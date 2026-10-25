@@ -21,10 +21,12 @@ class QuranReader extends StatefulWidget {
     required this.verse,
     required this.onFullscreenChanged,
     this.highlight,
+    this.onActiveVerseChanged,
   });
   final QuranController controller;
   final QuranVerse verse;
   final String? highlight;
+  final ValueChanged<QuranVerse>? onActiveVerseChanged;
   final ValueChanged<bool> onFullscreenChanged;
   @override
   State<QuranReader> createState() => _QuranReaderState();
@@ -49,6 +51,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     active = ValueNotifier(widget.verse);
+    active.addListener(_reportActiveVerse);
     surahId = widget.verse.surah;
     previousMode = controller.mode;
     fixedPage = controller.lastKey == widget.verse.key
@@ -68,6 +71,8 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _schedulePageDownloadOffer();
   }
+
+  void _reportActiveVerse() => widget.onActiveVerseChanged?.call(active.value);
 
   void _onVisibleItems() {
     if (!mounted || controller.mode != QuranReadingMode.continuous) return;
@@ -226,6 +231,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     controller.removeListener(_onPreferencesChanged);
     controller.audio.removeListener(_onAudioChanged);
     controller.flushReading();
+    active.removeListener(_reportActiveVerse);
     active.dispose();
     super.dispose();
   }

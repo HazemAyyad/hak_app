@@ -12,6 +12,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class ModuleCloud implements HttpClientAdapter {
   bool enabled = true, loseNextEventResponse = false;
+  int schemaVersion = 3;
   Completer<void>? gate;
   final requests = <RequestOptions>[];
   final entities = <String, dynamic>{};
@@ -29,7 +30,7 @@ class ModuleCloud implements HttpClientAdapter {
     Map<String, dynamic> body;
     if (options.path == '/capabilities') {
       body = {
-        'schema_version': 2,
+        'schema_version': schemaVersion,
         'personal_sync': enabled,
         'activity_sync': enabled,
       };
@@ -193,6 +194,74 @@ void main() {
       expect(cloud.history.length, 1);
       expect(await store.events('account.1', pendingOnly: true), isEmpty);
       expect(client.errors, isEmpty);
+    },
+  );
+
+  test(
+    'schema2 server keeps extended progress local and schema3 synchronizes typed definitions and history',
+    () async {
+      final h = ReligiousHabit(
+        id: operationId(),
+        title: 'عادة',
+        weekdays: [1, 7],
+        icon: 'beads',
+        target: 33,
+        epoch: operationId(),
+      );
+      final k = QuranKhatma(
+        id: operationId(),
+        title: 'ختمة',
+        startDate: '2026-10-25',
+        endDate: '2026-11-23',
+        epoch: operationId(),
+        archived: false,
+        reminderMinutes: 1245,
+      );
+      await store.save('account.1', h);
+      await store.save('account.1', k);
+      final page = ReligiousActivityEvent.fromJson({
+        ...event().toJson(),
+        'session_id': k.id,
+        'epoch': k.activeEpoch,
+        'subject_id': 'quran-page:1',
+        'kind': 'quranPage',
+      });
+      await store.append('account.1', page);
+      cloud.schemaVersion = 2;
+      expect(await client.sync(), isFalse);
+      expect(cloud.entities, isEmpty);
+      expect(cloud.history, isEmpty);
+      expect((await store.pendingPersonal('account.1')).length, 2);
+      cloud.schemaVersion = 3;
+      cloud.loseNextEventResponse = true;
+      expect(await client.sync(), isFalse);
+      expect(await client.sync(), isTrue);
+      expect(cloud.entities[h.key]['value'], h.toJson());
+      expect(cloud.entities[k.key]['value'], k.toJson());
+      expect(cloud.history.single['id'], page.id);
+      expect(await store.pendingPersonal('account.1'), isEmpty);
+      expect(await store.events('account.1', pendingOnly: true), isEmpty);
+      final replica = await ReligiousActivityStore.open(
+        factory: databaseFactoryFfiNoIsolate,
+        path: inMemoryDatabasePath,
+      );
+      final otherClient = ReligiousActivitySync(
+        store: replica,
+        session: () => current,
+        dio: Dio(BaseOptions(baseUrl: 'https://example.test'))
+          ..httpClientAdapter = cloud,
+      );
+      expect(await otherClient.sync(), isTrue);
+      expect(
+        (await replica.entities('account.1')).map((e) => e.toJson()),
+        containsAll([h.toJson(), k.toJson()]),
+      );
+      expect(
+        (await replica.events('account.1')).single.toJson(),
+        page.toJson(),
+      );
+      otherClient.disposed = true;
+      await replica.close();
     },
   );
 

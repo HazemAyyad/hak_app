@@ -680,56 +680,108 @@ class DailyVerseCard extends StatelessWidget {
 }
 
 class JourneyCards extends StatelessWidget {
-  const JourneyCards({super.key});
+  const JourneyCards({super.key, this.controller, this.onFeature});
+  final ReligiousController? controller;
+  final ValueChanged<AppFeature>? onFeature;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => ProgressSummary(
+    controller: controller,
+    builder: (context, c, failed) => _content(context, c, failed),
+  );
+  Widget _content(BuildContext context, ProgressController? c, bool failed) {
     final palette = AppPalette.of(context);
-    const items = [
-      ('العادات', 'تم اليوم', Icons.spa_outlined, 'leaf', .52),
-      ('الأذكار', 'أذكار الصباح', Icons.radio_button_checked, 'beads', .48),
-      ('الختمة', 'الجزء الثاني', Icons.menu_book_outlined, 'book', .24),
+    final habits = c?.habits.where((h) => c.due(h)).toList() ?? [];
+    final goal = habits.fold<int>(0, (sum, h) => sum + h.target);
+    final done = habits.fold<int>(0, (sum, h) => sum + c!.habitCount(h));
+    final totals = c?.totals(date: c.day);
+    final active = c?.khatmas
+        .where((k) => k.archived != true && !c.completed(k))
+        .firstOrNull;
+    final adhkarGoal =
+        c?.sessions.values
+            .where((s) => s.day == c.day)
+            .fold<int>(
+              0,
+              (sum, s) => sum + s.targets.values.fold<int>(0, (a, b) => a + b),
+            ) ??
+        0;
+    final unavailable = failed ? 'تعذّر التحميل' : '—';
+    final items = [
+      (
+        'العادات',
+        c == null ? unavailable : 'اليوم: $done من $goal',
+        Icons.spa_outlined,
+        'leaf',
+        goal == 0 ? 0.0 : done / goal,
+      ),
+      (
+        'الأذكار',
+        c == null ? unavailable : '${totals!.adhkar} قراءة اليوم',
+        Icons.radio_button_checked,
+        'beads',
+        adhkarGoal == 0 ? 0.0 : (totals!.adhkar / adhkarGoal).clamp(0.0, 1.0),
+      ),
+      (
+        'الختمة',
+        c == null
+            ? unavailable
+            : active == null
+            ? 'لم تبدأ بعد'
+            : '${c.readPages(active).length} صفحة',
+        Icons.menu_book_outlined,
+        'book',
+        active == null ? 0.0 : c!.fraction(active),
+      ),
     ];
     return Row(
       children: [
         for (var i = 0; i < items.length; i++) ...[
           if (i > 0) const SizedBox(width: 8),
           Expanded(
-            child: _Surface(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-              child: Column(
-                children: [
-                  _HomeGlyph(
-                    kind: items[i].$4,
-                    fallback: items[i].$3,
-                    color: palette.dark ? const Color(0xFF9ED9DF) : _homeTeal,
-                    size: 29,
-                  ),
-                  const SizedBox(height: 7),
-                  Text(
-                    items[i].$1,
-                    style: _homeText(context, 11, weight: FontWeight.w800),
-                  ),
-                  const SizedBox(height: 9),
-                  Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: LinearProgressIndicator(
-                      value: items[i].$5,
-                      minHeight: 7,
-                      borderRadius: BorderRadius.circular(8),
-                      color: _homeTeal,
-                      backgroundColor: palette.dark
-                          ? const Color(0xFF263F4C)
-                          : const Color(0xFFEAE7E1),
+            child: GestureDetector(
+              onTap: () => onFeature?.call(
+                [AppFeature.habits, AppFeature.adhkar, AppFeature.khatma][i],
+              ),
+              child: _Surface(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 14,
+                ),
+                child: Column(
+                  children: [
+                    _HomeGlyph(
+                      kind: items[i].$4,
+                      fallback: items[i].$3,
+                      color: palette.dark ? const Color(0xFF9ED9DF) : _homeTeal,
+                      size: 29,
                     ),
-                  ),
-                  const SizedBox(height: 9),
-                  Text(
-                    items[i].$2,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: _homeText(context, 10, color: palette.muted),
-                  ),
-                ],
+                    const SizedBox(height: 7),
+                    Text(
+                      items[i].$1,
+                      style: _homeText(context, 11, weight: FontWeight.w800),
+                    ),
+                    const SizedBox(height: 9),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: LinearProgressIndicator(
+                        value: items[i].$5,
+                        minHeight: 7,
+                        borderRadius: BorderRadius.circular(8),
+                        color: _homeTeal,
+                        backgroundColor: palette.dark
+                            ? const Color(0xFF263F4C)
+                            : const Color(0xFFEAE7E1),
+                      ),
+                    ),
+                    const SizedBox(height: 9),
+                    Text(
+                      items[i].$2,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: _homeText(context, 10, color: palette.muted),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

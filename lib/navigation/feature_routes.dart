@@ -40,7 +40,7 @@ enum AppFeature {
     image: 'beads',
     ready: true,
   ),
-  statistics('إحصائيات', Icons.query_stats_outlined),
+  statistics('إحصائيات', Icons.query_stats_outlined, ready: true),
   personalAdhkar(
     'أذكاري',
     Icons.edit_note_outlined,
@@ -55,7 +55,7 @@ enum AppFeature {
     image: 'quran',
   ),
   qibla('بوصلة القبلة', Icons.explore_outlined),
-  habits('متعقب العادة', Icons.fact_check_outlined),
+  habits('متعقب العادة', Icons.fact_check_outlined, ready: true),
   ruqya(
     'الرقية الشرعية',
     Icons.health_and_safety_outlined,
@@ -108,6 +108,7 @@ enum AppFeature {
     Icons.menu_book_rounded,
     subtitle: 'متابعة ختمة القرآن الكريم',
     image: 'kaaba',
+    ready: true,
   ),
   friday(
     'سنن الجمعة',

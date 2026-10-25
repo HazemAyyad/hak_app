@@ -10,6 +10,9 @@ import 'features/quran/presentation/quran_host.dart';
 import 'features/religious_content/data/religious_controller.dart';
 import 'features/religious_content/presentation/religious_host.dart';
 import 'features/tasbih/presentation/tasbih_page.dart';
+import 'features/progress/presentation/progress_page.dart';
+import 'features/progress/presentation/progress_summary.dart';
+import 'features/progress/data/progress_controller.dart';
 import 'startup/startup_flow.dart';
 
 import 'navigation/app_section.dart';
@@ -279,6 +282,22 @@ class _HomePageState extends State<HomePage> {
 
   void _openFeature(AppFeature feature) {
     switch (feature) {
+      case AppFeature.khatma:
+      case AppFeature.habits:
+      case AppFeature.statistics:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            settings: RouteSettings(name: feature.routeName),
+            builder: (_) => ProgressPage(
+              controller: _religious,
+              section: switch (feature) {
+                AppFeature.khatma => ProgressSection.khatma,
+                AppFeature.habits => ProgressSection.habits,
+                _ => ProgressSection.statistics,
+              },
+            ),
+          ),
+        );
       case AppFeature.tasbih:
         Navigator.of(context).push(
           MaterialPageRoute<void>(
@@ -382,9 +401,13 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: 14),
             DailyVerseCard(),
             SizedBox(height: 20),
-            SectionHeader(title: 'رحلتك اليوم', action: 'عرض الكل'),
+            SectionHeader(
+              title: 'رحلتك اليوم',
+              action: 'عرض الكل',
+              onTap: () => _openFeature(AppFeature.statistics),
+            ),
             SizedBox(height: 10),
-            JourneyCards(),
+            JourneyCards(controller: _religious, onFeature: _openFeature),
             SizedBox(height: 20),
             FridayCard(onTap: () => _openReligious('friday')),
             SizedBox(height: 20),
@@ -666,27 +689,36 @@ class _SocialButton extends StatelessWidget {
 }
 
 class SectionHeader extends StatelessWidget {
-  const SectionHeader({super.key, required this.title, required this.action});
+  const SectionHeader({
+    super.key,
+    required this.title,
+    required this.action,
+    this.onTap,
+  });
+  final VoidCallback? onTap;
   final String title;
   final String action;
   @override
-  Widget build(BuildContext context) => Row(
-    children: [
-      Expanded(
-        child: Text(
-          title,
-          style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: onTap,
+    child: Row(
+      children: [
+        Expanded(
+          child: Text(
+            title,
+            style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
+          ),
         ),
-      ),
-      Text(
-        action,
-        style: TextStyle(color: AppColors.teal, fontWeight: FontWeight.w700),
-      ),
-      Icon(
-        Icons.chevron_left,
-        color: AppColors.teal,
-        textDirection: TextDirection.ltr,
-      ),
-    ],
+        Text(
+          action,
+          style: TextStyle(color: AppColors.teal, fontWeight: FontWeight.w700),
+        ),
+        Icon(
+          Icons.chevron_left,
+          color: AppColors.teal,
+          textDirection: TextDirection.ltr,
+        ),
+      ],
+    ),
   );
 }

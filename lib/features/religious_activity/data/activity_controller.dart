@@ -7,8 +7,8 @@ import 'activity_models.dart';
 import 'activity_store.dart';
 import 'activity_sync.dart';
 
-/// Created only when a new religious feature is opened. Startup and the
-/// existing Quran/preferences paths do not need to initialize another DB.
+/// Opened lazily by a religious section or the home journey summary. Existing
+/// Quran preferences and downloads retain their independent storage paths.
 class ReligiousActivityController extends ChangeNotifier {
   ReligiousActivityController._(
     this.quran,

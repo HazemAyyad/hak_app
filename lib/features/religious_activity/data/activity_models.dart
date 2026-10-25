@@ -217,12 +217,18 @@ class ReligiousHabit extends PersonalEntity {
     required List<int> weekdays,
     int target = 1,
     this.enabled = true,
+    this.icon,
+    String? epoch,
   }) : title = _text(title, 160),
        weekdays = List.unmodifiable(
          weekdays.map((value) => _number(value, 1, 7)),
        ),
        target = _number(target, 1, 1000000),
+       epoch = epoch == null ? null : activityUuid(epoch),
        super(id) {
+    if (icon != null && !habitIcons.contains(icon)) {
+      throw const FormatException('Invalid habit icon');
+    }
     if (weekdays.isEmpty || weekdays.toSet().length != weekdays.length) {
       throw const FormatException('Invalid habit days');
     }
@@ -231,6 +237,22 @@ class ReligiousHabit extends PersonalEntity {
   final List<int> weekdays;
   final int target;
   final bool enabled;
+  static const habitIcons = [
+    'book',
+    'beads',
+    'moon',
+    'sun',
+    'heart',
+    'water',
+    'learn',
+    'give',
+    'prayer',
+    'activity',
+    'sleep',
+    'read',
+  ];
+  final String? icon, epoch;
+  String get activeEpoch => epoch ?? id;
   @override
   PersonalEntityKind get kind => PersonalEntityKind.habit;
   @override
@@ -240,6 +262,8 @@ class ReligiousHabit extends PersonalEntity {
     'weekdays': weekdays,
     'target': target,
     'enabled': enabled,
+    if (icon != null) 'icon': icon,
+    if (epoch != null) 'epoch': epoch,
   };
   factory ReligiousHabit.fromJson(Map<String, dynamic> data) => ReligiousHabit(
     id: data['id'] as String,
@@ -247,6 +271,8 @@ class ReligiousHabit extends PersonalEntity {
     weekdays: List<int>.from(data['weekdays'] as List),
     target: _number(data['target'], 1, 1000000),
     enabled: data['enabled'] as bool,
+    icon: data['icon'] as String?,
+    epoch: data['epoch'] as String?,
   );
 }
 
@@ -258,11 +284,18 @@ class QuranKhatma extends PersonalEntity {
     required String endDate,
     int firstPage = 1,
     int lastPage = 604,
+    String? epoch,
+    this.archived,
+    int? reminderMinutes,
   }) : title = _text(title, 160),
        startDate = activityDate(startDate),
        endDate = activityDate(endDate),
        firstPage = _number(firstPage, 1, 604),
        lastPage = _number(lastPage, firstPage, 604),
+       epoch = epoch == null ? null : activityUuid(epoch),
+       reminderMinutes = reminderMinutes == null
+           ? null
+           : _number(reminderMinutes, 0, 1439),
        super(id) {
     if (this.endDate.compareTo(this.startDate) < 0) {
       throw const FormatException('Invalid khatma dates');
@@ -270,6 +303,10 @@ class QuranKhatma extends PersonalEntity {
   }
   final String title, startDate, endDate;
   final int firstPage, lastPage;
+  final String? epoch;
+  final bool? archived;
+  final int? reminderMinutes;
+  String get activeEpoch => epoch ?? id;
   @override
   PersonalEntityKind get kind => PersonalEntityKind.khatma;
   @override
@@ -280,6 +317,9 @@ class QuranKhatma extends PersonalEntity {
     'end_date': endDate,
     'first_page': firstPage,
     'last_page': lastPage,
+    if (epoch != null) 'epoch': epoch,
+    if (archived != null) 'archived': archived,
+    if (reminderMinutes != null) 'reminder_minutes': reminderMinutes,
   };
   factory QuranKhatma.fromJson(Map<String, dynamic> data) => QuranKhatma(
     id: data['id'] as String,
@@ -288,6 +328,9 @@ class QuranKhatma extends PersonalEntity {
     endDate: data['end_date'] as String,
     firstPage: _number(data['first_page'], 1, 604),
     lastPage: _number(data['last_page'], 1, 604),
+    epoch: data['epoch'] as String?,
+    archived: data['archived'] as bool?,
+    reminderMinutes: data['reminder_minutes'] as int?,
   );
 }
 
