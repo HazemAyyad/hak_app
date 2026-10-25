@@ -1,5 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'app_appearance.dart';
+import 'features/settings/data/app_settings.dart';
+import 'features/settings/data/reminder_controller.dart';
+
+part 'settings_reminders.dart';
 
 const _teal = Color(0xFF0A8B80);
 
@@ -15,9 +21,13 @@ class SettingsPage extends StatelessWidget {
     this.onQuranSettings,
     this.onQuranAccount,
     this.onQuranDownloads,
+    this.reminders,
+    this.loadReminders,
   });
   final VoidCallback? onQuranSettings;
   final VoidCallback? onQuranAccount, onQuranDownloads;
+  final ReminderController? reminders;
+  final Future<ReminderController?> Function()? loadReminders;
 
   @override
   Widget build(BuildContext context) => _SettingsShell(
@@ -58,7 +68,17 @@ class SettingsPage extends StatelessWidget {
         ? onQuranSettings
         : () => Navigator.of(context).push(
             MaterialPageRoute<void>(
-              builder: (_) => SettingsDetailPage(kind: kind),
+              builder: (_) =>
+                  reminders == null &&
+                      loadReminders != null &&
+                      [
+                        SettingKind.reminders,
+                        SettingKind.notifications,
+                        SettingKind.privacy,
+                        SettingKind.hijri,
+                      ].contains(kind)
+                  ? _LoadReminderSettings(kind: kind, load: loadReminders!)
+                  : SettingsDetailPage(kind: kind, reminders: reminders),
             ),
           ),
   );
@@ -111,30 +131,75 @@ enum SettingKind {
 }
 
 class SettingsDetailPage extends StatefulWidget {
-  const SettingsDetailPage({required this.kind, super.key});
+  const SettingsDetailPage({required this.kind, this.reminders, super.key});
   final SettingKind kind;
+  final ReminderController? reminders;
 
   @override
   State<SettingsDetailPage> createState() => _SettingsDetailPageState();
 }
 
 class _SettingsDetailPageState extends State<SettingsDetailPage> {
-  final Map<String, bool> _switches = {};
-  int _hijriOffset = 0;
-  String _mushafMode = 'صفحات';
-
-  bool _value(String key, [bool initial = true]) =>
-      _switches.putIfAbsent(key, () => initial);
-
-  void _toggle(String key, bool value) =>
-      setState(() => _switches[key] = value);
+  AppSettings? _standalone;
+  BuildContext? _activeDialog;
+  String? _owner;
+  AppSettings? get _settings => widget.reminders?.settings ?? _standalone;
+  int get _hijriOffset => _settings?.number('hijriOffset', 0) ?? 0;
+  @override
+  void initState() {
+    super.initState();
+    _owner = widget.reminders?.settings.scope;
+    widget.reminders?.addListener(_ownerChanged);
+    if (widget.reminders == null) {
+      SharedPreferences.getInstance().then((prefs) {
+        if (mounted) setState(() => _standalone = AppSettings(prefs, 'guest'));
+      });
+    }
+  }
 
   @override
-  Widget build(BuildContext context) => _SettingsShell(
-    title: widget.kind.title,
-    subtitle: widget.kind.subtitle,
-    icon: widget.kind.icon,
-    child: _body(),
+  void dispose() {
+    widget.reminders?.removeListener(_ownerChanged);
+    _standalone?.dispose();
+    super.dispose();
+  }
+
+  void _ownerChanged() {
+    final next = widget.reminders?.settings.scope;
+    if (next == _owner) return;
+    _owner = next;
+    final dialog = _activeDialog;
+    if (dialog != null &&
+        dialog.mounted &&
+        ModalRoute.of(dialog)?.isCurrent == true) {
+      Navigator.pop(dialog);
+    }
+    _activeDialog = null;
+  }
+
+  bool _value(String key, [bool initial = true]) =>
+      _settings?.flag(key) ?? false;
+
+  void _toggle(String key, bool value) => unawaited(_settings!.set(key, value));
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: widget.reminders ?? _settings ?? const _EmptySettings(),
+    builder: (context, _) => _SettingsShell(
+      title: widget.kind.title,
+      subtitle: widget.kind.subtitle,
+      icon: widget.kind.icon,
+      child: Column(
+        children: [
+          if (_settings?.error case final error?)
+            _NoticeBox('لم يكتمل الحفظ', error),
+          if (_settings == null && widget.kind != SettingKind.appearance)
+            const CircularProgressIndicator()
+          else
+            _body(),
+        ],
+      ),
+    ),
   );
 
   Widget _body() {
@@ -148,15 +213,15 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
       case SettingKind.prayer:
         return _prayer();
       case SettingKind.reminders:
-        return _reminders();
+        return _reminderControls();
       case SettingKind.notifications:
-        return _notifications();
+        return _notificationControls();
       case SettingKind.hijri:
         return _hijri();
       case SettingKind.storage:
         return _storage();
       case SettingKind.privacy:
-        return _privacy();
+        return _permissionControls();
       case SettingKind.about:
         return _about();
     }
@@ -219,6 +284,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
                         ? Icons.dark_mode_outlined
                         : Icons.sync,
                     selected:
+                        !AppearanceScope.of(context).timed &&
                         AppearanceScope.of(context).mode == _themeMode(mode),
                     onTap: () =>
                         AppearanceScope.of(context).setMode(_themeMode(mode)),
@@ -232,6 +298,53 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
         'الوضع التلقائي',
         'يتبع مظهر الجهاز تلقائياً، ويتغير عند تغيير إعداداته.',
       ),
+      _SettingsTile(
+        icon: Icons.schedule,
+        title: 'المظهر حسب الوقت',
+        subtitle: 'نهار فاتح وليل داكن حسب وقت الجهاز',
+        trailing: Switch(
+          value: AppearanceScope.of(context).timed,
+          onChanged: AppearanceScope.of(context).setTimed,
+        ),
+      ),
+      if (AppearanceScope.of(context).timed) ...[
+        for (final day in [true, false])
+          _SettingsTile(
+            icon: day ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+            title: day ? 'بداية النهار' : 'بداية الليل',
+            subtitle: 'التوقيت المحلي للجهاز',
+            value: AppSettings.clockLabel(
+              day
+                  ? AppearanceScope.of(context).dayStart
+                  : AppearanceScope.of(context).nightStart,
+            ),
+            onTap: () async {
+              final appearance = AppearanceScope.of(context);
+              final minute = day ? appearance.dayStart : appearance.nightStart;
+              final time = await showTimePicker(
+                context: context,
+                initialTime: TimeOfDay(hour: minute ~/ 60, minute: minute % 60),
+              );
+              if (!mounted || time == null) return;
+              final value = time.hour * 60 + time.minute;
+              if (value ==
+                  (day ? appearance.nightStart : appearance.dayStart)) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('اختر وقتين مختلفين للنهار والليل'),
+                    ),
+                  );
+                }
+                return;
+              }
+              await appearance.setSchedule(
+                day: day ? value : appearance.dayStart,
+                night: day ? appearance.nightStart : value,
+              );
+            },
+          ),
+      ],
       _SectionTitle('نوع الخط'),
       _Panel(
         child: RadioGroup<AppFont>(
@@ -349,266 +462,15 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
     ],
   );
 
-  Widget _quran() => Column(
-    children: [
-      _SectionTitle('عرض المصحف'),
-      Row(
-        children: ['نص متصل', 'صفحات', 'آية بآية']
-            .map(
-              (mode) => Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: _ChoiceCard(
-                    label: mode,
-                    icon: mode == 'صفحات'
-                        ? Icons.folder_outlined
-                        : Icons.menu_book_outlined,
-                    selected: _mushafMode == mode,
-                    onTap: () => setState(() => _mushafMode = mode),
-                  ),
-                ),
-              ),
-            )
-            .toList(),
-      ),
-      _SettingsTile(
-        icon: Icons.text_fields,
-        title: 'حجم الخط داخل المصحف',
-        subtitle: 'التحكم في حجم نص القراءة',
-        value: 'متوسط',
-      ),
-      _SectionTitle('الصوت والتفسير'),
-      _SettingsTile(
-        icon: Icons.headphones_outlined,
-        title: 'القارئ الافتراضي',
-        subtitle: 'اختيار الصوت المستخدم في التلاوة',
-        value: 'اختيار القارئ',
-      ),
-      _SettingsTile(
-        icon: Icons.menu_book_outlined,
-        title: 'التفسير الافتراضي',
-        subtitle: 'اختيار أحد المصادر المعتمدة',
-        value: 'اختيار المصدر',
-      ),
-      _SettingsTile(
-        icon: Icons.sync,
-        title: 'التلاوة والتكرار',
-        subtitle: 'خيارات تشغيل الآيات وتكرارها',
-        value: 'إعدادات',
-      ),
-      _SectionTitle('القراءة دون اتصال'),
-      _SettingsTile(
-        icon: Icons.download_outlined,
-        title: 'التلاوات المحملة',
-        subtitle: 'عرض وإدارة الصوتيات المحفوظة',
-        value: 'إدارة الملفات',
-      ),
-      _InfoBox(
-        'حفظ آخر قراءة',
-        'يُحفظ موضعك الأخير للعودة إليه من الصفحة الرئيسية تلقائياً.',
-      ),
-    ],
+  Widget _quran() => const _InfoBox(
+    'إعدادات القرآن الكريم',
+    'افتح إعدادات القرآن من القائمة الرئيسية للإعدادات؛ تُستخدم إعدادات القارئ الأصلية دون نسخة مكررة.',
   );
 
-  Widget _prayer() => Column(
-    children: [
-      _SectionTitle('الموقع وطريقة الحساب'),
-      _SettingsTile(
-        icon: Icons.location_on_outlined,
-        title: 'الموقع المعتمد',
-        subtitle: 'تحديد المواقيت حسب موقع المستخدم',
-        value: 'نابلس، فلسطين',
-      ),
-      _SettingsTile(
-        icon: Icons.light_mode_outlined,
-        title: 'طريقة حساب الصلاة',
-        subtitle: 'قابلة للاختيار بين الطرق المعتمدة',
-        value: 'اختيار الطريقة',
-      ),
-      _SettingsTile(
-        icon: Icons.access_time,
-        title: 'تعديل المواقيت يدوياً',
-        subtitle: 'عند الحاجة وحسب الطريقة المختارة',
-        value: 'تخصيص',
-      ),
-      _SectionTitle('تنبيهات الصلاة'),
-      _switchTile(
-        'prayerOnTime',
-        'التنبيه عند دخول الوقت',
-        'إشعارات الصلوات المفروضة',
-        Icons.notifications_none,
-      ),
-      _SettingsTile(
-        icon: Icons.access_time,
-        title: 'التنبيه قبل الصلاة',
-        subtitle: 'تحديد المدة بالدقائق',
-        value: '10 دقائق',
-      ),
-      _SettingsTile(
-        icon: Icons.volume_up_outlined,
-        title: 'صوت الأذان',
-        subtitle: 'اختيار الصوت أو تنبيه صامت',
-        value: 'اختيار الصوت',
-      ),
-      _NoticeBox(
-        'دقة المواقيت',
-        'قد تختلف المواقيت بحسب الموقع وطريقة الحساب المختارة؛ تُحدّث عند تغيير الإعدادات.',
-      ),
-    ],
+  Widget _prayer() => const _NoticeBox(
+    'مواقيت الصلاة',
+    'لم يُحدد موقع أو أسلوب حساب بعد. سيُربط هذا القسم بالمواقيت في مرحلة الصلاة والقبلة؛ لا تُجدول تنبيهات من مواقيت افتراضية.',
   );
-
-  Widget _reminders() => Column(
-    children: [
-      _SectionTitle('تذكيرات الأذكار'),
-      _switchTile(
-        'morning',
-        'أذكار الصباح',
-        'موعد التذكير: 06:30 ص — مثال',
-        Icons.light_mode_outlined,
-      ),
-      _switchTile(
-        'evening',
-        'أذكار المساء',
-        'موعد التذكير: 05:30 م — مثال',
-        Icons.dark_mode_outlined,
-      ),
-      _switchTile(
-        'sleep',
-        'أذكار النوم',
-        'موعد التذكير: 10:00 م — مثال',
-        Icons.access_time,
-      ),
-      _switchTile(
-        'afterPrayer',
-        'أذكار بعد الصلاة',
-        'تذكير اختياري بعد الصلوات',
-        Icons.touch_app_outlined,
-        false,
-      ),
-      _SectionTitle('الورد والختمة'),
-      _switchTile(
-        'dailyWird',
-        'تذكير الورد اليومي',
-        'وقت التذكير قابل للتغيير',
-        Icons.menu_book_outlined,
-      ),
-      _switchTile(
-        'friday',
-        'رسائل يوم الجمعة',
-        'سنن الجمعة وسورة الكهف',
-        Icons.calendar_month_outlined,
-      ),
-      _SectionTitle('ضبط أوقات التذكير'),
-      _PrimaryButton('اختيار المواعيد والتكرار', Icons.access_time),
-      _InfoBox(
-        'إشعارات منتظمة',
-        'يمكن تعديل كل وقت من صفحة التذكير، وتحترم صلاحيات الإشعارات في الجهاز.',
-      ),
-    ],
-  );
-
-  Widget _notifications() => Column(
-    children: [
-      _SectionTitle('إشعارات الأذكار الذكية'),
-      _switchTile(
-        'smart',
-        'تفعيل الإشعارات الذكية',
-        'تذكيرات أثناء استخدام التطبيقات',
-        Icons.notifications_none,
-      ),
-      _SettingsTile(
-        icon: Icons.menu_book_outlined,
-        title: 'إظهار المحتوى المخصص',
-        subtitle: 'اختيار الأذكار التي تظهر',
-        value: 'تحديد المحتوى',
-      ),
-      _SectionTitle('المظهر أثناء العرض'),
-      _SettingsTile(
-        icon: Icons.tune,
-        title: 'موضع الإشعار',
-        subtitle: 'أعلى الشاشة أو الموضع المتاح',
-        value: 'أعلى الشاشة',
-      ),
-      _switchTile(
-        'transparent',
-        'شفافية الخلفية',
-        'خلفية شفافة عند دعم النظام',
-        Icons.palette_outlined,
-        false,
-      ),
-      _SettingsTile(
-        icon: Icons.text_fields,
-        title: 'حجم الخط والألوان',
-        subtitle: 'تخصيص إطار ونص التنبيه',
-        value: 'تخصيص',
-      ),
-      _SectionTitle('الصوت والتفاعل'),
-      _switchTile(
-        'sound',
-        'الصوت والاهتزاز',
-        'تشغيل أو تعطيل المؤثرات',
-        Icons.volume_up_outlined,
-      ),
-      _SettingsTile(
-        icon: Icons.access_time,
-        title: 'التأجيل السريع',
-        subtitle: 'إجراء اقرأ لاحقاً / إخفاء',
-        value: '5 دقائق',
-      ),
-      _NoticeBox(
-        'قدرات النظام',
-        'الظهور فوق التطبيقات والأوقات الدقيقة يتوقفان على إصدار Android أو iOS والصلاحيات المتاحة.',
-      ),
-    ],
-  );
-
-  Widget _privacy() => Column(
-    children: [
-      _SectionTitle('أذونات الجهاز'),
-      _SettingsTile(
-        icon: Icons.location_on_outlined,
-        title: 'الموقع الجغرافي',
-        subtitle: 'ضروري لحساب المواقيت والقبلة',
-        value: 'من إعدادات الجهاز',
-      ),
-      _SettingsTile(
-        icon: Icons.notifications_none,
-        title: 'الإشعارات',
-        subtitle: 'السماح بالتذكيرات والتنبيهات',
-        value: 'من إعدادات الجهاز',
-      ),
-      _SettingsTile(
-        icon: Icons.tune,
-        title: 'المظهر فوق التطبيقات',
-        subtitle: 'قد يلزم للتنبيهات الذكية على Android',
-        value: 'حسب النظام',
-      ),
-      _SectionTitle('حماية بياناتك'),
-      _SettingsTile(
-        icon: Icons.lock_outline,
-        title: 'بيانات الحساب والمزامنة',
-        subtitle: 'تطبيق سياسة الخصوصية المعتمدة',
-        value: 'عرض المعلومات',
-      ),
-      _SettingsTile(
-        icon: Icons.shield_outlined,
-        title: 'سياسة الخصوصية',
-        subtitle: 'الاطلاع على حقوقك وطريقة استخدام البيانات',
-        value: 'فتح السياسة',
-      ),
-      _SettingsTile(
-        icon: Icons.storage_outlined,
-        title: 'بيانات الضيف',
-        subtitle: 'تخزن محلياً ما لم تسجل الدخول',
-        value: 'عرض التفاصيل',
-      ),
-      _NoticeBox(
-        'إدارة الصلاحيات',
-        'حالات السماح الفعلية تُقرأ من نظام الجهاز، وليس من شكل هذا التصميم التوضيحي.',
-      ),
-    ],
-  );
-
   Widget _storage() => Column(
     children: [
       _SectionTitle('مساحة المحتوى'),
@@ -717,7 +579,10 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
               children: [
                 _CircleAction(
                   Icons.remove,
-                  () => setState(() => _hijriOffset--),
+                  () => _settings!.set(
+                    'hijriOffset',
+                    (_hijriOffset - 1).clamp(-3, 3),
+                  ),
                 ),
                 Column(
                   children: [
@@ -735,7 +600,13 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
                     ),
                   ],
                 ),
-                _CircleAction(Icons.add, () => setState(() => _hijriOffset++)),
+                _CircleAction(
+                  Icons.add,
+                  () => _settings!.set(
+                    'hijriOffset',
+                    (_hijriOffset + 1).clamp(-3, 3),
+                  ),
+                ),
               ],
             ),
             SizedBox(height: 20),
@@ -751,7 +622,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
         title: 'إعادة القيمة الافتراضية',
         subtitle: 'إزالة التصحيح اليدوي',
         value: 'إعادة الضبط',
-        onTap: () => setState(() => _hijriOffset = 0),
+        onTap: () => _settings!.set('hijriOffset', 0),
       ),
       _SectionTitle('تطبيق التصحيح'),
       _switchTile(
@@ -760,7 +631,10 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
         'في التاريخ الهجري المعروض داخل التطبيق',
         Icons.calendar_month_outlined,
       ),
-      _PrimaryButton('حفظ تصحيح التاريخ', Icons.check),
+      const _InfoBox(
+        'الحفظ تلقائي',
+        'يُحفظ التصحيح بين -3 و+3 أيام فور تغييره. يُربط بعرض التقويم في مرحلة المواقيت.',
+      ),
       _NoticeBox(
         'تنبيه',
         'هذا التعديل يغيّر العرض الهجري داخل التطبيق، ولا يغيّر تاريخ الهاتف نفسه.',

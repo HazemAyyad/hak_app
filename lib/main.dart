@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,8 @@ import 'features/progress/presentation/progress_page.dart';
 import 'features/progress/presentation/progress_summary.dart';
 import 'features/progress/data/progress_controller.dart';
 import 'features/sakinah/presentation/sakinah_page.dart';
+import 'features/adhkar/data/adhkar_repository.dart';
+import 'features/settings/data/reminder_controller.dart';
 import 'startup/startup_flow.dart';
 
 import 'navigation/app_section.dart';
@@ -74,7 +77,9 @@ class _HaqAppState extends State<HaqApp> {
   void _toggleTheme() {
     final appearance = _appearance!;
     appearance.setMode(
-      appearance.mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark,
+      appearance.effectiveMode == ThemeMode.dark
+          ? ThemeMode.light
+          : ThemeMode.dark,
     );
   }
 
@@ -95,7 +100,7 @@ class _HaqAppState extends State<HaqApp> {
         builder: (context, _) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'حق',
-          themeMode: appearance.mode,
+          themeMode: appearance.effectiveMode,
           locale: Locale('ar'),
           theme: _theme(Brightness.light),
           darkTheme: _theme(Brightness.dark),
@@ -198,7 +203,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   AppSection _section = AppSection.home;
   final _visited = <AppSection>{AppSection.home, AppSection.quran};
   bool _quranFullscreen = false;
@@ -207,26 +212,89 @@ class _HomePageState extends State<HomePage> {
   final _religiousKey = GlobalKey<ReligiousHostState>();
   final _adhkarKey = GlobalKey<AdhkarSectionPageState>();
   late final ReligiousController _religious;
+  ReminderController? _reminders;
+  Future<ReminderController?>? _preparingReminders;
   bool _religiousOpen = false;
   String? _religiousInitialCategory;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _quran = widget.quranController ?? QuranController();
     _religious =
         widget.religiousController ?? ReligiousController(quran: _quran);
     if (_quran.repository == null) {
       _quran.load().then((_) {
         if (mounted && _religious.catalog == null) _religious.load();
+        if (mounted) unawaited(_prepareReminders());
       });
     } else if (_religious.catalog == null) {
       _religious.load();
+      unawaited(_prepareReminders());
+    } else {
+      unawaited(_prepareReminders());
+    }
+  }
+
+  Future<ReminderController?> _prepareReminders() {
+    if (_reminders != null) return Future.value(_reminders);
+    return _preparingReminders ??= _loadReminders().whenComplete(
+      () => _preparingReminders = null,
+    );
+  }
+
+  Future<ReminderController?> _loadReminders() async {
+    try {
+      if (_quran.repository == null || _quran.preferences == null) return null;
+      final activity = await _religious.activity;
+      final catalog =
+          _religious.initialAdhkarCatalog ??
+          await AdhkarRepository.load(_quran.repository!);
+      if (!mounted) return null;
+      final reminders = ReminderController(
+        activity,
+        catalog,
+        onOpen: _openReminder,
+      );
+      setState(() => _reminders = reminders);
+      await reminders.initialize();
+      return mounted ? reminders : null;
+    } catch (_) {
+      /* Feature pages offer a retry when initialization fails. */
+    }
+    return null;
+  }
+
+  void _openReminder(String route) {
+    if (!mounted) return;
+    switch (route) {
+      case 'quran':
+        _openQuran();
+      case 'khatma':
+        _openFeature(AppFeature.khatma);
+      case 'library':
+        _openFeature(AppFeature.religiousLibrary);
+      case 'friday':
+        _openFeature(AppFeature.friday);
+      case 'settings':
+        _openFeature(AppFeature.settings);
+      default:
+        _selectSection(AppSection.adhkar);
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_reminders?.reconcile(force: true) ?? Future.value());
     }
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _reminders?.dispose();
     if (widget.religiousController == null) _religious.dispose();
     if (widget.quranController == null) _quran.dispose();
     super.dispose();
@@ -328,6 +396,8 @@ class _HomePageState extends State<HomePage> {
         Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => SettingsPage(
+              reminders: _reminders,
+              loadReminders: _prepareReminders,
               onQuranSettings: () {
                 Navigator.of(context).pop();
                 _openQuranSettings();

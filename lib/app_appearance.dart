@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,7 +15,8 @@ enum AppFont {
 
 /// The single source of appearance preferences for every route.
 class AppAppearance extends ChangeNotifier {
-  AppAppearance(this.preferences) {
+  AppAppearance(this.preferences, {DateTime Function()? clock})
+    : clock = clock ?? DateTime.now {
     mode = ThemeMode.values.firstWhere(
       (value) => value.name == preferences.getString('appearance.mode'),
       orElse: () => ThemeMode.system,
@@ -27,12 +29,71 @@ class AppAppearance extends ChangeNotifier {
       (value) => value.id == preferences.getString('appearance.font'),
       orElse: () => AppFont.cairo,
     );
+    timed = preferences.getBool('appearance.timed') ?? false;
+    dayStart = (preferences.getInt('appearance.dayStart') ?? 360).clamp(
+      0,
+      1439,
+    );
+    nightStart = (preferences.getInt('appearance.nightStart') ?? 1080).clamp(
+      0,
+      1439,
+    );
+    if (dayStart == nightStart) {
+      dayStart = 360;
+      nightStart = 1080;
+    }
+    _startClock();
   }
 
   final SharedPreferences preferences;
   late ThemeMode mode;
   late double fontScale;
   late AppFont font;
+  final DateTime Function() clock;
+  late bool timed;
+  late int dayStart, nightStart;
+  Timer? _timer;
+  ThemeMode? _lastMode;
+  ThemeMode get effectiveMode {
+    if (!timed) return mode;
+    final now = clock(), minute = now.hour * 60 + now.minute;
+    final light = dayStart < nightStart
+        ? minute >= dayStart && minute < nightStart
+        : minute >= dayStart || minute < nightStart;
+    return light ? ThemeMode.light : ThemeMode.dark;
+  }
+
+  void _startClock() {
+    _timer?.cancel();
+    _lastMode = effectiveMode;
+    if (timed) {
+      _timer = Timer.periodic(const Duration(seconds: 30), (_) {
+        if (_lastMode != effectiveMode) {
+          _lastMode = effectiveMode;
+          notifyListeners();
+        }
+      });
+    }
+  }
+
+  Future<void> setTimed(bool value) async {
+    timed = value;
+    _startClock();
+    notifyListeners();
+    await preferences.setBool('appearance.timed', value);
+  }
+
+  Future<void> setSchedule({required int day, required int night}) async {
+    if (day < 0 || day > 1439 || night < 0 || night > 1439 || day == night) {
+      throw ArgumentError('Invalid appearance schedule');
+    }
+    dayStart = day;
+    nightStart = night;
+    _startClock();
+    notifyListeners();
+    await preferences.setInt('appearance.dayStart', day);
+    await preferences.setInt('appearance.nightStart', night);
+  }
 
   Future<void> setFont(AppFont value) async {
     font = value;
@@ -42,7 +103,10 @@ class AppAppearance extends ChangeNotifier {
 
   Future<void> setMode(ThemeMode value) async {
     mode = value;
+    timed = false;
+    _startClock();
     notifyListeners();
+    await preferences.setBool('appearance.timed', false);
     await preferences.setString('appearance.mode', value.name);
   }
 
@@ -50,6 +114,12 @@ class AppAppearance extends ChangeNotifier {
     fontScale = value.clamp(.85, 1.2);
     notifyListeners();
     await preferences.setDouble('appearance.fontScale', fontScale);
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 }
 

@@ -495,12 +495,28 @@ class _KhatmaDetails extends StatelessWidget {
                 icon: const Icon(Icons.notifications_outlined),
                 label: const Text('موعد التذكير'),
               ),
+              if (k.reminderMinutes != null)
+                TextButton(
+                  onPressed: () => c.saveKhatma(
+                    QuranKhatma(
+                      id: k.id,
+                      title: k.title,
+                      startDate: k.startDate,
+                      endDate: k.endDate,
+                      firstPage: k.firstPage,
+                      lastPage: k.lastPage,
+                      epoch: k.activeEpoch,
+                      archived: k.archived,
+                    ),
+                  ),
+                  child: const Text('إلغاء تذكير الختمة'),
+                ),
             ],
           ),
           Text(
             k.reminderMinutes == null
-                ? 'التذكير غير مفعّل على هذا الجهاز.'
-                : 'موعد محفوظ: ${(k.reminderMinutes! ~/ 60).toString().padLeft(2, '0')}:${(k.reminderMinutes! % 60).toString().padLeft(2, '0')} • الإشعار غير مفعّل على هذا الجهاز.',
+                ? 'لم تحدد موعداً لتذكير هذه الختمة.'
+                : 'موعد محفوظ: ${(k.reminderMinutes! ~/ 60).toString().padLeft(2, '0')}:${(k.reminderMinutes! % 60).toString().padLeft(2, '0')} • يعتمد التنبيه على تفعيل التذكيرات وإذن الإشعارات في إعدادات التطبيق.',
           ),
           const SizedBox(height: 14),
           for (var i = 0; i < plan.length; i++)

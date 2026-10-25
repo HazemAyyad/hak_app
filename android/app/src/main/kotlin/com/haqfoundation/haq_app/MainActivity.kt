@@ -12,12 +12,14 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : AudioServiceActivity() {
+    private var reminders: HaqRemindersBridge? = null
     private var adhkarControls: MethodChannel? = null
     private var countWithVolumeKeys = false
     private var pendingImage: ByteArray? = null
     private var pendingImageResult: MethodChannel.Result? = null
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        reminders = HaqRemindersBridge(this, MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.haqfoundation.haq_app/reminders"))
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.haqfoundation.haq_app/image_export")
             .setMethodCallHandler { call, result ->
                 if (call.method != "saveImage") { result.notImplemented(); return@setMethodCallHandler }
@@ -93,6 +95,11 @@ class MainActivity : AudioServiceActivity() {
     override fun onPause() {
         countWithVolumeKeys = false
         super.onPause()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        reminders?.capture(intent)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
