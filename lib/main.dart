@@ -13,6 +13,7 @@ import 'features/tasbih/presentation/tasbih_page.dart';
 import 'features/progress/presentation/progress_page.dart';
 import 'features/progress/presentation/progress_summary.dart';
 import 'features/progress/data/progress_controller.dart';
+import 'features/sakinah/presentation/sakinah_page.dart';
 import 'startup/startup_flow.dart';
 
 import 'navigation/app_section.dart';
@@ -282,6 +283,13 @@ class _HomePageState extends State<HomePage> {
 
   void _openFeature(AppFeature feature) {
     switch (feature) {
+      case AppFeature.sakinah:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            settings: RouteSettings(name: feature.routeName),
+            builder: (_) => SakinahPage(controller: _religious),
+          ),
+        );
       case AppFeature.khatma:
       case AppFeature.habits:
       case AppFeature.statistics:

@@ -131,6 +131,7 @@ enum AppFeature {
     Icons.air_outlined,
     subtitle: 'تمارين التنفس والطمأنينة',
     image: 'sakinah',
+    ready: true,
   ),
   hadith(
     'الأحاديث النبوية',

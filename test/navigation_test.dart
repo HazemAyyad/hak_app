@@ -277,8 +277,9 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       await capture(tester, 'more-${mode.name}');
-      final planned = find.byKey(const ValueKey('feature-sakinah'));
-      await tester.ensureVisible(planned);
+      final planned = find.byKey(const ValueKey('feature-circles'));
+      await Scrollable.ensureVisible(tester.element(planned), alignment: .4);
+      await tester.pumpAndSettle();
       await tester.tap(planned);
       await tester.pumpAndSettle();
       expect(find.byType(FeaturePreparationPage), findsOneWidget);
