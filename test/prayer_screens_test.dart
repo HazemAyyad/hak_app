@@ -11,6 +11,7 @@ import 'package:haq_app/features/prayer/data/prayer_controller.dart';
 import 'package:haq_app/features/prayer/data/prayer_models.dart';
 import 'package:haq_app/features/prayer/data/heading_controller.dart';
 import 'package:haq_app/features/prayer/data/mosque_repository.dart';
+import 'package:haq_app/features/prayer/data/adhan_library.dart';
 import 'package:haq_app/features/prayer/presentation/prayer_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -131,7 +132,8 @@ void main() {
               .toImage(pixelRatio: 1.5);
       final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
-      final dir = Directory('build/p09-previews')..createSync(recursive: true);
+      final dir = Directory('build/qibla-video-previews')
+        ..createSync(recursive: true);
       File(
         '${dir.path}/$name.png',
       ).writeAsBytesSync(bytes!.buffer.asUint8List());
@@ -139,7 +141,16 @@ void main() {
   }
 
   Future<void> tap(WidgetTester tester, String label) async {
-    final target = find.text(label).first;
+    final matches = find.text(label);
+    if (matches.evaluate().isEmpty) {
+      await tester.scrollUntilVisible(
+        matches,
+        350,
+        scrollable: find.byType(Scrollable).first,
+        maxScrolls: 30,
+      );
+    }
+    final target = matches.first;
     await tester.ensureVisible(target);
     await tester.pumpAndSettle();
     await tester.tap(target);
@@ -152,6 +163,78 @@ void main() {
     zone: 'Asia/Hebron',
     label: 'موقع يدوي للاختبار',
   );
+  for (final dark in [false, true]) {
+    testWidgets(
+      'video compass and per-prayer alert preserve identity ${dark ? 'dark' : 'light'}',
+      (tester) async {
+        await tester.runAsync(
+          () => c.save(PrayerConfig(location: place(), beforeMinutes: 15)),
+        );
+        final stream = StreamController<dynamic>.broadcast();
+        final heading = HeadingController(readings: (_) => stream.stream);
+        await pump(
+          tester,
+          QiblaPage(controller: c, heading: heading),
+          dark: dark,
+          scale: 1,
+        );
+        tester.view.physicalSize = const Size(390, 1800);
+        stream.add({'degrees': 100.0, 'accuracy': 3, 'trueNorth': true});
+        await settle(tester);
+        await capture(tester, 'video-qibla-${dark ? 'dark' : 'light'}');
+        stream.add({'degrees': 150.0, 'accuracy': 3, 'trueNorth': true});
+        await tester.pump(const Duration(milliseconds: 80));
+        await capture(tester, 'video-motion-${dark ? 'dark' : 'light'}');
+        await tester.pumpWidget(const SizedBox());
+        heading.dispose();
+        await stream.close();
+        final temp = await tester.runAsync(
+          () => Directory.systemTemp.createTemp('haq-alert-screen-'),
+        );
+        final library = AdhanLibrary(
+          directory: () async => temp!,
+          prepare: (_, _) async => true,
+        );
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(AdhanLibrary.bridge, (call) async {
+              if (call.method == 'adhanStatus') {
+                return {
+                  'platform': 'android',
+                  'exact': true,
+                  'fullScreen': true,
+                };
+              }
+              return null;
+            });
+        await pump(
+          tester,
+          PrayerAlertPage(
+            controller: c,
+            prayer: PrayerName.fajr,
+            library: library,
+          ),
+          dark: dark,
+        );
+        await tester.tap(find.byType(Switch).first);
+        await tester.pump();
+        await tap(tester, 'صوت الأذان');
+        await capture(tester, 'video-alert-${dark ? 'dark' : 'light'}');
+        expect(find.text('الأذان الكامل'), findsOneWidget);
+        await tap(tester, 'احفظ التغييرات');
+        expect(
+          c.config.notifications,
+          false,
+        ); // No downloaded sound: no false success.
+        expect(library.error, contains('نزّل'));
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+        library.dispose();
+        await tester.runAsync(() => temp!.delete(recursive: true));
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(AdhanLibrary.bridge, null);
+      },
+    );
+  }
   testWidgets(
     'unknown compass does not request permission until explicit tap and denial shows no fake direction',
     (tester) async {

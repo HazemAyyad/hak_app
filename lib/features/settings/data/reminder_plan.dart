@@ -13,11 +13,16 @@ class ReminderJob {
     this.end,
     this.interval,
     this.at,
+    this.alertMode,
+    this.voice,
+    this.fullAdhan = false,
   });
   final String id, title, body, route;
   final int minute;
   final int? weekday, interval, at;
   final String? start, end;
+  final String? alertMode, voice;
+  final bool fullAdhan;
   Map<String, Object> toJson() => {
     'id': id,
     'title': title,
@@ -29,6 +34,9 @@ class ReminderJob {
     'start': ?start,
     'end': ?end,
     'at': ?at,
+    'alertMode': ?alertMode,
+    'voice': ?voice,
+    if (alertMode == 'adhan') 'fullAdhan': fullAdhan,
   };
 }
 

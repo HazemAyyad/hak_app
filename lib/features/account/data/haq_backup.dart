@@ -334,6 +334,7 @@ class HaqBackup {
             'before',
             'after',
             'prayers',
+            'alerts',
           }.contains(k),
         )) {
           throw const FormatException('إعداد صلاة غير معروف');

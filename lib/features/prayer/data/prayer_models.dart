@@ -3,6 +3,7 @@ import 'package:adhan_dart/adhan_dart.dart' as adhan;
 import 'package:hijri/hijri_calendar.dart';
 import 'package:timezone/data/latest_all.dart' as data;
 import 'package:timezone/timezone.dart' as tz;
+import 'prayer_alert.dart';
 
 bool _zonesReady = false;
 void initializePrayerZones() {
@@ -108,8 +109,9 @@ class PrayerConfig {
     this.highLatitude = 'recommended',
     Map<String, int> adjustments = const {},
     this.notifications = false,
-    this.beforeMinutes = 0,
+    this.beforeMinutes = 15,
     this.afterMinutes = 0,
+    Map<String, PrayerAlert> alerts = const {},
     List<String> enabledPrayers = const [
       'fajr',
       'dhuhr',
@@ -117,9 +119,11 @@ class PrayerConfig {
       'maghrib',
       'isha',
     ],
-  }) : adjustments = Map.unmodifiable(adjustments),
+  }) : alerts = Map.unmodifiable(alerts),
+       adjustments = Map.unmodifiable(adjustments),
        enabledPrayers = List.unmodifiable(enabledPrayers) {
-    if (!['recommended', 'middle', 'seventh', 'angle'].contains(highLatitude) ||
+    if (alerts.keys.any((k) => !PrayerName.values.any((p) => p.name == k)) ||
+        !['recommended', 'middle', 'seventh', 'angle'].contains(highLatitude) ||
         beforeMinutes < 0 ||
         beforeMinutes > 60 ||
         afterMinutes < 0 ||
@@ -131,9 +135,7 @@ class PrayerConfig {
         ) ||
         enabledPrayers.toSet().length != enabledPrayers.length ||
         enabledPrayers.any(
-          (key) => !PrayerName.values.any(
-            (p) => p != PrayerName.sunrise && p.name == key,
-          ),
+          (key) => !PrayerName.values.any((p) => p.name == key),
         )) {
       throw const FormatException('Invalid prayer preferences');
     }
@@ -145,6 +147,9 @@ class PrayerConfig {
   final Map<String, int> adjustments;
   final int beforeMinutes, afterMinutes;
   final List<String> enabledPrayers;
+  final Map<String, PrayerAlert> alerts;
+  PrayerAlert alert(PrayerName name) =>
+      alerts[name.name] ?? const PrayerAlert();
   PrayerConfig copyWith({
     PrayerLocation? location,
     bool clearLocation = false,
@@ -156,6 +161,7 @@ class PrayerConfig {
     int? beforeMinutes,
     int? afterMinutes,
     List<String>? enabledPrayers,
+    Map<String, PrayerAlert>? alerts,
   }) => PrayerConfig(
     location: clearLocation ? null : location ?? this.location,
     method: method ?? this.method,
@@ -166,6 +172,7 @@ class PrayerConfig {
     beforeMinutes: beforeMinutes ?? this.beforeMinutes,
     afterMinutes: afterMinutes ?? this.afterMinutes,
     enabledPrayers: enabledPrayers ?? this.enabledPrayers,
+    alerts: alerts ?? this.alerts,
   );
   Map<String, Object?> toJson() => {
     'location': location?.toJson(),
@@ -177,6 +184,7 @@ class PrayerConfig {
     'before': beforeMinutes,
     'after': afterMinutes,
     'prayers': enabledPrayers,
+    'alerts': alerts.map((key, value) => MapEntry(key, value.toJson())),
   };
   factory PrayerConfig.fromJson(Map data) => PrayerConfig(
     location: data['location'] == null
@@ -190,6 +198,10 @@ class PrayerConfig {
     beforeMinutes: data['before'] as int,
     afterMinutes: data['after'] as int,
     enabledPrayers: List<String>.from(data['prayers'] as List),
+    alerts: (data['alerts'] as Map? ?? {}).map(
+      (key, value) =>
+          MapEntry(key as String, PrayerAlert.fromJson(value as Map)),
+    ),
   );
 }
 
@@ -284,6 +296,63 @@ double qiblaBearing(PrayerLocation place) {
 
 double headingDifference(double target, double heading) =>
     ((target - heading + 540) % 360) - 180;
+
+String prayerClockLabel(DateTime time) =>
+    '${time.hour % 12 == 0 ? 12 : time.hour % 12}:${time.minute.toString().padLeft(2, '0')} ${time.hour < 12 ? 'ص' : 'م'}';
+
+String prayerGregorianDate(DateTime time) {
+  const months = [
+    'يناير',
+    'فبراير',
+    'مارس',
+    'أبريل',
+    'مايو',
+    'يونيو',
+    'يوليو',
+    'أغسطس',
+    'سبتمبر',
+    'أكتوبر',
+    'نوفمبر',
+    'ديسمبر',
+  ];
+  return '${time.day} ${months[time.month - 1]} ${time.year}';
+}
+
+Map<String, tz.TZDateTime> additionalPrayerTimes(
+  PrayerConfig config,
+  DateTime now,
+) {
+  if (config.location == null) return {};
+  try {
+    final day = calculatePrayerDay(config, now),
+        zone = config.location!.timeZone;
+    final next = calculatePrayerDay(
+      config,
+      tz.TZDateTime(zone, day.date.year, day.date.month, day.date.day + 1, 12),
+    );
+    final sunset = day.moments
+        .firstWhere((m) => m.name == PrayerName.maghrib)
+        .time;
+    final fajr = next.moments.firstWhere((m) => m.name == PrayerName.fajr).time;
+    final sunrise = day.moments
+        .firstWhere((m) => m.name == PrayerName.sunrise)
+        .time;
+    final night = fajr.difference(sunset);
+    if (night <= Duration.zero) return {};
+    return {
+      'الضحى (تقريبي)': sunrise.add(const Duration(minutes: 20)),
+      'منتصف الليل': sunset.add(
+        Duration(milliseconds: night.inMilliseconds ~/ 2),
+      ),
+      'الثلث الأخير من الليل': sunset.add(
+        Duration(milliseconds: night.inMilliseconds * 2 ~/ 3),
+      ),
+    };
+  } catch (_) {
+    return {};
+  }
+}
+
 double distanceMetres(double lat1, double lng1, double lat2, double lng2) {
   double r(double d) => d * math.pi / 180;
   final a =

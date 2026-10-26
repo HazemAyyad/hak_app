@@ -9,6 +9,19 @@ import android.graphics.PixelFormat
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.database.ContentObserver
+import android.view.KeyEvent
+import android.view.MotionEvent
+import android.view.WindowManager.LayoutParams
+import java.io.File
 import android.os.*
 import android.provider.Settings
 import android.speech.tts.TextToSpeech
@@ -24,7 +37,7 @@ import java.util.Locale
 import java.util.UUID
 
 /** Persisted native plan survives the Flutter process and device reboot. No
- * exact-alarm grant, lock-screen overlay, or automatic permission request. */
+ * optional prayer exact alarms require explicit special access. */
 object HaqReminders {
     private const val PREF = "haq_reminders_v1"
     private const val ROOT = "haq-reminder"
@@ -44,6 +57,8 @@ object HaqReminders {
         manager.createNotificationChannel(NotificationChannel("haq_reminders_sound", "تذكيرات حق", NotificationManager.IMPORTANCE_DEFAULT))
         manager.createNotificationChannel(NotificationChannel("haq_reminders_silent", "تذكيرات حق الصامتة", NotificationManager.IMPORTANCE_LOW).apply { setSound(null, null); enableVibration(false) })
         manager.createNotificationChannel(NotificationChannel("haq_overlay", "التنبيه العائم", NotificationManager.IMPORTANCE_LOW).apply { setSound(null, null) })
+        manager.createNotificationChannel(NotificationChannel("haq_prayer_vibration", "تنبيه الصلاة بالاهتزاز", NotificationManager.IMPORTANCE_DEFAULT).apply { setSound(null, null); enableVibration(true); vibrationPattern = longArrayOf(0, 350, 150, 350) })
+        manager.createNotificationChannel(NotificationChannel("haq_adhan_playback", "الأذان", NotificationManager.IMPORTANCE_HIGH).apply { setSound(null, null); enableVibration(false) })
     }
     fun status(c: Context): Map<String, Any> {
         channels(c)
@@ -65,6 +80,7 @@ object HaqReminders {
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
     private fun cancel(c: Context, p: JSONObject) {
+        c.stopService(Intent(c, HaqAdhanService::class.java))
         val alarms = c.getSystemService(AlarmManager::class.java)
         for (job in jobs(p)) {
             val id = job.getString("id")
@@ -119,8 +135,12 @@ object HaqReminders {
         return null
     }
     private fun schedule(c: Context, job: JSONObject, at: Long, action: String = "fire") {
-        c.getSystemService(AlarmManager::class.java).setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at,
-            pending(c, job.getString("id"), action))
+        val alarms = c.getSystemService(AlarmManager::class.java)
+        val exact = job.getString("id").contains(":prayer:") && (Build.VERSION.SDK_INT < 31 || alarms.canScheduleExactAlarms())
+        // Only user-selected prayer alerts can start the audible FGS from an
+        // exact alarm. General reminders retain the existing inexact plan.
+        if (exact) alarms.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending(c, job.getString("id"), action))
+        else alarms.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending(c, job.getString("id"), action))
     }
     fun restore(c: Context) {
         channels(c)
@@ -152,14 +172,19 @@ object HaqReminders {
         if (!allowed(c)) return
         val p = plan(c); val body = body(c, job)
         if (body.isBlank()) return
-        val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(c,
-            if (p.optBoolean("sound", true)) "haq_reminders_sound" else "haq_reminders_silent") else Notification.Builder(c)
+        val mode = job.optString("alertMode")
+        val sound = p.optBoolean("sound", true) && mode !in listOf("vibration", "silent")
+        val channelId = if (mode == "vibration") "haq_prayer_vibration" else if (sound) "haq_reminders_sound" else "haq_reminders_silent"
+        val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(c, channelId) else Notification.Builder(c)
         builder.setSmallIcon(R.drawable.ic_haq_reminder).setContentTitle(job.getString("title")).setContentText(body)
             .setStyle(Notification.BigTextStyle().bigText(body)).setAutoCancel(true)
             .setVisibility(Notification.VISIBILITY_PRIVATE).setCategory(Notification.CATEGORY_REMINDER)
             .setContentIntent(open(c, job.getString("route"), p.optString("scope")))
             .addAction(Notification.Action.Builder(null, "تأجيل ${p.optInt("snooze", 10)} د", pending(c, job.getString("id"), "snooze")).build())
-        if (Build.VERSION.SDK_INT < 26 && p.optBoolean("sound", true)) builder.setDefaults(Notification.DEFAULT_SOUND)
+        if (Build.VERSION.SDK_INT < 26) {
+            if (sound) builder.setDefaults(Notification.DEFAULT_SOUND)
+            else if (mode == "vibration") builder.setVibrate(longArrayOf(0, 350, 150, 350))
+        }
         c.getSystemService(NotificationManager::class.java).notify("$ROOT:${job.getString("id")}", 0, builder.build())
     }
     fun communityMessage(c: Context, scope: String, id: Int, sound: Boolean): Boolean {
@@ -176,7 +201,7 @@ object HaqReminders {
     }
     fun receive(c: Context, event: Intent) {
         if (event.action in listOf(Intent.ACTION_BOOT_COMPLETED, Intent.ACTION_MY_PACKAGE_REPLACED,
-                Intent.ACTION_TIME_CHANGED, Intent.ACTION_TIMEZONE_CHANGED)) {
+                Intent.ACTION_TIME_CHANGED, Intent.ACTION_TIMEZONE_CHANGED, AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED)) {
             if (plan(c).optBoolean("startup", true) || event.action != Intent.ACTION_BOOT_COMPLETED) restore(c)
             return
         }
@@ -192,7 +217,15 @@ object HaqReminders {
             if (prefs(c).edit().putString("snoozes", saved.toString()).commit()) schedule(c, job, at, "snoozed")
             c.getSystemService(NotificationManager::class.java).cancel("$ROOT:${job.getString("id")}", 0)
         } else {
-            show(c, job)
+            val timely = job.has("at") && System.currentTimeMillis() - job.getLong("at") in 0..120000
+            val exact = Build.VERSION.SDK_INT < 31 || c.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()
+            val adhan = event.action == "fire" && timely && exact && allowed(c) && p.optBoolean("sound", true) && job.optString("alertMode") == "adhan"
+            if (adhan) {
+                try {
+                    val launch = Intent(c, HaqAdhanService::class.java).putExtra("id", job.getString("id")).putExtra("revision", p.optString("revision"))
+                    if (Build.VERSION.SDK_INT >= 26) c.startForegroundService(launch) else c.startService(launch)
+                } catch (_: Exception) { show(c, job); prefs(c).edit().putBoolean("scheduleError", true).apply() }
+            } else show(c, job)
             if (event.action == "fire") next(job, System.currentTimeMillis())?.let { schedule(c, job, it) }
             else {
                 val saved = JSONObject(prefs(c).getString("snoozes", "{}") ?: "{}")
@@ -200,6 +233,184 @@ object HaqReminders {
             }
         }
     }
+}
+
+/** No network, arbitrary file path or religious text in the alarm intent.
+ * A persisted current plan is revalidated before the downloaded audio starts. */
+object HaqAdhanRules {
+    fun timely(at: Long, now: Long) = now >= at && now - at <= 120000
+    fun faceDown(x: Float, y: Float, z: Float) = z < -7f && kotlin.math.abs(x) < 6f && kotlin.math.abs(y) < 6f
+}
+
+class HaqAdhanService : Service(), SensorEventListener {
+    companion object {
+        const val ID = 7401
+        var current: HaqAdhanService? = null; private set
+        fun stop(c: Context) { c.stopService(Intent(c, HaqAdhanService::class.java)) }
+    }
+    private val handler = Handler(Looper.getMainLooper())
+    private var player: MediaPlayer? = null
+    private var focus: AudioFocusRequest? = null
+    private var sensor: SensorManager? = null
+    private var volume: ContentObserver? = null
+    private var originalVolume = -1
+    private var originalMusicVolume = -1
+    private var legacyFocus: AudioManager.OnAudioFocusChangeListener? = null
+    private var activeId: String? = null
+    private var faceDownSince = 0L
+    private var registered = false
+    private var wake: PowerManager.WakeLock? = null
+    private val screenOff = object : BroadcastReceiver() {
+        override fun onReceive(c: Context, intent: Intent) { if (intent.action == Intent.ACTION_SCREEN_OFF) stopSelf() }
+    }
+    override fun onBind(intent: Intent?) = null
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent?.action == "stop") { stopSelf(); return START_NOT_STICKY }
+        if (activeId != null && activeId == intent?.getStringExtra("id")) return START_NOT_STICKY
+        val p = HaqReminders.plan(this)
+        val job = HaqReminders.jobs(p).find { it.optString("id") == intent?.getStringExtra("id") }
+        val valid = job != null && intent?.getStringExtra("revision") == p.optString("revision") &&
+            job.optString("alertMode") == "adhan" && p.optBoolean("sound", true) &&
+            HaqAdhanRules.timely(job.optLong("at"), System.currentTimeMillis()) && HaqReminders.allowed(this)
+        if (!valid) { stopSelf(); return START_NOT_STICKY }
+        val voice = job!!.optString("voice")
+        if (voice !in listOf("alafasy", "nafees", "mustafa", "zahrani")) { stopSelf(); return START_NOT_STICKY }
+        val audio = File(filesDir, "adhan/$voice.mp3")
+        if (!audio.isFile) { HaqReminders.show(this, job); stopSelf(); return START_NOT_STICKY }
+        val receipt = job.getString("id") + ":" + p.optString("revision")
+        if (HaqReminders.prefs(this).getString("lastAdhan", null) == receipt) { stopSelf(); return START_NOT_STICKY }
+        if (!HaqReminders.prefs(this).edit().putString("lastAdhan", receipt).commit()) { stopSelf(); return START_NOT_STICKY }
+        activeId = job.getString("id")
+        current = this
+        HaqReminders.channels(this)
+        val launch = Intent(this, HaqAdhanActivity::class.java).putExtra("title", job.optString("title"))
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        val screen = PendingIntent.getActivity(this, ID, launch, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val stop = PendingIntent.getService(this, ID, Intent(this, HaqAdhanService::class.java).setAction("stop"),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, "haq_adhan_playback") else Notification.Builder(this)
+        builder.setSmallIcon(R.drawable.ic_haq_reminder).setContentTitle(job.optString("title"))
+            .setContentText("المس للإيقاف، أو اقلب الهاتف على وجهه")
+            .setCategory(Notification.CATEGORY_ALARM).setVisibility(Notification.VISIBILITY_PUBLIC)
+            .setOngoing(true).setContentIntent(screen).setDeleteIntent(stop)
+            .addAction(Notification.Action.Builder(null, "إيقاف الأذان", stop).build())
+        if (Build.VERSION.SDK_INT < 26) builder.setPriority(Notification.PRIORITY_HIGH)
+        if (Build.VERSION.SDK_INT < 34 || getSystemService(NotificationManager::class.java).canUseFullScreenIntent()) {
+            builder.setFullScreenIntent(screen, true)
+        }
+        try {
+            startForeground(ID, builder.build())
+            player?.release()
+            val audioManager = getSystemService(AudioManager::class.java)
+            val attrs = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
+            val listener = AudioManager.OnAudioFocusChangeListener { change -> if (change <= 0) stopSelf() }
+            legacyFocus = listener
+            val granted = if (Build.VERSION.SDK_INT >= 26) {
+                focus = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT).setAudioAttributes(attrs)
+                    .setOnAudioFocusChangeListener(listener).build()
+                audioManager.requestAudioFocus(focus!!)
+            } else audioManager.requestAudioFocus(listener, AudioManager.STREAM_ALARM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT)
+            if (granted != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) { stopSelf(); return START_NOT_STICKY }
+            wake = (getSystemService(POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "haq:adhan").apply { acquire(360000) }
+            sensor = getSystemService(SENSOR_SERVICE) as SensorManager
+            sensor?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)?.let { sensor?.registerListener(this, it, SensorManager.SENSOR_DELAY_NORMAL) }
+            originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
+            originalMusicVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+            volume = object : ContentObserver(handler) {
+                override fun onChange(selfChange: Boolean) {
+                    val now = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
+                    if (now != originalVolume || audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) != originalMusicVolume) stopSelf()
+                }
+            }.also { contentResolver.registerContentObserver(Settings.System.CONTENT_URI, true, it) }
+            if (!registered) {
+                if (Build.VERSION.SDK_INT >= 33) registerReceiver(screenOff, IntentFilter(Intent.ACTION_SCREEN_OFF), RECEIVER_NOT_EXPORTED)
+                else registerReceiver(screenOff, IntentFilter(Intent.ACTION_SCREEN_OFF))
+                registered = true
+            }
+            player = MediaPlayer().apply {
+                setAudioAttributes(attrs)
+                setDataSource(audio.path)
+                setOnCompletionListener { stopSelf() }
+                setOnErrorListener { _, _, _ -> stopSelf(); true }
+                setOnPreparedListener { it.start() }
+                prepareAsync()
+            }
+            handler.postDelayed({ stopSelf() }, if (job.optBoolean("fullAdhan")) 360000 else 25000)
+        } catch (_: Exception) { HaqReminders.prefs(this).edit().putBoolean("scheduleError", true).apply(); stopSelf() }
+        return START_NOT_STICKY
+    }
+    override fun onSensorChanged(event: SensorEvent) {
+        if (event.sensor.type != Sensor.TYPE_ACCELEROMETER) return
+        val down = HaqAdhanRules.faceDown(event.values[0], event.values[1], event.values[2])
+        if (!down) { faceDownSince = 0; return }
+        val now = SystemClock.elapsedRealtime()
+        if (faceDownSince == 0L) faceDownSince = now
+        if (now - faceDownSince >= 450) stopSelf()
+    }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    override fun onDestroy() {
+        handler.removeCallbacksAndMessages(null)
+        sensor?.unregisterListener(this)
+        volume?.let { contentResolver.unregisterContentObserver(it) }
+        if (registered) unregisterReceiver(screenOff)
+        player?.release(); player = null
+        if (Build.VERSION.SDK_INT >= 26) focus?.let { getSystemService(AudioManager::class.java).abandonAudioFocusRequest(it) }
+        else legacyFocus?.let { getSystemService(AudioManager::class.java).abandonAudioFocus(it) }
+        if (wake?.isHeld == true) wake?.release()
+        current = null
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        super.onDestroy()
+    }
+}
+
+/** System-owned full-screen alarm surface: never overlays other apps through
+ * SYSTEM_ALERT_WINDOW and never dismisses the user's keyguard. */
+class HaqAdhanActivity : Activity() {
+    private val handler = Handler(Looper.getMainLooper())
+    private var shown = false
+    private val check = object : Runnable {
+        override fun run() { if (HaqAdhanService.current == null) finish() else handler.postDelayed(this, 250) }
+    }
+    override fun onCreate(state: Bundle?) {
+        super.onCreate(state)
+        if (HaqAdhanService.current == null) { finish(); return }
+        if (Build.VERSION.SDK_INT >= 27) { setShowWhenLocked(true); setTurnScreenOn(true) }
+        else window.addFlags(LayoutParams.FLAG_SHOW_WHEN_LOCKED or LayoutParams.FLAG_TURN_SCREEN_ON)
+        window.addFlags(LayoutParams.FLAG_KEEP_SCREEN_ON)
+        val navy = Color.rgb(16, 42, 67); val gold = Color.rgb(199, 164, 90); val teal = Color.rgb(42, 140, 130)
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER; setPadding(40, 55, 40, 55)
+            background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(navy, Color.rgb(11, 23, 34)))
+            layoutDirection = View.LAYOUT_DIRECTION_RTL
+        }
+        fun label(value: String, size: Float, color: Int) = TextView(this).apply {
+            text = value; textSize = size; setTextColor(color); gravity = Gravity.CENTER; setPadding(0, 18, 0, 18)
+        }
+        layout.addView(label("حق", 52f, gold))
+        layout.addView(label(intent.getStringExtra("title") ?: "حان وقت الصلاة", 28f, Color.WHITE))
+        layout.addView(label("حيّ على الصلاة", 23f, gold))
+        layout.addView(label("المس الشاشة أو اضغط زرًا لإيقاف الصوت\nأو اقلب الهاتف على وجهه", 16f, Color.LTGRAY))
+        layout.addView(Button(this).apply {
+            text = "إيقاف الأذان"; textSize = 20f; setTextColor(Color.WHITE)
+            backgroundTintList = android.content.res.ColorStateList.valueOf(teal)
+            setOnClickListener { stop() }
+        }, LinearLayout.LayoutParams(-1, 64 * resources.displayMetrics.density.toInt().coerceAtLeast(1)))
+        setContentView(layout)
+        shown = true; handler.post(check)
+    }
+    private fun stop() { HaqAdhanService.stop(this); finish() }
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (shown && event.action == MotionEvent.ACTION_DOWN) { stop(); return true }
+        return super.dispatchTouchEvent(event)
+    }
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.action == KeyEvent.ACTION_DOWN) { stop(); return true }
+        return true
+    }
+    @Deprecated("Deprecated in Android")
+    override fun onBackPressed() { stop() }
+    override fun onUserLeaveHint() { super.onUserLeaveHint(); stop() }
+    override fun onDestroy() { handler.removeCallbacksAndMessages(null); super.onDestroy() }
 }
 
 class HaqReminderReceiver : BroadcastReceiver() {
@@ -347,6 +558,29 @@ class HaqRemindersBridge(private val activity: MainActivity, private val channel
                     "scope" -> { HaqReminders.changeScope(activity, call.arguments as String); result.success(null) }
                     "replace" -> { HaqReminders.replace(activity, JSONObject(call.arguments as Map<*, *>)); result.success(null) }
                     "status" -> result.success(HaqReminders.status(activity))
+                    "adhanStatus" -> result.success(mapOf("platform" to "android",
+                        "exact" to (Build.VERSION.SDK_INT < 31 || activity.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()),
+                        "fullScreen" to (Build.VERSION.SDK_INT < 34 || activity.getSystemService(NotificationManager::class.java).canUseFullScreenIntent())))
+                    "prepareAdhan" -> {
+                        val id = call.argument<String>("id") ?: error("voice")
+                        require(id in listOf("alafasy", "nafees", "mustafa", "zahrani"))
+                        val source = File(call.argument<String>("path") ?: error("path")).canonicalFile
+                        require(source.path.startsWith(File(activity.applicationInfo.dataDir).canonicalPath + File.separator) && source.isFile && source.length() in 1000..20971520)
+                        val target = File(activity.filesDir, "adhan/$id.mp3")
+                        target.parentFile!!.mkdirs()
+                        val temp = File(target.parentFile, "$id.part")
+                        source.copyTo(temp, overwrite = true)
+                        check(temp.renameTo(target))
+                        result.success(true)
+                    }
+                    "exactAlarmPermission" -> {
+                        if (Build.VERSION.SDK_INT >= 31) activity.startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:${activity.packageName}")))
+                        result.success(null)
+                    }
+                    "fullScreenPermission" -> {
+                        if (Build.VERSION.SDK_INT >= 34) activity.startActivity(Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, Uri.parse("package:${activity.packageName}")))
+                        result.success(null)
+                    }
                     "communityMessage" -> {
                         val scope = call.argument<String>("scope") ?: error("Missing scope")
                         val id = call.argument<Int>("id") ?: error("Missing ID")

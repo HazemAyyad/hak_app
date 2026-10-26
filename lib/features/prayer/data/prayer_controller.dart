@@ -7,6 +7,7 @@ import 'package:timezone/timezone.dart' as tz;
 import '../../settings/data/app_settings.dart';
 import '../../settings/data/reminder_plan.dart';
 import 'prayer_models.dart';
+import 'prayer_alert.dart';
 
 class PrayerController extends ChangeNotifier {
   PrayerController(
@@ -307,13 +308,15 @@ class PrayerController extends ChangeNotifier {
           12,
         );
         final times = calculatePrayerDay(config, date);
-        for (final m in times.obligatory.where(
+        for (final m in times.moments.where(
           (m) => config.enabledPrayers.contains(m.name.name),
         )) {
           final actions = {
             0: 'حان وقت ${m.name.label}',
             if (config.beforeMinutes > 0)
-              -config.beforeMinutes: 'اقترب وقت ${m.name.label}',
+              -config.beforeMinutes: m.name == PrayerName.sunrise
+                  ? 'اقترب وقت الشروق'
+                  : 'اقترب أذان ${m.name.label}',
             if (config.afterMinutes > 0)
               config.afterMinutes: 'أذكار بعد صلاة ${m.name.label}',
           };
@@ -329,6 +332,19 @@ class PrayerController extends ChangeNotifier {
                 route: entry.key > 0 ? 'adhkar' : 'prayer',
                 minute: 0,
                 at: at.toUtc().millisecondsSinceEpoch,
+                alertMode: entry.key == 0
+                    ? config.alert(m.name).mode.name
+                    : null,
+                voice:
+                    entry.key == 0 &&
+                        config.alert(m.name).mode == PrayerAlertMode.adhan &&
+                        m.name != PrayerName.sunrise
+                    ? config.alert(m.name).voice
+                    : null,
+                fullAdhan:
+                    entry.key == 0 &&
+                    m.name != PrayerName.sunrise &&
+                    config.alert(m.name).full,
               ),
             );
           }

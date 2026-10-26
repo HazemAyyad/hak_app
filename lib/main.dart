@@ -693,6 +693,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         ? QiblaPage(
                             controller: _prayer!,
                             active: _section == AppSection.qibla,
+                            beforeAudio: () async {
+                              await _quran.audio.stop();
+                              await _religious.media.stop();
+                            },
+                            enableReminders: () async {
+                              final reminders = await _prepareReminders();
+                              if (reminders == null) return false;
+                              await reminders.settings.set('enabled', true);
+                              return reminders.settings.error == null &&
+                                  reminders.settings.flag('enabled');
+                            },
                           )
                         : const FeaturePreparationPage(
                             feature: AppFeature.qibla,

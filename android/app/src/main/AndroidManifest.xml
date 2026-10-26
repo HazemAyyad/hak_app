@@ -6,6 +6,8 @@
     <uses-feature android:name="android.hardware.location.gps" android:required="false"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
@@ -44,6 +46,9 @@
             android:foregroundServiceType="mediaPlayback" android:exported="true" tools:ignore="Instantiatable">
             <intent-filter><action android:name="android.media.browse.MediaBrowserService"/></intent-filter>
         </service>
+        <service android:name=".HaqAdhanService" android:exported="false" android:foregroundServiceType="mediaPlayback"/>
+        <activity android:name=".HaqAdhanActivity" android:exported="false" android:excludeFromRecents="true"
+            android:launchMode="singleTop" android:showWhenLocked="true" android:turnScreenOn="true"/>
         <receiver android:name="com.ryanheise.audioservice.MediaButtonReceiver"
             android:exported="true" tools:ignore="Instantiatable">
             <intent-filter><action android:name="android.intent.action.MEDIA_BUTTON"/></intent-filter>
@@ -56,6 +61,7 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
                 <action android:name="android.intent.action.TIME_SET"/>
                 <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED"/>
             </intent-filter>
         </receiver>
         <service android:name=".HaqOverlayService" android:exported="false" android:foregroundServiceType="specialUse">

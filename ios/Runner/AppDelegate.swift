@@ -3,6 +3,7 @@ import UIKit
 import Photos
 import UserNotifications
 import CoreLocation
+import AVFoundation
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
@@ -134,6 +135,41 @@ private final class HaqReminderCenter {
           }
         }
       case "pendingOpen": result(self.pendingRoute); self.pendingRoute = nil; self.dartReady = true
+      case "adhanStatus": result(["platform": "ios", "exact": false, "fullScreen": false])
+      case "prepareAdhan":
+        guard let args = call.arguments as? [String: Any], let id = args["id"] as? String,
+              ["alafasy", "nafees", "mustafa", "zahrani"].contains(id), let path = args["path"] as? String else {
+          result(FlutterError(code: "audio", message: "Invalid voice", details: nil)); return
+        }
+        let source = URL(fileURLWithPath: path).standardizedFileURL.resolvingSymlinksInPath()
+        guard source.path.hasPrefix(NSHomeDirectory() + "/") else {
+          result(FlutterError(code: "audio", message: "Invalid audio path", details: nil)); return
+        }
+        DispatchQueue.global(qos: .userInitiated).async {
+          do {
+            let file = try AVAudioFile(forReading: source)
+            let format = file.processingFormat
+            guard format.channelCount <= 2, format.sampleRate > 0, format.sampleRate <= 96000 else { throw NSError(domain: "HaqAudio", code: 1) }
+            let frames = AVAudioFrameCount(min(file.length, AVAudioFramePosition(format.sampleRate * 25)))
+            guard frames > 0, let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frames) else { throw NSError(domain: "HaqAudio", code: 2) }
+            try file.read(into: buffer, frameCount: frames)
+            let folder = URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent("Library/Sounds", isDirectory: true)
+            try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            let target = folder.appendingPathComponent("haq-adhan-\(id).caf")
+            let temporary = folder.appendingPathComponent("haq-adhan-\(id)-pending.caf")
+            do {
+              let output = try AVAudioFile(forWriting: temporary, settings: [
+                AVFormatIDKey: kAudioFormatLinearPCM, AVSampleRateKey: format.sampleRate,
+                AVNumberOfChannelsKey: format.channelCount, AVLinearPCMBitDepthKey: 16,
+                AVLinearPCMIsFloatKey: false, AVLinearPCMIsBigEndianKey: false
+              ], commonFormat: format.commonFormat, interleaved: format.isInterleaved)
+              try output.write(from: buffer)
+            }
+            if FileManager.default.fileExists(atPath: target.path) { _ = try FileManager.default.replaceItemAt(target, withItemAt: temporary) }
+            else { try FileManager.default.moveItem(at: temporary, to: target) }
+            DispatchQueue.main.async { result(true) }
+          } catch { DispatchQueue.main.async { result(FlutterError(code: "audio", message: "Unable to prepare notification audio", details: nil)) } }
+        }
       case "communityMessage":
         guard let args = call.arguments as? [String: Any], let scope = args["scope"] as? String,
               scope == self.plan["scope"] as? String, let id = args["id"] as? Int, id > 0 else { result(false); return }
@@ -187,6 +223,16 @@ private final class HaqReminderCenter {
     let c = UNMutableNotificationContent()
     c.title = job["title"] as? String ?? "حق"; c.body = job["body"] as? String ?? ""
     c.sound = plan["sound"] as? Bool == false ? nil : .default
+    if let mode = job["alertMode"] as? String {
+      if mode == "silent" || mode == "vibration" { c.sound = nil }
+      else if mode == "adhan", plan["sound"] as? Bool != false,
+              let voice = job["voice"] as? String, ["alafasy", "nafees", "mustafa", "zahrani"].contains(voice) {
+        let name = "haq-adhan-\(voice).caf"
+        if FileManager.default.fileExists(atPath: NSHomeDirectory() + "/Library/Sounds/" + name) {
+          c.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: name))
+        }
+      }
+    }
     c.categoryIdentifier = "haq-reminder"
     c.userInfo = ["scope": plan["scope"] as? String ?? "guest", "route": job["route"] as? String ?? "adhkar"]
     return c

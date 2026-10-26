@@ -87,6 +87,10 @@ class MainActivity : AudioServiceActivity() {
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (HaqAdhanService.current != null && event.action == KeyEvent.ACTION_DOWN) {
+            HaqAdhanService.stop(this)
+            return true
+        }
         if (countWithVolumeKeys && (event.keyCode == KeyEvent.KEYCODE_VOLUME_UP || event.keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)) {
             if (event.action == KeyEvent.ACTION_DOWN && event.repeatCount == 0) {
                 adhkarControls?.invokeMethod("count", null)
