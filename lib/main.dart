@@ -24,6 +24,8 @@ import 'features/prayer/presentation/prayer_page.dart';
 import 'features/account/presentation/account_hub.dart';
 import 'features/community/data/community_controller.dart';
 import 'features/community/presentation/community_page.dart';
+import 'features/assistant/data/assistant_controller.dart';
+import 'features/assistant/presentation/assistant_page.dart';
 import 'startup/startup_flow.dart';
 
 import 'navigation/app_section.dart';
@@ -230,6 +232,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   bool _religiousOpen = false;
   String? _religiousInitialCategory;
   AppExperienceController? _experience;
+  late final AssistantController _assistant;
 
   @override
   void didChangeDependencies() {
@@ -251,6 +254,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _quran = widget.quranController ?? QuranController();
     _religious =
         widget.religiousController ?? ReligiousController(quran: _quran);
+    _assistant = AssistantController(_quran);
     if (_quran.repository == null) {
       _quran.load().then((_) {
         if (mounted && _religious.catalog == null) _religious.load();
@@ -328,6 +332,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _assistant.dispose();
     _reminders?.dispose();
     _prayer?.dispose();
     _experience?.unregister(_quran.audio);
@@ -441,6 +446,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   void _openFeature(AppFeature feature) {
     switch (feature) {
+      case AppFeature.assistant:
+      case AppFeature.subscription:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            settings: RouteSettings(name: feature.routeName),
+            builder: (_) => AssistantPage(
+              religious: _religious,
+              controller: _assistant,
+              subscription: feature == AppFeature.subscription,
+            ),
+          ),
+        );
       case AppFeature.circles:
       case AppFeature.duaTogether:
       case AppFeature.messages:

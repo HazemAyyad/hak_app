@@ -142,6 +142,8 @@ enum AppFeature {
   mosques('أقرب المساجد', Icons.mosque_outlined, ready: true),
   messages('رسائل حق', Icons.mail_outline, ready: true),
   stories('قصص حق', Icons.auto_stories_outlined, ready: true),
+  assistant('المساعد', Icons.auto_awesome_outlined, ready: true),
+  subscription('باكج حق', Icons.workspace_premium_outlined, ready: true),
   ourApps('تطبيقاتنا', Icons.account_balance_outlined);
 
   const AppFeature(
