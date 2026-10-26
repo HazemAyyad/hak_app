@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
+import '../../../app_loading.dart';
 import '../data/quran_audio.dart';
 import '../data/quran_audio_models.dart';
 import '../data/quran_controller.dart';
@@ -58,12 +59,14 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
         return Center(
           child: QPrimaryButton(
             label: 'إعادة تحميل قائمة القراء',
-            onTap: () => setState(() => request = media.initialize()),
+            onTap: () => setState(() {
+              request = media.initialize();
+            }),
           ),
         );
       }
       if (snapshot.connectionState != ConnectionState.done) {
-        return const Center(child: CircularProgressIndicator(color: qTeal));
+        return const AppLoadingSkeleton(label: 'جارٍ تحميل القراء والتلاوات');
       }
       return ListenableBuilder(
         listenable: media,
@@ -158,68 +161,68 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                         action: 'عرض الكل',
                         onAction: _readers,
                       ),
-                      SizedBox(
-                        height: 116 * MediaQuery.textScalerOf(context).scale(1),
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: spotlight.length,
-                          separatorBuilder: (_, index) =>
-                              const SizedBox(width: 8),
-                          itemBuilder: (context, index) {
-                            final entry = spotlight[index];
-                            return SizedBox(
-                              width: 105,
-                              child: QCard(
-                                color: entry.id == recitation.id
-                                    ? AppPalette.of(context).paleTeal
-                                    : null,
-                                padding: const EdgeInsets.all(8),
-                                onTap: () => _select(entry),
-                                child: Column(
-                                  children: [
-                                    Stack(
-                                      clipBehavior: Clip.none,
-                                      children: [
-                                        ReciterAvatar(recitation: entry),
-                                        if (entry.id == recitation.id)
-                                          const Positioned(
-                                            top: -4,
-                                            right: -8,
-                                            child: Icon(
-                                              Icons.check_circle,
-                                              color: qTeal,
-                                              size: 16,
+                      SingleChildScrollView(
+                        key: const ValueKey('quran-reciter-spotlight'),
+                        scrollDirection: Axis.horizontal,
+                        child: IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            spacing: 8,
+                            children: spotlight.map((entry) {
+                              return SizedBox(
+                                width: 105,
+                                child: QCard(
+                                  color: entry.id == recitation.id
+                                      ? AppPalette.of(context).paleTeal
+                                      : null,
+                                  padding: const EdgeInsets.all(8),
+                                  onTap: () => _select(entry),
+                                  child: Column(
+                                    children: [
+                                      Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          ReciterAvatar(recitation: entry),
+                                          if (entry.id == recitation.id)
+                                            const Positioned(
+                                              top: -4,
+                                              right: -8,
+                                              child: Icon(
+                                                Icons.check_circle,
+                                                color: qTeal,
+                                                size: 16,
+                                              ),
                                             ),
-                                          ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      entry.name,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                      style: qText(
-                                        context,
-                                        size: 11,
-                                        weight: FontWeight.w800,
+                                        ],
                                       ),
-                                    ),
-                                    Text(
-                                      entry.style,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: qText(
-                                        context,
-                                        size: 9,
-                                        color: qTeal,
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        entry.name,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                        style: qText(
+                                          context,
+                                          size: 11,
+                                          weight: FontWeight.w800,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        entry.style,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: qText(
+                                          context,
+                                          size: 9,
+                                          color: qTeal,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            }).toList(),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 14),
@@ -308,6 +311,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                   ? Icons.pause
                                   : Icons.play_arrow,
                               label: 'استماع إلى سورة ${chapter.name}',
+                              loading: current && media.buffering,
                               color: qTeal,
                               onTap: () => current
                                   ? media.toggle()
@@ -468,15 +472,42 @@ class QuranReciterPicker extends StatefulWidget {
 }
 
 class _QuranReciterPickerState extends State<QuranReciterPicker> {
+  late Future<void> request;
   String query = '';
   int filter = 0;
   @override
-  Widget build(BuildContext context) => ListenableBuilder(
+  void initState() {
+    super.initState();
+    request = widget.media.initialize();
+  }
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder<void>(
+    future: request,
+    builder: (context, snapshot) {
+      if (snapshot.connectionState != ConnectionState.done) {
+        return const AppLoadingSkeleton(label: 'جارٍ تحميل القراء والتلاوات');
+      }
+      if (snapshot.hasError || widget.media.catalog == null) {
+        return Center(
+          child: QPrimaryButton(
+            label: 'إعادة تحميل قائمة القراء',
+            onTap: () => setState(() {
+              request = widget.media.initialize();
+            }),
+          ),
+        );
+      }
+      return _content(context);
+    },
+  );
+
+  Widget _content(BuildContext context) => ListenableBuilder(
     listenable: widget.media,
     builder: (context, _) {
       final catalog = widget.media.catalog;
       if (catalog == null) {
-        return const Center(child: CircularProgressIndicator(color: qTeal));
+        return const AppLoadingSkeleton(label: 'جارٍ تحميل القراء والتلاوات');
       }
       final recitations = catalog.recitations
           .where(

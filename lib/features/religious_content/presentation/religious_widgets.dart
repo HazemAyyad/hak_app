@@ -26,7 +26,10 @@ TextStyle rText(
   FontWeight weight = FontWeight.w500,
   double height = 1.55,
 }) => TextStyle(
-  fontFamily: AppearanceScope.of(context).font.family,
+  fontFamily:
+      AppearanceScope.of(context).preferences.containsKey('appearance.font')
+      ? AppearanceScope.of(context).font.family
+      : 'Tajawal',
   fontFamilyFallback: const ['AmiriQuran'],
   fontSize: size,
   height: height,
@@ -160,13 +163,16 @@ class ReligiousRoundButton extends StatelessWidget {
               radius: (size + 8) / 2,
               child: SizedBox.square(
                 dimension: size,
-                child: Icon(
-                  icon,
-                  textDirection: TextDirection.ltr,
-                  size: size * .55,
-                  color: filled
-                      ? Colors.white
-                      : color ?? ReligiousColors(context).heading,
+                child: Transform.flip(
+                  flipX: icon == Icons.skip_next || icon == Icons.skip_previous,
+                  child: Icon(
+                    icon,
+                    textDirection: TextDirection.ltr,
+                    size: size * .55,
+                    color: filled
+                        ? Colors.white
+                        : color ?? ReligiousColors(context).heading,
+                  ),
                 ),
               ),
             ),
@@ -230,7 +236,6 @@ class ReligiousHeader extends StatelessWidget {
             : light
             ? 167
             : 185) +
-        top +
         (scale - 1) * 85;
     return Container(
       height: requiredHeight > baseHeight ? requiredHeight : baseHeight,
@@ -401,6 +406,12 @@ class ReligiousSearch extends StatelessWidget {
           child: TextField(
             controller: controller,
             onChanged: onChanged,
+            strutStyle: StrutStyle(
+              fontFamily: rText(context, 12).fontFamily,
+              fontSize: 12,
+              height: 1.5,
+              forceStrutHeight: true,
+            ),
             style: rText(context, 12, color: ReligiousColors(context).text),
             decoration: InputDecoration(
               hintText: hint,
@@ -410,7 +421,7 @@ class ReligiousSearch extends StatelessWidget {
                 color: ReligiousColors(context).muted,
               ),
               filled: true,
-              fillColor: ReligiousColors(context).subtle.withValues(alpha: .6),
+              fillColor: ReligiousColors(context).subtle.withValues(alpha: .75),
               isDense: true,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 10,
@@ -545,9 +556,9 @@ class ReligiousSectionCard extends StatelessWidget {
           textAlign: TextAlign.right,
           style: rText(
             context,
-            14,
+            13,
             color: ReligiousColors(context).text,
-            height: 1.85,
+            height: 1.65,
           ),
         ),
         if (source != null && source!.isNotEmpty)

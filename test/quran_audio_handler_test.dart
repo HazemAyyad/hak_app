@@ -22,6 +22,7 @@ class TestAudioPlayer implements AudioPlayer {
   final errors = StreamController<PlayerException>.broadcast(sync: true);
   PlaybackEvent event = PlaybackEvent();
   bool isPlaying = false;
+  Completer<void>? loadGate, loadEntered;
   @override
   LoopMode loopMode = LoopMode.off;
   final seeks = <(Duration, int?)>[];
@@ -93,6 +94,8 @@ class TestAudioPlayer implements AudioPlayer {
     Duration? initialPosition,
     ShuffleOrder? shuffleOrder,
   }) async {
+    loadEntered?.complete();
+    await loadGate?.future;
     sequence = sources.cast<IndexedAudioSource>();
     emit(index: initialIndex ?? 0);
     return null;
@@ -159,6 +162,17 @@ QuranAudioTrack recording(String id) => QuranAudioTrack(
   quality: '128kbps',
 );
 
+class PreparingMedia extends QuranMedia {
+  PreparingMedia()
+    : super(
+        repository: () => throw UnimplementedError(),
+        preferences: () => throw UnimplementedError(),
+      );
+  final ready = Completer<void>();
+  @override
+  Future<void> initialize() => ready.future;
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late TestAudioPlayer player;
@@ -171,6 +185,56 @@ void main() {
 
   Future<void> load(List<QuranAudioTrack> tracks) =>
       handler.load(tracks, tracks.map((t) => Uri.parse(t.url)).toList());
+
+  test(
+    'chapter taps show loading before catalog initialization and can be cancelled',
+    () async {
+      final media = PreparingMedia();
+      addTearDown(media.dispose);
+      final pending = media.playChapter(1);
+      expect(media.loading, isTrue);
+      expect(media.buffering, isTrue);
+      await media.stop();
+      media.ready.complete();
+      await pending;
+      expect(media.loading, isFalse);
+      expect(media.handler, isNull);
+      expect(media.current, isNull);
+      expect(media.error, isNull);
+    },
+  );
+
+  test(
+    'pending track metadata appears immediately and clears when cancelled',
+    () async {
+      final media = PreparingMedia();
+      addTearDown(media.dispose);
+      final pending = media.playTracks([recording('pending')]);
+      expect(media.current?.id, 'pending');
+      expect(media.loading, isTrue);
+      await media.stop();
+      expect(media.current, isNull);
+      media.ready.complete();
+      await pending;
+      expect(media.handler, isNull);
+      expect(media.loading, isFalse);
+    },
+  );
+
+  test(
+    'stop while loading prevents late source completion from restarting audio',
+    () async {
+      player.loadGate = Completer<void>();
+      player.loadEntered = Completer<void>();
+      final pending = load([recording('loading')]);
+      await player.loadEntered!.future;
+      await handler.stop();
+      player.loadGate!.complete();
+      await pending;
+      expect(player.playing, isFalse);
+      expect(handler.playbackState.value.playing, isFalse);
+    },
+  );
 
   test(
     'notification duration stays attached to its queue item across changes',
@@ -264,7 +328,7 @@ void main() {
   );
 
   testWidgets(
-    'Arabic player keeps seek directions physical and reciter arrow adjacent',
+    'Arabic player uses RTL timeline and controls with reciter arrow adjacent',
     (tester) async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
@@ -311,7 +375,11 @@ void main() {
       await show(compact: false);
       expect(
         tester.getCenter(find.byTooltip('إرجاع 10 ثوانٍ')).dx,
-        lessThan(tester.getCenter(find.byTooltip('تقديم 10 ثوانٍ')).dx),
+        greaterThan(tester.getCenter(find.byTooltip('تقديم 10 ثوانٍ')).dx),
+      );
+      expect(
+        Directionality.of(tester.element(find.byType(Slider))),
+        TextDirection.rtl,
       );
       await tester.tap(find.byTooltip('تقديم 10 ثوانٍ'));
       await tester.pump();

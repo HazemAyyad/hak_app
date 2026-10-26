@@ -658,7 +658,7 @@
       "verseKeys": [
         "2:201"
       ],
-      "image": "mosque",
+      "image": "open_quran",
       "number": 1
     },
     {
@@ -681,7 +681,7 @@
       "verseKeys": [
         "14:41"
       ],
-      "image": "lantern",
+      "image": "mosque",
       "number": 2
     },
     {
@@ -708,7 +708,7 @@
         "20:27",
         "20:28"
       ],
-      "image": "kaaba",
+      "image": "madina",
       "number": 3
     },
     {
@@ -731,7 +731,7 @@
       "verseKeys": [
         "2:127"
       ],
-      "image": "madina",
+      "image": "kaaba",
       "number": 4
     },
     {
@@ -753,7 +753,7 @@
       "verseKeys": [
         "3:38"
       ],
-      "image": "quran",
+      "image": "madina",
       "number": 5
     },
     {
@@ -776,7 +776,7 @@
       "verseKeys": [
         "20:114"
       ],
-      "image": "open_quran",
+      "image": "lantern",
       "number": 6
     },
     {
@@ -800,7 +800,7 @@
       "verseKeys": [
         "7:23"
       ],
-      "image": "mosque",
+      "image": "open_quran",
       "number": 7
     },
     {
@@ -824,7 +824,7 @@
       "verseKeys": [
         "3:8"
       ],
-      "image": "lantern",
+      "image": "mosque",
       "number": 8
     },
     {
@@ -847,7 +847,7 @@
       "verseKeys": [
         "28:24"
       ],
-      "image": "kaaba",
+      "image": "madina",
       "number": 9
     },
     {
@@ -870,7 +870,7 @@
       "verseKeys": [
         "21:87"
       ],
-      "image": "madina",
+      "image": "kaaba",
       "number": 10
     },
     {
@@ -892,7 +892,7 @@
       "verseKeys": [
         "2:250"
       ],
-      "image": "quran",
+      "image": "madina",
       "number": 11
     },
     {
@@ -914,7 +914,7 @@
       "verseKeys": [
         "25:74"
       ],
-      "image": "open_quran",
+      "image": "lantern",
       "number": 12
     },
     {
@@ -937,7 +937,7 @@
       "verseKeys": [
         "9:129"
       ],
-      "image": "mosque",
+      "image": "open_quran",
       "number": 13
     },
     {
@@ -963,7 +963,7 @@
       "verseKeys": [
         "27:19"
       ],
-      "image": "lantern",
+      "image": "mosque",
       "number": 14
     },
     {
@@ -986,7 +986,7 @@
       "verseKeys": [
         "14:40"
       ],
-      "image": "kaaba",
+      "image": "madina",
       "number": 15
     },
     {
@@ -1008,7 +1008,7 @@
         "23:97",
         "23:98"
       ],
-      "image": "madina",
+      "image": "kaaba",
       "number": 16
     },
     {

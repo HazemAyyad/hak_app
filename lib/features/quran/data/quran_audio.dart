@@ -219,6 +219,7 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> stop() async {
+    ++_loadGeneration;
     await seekForward(false);
     await player.stop();
     await super.stop();
@@ -251,6 +252,7 @@ class QuranMedia extends ChangeNotifier {
   bool loading = false, _disposed = false;
   int _generation = 0;
   bool _lostOwnership = false;
+  int get playbackSession => _generation;
   Timer? _timer;
   Timer? _fade;
   StreamSubscription<PlaybackEvent>? _endSubscription;
@@ -272,7 +274,9 @@ class QuranMedia extends ChangeNotifier {
       handler != null &&
       (handler!.ownership.owns(this) ||
           !_lostOwnership && handler!.ownership.unclaimed);
+  QuranAudioTrack? _pendingTrack;
   QuranAudioTrack? get current {
+    if (loading && _pendingTrack != null) return _pendingTrack;
     if (!ownsPlayback) return null;
     final item = handler?.mediaItem.value;
     final id = item?.extras?['trackId'] ?? item?.id;
@@ -409,12 +413,27 @@ class QuranMedia extends ChangeNotifier {
     if (tracks.isEmpty || start < 0 || start >= tracks.length) {
       throw ArgumentError('A valid nonempty recording queue is required');
     }
+    return _playSelection(
+      () => (tracks: tracks, start: start),
+      pending: tracks[start],
+    );
+  }
+
+  Future<void> _playSelection(
+    ({List<QuranAudioTrack> tracks, int start}) Function() select, {
+    QuranAudioTrack? pending,
+  }) async {
     final generation = ++_generation;
+    _pendingTrack = pending;
     loading = true;
     error = null;
     _notify();
     try {
       await initialize();
+      if (generation != _generation || _disposed) return;
+      final (:tracks, :start) = select();
+      _pendingTrack = tracks[start];
+      _notify();
       final audio = await _audioHandler();
       if (generation != _generation || _disposed) return;
       audio.ownership.claim(this, _lostPlayback);
@@ -440,59 +459,47 @@ class QuranMedia extends ChangeNotifier {
         );
         if (ownsPlayback) await audio.setSpeed(_preferredSpeed);
       });
-    } catch (_) {
+    } catch (failure) {
       if (generation == _generation) {
-        error = 'تعذّر تشغيل التلاوة؛ تحقق من الاتصال وأعد المحاولة';
+        error = failure is StateError
+            ? failure.message
+            : 'تعذّر تشغيل التلاوة؛ تحقق من الاتصال وأعد المحاولة';
       }
     } finally {
       if (generation == _generation) {
         loading = false;
+        _pendingTrack = null;
         _notify();
       }
     }
   }
 
-  Future<void> playChapter(int surah) async {
-    try {
-      await initialize();
-    } catch (_) {
-      return;
-    }
+  Future<void> playChapter(int surah) => _playSelection(() {
     final recitation = selection();
     final ids = recitation.chapters.toList()..sort();
     if (!ids.contains(surah)) {
-      error = 'هذه السورة غير متاحة في التلاوة المختارة';
-      _notify();
-      return;
+      throw StateError('هذه السورة غير متاحة في التلاوة المختارة');
     }
-    await playTracks(
-      ids.map((id) => recitation.track(repository(), id)).toList(),
+    return (
+      tracks: ids.map((id) => recitation.track(repository(), id)).toList(),
       start: ids.indexOf(surah),
     );
-  }
+  });
 
-  Future<void> playVerse(
-    QuranVerse verse, {
-    int? endAyah,
-    int repeats = 1,
-  }) async {
-    try {
-      await initialize();
-    } catch (_) {
-      return;
-    }
-    final recitation = selection(verse: true);
-    final end = (endAyah ?? verse.ayah).clamp(
-      verse.ayah,
-      repository().surah(verse.surah).ayahCount,
-    );
-    final tracks = [
-      for (var count = 0; count < repeats.clamp(1, 10); count++)
-        for (var ayah = verse.ayah; ayah <= end; ayah++)
-          recitation.track(repository(), verse.surah, ayah: ayah),
-    ];
-    await playTracks(tracks);
-  }
+  Future<void> playVerse(QuranVerse verse, {int? endAyah, int repeats = 1}) =>
+      _playSelection(() {
+        final recitation = selection(verse: true);
+        final end = (endAyah ?? verse.ayah).clamp(
+          verse.ayah,
+          repository().surah(verse.surah).ayahCount,
+        );
+        final tracks = [
+          for (var count = 0; count < repeats.clamp(1, 10); count++)
+            for (var ayah = verse.ayah; ayah <= end; ayah++)
+              recitation.track(repository(), verse.surah, ayah: ayah),
+        ];
+        return (tracks: tracks, start: 0);
+      });
 
   Future<void> playWord(String key, int position, String audioUrl) async {
     final uri = Uri.parse('https://audio.qurancdn.com/').resolve(audioUrl);
@@ -807,6 +814,7 @@ class QuranMedia extends ChangeNotifier {
   Future<void> stop() async {
     ++_generation;
     loading = false;
+    _pendingTrack = null;
     _cancelSleep(restore: true);
     await _control(() => handler!.stop());
     playingTracks = [];
@@ -829,6 +837,7 @@ class QuranMedia extends ChangeNotifier {
 
   void _lostPlayback() {
     _lostOwnership = true;
+    _pendingTrack = null;
     ++_generation;
     _cancelSleep();
     loading = false;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../app_experience.dart';
 
 import '../app_appearance.dart';
 
@@ -106,7 +107,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 Expanded(
                   child: PageView(
                     controller: _pages,
-                    onPageChanged: (index) => setState(() => _index = index),
+                    onPageChanged: (index) {
+                      AppExperienceScope.maybeOf(context)?.transition();
+                      setState(() => _index = index);
+                    },
                     children: const [
                       _OnboardingPage(
                         index: 0,

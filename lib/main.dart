@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_appearance.dart';
+import 'app_experience.dart';
 import 'settings_pages.dart';
 import 'features/quran/data/quran_controller.dart';
 import 'features/quran/presentation/quran_host.dart';
@@ -65,6 +66,8 @@ class HaqApp extends StatefulWidget {
 
 class _HaqAppState extends State<HaqApp> {
   AppAppearance? _appearance;
+  final _experience = AppExperienceController();
+  late final _navigationObserver = _experience.observer('root');
 
   @override
   void initState() {
@@ -89,6 +92,7 @@ class _HaqAppState extends State<HaqApp> {
 
   @override
   void dispose() {
+    _experience.dispose();
     if (widget.appearance == null) _appearance?.dispose();
     super.dispose();
   }
@@ -102,9 +106,10 @@ class _HaqAppState extends State<HaqApp> {
       child: ListenableBuilder(
         listenable: appearance,
         builder: (context, _) => MaterialApp(
+          navigatorKey: _experience.navigatorKey,
+          navigatorObservers: [_navigationObserver, prayerRoutes],
           debugShowCheckedModeBanner: false,
           title: 'حق',
-          navigatorObservers: [prayerRoutes],
           themeMode: appearance.effectiveMode,
           locale: Locale('ar'),
           theme: _theme(Brightness.light),
@@ -116,7 +121,7 @@ class _HaqAppState extends State<HaqApp> {
                     appearance.fontScale,
               ),
             ),
-            child: child!,
+            child: AppExperienceOverlay(controller: _experience, child: child!),
           ),
           home: widget.showStartup
               ? StartupFlow(
@@ -222,6 +227,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<ReminderController?>? _preparingReminders;
   bool _religiousOpen = false;
   String? _religiousInitialCategory;
+  AppExperienceController? _experience;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final next = AppExperienceScope.maybeOf(context);
+    if (next != _experience) {
+      _experience?.unregister(_quran.audio);
+      _experience?.unregister(_religious.media);
+      _experience = next;
+      next?.register(_quran.audio);
+      next?.register(_religious.media);
+    }
+  }
 
   @override
   void initState() {
@@ -307,15 +326,32 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _reminders?.dispose();
     _prayer?.dispose();
+    _experience?.unregister(_quran.audio);
+    _experience?.unregister(_religious.media);
     if (widget.religiousController == null) _religious.dispose();
     if (widget.quranController == null) _quran.dispose();
     super.dispose();
   }
 
-  void _selectSection(AppSection section) => setState(() {
-    _section = section;
-    _visited.add(section);
-  });
+  void _selectSection(AppSection section) {
+    if (section != AppSection.quran && _quranFullscreen) {
+      _quranFullscreen = false;
+      _experience?.setBottomBarVisible(true);
+    }
+    _experience?.changeSurface(
+      section == AppSection.quran
+          ? 'quran'
+          : section == AppSection.more && _religiousOpen
+          ? 'religious'
+          : section == AppSection.more
+          ? 'more'
+          : 'home-${section.index}',
+    );
+    setState(() {
+      _section = section;
+      _visited.add(section);
+    });
+  }
 
   void _preparePrayer() {
     if (_prayer != null || _quran.preferences == null) return;
@@ -353,6 +389,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   void _openReligious([String? category]) {
+    _experience?.changeSurface('religious');
     if (_religiousOpen &&
         _religiousKey.currentState != null &&
         category != null) {
@@ -596,6 +633,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   active: _section == AppSection.quran,
                   onExit: () => _selectSection(AppSection.home),
                   onFullscreenChanged: (value) {
+                    _experience?.setBottomBarVisible(!value);
                     if (mounted && value != _quranFullscreen) {
                       setState(() => _quranFullscreen = value);
                     }
@@ -630,7 +668,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       controller: _religious,
                       active: _section == AppSection.more,
                       initialCategory: _religiousInitialCategory,
-                      onClose: () => setState(() => _religiousOpen = false),
+                      onClose: () {
+                        _experience?.changeSurface('more');
+                        setState(() => _religiousOpen = false);
+                      },
                     )
                   : MorePage(onFeature: _openFeature),
             ],
@@ -641,11 +682,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               : religiousHandlesBack
               ? ReligiousNavigationBar(
                   onSelected: (index) {
-                    setState(() {
-                      _section = AppSection.values[index];
-                      _visited.add(_section);
-                      if (_section == AppSection.more) _religiousOpen = false;
-                    });
+                    if (index == AppSection.more.index) _religiousOpen = false;
+                    _selectSection(AppSection.values[index]);
                   },
                 )
               : ClipRRect(

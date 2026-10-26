@@ -732,9 +732,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     ),
   );
 
-  String _shareText(QuranVerse verse) =>
-      '${verse.text}\n[سورة ${repo.surah(verse.surah).name}: ${verse.ayah}]';
-
   Future<void> _share(QuranVerse verse) async {
     await chooseContentShare(
       context,
@@ -841,9 +838,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                     leading: const Icon(Icons.copy_outlined, color: qNavy),
                     title: const Text('نسخ الآية'),
                     onTap: () async {
-                      await Clipboard.setData(
-                        ClipboardData(text: _shareText(verse)),
-                      );
+                      await Clipboard.setData(ClipboardData(text: verse.text));
                       if (sheetContext.mounted) Navigator.pop(sheetContext);
                       if (mounted) qNotice(this.context, 'تم نسخ الآية');
                     },
@@ -920,17 +915,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
         ),
       );
   Future<void> _reciter() async {
-    try {
-      await controller.audio.initialize();
-    } catch (_) {
-      if (mounted) {
-        qNotice(
-          context,
-          'تعذّر فتح قائمة القراء؛ تحقق من مساحة الجهاز وأعد المحاولة',
-        );
-      }
-      return;
-    }
     if (mounted) {
       await Navigator.push(
         context,

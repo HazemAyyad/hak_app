@@ -371,7 +371,7 @@ class ReligiousController extends ChangeNotifier {
       }
       return false;
     }
-    return item.audioUrl?.isNotEmpty == true ||
+    return item.audioUrl?.trim().isNotEmpty == true ||
         item.verseKeys.any(
           (key) => quran.repository?.byKey.containsKey(key) == true,
         );

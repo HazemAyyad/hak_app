@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../app_appearance.dart';
+import '../../../app_loading.dart';
 import '../data/quran_audio.dart';
 import '../data/quran_audio_models.dart';
 import '../data/quran_controller.dart';
@@ -228,12 +229,14 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
         return Center(
           child: QPrimaryButton(
             label: 'إعادة المحاولة',
-            onTap: () => setState(() => request = media.initialize()),
+            onTap: () => setState(() {
+              request = media.initialize();
+            }),
           ),
         );
       }
       if (snapshot.connectionState != ConnectionState.done) {
-        return const Center(child: CircularProgressIndicator(color: qTeal));
+        return const AppLoadingSkeleton(label: 'جارٍ تحميل التنزيلات');
       }
       return ListenableBuilder(
         listenable: media.downloads,

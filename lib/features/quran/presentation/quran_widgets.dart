@@ -147,12 +147,14 @@ class QCircleButton extends StatelessWidget {
     this.onTap,
     this.color,
     this.size = 38,
+    this.loading = false,
   });
   final IconData icon;
   final String label;
   final VoidCallback? onTap;
   final Color? color;
   final double size;
+  final bool loading;
   @override
   Widget build(BuildContext context) => Tooltip(
     message: label,
@@ -162,20 +164,28 @@ class QCircleButton extends StatelessWidget {
       elevation: 1,
       shadowColor: const Color(0x22000000),
       child: InkWell(
-        onTap: onTap,
+        onTap: loading ? null : onTap,
         customBorder: const CircleBorder(),
         child: SizedBox(
           width: size,
           height: size,
-          child: Icon(
-            icon,
-            size: 23,
-            color:
-                color ??
-                (AppPalette.of(context).dark
-                    ? AppPalette.of(context).heading
-                    : qNavy),
-          ),
+          child: loading
+              ? const Padding(
+                  padding: EdgeInsets.all(9),
+                  child: CircularProgressIndicator(
+                    color: qTeal,
+                    strokeWidth: 2,
+                  ),
+                )
+              : Icon(
+                  icon,
+                  size: 23,
+                  color:
+                      color ??
+                      (AppPalette.of(context).dark
+                          ? AppPalette.of(context).heading
+                          : qNavy),
+                ),
         ),
       ),
     ),

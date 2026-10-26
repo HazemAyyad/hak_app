@@ -830,6 +830,7 @@ class FridayCard extends StatelessWidget {
     image:
         'assets/home/header_${AppPalette.of(context).dark ? 'dark' : 'light'}.png',
     height: 146,
+    minimumHeight: 146,
     imageAlignment: Alignment.bottomLeft,
     child: Row(
       children: [
@@ -975,17 +976,21 @@ class _PhotoCard extends StatelessWidget {
     required this.child,
     required this.image,
     required this.height,
+    this.minimumHeight = 0,
     this.imageAlignment = Alignment.center,
   });
   final Widget child;
   final String image;
-  final double height;
+  final double height, minimumHeight;
   final Alignment imageAlignment;
   @override
   Widget build(BuildContext context) {
     final dark = AppPalette.of(context).dark;
     return Container(
-      height: height * MediaQuery.textScalerOf(context).scale(1),
+      height: math.max(
+        minimumHeight,
+        height * MediaQuery.textScalerOf(context).scale(1),
+      ),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),

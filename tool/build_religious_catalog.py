@@ -50,7 +50,7 @@ def qitem(id,title,keys,categories,tags,image='quran',sections=None):
 
 dua_specs=[('goodness','ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار',['2:201'],'أدعية عامة'),('parents','رب اغفر لي ولوالدي وللمؤمنين يوم يقوم الحساب',['14:41'],'أدعية المغفرة'),('ease','رب اشرح لي صدري ويسر لي أمري',['20:25','20:26','20:27','20:28'],'أدعية التوفيق'),('acceptance','ربنا تقبل منا إنك أنت السميع العليم',['2:127'],'أدعية عامة'),('offspring','رب هب لي من لدنك ذرية طيبة',['3:38'],'أدعية الذرية'),('knowledge','رب زدني علمًا',['20:114'],'أدعية العلم'),('forgiveness','ربنا ظلمنا أنفسنا',['7:23'],'أدعية الاستغفار'),('mercy','ربنا لا تزغ قلوبنا',['3:8'],'أدعية الهداية'),('need','رب إني لما أنزلت إلي من خير فقير',['28:24'],'أدعية الرزق'),('distress','لا إله إلا أنت سبحانك إني كنت من الظالمين',['21:87'],'أدعية الاستغفار'),('patience','ربنا أفرغ علينا صبرًا',['2:250'],'أدعية الصبر'),('family','ربنا هب لنا من أزواجنا وذرياتنا قرة أعين',['25:74'],'أدعية الذرية'),('reliance','حسبي الله لا إله إلا هو',['9:129'],'أدعية التوكل'),('thankfulness','رب أوزعني أن أشكر نعمتك',['27:19'],'أدعية الشكر'),('prayer','رب اجعلني مقيم الصلاة ومن ذريتي',['14:40'],'أدعية الهداية'),('protection','وقل رب أعوذ بك من همزات الشياطين',['23:97','23:98'],'أدعية الوقاية')]
 for i,(slug,title,keys,tag) in enumerate(dua_specs,1):
-    qitem('qdua-'+slug,title,keys,['quran-duas'],[tag],['open_quran','mosque','lantern','kaaba','madina','quran'][i%6])['number']=i
+    qitem('qdua-'+slug,title,keys,['quran-duas'],[tag],['open_quran','mosque','madina','kaaba','madina','lantern'][(i-1)%6])['number']=i
 
 hisn=json.loads((SOURCES/'hisn.json').read_text(encoding='utf-8-sig'))
 for chapter_index,(title,chapter) in enumerate(list(hisn.items())[2:],1):
@@ -99,6 +99,17 @@ for i,n in enumerate(nawawi,1):
     r['tags']=['العقيدة' if i in [2,3,4,19,24,37,38] else 'العبادات' if i in [1,5,8,9,21,22,23,25,26,28,29] else 'الأخلاق' if i in [7,11,12,13,15,16,17,18,20,27,31,35,36] else 'المعاملات']
     r['sections']=[dict(title='شرح الحديث',text=n['description'],source='شرح المجموعة كما ورد في المصدر الرقمي osamayy/40-hadith-nawawi-db')]
     if reference:r['sections'].append(dict(title='التخريج',text=reference,source='المصدر الرقمي للأربعين النووية'))
+    if i==1:
+        r['title']='إنما الأعمال بالنيات'
+        # The supplied design has concise learning cards. Preserve the complete
+        # imported commentary below them as an independently expandable section.
+        r['sections']=[
+            dict(title='شرح الحديث',text='يبين النبي ﷺ أن قبول العمل ووزنه عند الله تعالى يتعلق بالنية. فهي الأساس في صحة العمل وقيمته، فالمؤمن يعمل لله خالصًا، ويبتعد عن الرياء وطلب الدنيا، لأن الجزاء من جنس النية.',source='فوائد موجزة كما في مرجع التصميم المقدم'),
+            dict(title='فوائد الحديث',text='• تجديد النية في جميع الأعمال.\n• إخلاص العمل لله تعالى.\n• التمييز بين العمل المقبول والمردود.\n• الدلالة على عظم منزلة الإخلاص.',source='فوائد موجزة كما في مرجع التصميم المقدم'),
+            dict(title='ما يستفاد منه في الحياة اليومية',text='١. استحضار النية قبل البدء بأي عمل.\n٢. مراقبة النية أثناء العمل وتجديدها.\n٣. الحرص على تصحيح النية إذا اختلطت بغير الله.',source='فوائد موجزة كما في مرجع التصميم المقدم'),
+            dict(title='الشرح المطول',text=n['description'],source='شرح المجموعة كما ورد في المصدر الرقمي osamayy/40-hadith-nawawi-db'),
+            dict(title='التخريج',text=reference,source='المصدر الرقمي للأربعين النووية'),
+        ]
 
 def sunnah(slug,title,text,ref,url,image,tags,time,application,cats):
     r=item('sunnah-'+slug,'sunnah',title,text,ref,url,cats,image=image,summary=application)

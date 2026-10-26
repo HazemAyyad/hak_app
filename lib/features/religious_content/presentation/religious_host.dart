@@ -7,6 +7,8 @@ import '../../../app_appearance.dart';
 import '../../../navigation/more_page.dart';
 import '../../adhkar/data/adhkar_repository.dart';
 import '../../adhkar/data/adhkar_session_controller.dart';
+import '../../../app_experience.dart';
+import '../../../app_loading.dart';
 import '../../quran/presentation/quran_reader.dart';
 import '../../quran/presentation/quran_audio_widgets.dart'
     show chooseAudioTimer;
@@ -45,6 +47,13 @@ class ReligiousHostState extends State<ReligiousHost> {
   ReligiousController get controller => widget.controller;
   ReligiousCatalog get catalog => controller.catalog!;
   bool _requestedRefresh = false;
+  NavigatorObserver? _observer;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _observer ??= AppExperienceScope.maybeOf(context)?.observer('religious');
+  }
+
   void openCategory(String id) {
     if (['istighfar', 'praise', 'glorification'].contains(id)) {
       _push(_MoodReadingPage(host: this, collectionId: id), '/religious/$id');
@@ -105,8 +114,8 @@ class ReligiousHostState extends State<ReligiousHost> {
   }
 
   Future<void> copy(BuildContext context, ReligiousItem item) async {
-    await Clipboard.setData(ClipboardData(text: item.shareText));
-    if (context.mounted) message(context, 'تم نسخ النص مع المصدر');
+    await Clipboard.setData(ClipboardData(text: item.copyText));
+    if (context.mounted) message(context, 'تم نسخ النص');
   }
 
   void share(BuildContext context, ReligiousItem item) {
@@ -163,7 +172,7 @@ class ReligiousHostState extends State<ReligiousHost> {
     listenable: controller,
     builder: (context, _) {
       if (controller.loading) {
-        return const Center(child: CircularProgressIndicator(color: rTeal));
+        return const AppLoadingSkeleton(label: 'جارٍ تحميل المحتوى الديني');
       }
       if (controller.catalog == null) {
         return ReligiousEmpty(
@@ -187,6 +196,7 @@ class ReligiousHostState extends State<ReligiousHost> {
           },
           child: Navigator(
             key: navigator,
+            observers: [?_observer],
             onGenerateInitialRoutes: (_, _) => [
               if (!widget.initialCategoryAsRoot ||
                   (catalog.byCategory[widget.initialCategory] == null &&
@@ -372,11 +382,18 @@ class _CategoryTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  Icon(
-                    Icons.chevron_left,
-                    textDirection: TextDirection.ltr,
-                    size: 21,
-                    color: colors.heading,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: colors.subtle,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: const EdgeInsets.all(3),
+                    child: Icon(
+                      Icons.chevron_left,
+                      textDirection: TextDirection.ltr,
+                      size: 18,
+                      color: colors.heading,
+                    ),
                   ),
                 ],
               ),
@@ -402,6 +419,7 @@ class _ItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = ReligiousColors(context);
+    final canPlay = verse && host.controller.hasAudio(item);
     return ReligiousCard(
       margin: const EdgeInsets.only(bottom: 7),
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
@@ -473,7 +491,14 @@ class _ItemTile extends StatelessWidget {
                       : item.text.replaceAll('\n', ' '),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: rText(context, 10, color: colors.text),
+                  style: !verse && item.type == 'quran'
+                      ? TextStyle(
+                          fontFamily: 'AmiriQuran',
+                          fontSize: 16,
+                          height: 1.5,
+                          color: colors.text,
+                        )
+                      : rText(context, 10, color: colors.text),
                 ),
                 if (!verse && ['dua', 'hadith', 'quran'].contains(item.type))
                   Text(
@@ -489,7 +514,7 @@ class _ItemTile extends StatelessWidget {
             const SizedBox(width: 6),
             SizedBox(
               width: 94,
-              height: 60,
+              height: 90,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(9),
                 child: ShaderMask(
@@ -506,13 +531,12 @@ class _ItemTile extends StatelessWidget {
             ),
           ],
           ReligiousRoundButton(
-            icon: verse ? Icons.play_arrow : Icons.chevron_left,
-            label: verse ? 'استماع ${item.title}' : 'تفاصيل ${item.title}',
+            icon: canPlay ? Icons.play_arrow : Icons.chevron_left,
+            label: canPlay ? 'استماع ${item.title}' : 'تفاصيل ${item.title}',
             size: verse ? 29 : 24,
-            filled: verse,
-            onTap: verse && !host.controller.hasAudio(item)
-                ? null
-                : () => verse ? host.play(context, item) : host.openItem(item),
+            filled: canPlay,
+            onTap: () =>
+                canPlay ? host.play(context, item) : host.openItem(item),
           ),
         ],
       ),
@@ -568,7 +592,7 @@ class _ReligiousPlayer extends StatelessWidget {
                 ],
               ),
               Directionality(
-                textDirection: TextDirection.ltr,
+                textDirection: TextDirection.rtl,
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     trackHeight: 2,

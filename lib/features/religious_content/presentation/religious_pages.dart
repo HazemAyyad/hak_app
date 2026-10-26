@@ -139,15 +139,6 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                       },
                     ),
                     const SizedBox(height: 8),
-                    SizedBox(
-                      height: 68 * MediaQuery.textScalerOf(context).scale(1),
-                      child: _CategoryTile(
-                        host: host,
-                        category: host.catalog.byCategory['nawawi']!,
-                        compact: true,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
                     ReligiousCard(
                       onTap: () => host._push(
                         _ReligiousCategoryPage(
@@ -156,10 +147,22 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                         ),
                         '/religious/browse',
                       ),
+                      padding: EdgeInsets.zero,
                       child: Row(
                         children: [
-                          const Icon(Icons.description_outlined, color: rGold),
-                          const SizedBox(width: 10),
+                          ClipRRect(
+                            borderRadius:
+                                const BorderRadiusDirectional.horizontal(
+                                  start: Radius.circular(14),
+                                ).resolve(TextDirection.rtl),
+                            child: Image.asset(
+                              rAsset('books'),
+                              width: 110,
+                              height: 76,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,19 +176,34 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                                   ),
                                 ),
                                 Text(
-                                  'نصوص وفوائد من المصادر المعتمدة',
+                                  'مقالات وقصص وفوائد إيمانية',
                                   style: rText(context, 10),
+                                ),
+                                InkWell(
+                                  onTap: () => host.openCategory('nawawi'),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 5,
+                                    ),
+                                    child: Text(
+                                      'الأربعون النووية  ‹',
+                                      style: rText(
+                                        context,
+                                        12,
+                                        weight: FontWeight.w800,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              rAsset('books'),
-                              width: 82,
-                              height: 50,
-                              fit: BoxFit.cover,
+                          const Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Icon(
+                              Icons.chevron_left,
+                              color: rTeal,
+                              textDirection: TextDirection.ltr,
                             ),
                           ),
                         ],
@@ -197,12 +215,16 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                           host.openItem(host.catalog.byId['qdua-goodness']!),
                       padding: EdgeInsets.zero,
                       child: Container(
-                        padding: const EdgeInsets.all(13),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           image: DecorationImage(
                             image: AssetImage(rAsset('daily')),
                             fit: BoxFit.cover,
+                            colorFilter: ColorFilter.mode(
+                              Colors.black.withValues(alpha: .35),
+                              BlendMode.darken,
+                            ),
                           ),
                           gradient: const LinearGradient(
                             colors: [Color(0xFF082B3C), Color(0xFF082B3C)],
@@ -258,11 +280,16 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                         Expanded(
                           child: Text(
                             'الوصول السريع',
-                            style: rText(context, 16, weight: FontWeight.w800),
+                            style: rText(context, 14, weight: FontWeight.w800),
                           ),
                         ),
                         TextButton(
                           onPressed: () => host.openCategory('prophetic-duas'),
+                          style: TextButton.styleFrom(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            minimumSize: Size.zero,
+                            padding: const EdgeInsets.all(8),
+                          ),
                           child: Text('عرض الكل', style: rText(context, 11)),
                         ),
                       ],
@@ -767,14 +794,13 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                         Expanded(
                           child: Text(queued.title, style: rText(context, 12)),
                         ),
-                        ReligiousRoundButton(
-                          icon: Icons.play_arrow,
-                          label: 'تشغيل قائمة الاستماع',
-                          filled: true,
-                          onTap: host.controller.hasAudio(queued)
-                              ? () => host.play(context, queued)
-                              : null,
-                        ),
+                        if (host.controller.hasAudio(queued))
+                          ReligiousRoundButton(
+                            icon: Icons.play_arrow,
+                            label: 'تشغيل قائمة الاستماع',
+                            filled: true,
+                            onTap: () => host.play(context, queued),
+                          ),
                       ],
                     ),
                   ),
@@ -798,14 +824,13 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                           ),
                           style: rText(context, 10),
                         ),
-                        ReligiousRoundButton(
-                          icon: Icons.play_arrow,
-                          label: 'استئناف الاستماع',
-                          filled: true,
-                          onTap: host.controller.hasAudio(item)
-                              ? () => host.play(context, item)
-                              : null,
-                        ),
+                        if (host.controller.hasAudio(item))
+                          ReligiousRoundButton(
+                            icon: Icons.play_arrow,
+                            label: 'استئناف الاستماع',
+                            filled: true,
+                            onTap: () => host.play(context, item),
+                          ),
                       ],
                     ),
                   ),

@@ -72,6 +72,15 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
       final quran = item.type == 'quran';
       final saved = host.controller.favorites.contains(item.id);
       final sections = item.sections;
+      final narrationBreak = item.type == 'hadith'
+          ? item.text.indexOf('يقول:')
+          : -1;
+      final narration = narrationBreak < 0
+          ? null
+          : item.text.substring(0, narrationBreak + 5);
+      final mainText = narrationBreak < 0
+          ? item.text
+          : item.text.substring(narrationBreak + 5).trim();
       return ListView(
         padding: EdgeInsets.zero,
         key: PageStorageKey('religious-details-${item.id}'),
@@ -142,10 +151,17 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                       if (!quran && !name)
                         Row(
                           children: [
-                            const Icon(
-                              Icons.menu_book_outlined,
-                              color: rGold,
-                              size: 19,
+                            Container(
+                              padding: const EdgeInsets.all(7),
+                              decoration: BoxDecoration(
+                                color: ReligiousColors(context).subtle,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.menu_book_outlined,
+                                color: rGold,
+                                size: 20,
+                              ),
                             ),
                             const SizedBox(width: 7),
                             Text(
@@ -165,9 +181,21 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                           ],
                         ),
                       const SizedBox(height: 8),
+                      if ((!widget.hadithTabs || !_explanationOnly) &&
+                          narration != null)
+                        Text(
+                          narration,
+                          textAlign: TextAlign.right,
+                          style: rText(
+                            context,
+                            13,
+                            color: ReligiousColors(context).text,
+                            height: 1.7,
+                          ),
+                        ),
                       if (!widget.hadithTabs || !_explanationOnly)
                         SelectableText(
-                          item.text,
+                          mainText,
                           textAlign: name || quran
                               ? TextAlign.center
                               : TextAlign.right,
@@ -262,21 +290,22 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                             'مشاركة',
                             () => host.share(context, item),
                           ),
-                          _detailAction(
-                            context,
-                            Icons.play_arrow,
-                            'استماع',
-                            () => host.play(context, item),
-                            filled: true,
-                            enabled: host.controller.hasAudio(item),
-                          ),
+                          if (host.controller.hasAudio(item))
+                            _detailAction(
+                              context,
+                              Icons.play_arrow,
+                              'استماع',
+                              () => host.play(context, item),
+                              filled: true,
+                            ),
                         ],
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 8),
-                if (host.controller.activeItem == item.id)
+                if (host.controller.hasAudio(item) &&
+                    host.controller.activeItem == item.id)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: _ReligiousPlayer(host: host, compact: true),
@@ -341,18 +370,46 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                     in !widget.hadithTabs || _explanationOnly
                         ? sections
                         : <ReligiousSection>[])
-                  ReligiousSectionCard(
-                    title: section.title,
-                    text: section.text,
-                    source: section.source,
-                    icon: section.title.contains('وقت')
-                        ? Icons.schedule
-                        : section.title.contains('تطبيق')
-                        ? Icons.settings_outlined
-                        : section.title.contains('فوائد')
-                        ? Icons.spa_outlined
-                        : Icons.menu_book_outlined,
-                  ),
+                  if (section.title == 'الشرح المطول' ||
+                      section.title == 'التخريج')
+                    ReligiousCard(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: EdgeInsets.zero,
+                      child: ExpansionTile(
+                        title: Text(
+                          section.title,
+                          style: rText(context, 14, weight: FontWeight.w800),
+                        ),
+                        childrenPadding: const EdgeInsets.all(12),
+                        children: [
+                          SelectableText(
+                            section.text,
+                            style: rText(
+                              context,
+                              13,
+                              color: ReligiousColors(context).text,
+                            ),
+                          ),
+                          if (section.source != null)
+                            Text(section.source!, style: rText(context, 9)),
+                        ],
+                      ),
+                    )
+                  else
+                    ReligiousSectionCard(
+                      title: section.title,
+                      text: section.text,
+                      source: section.source?.startsWith('فوائد موجزة') == true
+                          ? null
+                          : section.source,
+                      icon: section.title.contains('وقت')
+                          ? Icons.schedule
+                          : section.title.contains('تطبيق')
+                          ? Icons.settings_outlined
+                          : section.title.contains('فوائد')
+                          ? Icons.spa_outlined
+                          : Icons.menu_book_outlined,
+                    ),
                 if (item.type == 'dua')
                   ReligiousSectionCard(title: 'المصدر', text: item.source),
                 if (name && item.related.isNotEmpty) ...[
@@ -436,11 +493,11 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
           icon: icon,
           label: label,
           onTap: enabled ? onTap : null,
-          size: 30,
+          size: 34,
           filled: filled,
         ),
       ),
-      Text(label, style: rText(context, 8)),
+      Text(label, style: rText(context, 10)),
     ],
   );
 }
@@ -540,7 +597,8 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                             ),
                           ],
                         ),
-                        if (host.controller.media.current == null)
+                        if (host.controller.hasAudio(item) &&
+                            host.controller.media.current == null)
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             child: FilledButton.icon(
@@ -558,7 +616,8 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  _ReligiousPlayer(host: host),
+                  if (host.controller.hasAudio(item))
+                    _ReligiousPlayer(host: host),
                   const SizedBox(height: 16),
                   Text(
                     'محتويات الرقية',
@@ -599,37 +658,35 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                               ],
                             ),
                           ),
-                          ReligiousRoundButton(
-                            icon: Icons.play_arrow,
-                            label: 'تشغيل ${part.title}',
-                            onTap: host.controller.hasAudio(part)
-                                ? () => host.play(context, part)
-                                : null,
-                            filled: true,
-                            size: 28,
-                          ),
+                          if (host.controller.hasAudio(part))
+                            ReligiousRoundButton(
+                              icon: Icons.play_arrow,
+                              label: 'تشغيل ${part.title}',
+                              onTap: () => host.play(context, part),
+                              filled: true,
+                              size: 28,
+                            ),
                           const Icon(Icons.expand_more, color: rTeal, size: 18),
                         ],
                       ),
                     ),
                   const SizedBox(height: 12),
-                  FilledButton.icon(
-                    style: FilledButton.styleFrom(backgroundColor: rTeal),
-                    onPressed: !host.controller.hasAudio(item)
-                        ? null
-                        : () async {
-                            await host.controller.download(item);
-                            if (context.mounted) {
-                              host.message(
-                                context,
-                                host.controller.error ??
-                                    'أضيفت الملفات إلى قائمة التنزيل',
-                              );
-                            }
-                          },
-                    icon: const Icon(Icons.download_outlined),
-                    label: const Text('تحميل الرقية كاملة'),
-                  ),
+                  if (host.controller.hasAudio(item))
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(backgroundColor: rTeal),
+                      onPressed: () async {
+                        await host.controller.download(item);
+                        if (context.mounted) {
+                          host.message(
+                            context,
+                            host.controller.error ??
+                                'أضيفت الملفات إلى قائمة التنزيل',
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.download_outlined),
+                      label: const Text('تحميل الرقية كاملة'),
+                    ),
                   OutlinedButton.icon(
                     onPressed:
                         host.controller.hasAudio(item) ||

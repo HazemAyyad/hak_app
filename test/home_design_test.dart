@@ -55,6 +55,45 @@ void main() {
     quran.dispose();
   });
 
+  testWidgets(
+    'Friday card keeps content and action visible at reduced text scale',
+    (tester) async {
+      var taps = 0;
+      for (final font in [AppFont.cairo, AppFont.tajawal]) {
+        await appearance.setFont(font);
+        await tester.pumpWidget(
+          AppearanceScope(
+            controller: appearance,
+            child: MaterialApp(
+              theme: ThemeData(fontFamily: font.family),
+              home: MediaQuery(
+                data: const MediaQueryData(
+                  size: Size(392.7, 800),
+                  textScaler: TextScaler.linear(.85),
+                ),
+                child: Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Scaffold(
+                    body: Center(
+                      child: SizedBox(
+                        width: 360.7,
+                        child: FridayCard(onTap: () => taps++),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(tester.takeException(), isNull, reason: font.id);
+        await tester.tap(find.text('عرض المحتوى'));
+      }
+      expect(taps, 2);
+    },
+  );
+
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('home reference preview ${mode.name}', (tester) async {
       tester.view.physicalSize = const Size(412, 1900);

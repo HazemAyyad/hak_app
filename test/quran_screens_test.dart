@@ -15,6 +15,7 @@ import 'package:haq_app/features/quran/data/quran_downloads.dart';
 import 'package:haq_app/features/quran/data/quran_page_downloads.dart';
 import 'package:haq_app/features/quran/data/quran_audio_models.dart';
 import 'package:haq_app/features/quran/presentation/quran_host.dart';
+import 'package:haq_app/features/quran/presentation/quran_audio_pages.dart';
 import 'package:haq_app/features/quran/presentation/quran_download_pages.dart';
 import 'package:haq_app/features/quran/presentation/quran_tafsir.dart';
 import 'package:haq_app/features/quran/presentation/quran_home_sections.dart';
@@ -312,6 +313,59 @@ void main() {
       await capture(tester, 'tafsir');
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
+    },
+  );
+
+  testWidgets(
+    'reciter spotlight cards fit actual font metrics at small and large text scales',
+    (tester) async {
+      tester.view.physicalSize = const Size(320, 800);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await controller.audio.initialize();
+      for (final font in [AppFont.cairo, AppFont.tajawal, AppFont.system]) {
+        await appearance.setFont(font);
+        for (final scale in [.85, 1.0, 1.2]) {
+          await appearance.setFontScale(scale);
+          await tester.pumpWidget(
+            RepaintBoundary(
+              key: boundary,
+              child: AppearanceScope(
+                controller: appearance,
+                child: MaterialApp(
+                  theme: ThemeData(fontFamily: font.family),
+                  home: MediaQuery(
+                    data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Scaffold(
+                        body: QuranAudioPage(controller: controller),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          final cards = find.byKey(const ValueKey('quran-reciter-spotlight'));
+          expect(cards, findsOneWidget);
+          await tester.ensureVisible(cards);
+          if (font == AppFont.cairo && scale == .85) {
+            await capture(tester, 'reciter-cards-small-text');
+          }
+          await tester.drag(cards, const Offset(250, 0));
+          await tester.pumpAndSettle();
+          expect(
+            tester.takeException(),
+            isNull,
+            reason: '${font.name} at $scale',
+          );
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pumpAndSettle();
+        }
+      }
     },
   );
   testWidgets(

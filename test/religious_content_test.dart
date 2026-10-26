@@ -261,6 +261,108 @@ void main() {
       restored.dispose();
     },
   );
+  testWidgets('playback controls appear only for content with recordings', (
+    tester,
+  ) async {
+    await pump(tester);
+    for (final id in [
+      'hisn-002',
+      'nawawi-01',
+      'name-01',
+      'sunnah-hands',
+      'hisn-001',
+      'qdua-goodness',
+      'ruqya-kursi',
+    ]) {
+      final item = catalog.byId[id]!;
+      final playable = [
+        'hisn-001',
+        'qdua-goodness',
+        'ruqya-kursi',
+      ].contains(id);
+      expect(controller.hasAudio(item), playable, reason: id);
+      hostKey.currentState!.openItem(item);
+      await tester.pumpAndSettle();
+      expect(
+        find.byTooltip('استماع'),
+        playable ? findsOneWidget : findsNothing,
+        reason: id,
+      );
+      expect(
+        find.byIcon(Icons.play_arrow),
+        playable ? findsOneWidget : findsNothing,
+        reason: id,
+      );
+      hostKey.currentState!.back();
+      await tester.pumpAndSettle();
+    }
+    final silent = ReligiousItem({
+      'id': 'silent-list',
+      'type': 'playlist',
+      'title': 'قائمة بلا صوت',
+      'text': 'قراءة فقط',
+      'source': 'مصدر',
+      'sourceUrl': 'https://example.com',
+      'categories': ['ruqya'],
+      'related': ['nawawi-01'],
+    });
+    expect(controller.hasAudio(silent), isFalse);
+    expect(controller.hasAudio(catalog.byId['ruqya-complete']!), isTrue);
+    hostKey.currentState!.openItem(silent);
+    await tester.pumpAndSettle();
+    expect(find.byIcon(Icons.play_arrow), findsNothing);
+    expect(find.text('تحميل الرقية كاملة'), findsNothing);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets(
+    'copy actions omit source metadata for every content type',
+    (tester) async {
+      String? clipboardText;
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        (call) async {
+          if (call.method == 'Clipboard.setData') {
+            clipboardText = (call.arguments as Map)['text'] as String;
+          }
+          return null;
+        },
+      );
+      addTearDown(
+        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform,
+          null,
+        ),
+      );
+      await pump(tester);
+      for (final id in [
+        'qdua-goodness',
+        'hisn-001',
+        'nawawi-02',
+        'name-01',
+        'sunnah-hands',
+      ]) {
+        final item = catalog.byId[id]!;
+        hostKey.currentState!.openItem(item);
+        await tester.pumpAndSettle();
+        final button = find.byTooltip('نسخ');
+        await Scrollable.ensureVisible(tester.element(button), alignment: .3);
+        await tester.pumpAndSettle();
+        await tester.tap(button);
+        await tester.pumpAndSettle();
+        expect(clipboardText, item.copyText);
+        expect(clipboardText, isNot(contains(item.sourceUrl)));
+        expect(clipboardText, isNot(contains(item.source)));
+        if (item.type == 'hadith') {
+          expect(clipboardText, isNot(contains('(رواه')));
+        }
+        hostKey.currentState!.back();
+        await tester.pumpAndSettle();
+      }
+      await tester.pumpWidget(const SizedBox());
+    },
+    timeout: const Timeout(Duration(seconds: 45)),
+  );
   testWidgets(
     'disposing while local catalog is loading leaves no background timer',
     (tester) async {
