@@ -18,13 +18,13 @@ Flutter في المجلد الأساسي `F:\flutter_projects\haq_app` على `m
 
 ## الربط والباك
 
-الافتراضي `https://hak.duosparktech.com/api`. يمكن تغييره بالبناء:
+الافتراضي `https://hak.dr-bike.shop/api`. يمكن تغييره بالبناء:
 
 ```powershell
-flutter run --dart-define=HAQ_API_BASE_URL=https://hak.duosparktech.com/api
+flutter run --dart-define=HAQ_API_BASE_URL=https://hak.dr-bike.shop/api
 ```
 
-فحص `/api/v1/quran/manifest` على هذا الدومين رجع `404` بتاريخ 13 أكتوبر 2026. لذلك الحساب والمزامنة يتطلبان نشر تغييرات Laravel وتشغيل migration القرآن. المحتوى العام يستخدم المصادر الرسمية كبديل عند عدم إتاحة وسيط الباك، ويظل النص المحلي متاحًا.
+فحص `/api/v1/quran/manifest` على الدومين السابق `hak.duosparktech.com` رجع `404` بتاريخ 13 أكتوبر 2026؛ هذه نتيجة تاريخية ولا تثبت حالة الدومين الجديد. الحساب والمزامنة يتطلبان نشر تغييرات Laravel وتشغيل migration القرآن. المحتوى العام يستخدم المصادر الرسمية كبديل عند عدم إتاحة وسيط الباك، ويظل النص المحلي متاحًا.
 
 تفاصيل النشر والجداول والعقود في `F:\laragon\www\haq-foundation\resources\quran\README.md`. لم تُشغّل migration على قاعدة الجمعية ولم تُرفع تغييرات الباك من هذه المحادثة. اختبارات المزامنة تنشئ الجداول المحددة فقط في SQLite `:memory:` ثم تُغلقها.
 
