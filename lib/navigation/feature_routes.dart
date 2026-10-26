@@ -8,8 +8,8 @@ enum AppFeature {
     Icons.front_hand_outlined,
     ready: true,
   ),
-  duaTogether('ادعُ معي', Icons.people_alt_outlined),
-  circles('حلقات الذكر', Icons.auto_awesome_outlined),
+  duaTogether('ادعُ معي', Icons.people_alt_outlined, ready: true),
+  circles('حلقات الذكر', Icons.auto_awesome_outlined, ready: true),
   settings('الإعدادات', Icons.settings_outlined, ready: true),
   tasbih(
     'المسبحة الإلكترونية',
@@ -140,6 +140,8 @@ enum AppFeature {
     ready: true,
   ),
   mosques('أقرب المساجد', Icons.mosque_outlined, ready: true),
+  messages('رسائل حق', Icons.mail_outline, ready: true),
+  stories('قصص حق', Icons.auto_stories_outlined, ready: true),
   ourApps('تطبيقاتنا', Icons.account_balance_outlined);
 
   const AppFeature(

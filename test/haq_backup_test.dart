@@ -83,6 +83,39 @@ void main() {
     await store.close();
   });
   test(
+    'community local preferences roundtrip without server receipts or pending submissions',
+    () async {
+      final state = {
+        'saved': [7, 9],
+        'hidden': [2],
+        'hiddenThrough': 3,
+        'readThrough': 8,
+        'sound': true,
+      };
+      await prefs.setString('community.local.v1.guest', jsonEncode(state));
+      await prefs.setString(
+        'community.pending.v1.guest',
+        'private-pending-receipt',
+      );
+      final archive = HaqBackupArchive.decode(
+        (await backup.capture()).encode(),
+      );
+      backup.validate(archive);
+      expect(
+        jsonDecode(archive.payload['settings']['community'] as String),
+        state,
+      );
+      expect(archive.encode(), isNot(contains('private-pending-receipt')));
+      await prefs.remove('community.local.v1.guest');
+      await backup.restore(archive, replace: true);
+      expect(jsonDecode(prefs.getString('community.local.v1.guest')!), state);
+      expect(
+        prefs.getString('community.pending.v1.guest'),
+        'private-pending-receipt',
+      );
+    },
+  );
+  test(
     'roundtrip includes typed data and settings without credentials, other accounts or downloaded bytes',
     () async {
       await prefs.setString(

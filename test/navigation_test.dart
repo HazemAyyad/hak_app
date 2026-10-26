@@ -251,7 +251,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(selected.last, feature);
       }
-      expect(selected.length, 30);
+      expect(selected.length, AppFeature.values.length);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     },
@@ -277,7 +277,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       await capture(tester, 'more-${mode.name}');
-      final planned = find.byKey(const ValueKey('feature-circles'));
+      final planned = find.byKey(const ValueKey('feature-ourApps'));
       await Scrollable.ensureVisible(tester.element(planned), alignment: .4);
       await tester.pumpAndSettle();
       await tester.tap(planned);

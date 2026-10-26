@@ -134,6 +134,22 @@ private final class HaqReminderCenter {
           }
         }
       case "pendingOpen": result(self.pendingRoute); self.pendingRoute = nil; self.dartReady = true
+      case "communityMessage":
+        guard let args = call.arguments as? [String: Any], let scope = args["scope"] as? String,
+              scope == self.plan["scope"] as? String, let id = args["id"] as? Int, id > 0 else { result(false); return }
+        let capturedGeneration = self.generation
+        self.center.getNotificationSettings { settings in
+          guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else { DispatchQueue.main.async { result(false) }; return }
+          DispatchQueue.main.async {
+          guard self.generation == capturedGeneration, scope == self.plan["scope"] as? String else { result(false); return }
+          let content = UNMutableNotificationContent()
+          content.title = "رسائل حق"; content.body = "وصل محتوى جديد إلى رسائل حق"
+          if args["sound"] as? Bool == true { content.sound = .default }
+          content.userInfo = ["route": "messages", "scope": scope]
+          let request = UNNotificationRequest(identifier: "haq-reminder:community", content: content, trigger: nil)
+          self.center.add(request) { error in DispatchQueue.main.async { result(error == nil) } }
+          }
+        }
       case "requestPermission":
         self.center.requestAuthorization(options: [.alert, .sound, .badge]) { _, error in
           DispatchQueue.main.async {

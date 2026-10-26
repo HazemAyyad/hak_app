@@ -22,6 +22,8 @@ import 'features/prayer/data/prayer_controller.dart';
 import 'features/prayer/data/prayer_models.dart';
 import 'features/prayer/presentation/prayer_page.dart';
 import 'features/account/presentation/account_hub.dart';
+import 'features/community/data/community_controller.dart';
+import 'features/community/presentation/community_page.dart';
 import 'startup/startup_flow.dart';
 
 import 'navigation/app_section.dart';
@@ -296,6 +298,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void _openReminder(String route) {
     if (!mounted) return;
     switch (route) {
+      case 'messages':
+        _openFeature(AppFeature.messages);
       case 'prayer':
         _openPrayer();
       case 'quran':
@@ -437,6 +441,24 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   void _openFeature(AppFeature feature) {
     switch (feature) {
+      case AppFeature.circles:
+      case AppFeature.duaTogether:
+      case AppFeature.messages:
+      case AppFeature.stories:
+        Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            settings: RouteSettings(name: feature.routeName),
+            builder: (_) => CommunityPage(
+              religious: _religious,
+              section: switch (feature) {
+                AppFeature.circles => CommunitySection.circles,
+                AppFeature.duaTogether => CommunitySection.prayers,
+                AppFeature.messages => CommunitySection.messages,
+                _ => CommunitySection.stories,
+              },
+            ),
+          ),
+        );
       case AppFeature.sakinah:
         Navigator.of(context).push(
           MaterialPageRoute<void>(

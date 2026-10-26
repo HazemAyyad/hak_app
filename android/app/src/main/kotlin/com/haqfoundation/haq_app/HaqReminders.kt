@@ -162,6 +162,18 @@ object HaqReminders {
         if (Build.VERSION.SDK_INT < 26 && p.optBoolean("sound", true)) builder.setDefaults(Notification.DEFAULT_SOUND)
         c.getSystemService(NotificationManager::class.java).notify("$ROOT:${job.getString("id")}", 0, builder.build())
     }
+    fun communityMessage(c: Context, scope: String, id: Int, sound: Boolean): Boolean {
+        if (!allowed(c) || plan(c).optString("scope") != scope) return false
+        channels(c)
+        val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(c,
+            if (sound) "haq_reminders_sound" else "haq_reminders_silent") else Notification.Builder(c)
+        builder.setSmallIcon(R.drawable.ic_haq_reminder).setContentTitle("رسائل حق")
+            .setContentText("وصل محتوى جديد إلى رسائل حق").setAutoCancel(true)
+            .setVisibility(Notification.VISIBILITY_PRIVATE).setContentIntent(open(c, "messages", scope))
+        if (Build.VERSION.SDK_INT < 26 && sound) builder.setDefaults(Notification.DEFAULT_SOUND)
+        c.getSystemService(NotificationManager::class.java).notify("$ROOT:community", 0, builder.build())
+        return true
+    }
     fun receive(c: Context, event: Intent) {
         if (event.action in listOf(Intent.ACTION_BOOT_COMPLETED, Intent.ACTION_MY_PACKAGE_REPLACED,
                 Intent.ACTION_TIME_CHANGED, Intent.ACTION_TIMEZONE_CHANGED)) {
@@ -335,6 +347,12 @@ class HaqRemindersBridge(private val activity: MainActivity, private val channel
                     "scope" -> { HaqReminders.changeScope(activity, call.arguments as String); result.success(null) }
                     "replace" -> { HaqReminders.replace(activity, JSONObject(call.arguments as Map<*, *>)); result.success(null) }
                     "status" -> result.success(HaqReminders.status(activity))
+                    "communityMessage" -> {
+                        val scope = call.argument<String>("scope") ?: error("Missing scope")
+                        val id = call.argument<Int>("id") ?: error("Missing ID")
+                        require(id > 0)
+                        result.success(HaqReminders.communityMessage(activity, scope, id, call.argument<Boolean>("sound") == true))
+                    }
                     "pendingOpen" -> { result.success(pendingRoute); pendingRoute = null }
                     "requestPermission" -> {
                         if (Build.VERSION.SDK_INT >= 33) activity.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), HaqReminders.NOTIFICATION_PERMISSION)

@@ -138,6 +138,7 @@ class HaqBackup {
     'prayer': 'prayer.config.v1.$scope',
     'adhkar': 'adhkar.display.v1.$scope',
     'sakinah': 'sakinah.settings.$scope',
+    'community': 'community.local.v1.$scope',
     for (final name in ['haptic', 'auto', 'countSound', 'goalSound'])
       'tasbih.$name': 'tasbih.settings.v1.$scope.$name',
   };
@@ -286,7 +287,32 @@ class HaqBackup {
         throw const FormatException('إعداد غير صالح');
       }
       final v = Map<String, dynamic>.from(jsonDecode(e.value as String) as Map);
-      if (e.key == 'app') {
+      if (e.key == 'community') {
+        if (v.keys.any(
+              (k) => !{
+                'saved',
+                'hidden',
+                'hiddenThrough',
+                'readThrough',
+                'sound',
+              }.contains(k),
+            ) ||
+            v['sound'] is! bool ||
+            v['hiddenThrough'] is! int ||
+            (v['hiddenThrough'] as int) < 0 ||
+            v['readThrough'] is! int ||
+            (v['readThrough'] as int) < 0) {
+          throw const FormatException('إعدادات الرسائل غير صالحة');
+        }
+        for (final key in ['saved', 'hidden']) {
+          final ids = List<int>.from(v[key] as List);
+          if (ids.length > 10000 ||
+              ids.any((id) => id <= 0) ||
+              ids.toSet().length != ids.length) {
+            throw const FormatException('معرّفات رسائل غير صالحة');
+          }
+        }
+      } else if (e.key == 'app') {
         for (final setting in v.entries) {
           AppSettings.validate(
             setting.key,
