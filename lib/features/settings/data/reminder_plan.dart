@@ -12,10 +12,11 @@ class ReminderJob {
     this.start,
     this.end,
     this.interval,
+    this.at,
   });
   final String id, title, body, route;
   final int minute;
-  final int? weekday, interval;
+  final int? weekday, interval, at;
   final String? start, end;
   Map<String, Object> toJson() => {
     'id': id,
@@ -27,6 +28,7 @@ class ReminderJob {
     'interval': ?interval,
     'start': ?start,
     'end': ?end,
+    'at': ?at,
   };
 }
 

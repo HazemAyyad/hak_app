@@ -54,7 +54,7 @@ enum AppFeature {
     subtitle: 'تلاوة واستماع وتفسير',
     image: 'quran',
   ),
-  qibla('بوصلة القبلة', Icons.explore_outlined),
+  qibla('بوصلة القبلة', Icons.explore_outlined, ready: true),
   habits('متعقب العادة', Icons.fact_check_outlined, ready: true),
   ruqya(
     'الرقية الشرعية',
@@ -139,7 +139,7 @@ enum AppFeature {
     category: 'hadith',
     ready: true,
   ),
-  mosques('أقرب المساجد', Icons.mosque_outlined),
+  mosques('أقرب المساجد', Icons.mosque_outlined, ready: true),
   ourApps('تطبيقاتنا', Icons.account_balance_outlined);
 
   const AppFeature(

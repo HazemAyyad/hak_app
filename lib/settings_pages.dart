@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app_appearance.dart';
 import 'features/settings/data/app_settings.dart';
 import 'features/settings/data/reminder_controller.dart';
+import 'features/prayer/data/prayer_models.dart';
 
 part 'settings_reminders.dart';
 
@@ -19,12 +20,14 @@ class SettingsPage extends StatelessWidget {
   const SettingsPage({
     super.key,
     this.onQuranSettings,
+    this.onPrayerSettings,
     this.onQuranAccount,
     this.onQuranDownloads,
     this.reminders,
     this.loadReminders,
   });
   final VoidCallback? onQuranSettings;
+  final VoidCallback? onPrayerSettings;
   final VoidCallback? onQuranAccount, onQuranDownloads;
   final ReminderController? reminders;
   final Future<ReminderController?> Function()? loadReminders;
@@ -62,6 +65,8 @@ class SettingsPage extends StatelessWidget {
     subtitle: kind.subtitle,
     onTap: kind == SettingKind.account && onQuranAccount != null
         ? onQuranAccount
+        : kind == SettingKind.prayer && onPrayerSettings != null
+        ? onPrayerSettings
         : kind == SettingKind.storage && onQuranDownloads != null
         ? onQuranDownloads
         : kind == SettingKind.quran && onQuranSettings != null
@@ -555,7 +560,13 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
             ),
             SizedBox(height: 18),
             Text(
-              'وفق تقويم الجهاز',
+              widget.reminders?.prayer?.hijriLabel ??
+                  prayerHijriDate(
+                    DateTime.now(),
+                    correction: _settings!.flag('correctHijri')
+                        ? _hijriOffset
+                        : 0,
+                  ),
               style: TextStyle(
                 fontSize: 27,
                 fontWeight: FontWeight.w900,
@@ -633,7 +644,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
       ),
       const _InfoBox(
         'الحفظ تلقائي',
-        'يُحفظ التصحيح بين -3 و+3 أيام فور تغييره. يُربط بعرض التقويم في مرحلة المواقيت.',
+        'يُحفظ التصحيح بين -3 و+3 أيام فور تغييره ويُطبق على عرض التقويم. تقويم أم القرى قد يختلف عن إعلان بداية الشهر محلياً؛ لا يغيّر حساب الصلاة أو تاريخ الجهاز.',
       ),
       _NoticeBox(
         'تنبيه',

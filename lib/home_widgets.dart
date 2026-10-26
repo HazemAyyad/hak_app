@@ -179,155 +179,186 @@ class _RoundButton extends StatelessWidget {
 }
 
 class PrayerCard extends StatelessWidget {
-  const PrayerCard({super.key});
+  const PrayerCard({super.key, this.controller, this.onTap});
+  final PrayerController? controller;
+  final VoidCallback? onTap;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: controller ?? const AlwaysStoppedAnimation(0),
+    builder: (context, _) => _content(context),
+  );
+  Widget _content(BuildContext context) {
     final palette = AppPalette.of(context);
-    const prayers = [
-      ('الفجر', '04:32', Icons.wb_sunny_outlined),
-      ('الظهر', '12:07', Icons.light_mode_outlined),
-      ('العصر', '15:34', Icons.wb_twilight),
-      ('المغرب', '18:21', Icons.wb_twilight),
-      ('العشاء', '19:45', Icons.dark_mode),
+    String time(PrayerName name) =>
+        controller?.today?.moments
+            .where((m) => m.name == name)
+            .firstOrNull
+            ?.label ??
+        '--:--';
+    final prayers = [
+      ('الفجر', time(PrayerName.fajr), Icons.wb_sunny_outlined),
+      ('الظهر', time(PrayerName.dhuhr), Icons.light_mode_outlined),
+      ('العصر', time(PrayerName.asr), Icons.wb_twilight),
+      ('المغرب', time(PrayerName.maghrib), Icons.wb_twilight),
+      ('العشاء', time(PrayerName.isha), Icons.dark_mode),
     ];
-    return _Surface(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 70,
-                height: 76,
-                decoration: BoxDecoration(
-                  color: palette.dark
-                      ? const Color(0xFF263F4B)
-                      : const Color(0xFFF1EEE7),
-                  shape: BoxShape.circle,
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: _Surface(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 70,
+                  height: 76,
+                  decoration: BoxDecoration(
+                    color: palette.dark
+                        ? const Color(0xFF263F4B)
+                        : const Color(0xFFF1EEE7),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.mosque,
+                    size: 48,
+                    color: palette.dark
+                        ? Colors.white
+                        : const Color(0xFF07535D),
+                  ),
                 ),
-                child: Icon(
-                  Icons.mosque,
-                  size: 48,
-                  color: palette.dark ? Colors.white : const Color(0xFF07535D),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'الصلاة القادمة',
+                        style: _homeText(context, 10, weight: FontWeight.w800),
+                      ),
+                      Text(
+                        controller?.upcoming?.name.label ?? 'حدد الموقع',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: _homeText(context, 18, weight: FontWeight.w800),
+                      ),
+                      Text(
+                        controller?.countdown ?? '--:--:--',
+                        textDirection: TextDirection.ltr,
+                        style: _homeText(
+                          context,
+                          20,
+                          weight: FontWeight.w700,
+                          color: _homeGold,
+                        ),
+                      ),
+                      Text(
+                        'ساعة   دقيقة   ثانية',
+                        style: _homeText(context, 8, color: palette.muted),
+                      ),
+                    ],
+                  ),
                 ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        controller?.hijriLabel ??
+                            prayerHijriDate(DateTime.now()),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: _homeText(context, 10, color: palette.muted),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            size: 13,
+                            color: palette.heading,
+                          ),
+                          const SizedBox(width: 4),
+                          Flexible(
+                            child: Text(
+                              controller?.config.location?.label ??
+                                  'الموقع غير محدد',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: _homeText(
+                                context,
+                                10,
+                                color: palette.muted,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: palette.dark
+                    ? const Color(0xFF142F3B)
+                    : const Color(0xFFF8F5ED),
+                borderRadius: BorderRadius.circular(15),
               ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'الصلاة القادمة',
-                      style: _homeText(context, 10, weight: FontWeight.w800),
-                    ),
-                    Text(
-                      'الظهر',
-                      style: _homeText(context, 18, weight: FontWeight.w800),
-                    ),
-                    Text(
-                      '02:35:42',
-                      textDirection: TextDirection.ltr,
-                      style: _homeText(
-                        context,
-                        20,
-                        weight: FontWeight.w700,
-                        color: _homeGold,
+              child: Row(
+                children: prayers.map((prayer) {
+                  final selected =
+                      prayer.$1 == controller?.upcoming?.name.label;
+                  final color = selected ? Colors.white : palette.heading;
+                  return Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: selected
+                          ? BoxDecoration(
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF008C96), Color(0xFF00616C)],
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            )
+                          : null,
+                      child: Column(
+                        children: [
+                          Icon(
+                            prayer.$3,
+                            size: 23,
+                            color: prayer.$1 == 'العشاء' ? color : _homeGold,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            prayer.$1,
+                            style: _homeText(context, 11, color: color),
+                          ),
+                          const SizedBox(height: 3),
+                          Text(
+                            prayer.$2,
+                            textDirection: TextDirection.ltr,
+                            style: _homeText(
+                              context,
+                              11,
+                              weight: FontWeight.w700,
+                              color: color,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      'ساعة   دقيقة   ثانية',
-                      style: _homeText(context, 8, color: palette.muted),
-                    ),
-                  ],
-                ),
+                  );
+                }).toList(),
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'السبت 28 صفر 1448 هـ',
-                      style: _homeText(context, 10, color: palette.muted),
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.location_on,
-                          size: 13,
-                          color: palette.heading,
-                        ),
-                        const SizedBox(width: 4),
-                        Flexible(
-                          child: Text(
-                            'نابلس، فلسطين',
-                            style: _homeText(context, 10, color: palette.muted),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Container(
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: palette.dark
-                  ? const Color(0xFF142F3B)
-                  : const Color(0xFFF8F5ED),
-              borderRadius: BorderRadius.circular(15),
             ),
-            child: Row(
-              children: prayers.map((prayer) {
-                final selected = prayer.$1 == 'الظهر';
-                final color = selected ? Colors.white : palette.heading;
-                return Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    decoration: selected
-                        ? BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF008C96), Color(0xFF00616C)],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          )
-                        : null,
-                    child: Column(
-                      children: [
-                        Icon(
-                          prayer.$3,
-                          size: 23,
-                          color: prayer.$1 == 'العشاء' ? color : _homeGold,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          prayer.$1,
-                          style: _homeText(context, 11, color: color),
-                        ),
-                        const SizedBox(height: 3),
-                        Text(
-                          prayer.$2,
-                          textDirection: TextDirection.ltr,
-                          style: _homeText(
-                            context,
-                            11,
-                            weight: FontWeight.w700,
-                            color: color,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

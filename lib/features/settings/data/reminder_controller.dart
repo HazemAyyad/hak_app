@@ -8,6 +8,7 @@ import '../../religious_activity/data/activity_controller.dart';
 import '../../religious_activity/data/activity_models.dart';
 import 'app_settings.dart';
 import 'reminder_plan.dart';
+import '../../prayer/data/prayer_controller.dart';
 
 class ReminderDeviceState {
   const ReminderDeviceState({
@@ -41,12 +42,14 @@ class ReminderController extends ChangeNotifier {
     this.catalog, {
     MethodChannel? channel,
     this.onOpen,
+    this.prayer,
   }) : channel =
            channel ??
            const MethodChannel('com.haqfoundation.haq_app/reminders') {
     settings = AppSettings(activity.quran.preferences!, activity.scope);
-    settings.addListener(_changed);
+    settings.addListener(_settingsChanged);
     activity.addListener(_activityChanged);
+    prayer?.scheduleChanged.addListener(_changed);
     this.channel.setMethodCallHandler((call) async {
       if (call.method == 'open' && call.arguments is String) {
         onOpen?.call(call.arguments as String);
@@ -57,6 +60,7 @@ class ReminderController extends ChangeNotifier {
   final AdhkarRepository catalog;
   final MethodChannel channel;
   final void Function(String)? onOpen;
+  final PrayerController? prayer;
   late AppSettings settings;
   ReminderDeviceState device = const ReminderDeviceState();
   String? error;
@@ -87,13 +91,18 @@ class ReminderController extends ChangeNotifier {
     );
   }
 
+  void _settingsChanged() {
+    prayer?.tick();
+    _changed();
+  }
+
   void _activityChanged() {
     if (_disposed) return;
     if (settings.scope != activity.scope) {
-      settings.removeListener(_changed);
+      settings.removeListener(_settingsChanged);
       settings.dispose();
       settings = AppSettings(activity.quran.preferences!, activity.scope)
-        ..addListener(_changed);
+        ..addListener(_settingsChanged);
       content = {};
       device = const ReminderDeviceState();
       _fingerprint = null;
@@ -134,11 +143,15 @@ class ReminderController extends ChangeNotifier {
             .where(content.containsKey)
             .map((id) => content[id]!)
             .toList();
-        final plan = reminderPlan(
-          config,
-          entities,
-          history,
-        ).where((j) => j.interval == null || selected.isNotEmpty).toList();
+        final plan = [
+          ...reminderPlan(
+            config,
+            entities,
+            history,
+          ).where((j) => j.interval == null || selected.isNotEmpty),
+          if (config.flag('enabled') && prayer?.scope == scope)
+            ...prayer!.reminderJobs(),
+        ];
         final payload = <String, Object>{
           'scope': scope,
           'jobs': plan.map((j) => j.toJson()).toList(),
@@ -217,7 +230,8 @@ class ReminderController extends ChangeNotifier {
     _disposed = true;
     _debounce?.cancel();
     activity.removeListener(_activityChanged);
-    settings.removeListener(_changed);
+    prayer?.scheduleChanged.removeListener(_changed);
+    settings.removeListener(_settingsChanged);
     settings.dispose();
     channel.setMethodCallHandler(null);
     super.dispose();

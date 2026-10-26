@@ -32,7 +32,7 @@ try {
     ) -join ';'
     New-Item -ItemType Directory -Force -Path build/p08-native-check | Out-Null
     # Only the generated Android resource ID is represented by a small stand-in.
-    # Both actual Kotlin source files compile against the cached Android/Flutter
+    # The actual Kotlin sources compile against the cached Android/Flutter
     # APIs. This does not validate packaged resources, Gradle, or phone behavior.
     [IO.File]::WriteAllText((Join-Path $taskRoot 'build/p08-native-check/ResourceIds.kt'),
         'package com.haqfoundation.haq_app; object R { object drawable { const val ic_haq_reminder = 1 } }')
@@ -41,6 +41,7 @@ try {
         build/p08-native-check/ResourceIds.kt `
         android/app/src/main/kotlin/com/haqfoundation/haq_app/MainActivity.kt `
         android/app/src/main/kotlin/com/haqfoundation/haq_app/HaqReminders.kt `
+        android/app/src/main/kotlin/com/haqfoundation/haq_app/HaqPrayerBridge.kt `
         test/native/HaqReminderScheduleChecks.kt
     if ($LASTEXITCODE -ne 0) { throw 'Native source check failed.' }
     $taskRuntime = (Join-Path $taskRoot 'build/p08-native-check/classes') + ';' + $taskTarget

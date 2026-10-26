@@ -17,6 +17,9 @@ import 'features/progress/data/progress_controller.dart';
 import 'features/sakinah/presentation/sakinah_page.dart';
 import 'features/adhkar/data/adhkar_repository.dart';
 import 'features/settings/data/reminder_controller.dart';
+import 'features/prayer/data/prayer_controller.dart';
+import 'features/prayer/data/prayer_models.dart';
+import 'features/prayer/presentation/prayer_page.dart';
 import 'startup/startup_flow.dart';
 
 import 'navigation/app_section.dart';
@@ -100,6 +103,7 @@ class _HaqAppState extends State<HaqApp> {
         builder: (context, _) => MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'حق',
+          navigatorObservers: [prayerRoutes],
           themeMode: appearance.effectiveMode,
           locale: Locale('ar'),
           theme: _theme(Brightness.light),
@@ -213,6 +217,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final _adhkarKey = GlobalKey<AdhkarSectionPageState>();
   late final ReligiousController _religious;
   ReminderController? _reminders;
+  PrayerController? _prayer;
   Future<ReminderController?>? _preparingReminders;
   bool _religiousOpen = false;
   String? _religiousInitialCategory;
@@ -247,6 +252,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Future<ReminderController?> _loadReminders() async {
     try {
       if (_quran.repository == null || _quran.preferences == null) return null;
+      _preparePrayer();
       final activity = await _religious.activity;
       final catalog =
           _religious.initialAdhkarCatalog ??
@@ -256,6 +262,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         activity,
         catalog,
         onOpen: _openReminder,
+        prayer: _prayer,
       );
       setState(() => _reminders = reminders);
       await reminders.initialize();
@@ -269,6 +276,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void _openReminder(String route) {
     if (!mounted) return;
     switch (route) {
+      case 'prayer':
+        _openPrayer();
       case 'quran':
         _openQuran();
       case 'khatma':
@@ -286,6 +295,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    _prayer?.setForeground(state == AppLifecycleState.resumed);
     if (state == AppLifecycleState.resumed) {
       unawaited(_reminders?.reconcile(force: true) ?? Future.value());
     }
@@ -295,6 +305,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _reminders?.dispose();
+    _prayer?.dispose();
     if (widget.religiousController == null) _religious.dispose();
     if (widget.quranController == null) _quran.dispose();
     super.dispose();
@@ -304,6 +315,32 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _section = section;
     _visited.add(section);
   });
+
+  void _preparePrayer() {
+    if (_prayer != null || _quran.preferences == null) return;
+    _prayer = PrayerController(
+      _quran.preferences!,
+      scopeOf: () => _quran.account.profile == null
+          ? 'guest'
+          : 'account.${_quran.account.profile!['id']}',
+      account: _quran.account,
+    );
+    if (mounted) setState(() {});
+  }
+
+  void _openPrayer({bool settings = false}) {
+    _preparePrayer();
+    final c = _prayer;
+    if (c == null) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => settings
+            ? PrayerSettingsPage(controller: c)
+            : PrayerPage(controller: c),
+      ),
+    );
+  }
 
   void _openQuran({bool resume = false}) {
     _selectSection(AppSection.quran);
@@ -392,12 +429,26 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         });
       case AppFeature.qibla:
         _selectSection(AppSection.qibla);
+      case AppFeature.mosques:
+        _preparePrayer();
+        if (_prayer != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (_) => MosquesPage(controller: _prayer!),
+            ),
+          );
+        }
       case AppFeature.settings:
         Navigator.of(context).push(
           MaterialPageRoute<void>(
             builder: (_) => SettingsPage(
               reminders: _reminders,
               loadReminders: _prepareReminders,
+              onPrayerSettings: () {
+                Navigator.of(context).pop();
+                _openPrayer(settings: true);
+              },
               onQuranSettings: () {
                 Navigator.of(context).pop();
                 _openQuranSettings();
@@ -462,7 +513,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
         sliver: SliverList(
           delegate: SliverChildListDelegate.fixed([
-            PrayerCard(),
+            PrayerCard(controller: _prayer, onTap: _openPrayer),
             SizedBox(height: 14),
             QuickServices(
               onDuasTap: () => _openReligious(),
@@ -548,10 +599,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     )
                   : const SizedBox.shrink(),
               _visited.contains(AppSection.qibla)
-                  ? const FeaturePreparationPage(
-                      feature: AppFeature.qibla,
-                      embedded: true,
-                    )
+                  ? _prayer != null
+                        ? QiblaPage(
+                            controller: _prayer!,
+                            active: _section == AppSection.qibla,
+                          )
+                        : const FeaturePreparationPage(
+                            feature: AppFeature.qibla,
+                            embedded: true,
+                          )
                   : const SizedBox.shrink(),
               !_visited.contains(AppSection.more)
                   ? const SizedBox.shrink()

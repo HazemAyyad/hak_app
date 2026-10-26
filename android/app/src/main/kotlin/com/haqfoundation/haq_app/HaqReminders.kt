@@ -84,7 +84,7 @@ object HaqReminders {
             .remove("index").remove("snoozes").commit())
     }
     fun replace(c: Context, next: JSONObject) {
-        require(next.getJSONArray("jobs").length() <= 200)
+        require(next.getJSONArray("jobs").length() <= 512)
         val old = plan(c)
         if (old.optString("signature").isNotEmpty() && old.optString("signature") == next.optString("signature")) {
             restore(c); return
@@ -98,6 +98,7 @@ object HaqReminders {
     }
     fun hasOverlay(p: JSONObject) = p.optString("type") == "overlay" && jobs(p).any { it.has("interval") }
     fun next(job: JSONObject, after: Long): Long? {
+        if (job.has("at")) return job.getLong("at").takeIf { it > after }
         if (job.has("interval")) return after + job.getInt("interval").coerceIn(1, 300) * 60000L
         val cal = Calendar.getInstance().apply {
             timeInMillis = after
@@ -170,6 +171,7 @@ object HaqReminders {
         val p = plan(c)
         if (event.getStringExtra("revision") != p.optString("revision")) return
         val job = jobs(p).find { it.getString("id") == event.getStringExtra("id") } ?: return
+        if (job.has("at") && System.currentTimeMillis() - job.getLong("at") > 7200000L) return
         val today = java.text.SimpleDateFormat("yyyy-MM-dd", Locale.US).format(java.util.Date())
         if (job.has("end") && today > job.getString("end")) return
         if (event.action == "snooze") {

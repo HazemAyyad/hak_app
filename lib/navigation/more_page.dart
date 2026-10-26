@@ -164,11 +164,13 @@ class DirectoryHeader extends StatelessWidget {
     required this.title,
     required this.subtitle,
     this.maxTitleLines,
+    this.onBack,
     this.imageAsset = 'assets/navigation/more_header.png',
   });
   final String title, subtitle;
   final String imageAsset;
   final int? maxTitleLines;
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +178,14 @@ class DirectoryHeader extends StatelessWidget {
     return SizedBox(
       height:
           218 +
+          (onBack == null
+              ? 0
+              : 60 +
+                    (MediaQuery.textScalerOf(context).scale(1) - 1).clamp(
+                          0,
+                          3,
+                        ) *
+                        180) +
           MediaQuery.paddingOf(context).top +
           (imageAsset == 'assets/navigation/more_header.png'
               ? 0
@@ -243,6 +253,20 @@ class DirectoryHeader extends StatelessWidget {
               ),
             ),
           ),
+          if (onBack != null)
+            Positioned(
+              left: 16,
+              top: MediaQuery.paddingOf(context).top + 18,
+              child: Material(
+                color: palette.surface,
+                shape: const CircleBorder(),
+                child: IconButton(
+                  onPressed: onBack,
+                  tooltip: 'رجوع',
+                  icon: Icon(Icons.arrow_back_ios_new, color: palette.heading),
+                ),
+              ),
+            ),
         ],
       ),
     );

@@ -2,10 +2,12 @@ import Flutter
 import UIKit
 import Photos
 import UserNotifications
+import CoreLocation
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
   private var haqReminders: HaqReminderCenter?
+  private var haqPrayer: HaqPrayerDevice?
   private var haqPendingResponse: UNNotificationResponse?
   override func application(
     _ application: UIApplication,
@@ -17,6 +19,9 @@ import UserNotifications
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "HaqPrayer") {
+      haqPrayer = HaqPrayerDevice(messenger: registrar.messenger())
+    }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "HaqReminders") {
       haqReminders = HaqReminderCenter(messenger: registrar.messenger())
       if let response = haqPendingResponse { haqReminders?.receive(response); haqPendingResponse = nil }
@@ -111,7 +116,7 @@ private final class HaqReminderCenter {
           self.clearPrivate { result(nil) }
         } else { result(nil) }
       case "replace":
-        guard let data = call.arguments as? [String: Any], let jobs = data["jobs"] as? [[String: Any]], jobs.count <= 200 else {
+        guard let data = call.arguments as? [String: Any], let jobs = data["jobs"] as? [[String: Any]], jobs.count <= 512 else {
           result(FlutterError(code: "reminders", message: "Invalid reminder plan", details: nil)); return
         }
         let unchanged = self.plan["signature"] as? String == data["signature"] as? String
@@ -184,7 +189,12 @@ private final class HaqReminderCenter {
       for job in jobs {
         guard let id = job["id"] as? String, let minute = job["minute"] as? Int else { continue }
         let c = self.content(job)
-        if let interval = job["interval"] as? Int {
+        if let at = job["at"] as? NSNumber {
+          let date = Date(timeIntervalSince1970: at.doubleValue / 1000)
+          guard date > now else { continue }
+          let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, date.timeIntervalSinceNow), repeats: false)
+          dated.append((date, UNNotificationRequest(identifier: self.prefix + id, content: c, trigger: trigger)))
+        } else if let interval = job["interval"] as? Int {
           // A single repeating iOS request uses the selected first text. It is
           // refreshed on opening the app; iOS cannot run arbitrary overlay/TTS.
           guard let text = (snapshot["smartItems"] as? [String])?.first else { continue }
@@ -243,5 +253,125 @@ private final class HaqReminderCenter {
       if dartReady { channel.invokeMethod("open", arguments: route) }
       else { pendingRoute = route }
     }
+  }
+}
+
+/// Foreground CoreLocation only. iOS trueHeading is used when available;
+/// magnetic-only readings are labelled and never presented as verified north.
+private final class HaqPrayerDevice: NSObject, CLLocationManagerDelegate, FlutterStreamHandler {
+  private let manager = CLLocationManager()
+  private let channel: FlutterMethodChannel
+  private let events: FlutterEventChannel
+  private var sink: FlutterEventSink?
+  private var pending: FlutterResult?
+  private var timeout: DispatchWorkItem?
+  private var requested = false
+  private var backgroundObserver: NSObjectProtocol?
+  init(messenger: FlutterBinaryMessenger) {
+    channel = FlutterMethodChannel(name: "com.haqfoundation.haq_app/prayer", binaryMessenger: messenger)
+    events = FlutterEventChannel(name: "com.haqfoundation.haq_app/heading", binaryMessenger: messenger)
+    super.init()
+    manager.delegate = self
+    manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+    manager.headingFilter = 1
+    events.setStreamHandler(self)
+    backgroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification,
+        object: nil, queue: .main) { [weak self] _ in self?.stopHeading() }
+    channel.setMethodCallHandler { [weak self] call, result in
+      guard let self = self else { result(nil); return }
+      switch call.method {
+      case "status":
+        let status = CLLocationManager.authorizationStatus()
+        result(["permission": status == .authorizedWhenInUse || status == .authorizedAlways,
+                "enabled": CLLocationManager.locationServicesEnabled(), "zone": TimeZone.current.identifier,
+                "heading": CLLocationManager.headingAvailable()])
+      case "requestLocation":
+        guard self.pending == nil else { result(FlutterError(code: "busy", message: "Location request pending", details: nil)); return }
+        self.pending = result; self.requested = false
+        let work = DispatchWorkItem { [weak self] in self?.fail("timeout", "No recent location available") }
+        self.timeout = work; DispatchQueue.main.asyncAfter(deadline: .now() + 30, execute: work)
+        if !CLLocationManager.locationServicesEnabled() { self.fail("disabled", "Location services disabled") }
+        else if CLLocationManager.authorizationStatus() == .notDetermined { self.manager.requestWhenInUseAuthorization() }
+        else { self.authorized() }
+      case "settings":
+        if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
+        result(nil)
+      case "openMap":
+        guard let raw = call.arguments as? String, let url = URL(string: raw), url.scheme == "https", url.host == "www.openstreetmap.org" else {
+          result(FlutterError(code: "map", message: "Invalid map URL", details: nil)); return
+        }
+        UIApplication.shared.open(url, options: [:]) { opened in
+          result(opened ? nil : FlutterError(code: "map", message: "No map handler", details: nil))
+        }
+      default: result(FlutterMethodNotImplemented)
+      }
+    }
+  }
+  private func authorized() {
+    guard pending != nil else { return }
+    let status = CLLocationManager.authorizationStatus()
+    if status == .denied || status == .restricted { fail("denied", "Location permission denied") }
+    else if (status == .authorizedWhenInUse || status == .authorizedAlways) && !requested {
+      requested = true; manager.requestLocation()
+    }
+  }
+  func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) { authorized() }
+  func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) { authorized() }
+  func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    guard let result = pending else { return }
+    guard let location = locations.last, location.horizontalAccuracy >= 0, location.horizontalAccuracy <= 5000,
+          abs(location.timestamp.timeIntervalSinceNow) <= 300 else { fail("stale", "No accurate recent location"); return }
+    pending = nil; timeout?.cancel(); timeout = nil
+    result(["lat": location.coordinate.latitude, "lng": location.coordinate.longitude,
+            "accuracy": location.horizontalAccuracy, "measured": Int64(location.timestamp.timeIntervalSince1970 * 1000),
+            "zone": TimeZone.current.identifier])
+  }
+  func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+    if pending != nil { fail((error as? CLError)?.code == .denied ? "denied" : "location", "Location unavailable") }
+  }
+  private func fail(_ code: String, _ message: String) {
+    let result = pending; pending = nil; timeout?.cancel(); timeout = nil
+    if sink == nil { manager.stopUpdatingLocation() }
+    result?(FlutterError(code: code, message: message, details: nil))
+  }
+  func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+    stopHeading()
+    guard CLLocationManager.headingAvailable() else { events(FlutterError(code: "sensor", message: "Heading sensor unavailable", details: nil)); return nil }
+    sink = events
+    _ = updateHeadingOrientation()
+    let status = CLLocationManager.authorizationStatus()
+    if status == .authorizedWhenInUse || status == .authorizedAlways { manager.startUpdatingLocation() }
+    manager.startUpdatingHeading()
+    return nil
+  }
+  func onCancel(withArguments arguments: Any?) -> FlutterError? { stopHeading(); return nil }
+  func stopHeading() {
+    sink = nil; manager.stopUpdatingHeading()
+    if pending == nil { manager.stopUpdatingLocation() }
+  }
+  func locationManager(_ manager: CLLocationManager, didUpdateHeading heading: CLHeading) {
+    guard let sink = sink else { return }
+    guard abs(heading.timestamp.timeIntervalSinceNow) < 5 else { return }
+    guard updateHeadingOrientation() else { return }
+    let quality = heading.headingAccuracy < 0 ? 0 : heading.headingAccuracy <= 15 ? 3 : heading.headingAccuracy <= 30 ? 2 : 1
+    sink(["degrees": heading.trueHeading >= 0 ? heading.trueHeading : heading.magneticHeading,
+          "accuracy": quality, "trueNorth": heading.trueHeading >= 0])
+  }
+  func locationManagerShouldDisplayHeadingCalibration(_ manager: CLLocationManager) -> Bool { true }
+  private func updateHeadingOrientation() -> Bool {
+    let orientation: CLDeviceOrientation
+    switch UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first(where: { $0.activationState == .foregroundActive })?.interfaceOrientation {
+      case .landscapeLeft: orientation = .landscapeLeft
+      case .landscapeRight: orientation = .landscapeRight
+      case .portraitUpsideDown: orientation = .portraitUpsideDown
+      default: orientation = .portrait
+    }
+    if manager.headingOrientation == orientation { return true }
+    manager.headingOrientation = orientation
+    return false
+  }
+  deinit {
+    if let observer = backgroundObserver { NotificationCenter.default.removeObserver(observer) }
+    timeout?.cancel(); manager.stopUpdatingHeading(); manager.stopUpdatingLocation()
   }
 }

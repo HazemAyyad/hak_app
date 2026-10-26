@@ -10,8 +10,10 @@ import android.app.Activity
 import android.view.KeyEvent
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.EventChannel
 
 class MainActivity : AudioServiceActivity() {
+    private var prayerDevice: HaqPrayerBridge? = null
     private var reminders: HaqRemindersBridge? = null
     private var adhkarControls: MethodChannel? = null
     private var countWithVolumeKeys = false
@@ -19,6 +21,8 @@ class MainActivity : AudioServiceActivity() {
     private var pendingImageResult: MethodChannel.Result? = null
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        prayerDevice = HaqPrayerBridge(this, MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.haqfoundation.haq_app/prayer"),
+            EventChannel(flutterEngine.dartExecutor.binaryMessenger, "com.haqfoundation.haq_app/heading"))
         reminders = HaqRemindersBridge(this, MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.haqfoundation.haq_app/reminders"))
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.haqfoundation.haq_app/image_export")
             .setMethodCallHandler { call, result ->
@@ -93,6 +97,7 @@ class MainActivity : AudioServiceActivity() {
     }
 
     override fun onPause() {
+        prayerDevice?.stopHeading()
         countWithVolumeKeys = false
         super.onPause()
     }
@@ -100,6 +105,15 @@ class MainActivity : AudioServiceActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         reminders?.capture(intent)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == HaqPrayerBridge.PERMISSION) prayerDevice?.permissionResult()
+    }
+    override fun onDestroy() {
+        prayerDevice?.dispose()
+        super.onDestroy()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

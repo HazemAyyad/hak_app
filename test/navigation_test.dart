@@ -148,7 +148,7 @@ void main() {
           expect(find.byType(AdhkarSectionPage), findsOneWidget);
         }
         if (section == AppSection.qibla) {
-          expect(find.text('قريبًا في حق'), findsOneWidget);
+          expect(find.text('الموقع غير متاح'), findsOneWidget);
           expect(find.byType(AdhkarSectionPage), findsNothing);
         }
         await tester.binding.handlePopRoute();

@@ -29,5 +29,9 @@ fun main() {
     val repeat = JSONObject().put("interval", 3)
     val now = instant(2026, 10, 26, 12, 0)
     check(HaqReminders.next(repeat, now) == now + 180000)
-    println("28 native scheduling checks passed (daily, Friday, expiry, leap day, DST and repeat). No app built or run.")
+    val once = JSONObject().put("at", now + 1000)
+    check(HaqReminders.next(once, now) == now + 1000)
+    check(HaqReminders.next(once, now + 1000) == null)
+    check(HaqReminders.next(once, now + 60000) == null)
+    println("31 native scheduling checks passed (daily, Friday, expiry, leap day, DST, repeat and one-shot UTC). No app built or run.")
 }

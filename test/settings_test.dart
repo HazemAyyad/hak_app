@@ -15,6 +15,8 @@ import 'package:haq_app/features/religious_activity/data/activity_store.dart';
 import 'package:haq_app/features/settings/data/app_settings.dart';
 import 'package:haq_app/features/settings/data/reminder_controller.dart';
 import 'package:haq_app/features/settings/data/reminder_plan.dart';
+import 'package:haq_app/features/prayer/data/prayer_controller.dart';
+import 'package:haq_app/features/prayer/data/prayer_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -372,6 +374,66 @@ void main() {
         expect(latest['smartItems'], isEmpty);
         expect(latest['jobs'], isEmpty);
         expect(c.content.containsKey(personal.id), false);
+      },
+    );
+    test(
+      'prayer UTC jobs require general enable and disappear when the location is cleared',
+      () async {
+        c.dispose();
+        final prayer = PrayerController(
+          prefs,
+          scopeOf: () => activity.scope,
+          account: quran.account,
+          autoTick: false,
+          clock: () => DateTime.utc(2026, 10, 26, 10),
+        );
+        addTearDown(prayer.dispose);
+        final catalog = AdhkarRepository.fromJson(
+          jsonDecode(File('assets/religious/adhkar.json').readAsStringSync())
+              as Map<String, dynamic>,
+          quran.repository!,
+        );
+        c = ReminderController(
+          activity,
+          catalog,
+          channel: channel,
+          prayer: prayer,
+        );
+        await c.initialize();
+        await prayer.save(
+          PrayerConfig(
+            location: PrayerLocation(
+              latitude: 31.53,
+              longitude: 35.1,
+              zone: 'Asia/Hebron',
+              label: 'اختبار',
+            ),
+            notifications: true,
+            beforeMinutes: 10,
+            afterMinutes: 5,
+          ),
+        );
+        await c.reconcile();
+        expect(
+          (calls.lastWhere((e) => e.method == 'replace').arguments
+              as Map)['jobs'],
+          isEmpty,
+        );
+        await c.settings.set('enabled', true);
+        await c.reconcile();
+        final jobs =
+            (calls.lastWhere((e) => e.method == 'replace').arguments
+                    as Map)['jobs']
+                as List;
+        expect(jobs.length, 210);
+        expect(jobs.every((e) => (e as Map)['at'] is int), true);
+        await prayer.save(prayer.config.copyWith(clearLocation: true));
+        await c.reconcile();
+        expect(
+          (calls.lastWhere((e) => e.method == 'replace').arguments
+              as Map)['jobs'],
+          isEmpty,
+        );
       },
     );
     test(
