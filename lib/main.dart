@@ -20,6 +20,7 @@ import 'features/settings/data/reminder_controller.dart';
 import 'features/prayer/data/prayer_controller.dart';
 import 'features/prayer/data/prayer_models.dart';
 import 'features/prayer/presentation/prayer_page.dart';
+import 'features/account/presentation/account_hub.dart';
 import 'startup/startup_flow.dart';
 
 import 'navigation/app_section.dart';
@@ -379,6 +380,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
+  Widget _accountHub() => AccountHubPage(
+    controller: _religious,
+    beforeBackup: () async {
+      await _reminders?.settings.flush();
+      await _prayer?.flush();
+    },
+    onRestored: () async {
+      await _reminders?.reloadBackup();
+    },
+  );
+
   void _openQuranDownloads() {
     _openQuran();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -580,6 +592,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 child: QuranHost(
                   key: _quranKey,
                   controller: _quran,
+                  accountBuilder: _accountHub,
                   active: _section == AppSection.quran,
                   onExit: () => _selectSection(AppSection.home),
                   onFullscreenChanged: (value) {

@@ -17,23 +17,29 @@ class ActivityAccountSession {
 /// Captures the account and token for every exchange. Late responses from a
 /// previous login cannot mutate the newly selected account's local records.
 class ReligiousActivitySync {
-  ReligiousActivitySync({required this.store, required this.session, Dio? dio})
-    : dio =
-          dio ??
-          Dio(
-            BaseOptions(
-              baseUrl: '$haqApiBase/v1/religious',
-              connectTimeout: const Duration(seconds: 12),
-              receiveTimeout: const Duration(seconds: 20),
-            ),
-          );
+  ReligiousActivitySync({
+    required this.store,
+    required this.session,
+    this.onUnauthorized,
+    Dio? dio,
+  }) : dio =
+           dio ??
+           Dio(
+             BaseOptions(
+               baseUrl: '$haqApiBase/v1/religious',
+               connectTimeout: const Duration(seconds: 12),
+               receiveTimeout: const Duration(seconds: 20),
+             ),
+           );
   final ReligiousActivityStore store;
   final ActivityAccountSession? Function() session;
   final Dio dio;
+  final Future<void> Function(ActivityAccountSession)? onUnauthorized;
   final _running = <String, Future<bool>>{};
   final errors = <String, String>{};
   final lastSync = <String, DateTime>{};
   bool disposed = false;
+  Future<void> settle() async => Future.wait(_running.values.toList());
 
   bool _current(ActivityAccountSession captured) {
     final now = session();
@@ -147,7 +153,12 @@ class ReligiousActivitySync {
       errors.remove(scope);
       lastSync[scope] = DateTime.now();
       return true;
-    } catch (_) {
+    } catch (e) {
+      if (_current(captured) &&
+          e is DioException &&
+          e.response?.statusCode == 401) {
+        await onUnauthorized?.call(captured);
+      }
       if (_current(captured)) {
         errors[scope] =
             'التغييرات محفوظة على الجهاز؛ تعذّرت المزامنة وستُعاد المحاولة';

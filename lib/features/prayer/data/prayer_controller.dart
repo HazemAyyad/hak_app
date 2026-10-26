@@ -71,6 +71,13 @@ class PrayerController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void reloadBackup() {
+    ++_revision;
+    locating = false;
+    _restore();
+    notifyListeners();
+  }
+
   void _calculate() {
     _manageClock();
     today = null;

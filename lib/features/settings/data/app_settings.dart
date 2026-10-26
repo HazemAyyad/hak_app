@@ -110,7 +110,7 @@ class AppSettings extends ChangeNotifier {
     return job;
   }
 
-  void _validate(String key, Object value) {
+  static void validate(String key, Object value) {
     final valid = switches.contains(key)
         ? value is bool
         : key.endsWith('.time') && times.containsKey(key.split('.').first)
@@ -147,6 +147,8 @@ class AppSettings extends ChangeNotifier {
           };
     if (!valid) throw ArgumentError('Invalid setting: $key');
   }
+
+  void _validate(String key, Object value) => validate(key, value);
 
   Future<void> reset() {
     if (_disposed) return Future.value();

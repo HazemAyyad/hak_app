@@ -102,8 +102,19 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
   QuranSyncLedger ledger = QuranSyncLedger();
   String? token, error, lastSync;
   bool busy = false, syncing = false, _applying = false, _disposed = false;
+  bool maintenance = false, sessionExpired = false;
+  bool googleAvailable = false, recoveryAvailable = false;
   Timer? _timer, _retry;
   Future<void> _writes = Future.value();
+  Future<void> _credentialWrites = Future.value();
+  Future<void> _vault(Future<void> Function() write) {
+    final next = _credentialWrites
+        .catchError((Object _) {})
+        .then((_) => write());
+    _credentialWrites = next;
+    return next;
+  }
+
   Future<void>? _sync;
   String get stateKey => profile == null
       ? 'quran.state.v1'
@@ -118,8 +129,9 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
       token = await storage.read(key: 'quran.account.token');
       if (_disposed) return;
       final cached = controller.preferences!.getString('quran.account.profile');
-      if (token != null && cached != null) {
+      if (cached != null) {
         profile = Map<String, dynamic>.from(jsonDecode(cached) as Map);
+        sessionExpired = token == null;
         _loadLedger();
         controller.restoreState(
           jsonDecode(controller.preferences!.getString(stateKey) ?? '{}')
@@ -132,6 +144,53 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
     } catch (_) {
       error = 'تعذّر استعادة الحساب؛ يمكنك متابعة القراءة دون اتصال';
     }
+  }
+
+  Future<void> capabilities() async {
+    try {
+      final data =
+          (await dio.get<Map<String, dynamic>>(
+                '/religious/account/capabilities',
+              )).data!['data']
+              as Map;
+      googleAvailable = data['google'] == true;
+      recoveryAvailable = data['recovery'] == true;
+    } catch (_) {
+      googleAvailable = false;
+      recoveryAvailable = false;
+    }
+    _emit();
+  }
+
+  Future<void> expireSession() async {
+    if (profile == null) return;
+    final owner = profile!['id'];
+    token = null;
+    sessionExpired = true;
+    await _vault(() => storage.delete(key: 'quran.account.token'));
+    if (profile?['id'] != owner || token != null) return;
+    error = 'انتهت الجلسة. بياناتك محفوظة؛ ادخل بنفس الحساب لاستكمال المزامنة';
+    _emit();
+  }
+
+  Future<void> settle() async {
+    _timer?.cancel();
+    await _sync;
+    await _writes;
+  }
+
+  void reloadBackup() {
+    if (profile != null) {
+      _loadLedger();
+      _apply();
+    } else {
+      controller.restoreState(
+        jsonDecode(controller.preferences!.getString(stateKey) ?? '{}')
+            as Map<String, dynamic>,
+      );
+      controller.refreshReading();
+    }
+    _emit();
   }
 
   void _loadLedger() {
@@ -186,7 +245,7 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
     String? name,
     bool mergeGuest = true,
   }) async {
-    if (busy || profile != null) return;
+    if (busy || maintenance || (profile != null && !sessionExpired)) return;
     busy = true;
     error = null;
     _emit();
@@ -202,36 +261,7 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
                 },
               )).data!['data']
               as Map<String, dynamic>;
-      final newToken = data['token'] as String;
-      await storage.write(key: 'quran.account.token', value: newToken);
-      await controller.flushReading();
-      token = newToken;
-      profile = Map<String, dynamic>.from(data['account'] as Map);
-      await controller.preferences!.setBool(
-        'religious.activity.mergeGuest.${profile!['id']}',
-        mergeGuest,
-      );
-      await controller.preferences!.setString(
-        'quran.account.profile',
-        jsonEncode(profile),
-      );
-      _loadLedger();
-      _apply();
-      // Pull tombstones before the one-time, explicitly selected guest merge.
-      final pulled = await sync();
-      if (mergeGuest) {
-        if (pulled) {
-          ledger.mergeGuest(guest);
-          await _saveLedger();
-          _apply();
-          await sync();
-        } else {
-          await controller.preferences!.setString(
-            'quran.guest.merge.${profile!['id']}',
-            jsonEncode(guest),
-          );
-        }
-      }
+      await acceptSession(data, guest: guest, mergeGuest: mergeGuest);
     } catch (e) {
       error = _message(e);
     } finally {
@@ -240,7 +270,194 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
+  Future<void> acceptSession(
+    Map<String, dynamic> data, {
+    required Map<String, dynamic> guest,
+    required bool mergeGuest,
+  }) async {
+    final next = Map<String, dynamic>.from(data['account'] as Map);
+    if (profile != null && profile!['id'] != next['id']) {
+      throw StateError('Different account');
+    }
+    final resuming = profile != null;
+    await controller.flushReading();
+    final newToken = data['token'] as String;
+    await _vault(
+      () => storage.write(key: 'quran.account.token', value: newToken),
+    );
+    token = newToken;
+    profile = next;
+    sessionExpired = false;
+    await controller.preferences!.setString(
+      'quran.account.profile',
+      jsonEncode(profile),
+    );
+    if (!resuming) {
+      await controller.preferences!.setBool(
+        'religious.activity.mergeGuest.${profile!['id']}',
+        mergeGuest,
+      );
+      _loadLedger();
+      _apply();
+    }
+    final pulled = await sync();
+    if (!resuming && mergeGuest) {
+      if (pulled) {
+        ledger.mergeGuest(guest);
+        await _saveLedger();
+        _apply();
+        await sync();
+      } else {
+        await controller.preferences!.setString(
+          'quran.guest.merge.${profile!['id']}',
+          jsonEncode(guest),
+        );
+      }
+    }
+  }
+
+  Future<bool> google(
+    String idToken, {
+    String? username,
+    bool mergeGuest = true,
+    bool link = false,
+  }) async {
+    if (busy || maintenance) return false;
+    busy = true;
+    error = null;
+    _emit();
+    final captured = profile?['id'];
+    try {
+      final data =
+          (await dio.post<Map<String, dynamic>>(
+                '/religious/account/google${link ? '/link' : ''}',
+                data: {'id_token': idToken, 'username': ?username},
+                options: Options(
+                  headers: {if (link) 'Authorization': 'Bearer $token'},
+                ),
+              )).data!['data']
+              as Map<String, dynamic>;
+      if (_disposed || profile?['id'] != captured) return false;
+      if (link) {
+        profile = Map<String, dynamic>.from(data);
+        await controller.preferences!.setString(
+          'quran.account.profile',
+          jsonEncode(profile),
+        );
+      } else {
+        await acceptSession(data, guest: entities(), mergeGuest: mergeGuest);
+      }
+      return true;
+    } catch (e) {
+      error = _message(e);
+      return false;
+    } finally {
+      busy = false;
+      _emit();
+    }
+  }
+
+  Future<bool> updateProfile(String username, String name) async {
+    if (busy || maintenance || profile == null || token == null) return false;
+    busy = true;
+    error = null;
+    final owner = profile!['id'], credential = token;
+    _emit();
+    try {
+      final data =
+          (await dio.patch<Map<String, dynamic>>(
+                '/religious/account/profile',
+                data: {'username': username, 'name': name},
+                options: Options(
+                  headers: {'Authorization': 'Bearer $credential'},
+                ),
+              )).data!['data']
+              as Map;
+      if (_disposed || profile?['id'] != owner || token != credential) {
+        return false;
+      }
+      profile = Map<String, dynamic>.from(data);
+      await controller.preferences!.setString(
+        'quran.account.profile',
+        jsonEncode(profile),
+      );
+      return true;
+    } catch (e) {
+      error = _message(e);
+      return false;
+    } finally {
+      busy = false;
+      _emit();
+    }
+  }
+
+  Future<String?> recovery(
+    String email, {
+    String? code,
+    String? password,
+  }) async {
+    if (busy || maintenance) return null;
+    busy = true;
+    error = null;
+    _emit();
+    try {
+      final data =
+          (await dio.post<Map<String, dynamic>>(
+                '/religious/account/${code == null ? 'forgot-password' : 'reset-password'}',
+                data: {
+                  'email': email.trim(),
+                  if (code != null) ...{
+                    'token': code.trim(),
+                    'password': password,
+                    'password_confirmation': password,
+                  },
+                },
+              )).data!['data']
+              as Map;
+      return code == null
+          ? data['message'] as String
+          : 'تم تغيير كلمة المرور؛ ادخل مجددًا';
+    } catch (e) {
+      error = _message(e);
+      return null;
+    } finally {
+      busy = false;
+      _emit();
+    }
+  }
+
+  Future<bool> deleteAccount({String? password, String? googleToken}) async {
+    if (busy || maintenance || token == null || profile == null) return false;
+    busy = true;
+    error = null;
+    _emit();
+    try {
+      await settle();
+      await dio.delete(
+        '/religious/account',
+        data: {
+          'confirmation': 'DELETE',
+          'password': password,
+          'id_token': googleToken,
+        },
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+      // The local account cache is retained, isolated and inaccessible after logout.
+      await _leave();
+      return true;
+    } catch (e) {
+      error = _message(e);
+      return false;
+    } finally {
+      busy = false;
+      _emit();
+    }
+  }
+
   String _message(Object e) {
+    if (e is StateError) {
+      return 'ادخل بنفس الحساب الحالي، أو سجل الخروج أولًا لاختيار حساب آخر';
+    }
     if (e is DioException) {
       if (e.response?.statusCode == 404 || e.response?.statusCode == 503) {
         return 'خدمة الحساب غير متاحة على السيرفر حاليًا؛ يمكنك الاستمرار كضيف';
@@ -261,7 +478,9 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   Future<bool> sync() async {
-    if (profile == null || token == null || _disposed) return false;
+    if (profile == null || token == null || _disposed || maintenance) {
+      return false;
+    }
     if (_sync != null) {
       await _sync;
       return error == null;
@@ -287,10 +506,16 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
                     ),
                   )).data!['data']
                   as Map<String, dynamic>;
-          if (_disposed || profile?['id'] != ownerId || token != sessionToken) {
+          if (_disposed ||
+              maintenance ||
+              profile?['id'] != ownerId ||
+              token != sessionToken) {
             return;
           }
           ledger.accept(response, sent);
+          if (sent.isNotEmpty && (response['acknowledged'] as List).isEmpty) {
+            throw const FormatException('Sync made no progress');
+          }
           final guestKey = 'quran.guest.merge.${profile!['id']}';
           final guest = controller.preferences!.getString(guestKey);
           if (guest != null) {
@@ -307,7 +532,13 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
         lastSync = DateTime.now().toLocal().toIso8601String();
         success = true;
       } catch (e) {
-        error = _message(e);
+        if (profile?['id'] == ownerId && token == sessionToken) {
+          if (e is DioException && e.response?.statusCode == 401) {
+            await expireSession();
+          } else {
+            error = _message(e);
+          }
+        }
       } finally {
         syncing = false;
         _emit();
@@ -349,7 +580,7 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   Future<void> logout() async {
-    if (busy || profile == null) return;
+    if (busy || maintenance || profile == null) return;
     busy = true;
     _emit();
     if (_sync != null) await _sync;
@@ -362,19 +593,25 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
     } catch (_) {
       /* Local logout is available offline too. */
     }
-    await storage.delete(key: 'quran.account.token');
+    await _leave();
+    busy = false;
+    _emit();
+  }
+
+  Future<void> _leave() async {
+    await _vault(() => storage.delete(key: 'quran.account.token'));
     await controller.preferences!.remove('quran.account.profile');
     token = null;
     profile = null;
+    sessionExpired = false;
     ledger = QuranSyncLedger();
+    lastSync = null;
     error = null;
     controller.restoreState(
       jsonDecode(controller.preferences!.getString('quran.state.v1') ?? '{}')
           as Map<String, dynamic>,
     );
     controller.refreshReading();
-    busy = false;
-    _emit();
   }
 
   void _emit() {

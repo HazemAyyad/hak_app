@@ -16,7 +16,17 @@ class ReligiousActivityController extends ChangeNotifier {
     this.enableSync,
     this._ownsStore,
   ) {
-    syncClient = ReligiousActivitySync(store: store, session: _session);
+    syncClient = ReligiousActivitySync(
+      store: store,
+      session: _session,
+      onUnauthorized: (captured) async {
+        if (!_disposed &&
+            quran.account.profile?['id'].toString() == captured.owner &&
+            quran.account.token == captured.token) {
+          await quran.account.expireSession();
+        }
+      },
+    );
     quran.account.addListener(_accountChanged);
     if (enableSync) {
       _retry = Timer.periodic(
@@ -32,6 +42,7 @@ class ReligiousActivityController extends ChangeNotifier {
   late final ReligiousActivitySync syncClient;
   Timer? _retry, _debounce;
   bool _disposed = false;
+  bool maintenance = false;
   String get scope =>
       religiousActivityScope(quran.account.profile?['id'].toString());
   String? get syncError => syncClient.errors[scope];
@@ -59,6 +70,7 @@ class ReligiousActivityController extends ChangeNotifier {
   }
 
   ActivityAccountSession? _session() {
+    if (maintenance) return null;
     final id = quran.account.profile?['id'].toString(),
         token = quran.account.token;
     if (id == null || token == null) return null;
@@ -78,7 +90,7 @@ class ReligiousActivityController extends ChangeNotifier {
   }
 
   Future<void> sync() async {
-    if (!enableSync) return;
+    if (!enableSync || maintenance) return;
     await syncClient.sync();
     if (!_disposed) notifyListeners();
   }

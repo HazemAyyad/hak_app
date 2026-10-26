@@ -102,6 +102,39 @@ class ReligiousActivityStore {
       (await _meta(database, 'global', 'device_id'))!;
   Future<void> close() => database.close();
 
+  Future<bool> restoreCommitted(String scope, String id) async =>
+      await _meta(database, scope, 'restore.commit') == id;
+
+  /// SQLite rolls back every entity/event on any validation or preference error.
+  /// The caller keeps a durable preference undo journal for process termination.
+  Future<void> restoreBackup(
+    String scope,
+    Map<String, dynamic> personal,
+    List<ReligiousActivityEvent> events, {
+    required bool replace,
+    required String restoreId,
+    required Future<void> Function() writePreferences,
+  }) async {
+    _scope(scope);
+    for (final e in personal.entries) {
+      _entity(e.key, e.value);
+    }
+    await database.transaction((tx) async {
+      final ledger = await _ledger(tx, scope);
+      if (replace) {
+        ledger.record(personal);
+      } else {
+        ledger.mergeGuest(personal);
+      }
+      await _saveLedger(tx, scope, ledger);
+      for (final event in events) {
+        await _append(tx, scope, event);
+      }
+      await writePreferences();
+      await _setMeta(tx, scope, 'restore.commit', restoreId);
+    });
+  }
+
   Future<String?> _meta(
     sql.DatabaseExecutor tx,
     String scope,

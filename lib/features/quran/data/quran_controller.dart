@@ -10,6 +10,7 @@ import 'quran_audio.dart';
 import 'quran_sync.dart';
 import 'quran_downloads.dart';
 import 'quran_page_downloads.dart';
+import '../../account/data/restore_journal.dart';
 
 enum QuranReadingMode { continuous, ayah, pages }
 
@@ -72,6 +73,7 @@ class QuranController extends ChangeNotifier {
     try {
       final repo = initialRepository ?? await QuranRepository.load();
       final prefs = preferences ?? await SharedPreferences.getInstance();
+      await recoverHaqRestore(prefs);
       if (_disposed) return;
       repository = repo;
       content.attachRepository(repo);

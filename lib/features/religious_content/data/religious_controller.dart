@@ -72,6 +72,18 @@ class ReligiousController extends ChangeNotifier {
   QuranSyncLedger ledger = QuranSyncLedger();
   bool loading = true, refreshing = false, syncing = false;
   bool _disposed = false, _listening = false;
+  bool maintenance = false;
+  Future<void> settle() async {
+    _syncTimer?.cancel();
+    await _sync;
+    await _writes;
+  }
+
+  void reloadBackup() {
+    _restore();
+    _emit();
+  }
+
   String? error, updateError, syncError, _owner;
   Timer? _syncTimer, _progressTimer, _retryTimer;
   Future<void> _writes = Future.value();
@@ -213,7 +225,10 @@ class ReligiousController extends ChangeNotifier {
     _progressTimer?.cancel();
     activeItem = null;
     _restore();
-    if (owner != null && guest.isNotEmpty) {
+    if (owner != null &&
+        guest.isNotEmpty &&
+        quran.preferences!.getBool('religious.activity.mergeGuest.$owner') ==
+            true) {
       await quran.preferences!.setString(
         'religious.merge.$owner',
         jsonEncode(guest),
@@ -226,7 +241,12 @@ class ReligiousController extends ChangeNotifier {
   }
 
   Future<void> sync() async {
-    if (_owner == null || quran.account.token == null || _disposed) return;
+    if (_owner == null ||
+        quran.account.token == null ||
+        _disposed ||
+        maintenance) {
+      return;
+    }
     if (_sync != null) return _sync;
     final owner = _owner, token = quran.account.token;
     _sync = (() async {
@@ -248,10 +268,16 @@ class ReligiousController extends ChangeNotifier {
                     ),
                   )).data!['data']
                   as Map<String, dynamic>;
-          if (_disposed || _owner != owner || quran.account.token != token) {
+          if (_disposed ||
+              maintenance ||
+              _owner != owner ||
+              quran.account.token != token) {
             return;
           }
           ledger.accept(data, sent);
+          if (sent.isNotEmpty && (data['acknowledged'] as List).isEmpty) {
+            throw const FormatException('Sync made no progress');
+          }
           final guestKey = 'religious.merge.$owner';
           final guest = quran.preferences!.getString(guestKey);
           if (guest != null) {
@@ -280,9 +306,14 @@ class ReligiousController extends ChangeNotifier {
           }
           await _persist();
         } while (ledger.pending.isNotEmpty && !_disposed && _owner == owner);
-      } catch (_) {
+      } catch (e) {
         if (_owner == owner) {
           syncError = 'المحفوظات على الجهاز؛ ستتوفر المزامنة عند اتصال الخدمة';
+          if (e is DioException &&
+              e.response?.statusCode == 401 &&
+              quran.account.token == token) {
+            await quran.account.expireSession();
+          }
         }
       } finally {
         syncing = false;
@@ -424,6 +455,7 @@ class ReligiousController extends ChangeNotifier {
       }
       _progressTimer?.cancel();
       _progressTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+        if (maintenance) return;
         final active = catalog?.byId[activeItem];
         final current = media.current;
         if (active == null ||

@@ -81,6 +81,18 @@ class ReminderController extends ChangeNotifier {
     }
   }
 
+  Future<void> reloadBackup() async {
+    await settings.flush();
+    settings.removeListener(_settingsChanged);
+    settings.dispose();
+    settings = AppSettings(activity.quran.preferences!, activity.scope)
+      ..addListener(_settingsChanged);
+    prayer?.reloadBackup();
+    _fingerprint = null;
+    notifyListeners();
+    await reconcile(force: true);
+  }
+
   void _changed() {
     if (_disposed) return;
     notifyListeners();

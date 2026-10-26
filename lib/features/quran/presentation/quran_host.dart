@@ -21,11 +21,13 @@ class QuranHost extends StatefulWidget {
     required this.onFullscreenChanged,
     this.active = true,
     this.onExit,
+    this.accountBuilder,
   });
   final QuranController controller;
   final ValueChanged<bool> onFullscreenChanged;
   final bool active;
   final VoidCallback? onExit;
+  final Widget Function()? accountBuilder;
   @override
   State<QuranHost> createState() => QuranHostState();
 }
@@ -93,7 +95,9 @@ class QuranHostState extends State<QuranHost> {
   );
 
   void openSettings() => _push(QuranReadingSettings(controller: controller));
-  void openAccount() => _push(QuranAccountPage(controller: controller));
+  void openAccount() => _push(
+    widget.accountBuilder?.call() ?? QuranAccountPage(controller: controller),
+  );
   void openAudio() => _push(QuranAudioPage(controller: controller));
   void openDownloads() => _push(QuranDownloadPage(controller: controller));
   void openExplanation({bool meanings = false, QuranVerse? verse}) => _push(
