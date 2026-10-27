@@ -524,7 +524,7 @@ class QuranHomePage extends StatelessWidget {
                         title: const Text('مصدر القرآن الكريم'),
                         content: SingleChildScrollView(
                           child: SelectableText(
-                            'Tanzil Project\n${repo.sourceUrl}\n\n${repo.license}\n\nصفحات التجويد: خط QCF V4 من مجمع الملك فهد عبر Quran Foundation.\nhttps://api-docs.quran.com/docs/tutorials/fonts/font-rendering/\n\nصور المصحف المحفوظة: مصحف المدينة برواية حفص، مجمع الملك فهد عبر Quran.ws quran-svg v1.1.1.\nحقوق الرسوم للمجمع؛ بيانات مناطق الآيات © 2026 Quran.ws، ترخيص CC BY 4.0.\nhttps://github.com/quran-ws/quran-svg/blob/v1.1.1/NOTICE.md',
+                            'Tanzil Project\n${repo.sourceUrl}\n\n${repo.license}\n\nصفحات التجويد: خط QCF V4 من مجمع الملك فهد عبر Quran Foundation.\nhttps://api-docs.quran.com/docs/tutorials/fonts/font-rendering/\n\nصور المصحف المحفوظة: مصحف المدينة برواية حفص، مجمع الملك فهد عبر Quran.ws quran-svg v1.1.1.\nحقوق الرسوم للمجمع؛ بيانات مناطق الآيات © 2026 Quran.ws، ترخيص CC BY 4.0.\nhttps://github.com/quran-ws/quran-svg/blob/v1.1.1/NOTICE.md\n\nخطوط النص: أميري قرآن، شهرزاد، لطيف، ونوتو نسخ العربية بترخيص SIL OFL.\nخط عثماني حفص V3.0: مجمع الملك فهد لطباعة المصحف الشريف، موزّع دون تعديل وفق رخصته.\nhttps://fonts.qurancomplex.gov.sa/hafs-reading/\nتُرفق رخص الخطوط مع ملفات التطبيق.',
                           ),
                         ),
                         actions: [

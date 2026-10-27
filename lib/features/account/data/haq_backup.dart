@@ -235,7 +235,19 @@ class HaqBackup {
         }
       } else if (key == 'preferences') {
         final v = e.value as Map;
-        if (v.length != 3 ||
+        if (v.keys.any(
+              (k) =>
+                  !{'mode', 'paper', 'fontSize', 'font', 'tajweed'}.contains(k),
+            ) ||
+            (v.containsKey('font') &&
+                ![
+                  'amiri',
+                  'uthmani',
+                  'scheherazade',
+                  'noto',
+                  'lateef',
+                ].contains(v['font'])) ||
+            (v.containsKey('tajweed') && v['tajweed'] is! bool) ||
             !['continuous', 'ayah', 'pages'].contains(v['mode']) ||
             !['light', 'ivory', 'green', 'dark'].contains(v['paper']) ||
             v['fontSize'] is! num ||

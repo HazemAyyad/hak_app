@@ -219,6 +219,8 @@ class QuranAccount extends ChangeNotifier with WidgetsBindingObserver {
     'preferences': {
       'mode': controller.mode.name,
       'fontSize': controller.fontSize,
+      'font': controller.scriptFont.name,
+      'tajweed': controller.showTajweed,
       'paper': controller.paper,
     },
   };

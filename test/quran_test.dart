@@ -106,6 +106,8 @@ void main() {
       controller.toggleSurah(2);
       controller.setMode(QuranReadingMode.ayah);
       controller.setFontSize(29);
+      controller.setScriptFont(QuranScriptFont.uthmani);
+      controller.setShowTajweed(false);
       controller.setPaper('ivory');
       await controller.persist();
       final restored = QuranController(
@@ -120,6 +122,8 @@ void main() {
       expect(restored.savedSurahs, {2});
       expect(restored.mode, QuranReadingMode.ayah);
       expect(restored.fontSize, 29);
+      expect(restored.scriptFont, QuranScriptFont.uthmani);
+      expect(restored.showTajweed, false);
       restored.toggleFavorite('2:255');
       expect(restored.favorites, isEmpty);
       expect(restored.bookmarks.keys, ['2:255']);

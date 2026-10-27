@@ -103,6 +103,10 @@ flutter:
     - assets/religious/
     - assets/animations/
     - assets/prayer_places/
+    - assets/fonts/UthmanicHafs-LICENSE.txt
+    - assets/fonts/ScheherazadeNew-OFL.txt
+    - assets/fonts/Lateef-OFL.txt
+    - assets/fonts/NotoNaskhArabic-OFL.txt
 
   fonts:
     - family: QuranUI
@@ -111,6 +115,18 @@ flutter:
     - family: AmiriQuran
       fonts:
         - asset: assets/fonts/AmiriQuran.ttf
+    - family: UthmanicHafs
+      fonts:
+        - asset: assets/fonts/UthmanicHafs.ttf
+    - family: ScheherazadeNew
+      fonts:
+        - asset: assets/fonts/ScheherazadeNew.ttf
+    - family: Lateef
+      fonts:
+        - asset: assets/fonts/Lateef.ttf
+    - family: NotoNaskhArabic
+      fonts:
+        - asset: assets/fonts/NotoNaskhArabic.ttf
     - family: Tajawal
       fonts:
         - asset: assets/fonts/Tajawal-Regular.ttf

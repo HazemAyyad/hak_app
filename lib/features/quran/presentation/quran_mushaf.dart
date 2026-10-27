@@ -24,6 +24,7 @@ class QuranMushaf extends StatefulWidget {
     required this.paper,
     required this.ink,
     required this.downloads,
+    this.showTajweed = true,
   });
   final QuranContent content;
   final QuranRepository repository;
@@ -33,6 +34,7 @@ class QuranMushaf extends StatefulWidget {
   final ValueChanged<QuranVerse> onSelect, onOptions;
   final Color paper, ink;
   final QuranPageDownloads downloads;
+  final bool showTajweed;
   @override
   State<QuranMushaf> createState() => _QuranMushafState();
 }
@@ -224,6 +226,7 @@ class _QuranMushafState extends State<QuranMushaf> {
                             child: FittedBox(
                               fit: BoxFit.fill,
                               child: MushafCanvas(
+                                showTajweed: widget.showTajweed,
                                 data: data,
                                 repository: widget.repository,
                                 selected: widget.selected,
@@ -290,11 +293,13 @@ class MushafCanvas extends StatelessWidget {
     required this.ink,
     required this.onSelect,
     required this.onOptions,
+    this.showTajweed = true,
   });
   final MushafPageData data;
   final QuranRepository repository;
   final String selected;
   final Color paper, ink;
+  final bool showTajweed;
   final ValueChanged<QuranVerse> onSelect, onOptions;
 
   @override
@@ -450,6 +455,7 @@ class MushafCanvas extends StatelessWidget {
       repository: repository,
       onSelect: onSelect,
       onOptions: onOptions,
+      showTajweed: showTajweed,
     );
   }
 }

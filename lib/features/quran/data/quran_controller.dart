@@ -14,6 +14,17 @@ import '../../account/data/restore_journal.dart';
 
 enum QuranReadingMode { continuous, ayah, pages }
 
+enum QuranScriptFont {
+  amiri('أميري قرآن', 'AmiriQuran'),
+  uthmani('عثماني — حفص', 'UthmanicHafs'),
+  scheherazade('نسخ — شهرزاد', 'ScheherazadeNew'),
+  noto('نسخ — نوتو', 'NotoNaskhArabic'),
+  lateef('لطيف', 'Lateef');
+
+  const QuranScriptFont(this.label, this.family);
+  final String label, family;
+}
+
 class QuranController extends ChangeNotifier {
   QuranController({
     this.initialRepository,
@@ -58,6 +69,8 @@ class QuranController extends ChangeNotifier {
   int? lastPage;
   QuranReadingMode mode = QuranReadingMode.continuous;
   double fontSize = 24;
+  QuranScriptFont scriptFont = QuranScriptFont.amiri;
+  bool showTajweed = true;
   String paper = 'light';
   final Map<String, String> favorites = {};
   final Map<String, String> bookmarks = {};
@@ -106,6 +119,8 @@ class QuranController extends ChangeNotifier {
     lastAlignment = 0;
     mode = QuranReadingMode.continuous;
     fontSize = 24;
+    scriptFont = QuranScriptFont.amiri;
+    showTajweed = true;
     paper = 'light';
     final key = state['lastKey'] as String?;
     lastKey = repository!.byKey.containsKey(key) ? key : null;
@@ -119,6 +134,11 @@ class QuranController extends ChangeNotifier {
       orElse: () => QuranReadingMode.continuous,
     );
     fontSize = ((state['fontSize'] as num?)?.toDouble() ?? 24).clamp(18, 36);
+    scriptFont = QuranScriptFont.values.firstWhere(
+      (font) => font.name == state['font'],
+      orElse: () => QuranScriptFont.amiri,
+    );
+    showTajweed = state['tajweed'] is bool ? state['tajweed'] as bool : true;
     paper = ['light', 'ivory', 'green', 'dark'].contains(state['paper'])
         ? state['paper'] as String
         : 'light';
@@ -191,6 +211,18 @@ class QuranController extends ChangeNotifier {
     _emit();
   }
 
+  void setScriptFont(QuranScriptFont value) {
+    scriptFont = value;
+    persist();
+    _emit();
+  }
+
+  void setShowTajweed(bool value) {
+    showTajweed = value;
+    persist();
+    _emit();
+  }
+
   void setPaper(String value) {
     paper = value;
     persist();
@@ -208,6 +240,8 @@ class QuranController extends ChangeNotifier {
       'page': lastPage,
       'mode': mode.name,
       'fontSize': fontSize,
+      'font': scriptFont.name,
+      'tajweed': showTajweed,
       'paper': paper,
       'favorites': favorites,
       'bookmarks': bookmarks,

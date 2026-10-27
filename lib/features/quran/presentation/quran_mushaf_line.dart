@@ -19,12 +19,14 @@ class QuranMushafLine extends StatefulWidget {
     required this.repository,
     required this.onSelect,
     required this.onOptions,
+    this.showTajweed = true,
   });
   final List<MushafWord> words;
   final String fontFamily, selected;
   final double fontSize;
   final bool centered;
   final QuranRepository repository;
+  final bool showTajweed;
   final ValueChanged<QuranVerse> onSelect, onOptions;
 
   @override
@@ -113,12 +115,7 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(3),
                           ),
-                          child: Text(
-                            word.glyph,
-                            textDirection: TextDirection.rtl,
-                            textScaler: TextScaler.noScaling,
-                            style: style,
-                          ),
+                          child: _glyph(word.glyph),
                         ),
                       ),
                     ),
@@ -129,5 +126,25 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
         );
       },
     );
+  }
+
+  Widget _glyph(String glyph) {
+    final text = Text(
+      glyph,
+      textDirection: TextDirection.rtl,
+      textScaler: TextScaler.noScaling,
+      style: style,
+    );
+    // Mask only the glyph's rasterized ink, leaving selection backgrounds and
+    // the original text/font bytes untouched. COLR colors ignore TextStyle.color.
+    return widget.showTajweed
+        ? text
+        : ColorFiltered(
+            colorFilter: const ColorFilter.mode(
+              Color(0xFF17150F),
+              BlendMode.srcIn,
+            ),
+            child: text,
+          );
   }
 }

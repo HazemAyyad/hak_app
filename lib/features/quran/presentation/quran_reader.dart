@@ -401,6 +401,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                 Expanded(
                   child: controller.mode == QuranReadingMode.pages
                       ? QuranMushaf(
+                          showTajweed: controller.showTajweed,
                           content: controller.content,
                           repository: repo,
                           page: fixedPage,
@@ -572,7 +573,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
             child: Text(
               chapter.basmala!,
               style: TextStyle(
-                fontFamily: 'AmiriQuran',
+                fontFamily: controller.scriptFont.family,
                 fontSize: controller.fontSize,
                 color: _ink(context),
                 height: 1.8,
@@ -619,7 +620,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                       verse.text,
                       textAlign: TextAlign.right,
                       style: TextStyle(
-                        fontFamily: 'AmiriQuran',
+                        fontFamily: controller.scriptFont.family,
                         fontSize: controller.fontSize,
                         color: _ink(context),
                         height: 1.85,
@@ -667,7 +668,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                   verse.text,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontFamily: 'AmiriQuran',
+                    fontFamily: controller.scriptFont.family,
                     fontSize: controller.fontSize + 3,
                     height: 1.85,
                     color: _ink(context),
@@ -1032,16 +1033,38 @@ class QuranReadingSettings extends StatelessWidget {
                       style: qText(context, size: 18, weight: FontWeight.w800),
                     ),
                     Text(
-                      'خط أميري قرآن • رسم عثماني',
+                      'اختر خط نص القرآن',
                       style: qText(
                         context,
                         size: 12,
                         color: AppPalette.of(context).muted,
                       ),
                     ),
+                    DropdownButtonFormField<QuranScriptFont>(
+                      key: ValueKey(
+                        'quran-script-font-${controller.scriptFont.name}',
+                      ),
+                      initialValue: controller.scriptFont,
+                      isExpanded: true,
+                      decoration: const InputDecoration(
+                        labelText: 'نوع خط القرآن',
+                      ),
+                      items: [
+                        for (final font in QuranScriptFont.values)
+                          DropdownMenuItem(
+                            value: font,
+                            child: Text(font.label),
+                          ),
+                      ],
+                      onChanged: controller.mode == QuranReadingMode.pages
+                          ? null
+                          : (font) {
+                              if (font != null) controller.setScriptFont(font);
+                            },
+                    ),
                     if (controller.mode == QuranReadingMode.pages)
                       Text(
-                        'صفحات المصحف ثابتة التوزيع بخط مجمع الملك فهد. كبّر الصفحة بإصبعين دون تغيير سطورها.',
+                        'نوع الخط للنص المتصل وآية بآية. صفحات المصحف بخطها الأصلي وتوزيعها الثابت؛ كبّرها بإصبعين.',
                         style: qText(context, size: 11),
                       ),
                     Row(
@@ -1069,7 +1092,7 @@ class QuranReadingSettings extends StatelessWidget {
                       child: Text(
                         controller.repository!.verses.first.text,
                         style: TextStyle(
-                          fontFamily: 'AmiriQuran',
+                          fontFamily: controller.scriptFont.family,
                           fontSize: controller.fontSize,
                           height: 1.8,
                         ),
@@ -1086,6 +1109,16 @@ class QuranReadingSettings extends StatelessWidget {
                     Text(
                       'المظهر والألوان',
                       style: qText(context, size: 18, weight: FontWeight.w800),
+                    ),
+                    SwitchListTile(
+                      key: const ValueKey('quran-show-tajweed'),
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('إظهار ألوان التجويد'),
+                      subtitle: const Text(
+                        'اعرض ألوان أحكام التجويد في صفحات المصحف التي تدعمها.',
+                      ),
+                      value: controller.showTajweed,
+                      onChanged: controller.setShowTajweed,
                     ),
                     Text(
                       'اختر نمط القراءة المريح لعينيك',

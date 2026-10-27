@@ -22,7 +22,13 @@ void main() {
           'favorite:2:2': {'deleted': true, 'value': null, 'revision': 2},
           'preferences': {
             'deleted': false,
-            'value': {'mode': 'pages', 'paper': 'ivory', 'fontSize': 26},
+            'value': {
+              'mode': 'pages',
+              'paper': 'ivory',
+              'fontSize': 26,
+              'font': 'uthmani',
+              'tajweed': false,
+            },
             'revision': 1,
           },
         },
@@ -84,6 +90,7 @@ void main() {
       await controller.load();
       controller.toggleFavorite('2:2');
       controller.toggleFavorite('2:4');
+      controller.setScriptFont(QuranScriptFont.lateef);
       await controller.persist();
       await controller.account.authenticate(
         register: false,
@@ -92,12 +99,16 @@ void main() {
       );
       expect(controller.account.error, isNull);
       expect(controller.mode, QuranReadingMode.pages);
+      expect(controller.scriptFont, QuranScriptFont.uthmani);
+      expect(controller.showTajweed, false);
       expect(controller.favorites.keys, ['2:4']);
       expect(prefs.getString('quran.state.v1'), contains('2:2'));
       controller.toggleBookmark('2:5');
       await controller.account.sync();
       expect(server[1]!['bookmark:2:5']['deleted'], isFalse);
       await controller.account.logout();
+      expect(controller.scriptFont, QuranScriptFont.lateef);
+      expect(controller.showTajweed, true);
       expect(controller.favorites.keys, ['2:2', '2:4']);
       expect(controller.bookmarks, isEmpty);
       await controller.account.authenticate(

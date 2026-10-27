@@ -83,6 +83,22 @@ void main() {
     await store.close();
   });
   test(
+    'Quran font and Tajweed preferences validate and survive backup restore',
+    () async {
+      quran.setScriptFont(QuranScriptFont.noto);
+      quran.setShowTajweed(false);
+      await quran.flushReading();
+      final archive = await backup.capture();
+      backup.validate(archive);
+      quran.setScriptFont(QuranScriptFont.amiri);
+      quran.setShowTajweed(true);
+      await quran.flushReading();
+      await backup.restore(archive, replace: true);
+      expect(quran.scriptFont, QuranScriptFont.noto);
+      expect(quran.showTajweed, false);
+    },
+  );
+  test(
     'community local preferences roundtrip without server receipts or pending submissions',
     () async {
       final state = {
