@@ -1,0 +1,148 @@
+{
+  "retrieved": "2026-10-27",
+  "cityCount": 171675,
+  "countryCount": 252,
+  "sources": {
+    "cities1000.zip": {
+      "url": "https://download.geonames.org/export/dump/cities1000.zip",
+      "sha256": "da28572d617c58a98636a561476c5d850f89f2b36996fef3395357bec7ff1f7a"
+    },
+    "countryInfo.txt": {
+      "url": "https://download.geonames.org/export/dump/countryInfo.txt",
+      "sha256": "c55f638cfaafb4fe45a9aa15120a0f1f78e8a34a8e1847d7b9320cf740fbc9ab"
+    },
+    "territories.json": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr-json/48.0.0/cldr-json/cldr-localenames-full/main/ar/territories.json",
+      "sha256": "b78c4a11a9ad8358048998bcda2eb49e205d5ab281f85991ed097af7b972c3d7"
+    },
+    "territories-en.json": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr-json/48.0.0/cldr-json/cldr-localenames-full/main/en/territories.json",
+      "sha256": "158c1d575308f7e46912edbeda435c8fe2ef5dad280798231f3a432e406b1807"
+    },
+    "UNICODE-LICENSE.txt": {
+      "url": "https://raw.githubusercontent.com/unicode-org/cldr-json/48.0.0/LICENSE",
+      "sha256": "220ba0e1c43b99530d2d5bdb892a99dca0989414f51ab695ecd90163eaa1ec3b"
+    },
+    "alternates-AE.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/AE.zip",
+      "sha256": "c9f62c613ee840ffbcdbe9ed2fc1f6d8fb67219097bcdeb5a0519c29f4113df0"
+    },
+    "alternates-BH.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/BH.zip",
+      "sha256": "78006e5916687cd66138acba6750a271d7c7d21658ceaa38281041a5f5e573f1"
+    },
+    "alternates-DJ.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/DJ.zip",
+      "sha256": "b1d9e9b098af20f18ce698030a552c0fc23a425e11271196aea105bdfc1b612d"
+    },
+    "alternates-DZ.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/DZ.zip",
+      "sha256": "5ab614c691aeb75abc160fe00afb0cb90a8cf0a305837780443fc11ad2850e4a"
+    },
+    "alternates-EG.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/EG.zip",
+      "sha256": "2c95bc7b98927dce1f49a744c0f0dc0ffd946ea2bb57b5fd93e3078caf8e2ac9"
+    },
+    "alternates-EH.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/EH.zip",
+      "sha256": "17e5c273e770b0622ae41ddcca2e395b10d8884d80fdbc14b5bec174dc43b647"
+    },
+    "alternates-ER.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/ER.zip",
+      "sha256": "d4fcc0321a7a639daf6e1615e58976ad7ae00fd6c3c4936e8c2d74f4fd86305e"
+    },
+    "alternates-GB.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/GB.zip",
+      "sha256": "653c17219cdd240e856be817e42bc6cea8becb373afe2b9a109297c931c8bddc"
+    },
+    "alternates-IL.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/IL.zip",
+      "sha256": "a685c688f70ff8a3e3dacf168aec4b53584e8ab5d5be0c872f6bd69a21c71414"
+    },
+    "alternates-IQ.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/IQ.zip",
+      "sha256": "2f32d3b1ff03d5dd9e10456ff9620fbd4c314da854ceac40508bbc933d179d79"
+    },
+    "alternates-JO.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/JO.zip",
+      "sha256": "3d1c44606d4b890e46e31e5d809dd14472a194b46ba7c417fec491608a4bdb93"
+    },
+    "alternates-KM.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/KM.zip",
+      "sha256": "7df4a4915c9c967d8ad70bb02219f9a82e415b5f1bafcb89d919c7826aea3ea2"
+    },
+    "alternates-KW.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/KW.zip",
+      "sha256": "1d4b40cf20ea84a357fff7e747c61b8cd083ffa710090a1aba9a78b977302dc9"
+    },
+    "alternates-LB.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/LB.zip",
+      "sha256": "c7d42bbfb4fb0622b154056f47d30624faba41da5c1b344bc5427e6afc0b8c70"
+    },
+    "alternates-LY.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/LY.zip",
+      "sha256": "3df27f1e39d2063cce809e4f889465bf98a6ebed4bc5e20f446e912c8fd95fed"
+    },
+    "alternates-MA.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/MA.zip",
+      "sha256": "25829a7beffa3d2824c78a550b47b7ee21c09d781d19f37ef1ef8e280f09d5e3"
+    },
+    "alternates-MR.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/MR.zip",
+      "sha256": "855b88c87a1dfe6df3a7898dddf4f7c619293f59f47e9a2989697eacf895e2f2"
+    },
+    "alternates-OM.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/OM.zip",
+      "sha256": "ed942d8b8b6d5a8e22e8d213b6290697f340514375ce2f851c6f87ed0f23f934"
+    },
+    "alternates-PS.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/PS.zip",
+      "sha256": "ea8c42e60f434e4d62e87b1de23daeb6f0268aa1d8f65e19e80838810cb186bc"
+    },
+    "alternates-QA.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/QA.zip",
+      "sha256": "0c0b689f0f8c5f4d5102f58d9af2206807972187be70eb16cc1566d96d847d10"
+    },
+    "alternates-SA.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/SA.zip",
+      "sha256": "d6da59b01bb862edeeafc8d8516a945809ce67063a61e13735c911049978daae"
+    },
+    "alternates-SD.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/SD.zip",
+      "sha256": "ef75e9f0a2ad184837466711a9704baadad0db22bf212eb7449537a8b84083a9"
+    },
+    "alternates-SO.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/SO.zip",
+      "sha256": "1c11bb292cc66f32175bd34b32debb90ec068021d30214803dc25638a05e2d62"
+    },
+    "alternates-SY.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/SY.zip",
+      "sha256": "2d34ff434eeeb46dae7f162a1defa98b4c992b02aa50aeb2a66c3a6ef2f52dcf"
+    },
+    "alternates-TD.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/TD.zip",
+      "sha256": "1d377b37520d0ef14a2b3b8e19f080bf99e6d04934093acae0e53ed221db2dd2"
+    },
+    "alternates-TN.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/TN.zip",
+      "sha256": "64a36d6ae09b0758ede83cec820449c9eb0c174205c1b0cd60bbd9f1408cb049"
+    },
+    "alternates-TZ.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/TZ.zip",
+      "sha256": "d3848087384670a560c3341567276cf2ac382dc51aa1d0657020251bf901056c"
+    },
+    "alternates-UG.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/UG.zip",
+      "sha256": "3b3189296a4eb06a262f0074853f8f7ae513c538b3d0e376a638fde1fb8da366"
+    },
+    "alternates-YE.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/YE.zip",
+      "sha256": "dd73e72d05f445a653e3901883fe962993ca50d27a12dc27d71717afb8e1dcac"
+    }
+  },
+  "assetSha256": "94ab97b3c0864dd59dea83558c67d3182e9d98416466e8bfa0b38aeb64efa046",
+  "uncompressedBytes": 18289478,
+  "compressedBytes": 6151201,
+  "license": "GeoNames CC BY 4.0; Unicode License V3 for country translations",
+  "scope": "GeoNames cities1000: settlements over 1000 residents or administrative seats through PPLA3; not every village/address."
+}

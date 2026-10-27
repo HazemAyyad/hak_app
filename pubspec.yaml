@@ -63,6 +63,9 @@ dependencies:
   in_app_purchase_storekit: 0.4.15
   firebase_core: 3.15.2
   firebase_messaging: 15.2.10
+  flutter_map: 8.3.2
+  latlong2: 0.9.1
+  timezone_finder: 1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -99,6 +102,7 @@ flutter:
     - assets/navigation/
     - assets/religious/
     - assets/animations/
+    - assets/prayer_places/
 
   fonts:
     - family: QuranUI

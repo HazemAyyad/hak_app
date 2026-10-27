@@ -12,6 +12,7 @@ import '../data/mosque_repository.dart';
 import '../data/prayer_alert.dart';
 import '../data/adhan_library.dart';
 import 'qibla_dial.dart';
+import 'prayer_location_picker.dart';
 
 part 'prayer_settings.dart';
 part 'prayer_alert_page.dart';

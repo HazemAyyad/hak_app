@@ -1,0 +1,68 @@
+LICENCE FOR THE BUNDLED TIME ZONE BOUNDARY DATA
+===============================================
+
+This file covers the generated data files in `lib/data/` and the derived
+identifier table in `lib/src/zone_names.dart`. It does NOT cover the source
+code of this package, which is licensed under the MIT License (see LICENSE).
+
+
+Source
+------
+
+The bundled index is derived from the `timezones.geojson.zip` (land-only,
+full-fidelity) release asset of the Timezone Boundary Builder project:
+
+    https://github.com/evansiroky/timezone-boundary-builder
+
+which in turn derives its boundaries from OpenStreetMap:
+
+    https://www.openstreetmap.org
+
+Timezone Boundary Builder's own code is MIT licensed, but the boundary data it
+produces is released under the Open Database License. This package transforms
+that data (quantisation, delta encoding, spatial indexing) and therefore ships
+a Derivative Database within the meaning of that licence.
+
+
+Licence
+-------
+
+The bundled data is licensed under the Open Data Commons Open Database License
+(ODbL) v1.0.
+
+    Full licence text: https://opendatacommons.org/licenses/odbl/1-0/
+    Plain-language summary: https://opendatacommons.org/licenses/odbl/summary/
+
+ODbL section 4.4 permits a Derivative Database to be distributed with a URI for
+the licence rather than a verbatim copy; the URI above satisfies that
+requirement.
+
+In outline, the ODbL requires that you:
+
+  * Attribute — keep the attribution notice below intact in any public use or
+    redistribution of this data or works produced from it.
+  * Share-Alike — if you publicly use an adapted version of this database, you
+    must offer that adapted database under the ODbL as well.
+  * Keep open — if you redistribute the database, or an adapted version, you
+    may not use technological measures that restrict others' use of it.
+
+This summary is not a substitute for the licence text. Read the full licence if
+you intend to redistribute or adapt the data.
+
+
+Required attribution
+--------------------
+
+    Time zone boundary data © OpenStreetMap contributors, available under the
+    Open Database License (ODbL). Boundaries built by Timezone Boundary Builder
+    (https://github.com/evansiroky/timezone-boundary-builder).
+
+
+Note on disputed territories
+----------------------------
+
+The upstream data documents 25 pairs of time zones permitted to overlap, most
+of which correspond to disputed territories. Where a coordinate falls inside
+more than one zone, this package returns a single identifier chosen by an
+arbitrary deterministic rule. That choice is a technical tie-break and is not a
+statement about sovereignty. See the README for details.

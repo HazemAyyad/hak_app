@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/features/prayer/data/prayer_controller.dart';
 import 'package:haq_app/features/prayer/data/prayer_models.dart';
+import 'package:haq_app/features/prayer/data/place_catalog.dart';
 import 'package:haq_app/features/prayer/data/heading_controller.dart';
 import 'package:haq_app/features/prayer/data/mosque_repository.dart';
 import 'package:haq_app/features/prayer/data/adhan_library.dart';
@@ -254,9 +255,37 @@ void main() {
     },
   );
   testWidgets(
+    'city search returns draft to prayer settings and persists with final save without GPS permission',
+    (tester) async {
+      await tester.runAsync(PlaceCatalog.load);
+      await pump(tester, PrayerSettingsPage(controller: c));
+      await tap(tester, 'بحث عن دولة أو مدينة');
+      await tester.enterText(
+        find.byKey(const ValueKey('prayer-place-query')),
+        'نابلس',
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('نابلس').last);
+      await settle(tester);
+      await tester.tap(find.text('اعتماد هذا الموقع'));
+      await settle(tester);
+      await tester.pumpAndSettle();
+      expect(c.config.location, isNull);
+      expect(find.text('نابلس، فلسطين'), findsOneWidget);
+      await tap(tester, 'حفظ إعدادات الصلاة');
+      expect(c.config.location?.label, 'نابلس، فلسطين');
+      expect(c.config.location?.zone, 'Asia/Hebron');
+      expect(c.today, isNotNull);
+      expect(calls, isEmpty);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+  testWidgets(
     'manual form saves verified coordinates and timezone, independent of location permission',
     (tester) async {
       await pump(tester, PrayerSettingsPage(controller: c));
+      await tap(tester, 'ضبط الإحداثيات والمنطقة الزمنية يدويًا');
       await tester.enterText(find.byType(TextFormField).at(0), 'موقعي اليدوي');
       await tester.enterText(find.byType(TextFormField).at(1), '31.53');
       await tester.enterText(find.byType(TextFormField).at(2), '35.1');

@@ -47,6 +47,28 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
     }
   }
 
+  Future<void> _pickLocation({required bool map}) async {
+    final owner = _scope;
+    final place = await Navigator.push<PrayerLocation>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PrayerLocationPicker(
+          controller: widget.controller,
+          initial: _draft.location,
+          showMap: map,
+        ),
+      ),
+    );
+    if (!mounted || owner != _scope || place == null) return;
+    setState(() {
+      _draft = _draft.copyWith(location: place);
+      _label.text = place.label;
+      _lat.text = place.latitude.toString();
+      _lng.text = place.longitude.toString();
+      _zone = place.zone;
+    });
+  }
+
   Future<void> _pickZone() async {
     final owner = _scope;
     var filter = '';
@@ -108,6 +130,14 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
   Future<void> _save() async {
     FocusScope.of(context).unfocus();
     if (_saving || !_form.currentState!.validate()) return;
+    if (_lat.text.isEmpty || _lng.text.isEmpty || _label.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('ابحث عن مدينة أو اختر موقعك على الخريطة أولًا'),
+        ),
+      );
+      return;
+    }
     final owner = _scope;
     setState(() => _saving = true);
     try {
@@ -224,70 +254,114 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                   ),
                                 ),
                             const SizedBox(height: 8),
-                            TextFormField(
-                              controller: _label,
-                              decoration: const InputDecoration(
-                                labelText: 'اسم الموقع اليدوي',
-                              ),
-                              maxLength: 100,
-                              validator: (v) => v == null || v.trim().isEmpty
-                                  ? 'اكتب اسماً للموقع'
-                                  : null,
-                            ),
-                            for (final entry in [
-                              (_lat, 'خط العرض (-90 إلى 90)', 90),
-                              (_lng, 'خط الطول (-180 إلى 180)', 180),
-                            ])
-                              TextFormField(
-                                controller: entry.$1,
-                                textDirection: TextDirection.ltr,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                      signed: true,
-                                    ),
-                                decoration: InputDecoration(
-                                  labelText: entry.$2,
+                            if (_draft.location case final place?)
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: Icon(
+                                  Icons.place_outlined,
+                                  color: AppPalette.of(context).tealHeading,
                                 ),
-                                validator: (value) {
-                                  final n = double.tryParse(
-                                    value?.trim() ?? '',
-                                  );
-                                  return n == null ||
-                                          !n.isFinite ||
-                                          n.abs() > entry.$3
-                                      ? 'أدخل إحداثية صحيحة'
-                                      : null;
-                                },
+                                title: Text(place.label),
+                                subtitle: Text(
+                                  place.zone,
+                                  textDirection: TextDirection.ltr,
+                                ),
                               ),
-                            ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: const Text('المنطقة الزمنية للموقع'),
-                              subtitle: Text(
-                                _zone,
-                                textDirection: TextDirection.ltr,
-                              ),
-                              trailing: const Icon(Icons.chevron_left),
-                              onTap: _pickZone,
+                            const Text(
+                              'الاختيار اليدوي',
+                              style: TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            TextButton(
-                              onPressed: () async {
-                                final owner = _scope;
-                                final state = await widget.controller
-                                    .deviceStatus();
-                                final zone = state['zone'];
-                                if (mounted &&
-                                    owner == _scope &&
-                                    zone is String &&
-                                    tz.timeZoneDatabase.locations.containsKey(
-                                      zone,
-                                    )) {
-                                  setState(() => _zone = zone);
-                                }
-                              },
-                              child: const Text(
-                                'استخدام المنطقة الزمنية الحالية للجهاز',
+                            const SizedBox(height: 8),
+                            OutlinedButton.icon(
+                              onPressed: () => _pickLocation(map: false),
+                              icon: const Icon(Icons.search),
+                              label: const Text('بحث عن دولة أو مدينة'),
+                            ),
+                            OutlinedButton.icon(
+                              onPressed: () => _pickLocation(map: true),
+                              icon: const Icon(Icons.map_outlined),
+                              label: const Text('تحديد نقطة على الخريطة'),
+                            ),
+                            Text(
+                              'بعد اختيار الموقع اضغط «حفظ إعدادات الصلاة».',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: AppPalette.of(context).muted,
                               ),
+                            ),
+                            ExpansionTile(
+                              tilePadding: EdgeInsets.zero,
+                              title: const Text(
+                                'ضبط الإحداثيات والمنطقة الزمنية يدويًا',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              children: [
+                                TextFormField(
+                                  controller: _label,
+                                  decoration: const InputDecoration(
+                                    labelText: 'اسم الموقع اليدوي',
+                                  ),
+                                  maxLength: 100,
+                                  validator: (v) =>
+                                      v == null || v.trim().isEmpty
+                                      ? 'اكتب اسماً للموقع'
+                                      : null,
+                                ),
+                                for (final entry in [
+                                  (_lat, 'خط العرض (-90 إلى 90)', 90),
+                                  (_lng, 'خط الطول (-180 إلى 180)', 180),
+                                ])
+                                  TextFormField(
+                                    controller: entry.$1,
+                                    textDirection: TextDirection.ltr,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                          decimal: true,
+                                          signed: true,
+                                        ),
+                                    decoration: InputDecoration(
+                                      labelText: entry.$2,
+                                    ),
+                                    validator: (value) {
+                                      final n = double.tryParse(
+                                        value?.trim() ?? '',
+                                      );
+                                      return n == null ||
+                                              !n.isFinite ||
+                                              n.abs() > entry.$3
+                                          ? 'أدخل إحداثية صحيحة'
+                                          : null;
+                                    },
+                                  ),
+                                ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  title: const Text('المنطقة الزمنية للموقع'),
+                                  subtitle: Text(
+                                    _zone,
+                                    textDirection: TextDirection.ltr,
+                                  ),
+                                  trailing: const Icon(Icons.chevron_left),
+                                  onTap: _pickZone,
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    final owner = _scope;
+                                    final state = await widget.controller
+                                        .deviceStatus();
+                                    final zone = state['zone'];
+                                    if (mounted &&
+                                        owner == _scope &&
+                                        zone is String &&
+                                        tz.timeZoneDatabase.locations
+                                            .containsKey(zone)) {
+                                      setState(() => _zone = zone);
+                                    }
+                                  },
+                                  child: const Text(
+                                    'استخدام المنطقة الزمنية الحالية للجهاز',
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
