@@ -23,6 +23,7 @@ import 'features/prayer/data/prayer_models.dart';
 import 'features/prayer/presentation/prayer_page.dart';
 import 'features/account/presentation/account_hub.dart';
 import 'features/community/data/community_controller.dart';
+import 'features/community/data/public_push.dart';
 import 'features/community/presentation/community_page.dart';
 import 'features/assistant/data/assistant_controller.dart';
 import 'features/assistant/presentation/assistant_page.dart';
@@ -233,6 +234,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   String? _religiousInitialCategory;
   AppExperienceController? _experience;
   late final AssistantController _assistant;
+  PublicPushController? _publicPush;
 
   @override
   void didChangeDependencies() {
@@ -259,12 +261,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       _quran.load().then((_) {
         if (mounted && _religious.catalog == null) _religious.load();
         if (mounted) unawaited(_prepareReminders());
+        if (mounted) _preparePublicPush();
       });
     } else if (_religious.catalog == null) {
       _religious.load();
       unawaited(_prepareReminders());
+      _preparePublicPush();
     } else {
       unawaited(_prepareReminders());
+      _preparePublicPush();
     }
   }
 
@@ -273,6 +278,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return _preparingReminders ??= _loadReminders().whenComplete(
       () => _preparingReminders = null,
     );
+  }
+
+  void _preparePublicPush() {
+    if (_publicPush != null || _quran.preferences == null) return;
+    final controller = PublicPushController(
+      _quran.preferences!,
+      onOpen: () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _openFeature(AppFeature.messages);
+        });
+      },
+    );
+    _publicPush = controller;
+    unawaited(controller.initialize());
   }
 
   Future<ReminderController?> _loadReminders() async {
@@ -326,6 +345,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _prayer?.setForeground(state == AppLifecycleState.resumed);
     if (state == AppLifecycleState.resumed) {
       unawaited(_reminders?.reconcile(force: true) ?? Future.value());
+      if (_publicPush?.wanted == true) unawaited(_publicPush!.reconcile());
     }
   }
 
@@ -333,6 +353,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _assistant.dispose();
+    _publicPush?.dispose();
     _reminders?.dispose();
     _prayer?.dispose();
     _experience?.unregister(_quran.audio);
@@ -467,6 +488,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             settings: RouteSettings(name: feature.routeName),
             builder: (_) => CommunityPage(
               religious: _religious,
+              push: _publicPush,
               section: switch (feature) {
                 AppFeature.circles => CommunitySection.circles,
                 AppFeature.duaTogether => CommunitySection.prayers,

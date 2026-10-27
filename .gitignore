@@ -45,3 +45,6 @@ app.*.map.json
 /android/app/release
 /android/.kotlin/
 /tool/haq_splash_rive/build/
+# Native Firebase application configuration is supplied during activation.
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist

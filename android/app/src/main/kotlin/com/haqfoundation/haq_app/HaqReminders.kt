@@ -59,6 +59,7 @@ object HaqReminders {
         manager.createNotificationChannel(NotificationChannel("haq_overlay", "التنبيه العائم", NotificationManager.IMPORTANCE_LOW).apply { setSound(null, null) })
         manager.createNotificationChannel(NotificationChannel("haq_prayer_vibration", "تنبيه الصلاة بالاهتزاز", NotificationManager.IMPORTANCE_DEFAULT).apply { setSound(null, null); enableVibration(true); vibrationPattern = longArrayOf(0, 350, 150, 350) })
         manager.createNotificationChannel(NotificationChannel("haq_adhan_playback", "الأذان", NotificationManager.IMPORTANCE_HIGH).apply { setSound(null, null); enableVibration(false) })
+        manager.createNotificationChannel(NotificationChannel("haq_community_push", "رسائل حق العامة", NotificationManager.IMPORTANCE_DEFAULT).apply { setSound(null, null); enableVibration(false) })
     }
     fun status(c: Context): Map<String, Any> {
         channels(c)
@@ -378,20 +379,21 @@ class HaqAdhanActivity : Activity() {
         else window.addFlags(LayoutParams.FLAG_SHOW_WHEN_LOCKED or LayoutParams.FLAG_TURN_SCREEN_ON)
         window.addFlags(LayoutParams.FLAG_KEEP_SCREEN_ON)
         val navy = Color.rgb(16, 42, 67); val gold = Color.rgb(199, 164, 90); val teal = Color.rgb(42, 140, 130)
+        val brandFont = try { Typeface.createFromAsset(assets, "flutter_assets/assets/fonts/Cairo.ttf") } catch (_: Exception) { Typeface.DEFAULT }
         val layout = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL; gravity = Gravity.CENTER; setPadding(40, 55, 40, 55)
             background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(navy, Color.rgb(11, 23, 34)))
             layoutDirection = View.LAYOUT_DIRECTION_RTL
         }
         fun label(value: String, size: Float, color: Int) = TextView(this).apply {
-            text = value; textSize = size; setTextColor(color); gravity = Gravity.CENTER; setPadding(0, 18, 0, 18)
+            text = value; textSize = size; typeface = brandFont; setTextColor(color); gravity = Gravity.CENTER; setPadding(0, 18, 0, 18)
         }
         layout.addView(label("حق", 52f, gold))
         layout.addView(label(intent.getStringExtra("title") ?: "حان وقت الصلاة", 28f, Color.WHITE))
         layout.addView(label("حيّ على الصلاة", 23f, gold))
         layout.addView(label("المس الشاشة أو اضغط زرًا لإيقاف الصوت\nأو اقلب الهاتف على وجهه", 16f, Color.LTGRAY))
         layout.addView(Button(this).apply {
-            text = "إيقاف الأذان"; textSize = 20f; setTextColor(Color.WHITE)
+            text = "إيقاف الأذان"; textSize = 20f; typeface = brandFont; setTextColor(Color.WHITE)
             backgroundTintList = android.content.res.ColorStateList.valueOf(teal)
             setOnClickListener { stop() }
         }, LinearLayout.LayoutParams(-1, 64 * resources.displayMetrics.density.toInt().coerceAtLeast(1)))
@@ -558,6 +560,7 @@ class HaqRemindersBridge(private val activity: MainActivity, private val channel
                     "scope" -> { HaqReminders.changeScope(activity, call.arguments as String); result.success(null) }
                     "replace" -> { HaqReminders.replace(activity, JSONObject(call.arguments as Map<*, *>)); result.success(null) }
                     "status" -> result.success(HaqReminders.status(activity))
+                    "preparePublicPush" -> { HaqReminders.channels(activity); result.success(null) }
                     "adhanStatus" -> result.success(mapOf("platform" to "android",
                         "exact" to (Build.VERSION.SDK_INT < 31 || activity.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()),
                         "fullScreen" to (Build.VERSION.SDK_INT < 34 || activity.getSystemService(NotificationManager::class.java).canUseFullScreenIntent())))

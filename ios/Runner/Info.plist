@@ -60,7 +60,9 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>حفظ صورة الآية أو الدعاء في الصور على أجهزة iOS القديمة عند اختيارك الحفظ.</string>
 	<key>UIBackgroundModes</key>
-	<array><string>audio</string></array>
+	<array><string>audio</string><string>remote-notification</string><string>fetch</string></array>
+	<key>FirebaseMessagingAutoInitEnabled</key>
+	<false/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/features/community/data/community_controller.dart';
+import 'package:haq_app/features/community/data/public_push.dart';
 import 'package:haq_app/features/community/presentation/community_page.dart';
 import 'package:haq_app/features/community/presentation/community_media.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
@@ -105,6 +106,7 @@ void main() {
     bool dark = false,
     double scale = 1,
     Size size = const Size(360, 950),
+    PublicPushController? push,
   }) async {
     await tester.binding.setSurfaceSize(size);
     await tester.pumpWidget(
@@ -130,6 +132,7 @@ void main() {
                 religious: religious,
                 section: section,
                 controller: c,
+                push: push,
               ),
             ),
           ),
@@ -150,6 +153,50 @@ void main() {
   Future<void> unmount(WidgetTester tester) async {
     await tester.pumpWidget(const SizedBox.shrink());
     await pump(tester);
+  }
+
+  for (final dark in [false, true]) {
+    testWidgets(
+      'public push activation stays honest and fits enlarged ${dark ? 'dark' : 'light'}',
+      (tester) async {
+        final push = PublicPushController(
+          quran.preferences!,
+          configured: false,
+        );
+        await mount(
+          tester,
+          CommunitySection.messages,
+          dark: dark,
+          scale: 1.5,
+          size: const Size(320, 1000),
+          push: push,
+        );
+        expect(find.text('إشعارات الرسائل والتطبيق مغلق'), findsOneWidget);
+        expect(
+          tester
+              .widget<SwitchListTile>(find.byType(SwitchListTile).first)
+              .onChanged,
+          isNull,
+        );
+        expect(push.active, false);
+        expect(tester.takeException(), isNull);
+        await tester.runAsync(() async {
+          final image =
+              await (capture.currentContext!.findRenderObject()
+                      as RenderRepaintBoundary)
+                  .toImage(pixelRatio: 1.5);
+          final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+          image.dispose();
+          final dir = Directory('build/push-previews')
+            ..createSync(recursive: true);
+          File(
+            '${dir.path}/${dark ? 'dark' : 'light'}.png',
+          ).writeAsBytesSync(bytes!.buffer.asUint8List());
+        });
+        await unmount(tester);
+        push.dispose();
+      },
+    );
   }
 
   testWidgets(

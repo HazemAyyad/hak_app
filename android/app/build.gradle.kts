@@ -5,6 +5,12 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Added only during final Firebase activation. Source-only development works
+// without creating a Firebase project or committing its configuration.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}
+
 android {
     namespace = "com.haqfoundation.haq_app"
     compileSdk = flutter.compileSdkVersion

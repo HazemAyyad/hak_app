@@ -7,6 +7,7 @@ import '../../../navigation/more_page.dart';
 import '../../account/presentation/account_hub.dart';
 import '../../religious_content/data/religious_controller.dart';
 import '../data/community_controller.dart';
+import '../data/public_push.dart';
 import 'community_media.dart';
 
 part 'community_forms.dart';
@@ -25,10 +26,12 @@ class CommunityPage extends StatefulWidget {
     required this.religious,
     required this.section,
     this.controller,
+    this.push,
   });
   final ReligiousController religious;
   final CommunitySection section;
   final CommunityController? controller;
+  final PublicPushController? push;
   @override
   State<CommunityPage> createState() => _CommunityPageState();
 }
@@ -85,6 +88,7 @@ class _CommunityPageState extends State<CommunityPage> {
             religious: widget.religious,
             section: widget.section,
             onClose: () => Navigator.of(context).pop(),
+            push: widget.push,
           ),
         ),
       ),
@@ -98,11 +102,13 @@ class _CommunityDirectory extends StatefulWidget {
     required this.religious,
     required this.section,
     required this.onClose,
+    this.push,
   });
   final CommunityController c;
   final ReligiousController religious;
   final CommunitySection section;
   final VoidCallback onClose;
+  final PublicPushController? push;
   @override
   State<_CommunityDirectory> createState() => _CommunityDirectoryState();
 }
@@ -283,6 +289,47 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                           ),
                         ),
                       if (!private || c.signedIn) ...[
+                        if (widget.section == CommunitySection.messages &&
+                            widget.push != null)
+                          _CommunityCard(
+                            child: ListenableBuilder(
+                              listenable: widget.push!,
+                              builder: (context, _) {
+                                final push = widget.push!;
+                                return Column(
+                                  children: [
+                                    SwitchListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      title: const Text(
+                                        'إشعارات الرسائل والتطبيق مغلق',
+                                      ),
+                                      subtitle: Text(
+                                        !push.available
+                                            ? 'بانتظار تهيئة الخدمة؛ لا حاجة لتفعيلها الآن'
+                                            : push.active
+                                            ? 'مفعّلة على هذا الجهاز للمحتوى العام'
+                                            : 'اختياري • يربط الجهاز بخدمة Firebase عند التفعيل',
+                                      ),
+                                      value: push.wanted,
+                                      onChanged: push.busy || !push.available
+                                          ? null
+                                          : (value) => push.setEnabled(value),
+                                    ),
+                                    if (push.error case final error?)
+                                      Text(error, textAlign: TextAlign.center),
+                                    if (push.available && push.error != null)
+                                      TextButton(
+                                        onPressed: push.busy
+                                            ? null
+                                            : () =>
+                                                  push.setEnabled(push.wanted),
+                                        child: const Text('إعادة المحاولة'),
+                                      ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ),
                         if (widget.section == CommunitySection.prayers)
                           Wrap(
                             spacing: 8,
