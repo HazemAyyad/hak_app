@@ -122,7 +122,9 @@ class ReligiousHostState extends State<ReligiousHost> {
     unawaited(
       chooseContentShare(
         context,
-        item.verseKeys.isEmpty
+        item.id.startsWith('hisn-')
+            ? ShareCardContent.adhkar(item.text)
+            : item.verseKeys.isEmpty
             ? ShareCardContent(
                 text: item.text,
                 source: item.source,

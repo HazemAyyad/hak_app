@@ -24,6 +24,34 @@ void main() {
     }
   });
   test(
+    'adhkar export has Haq identity and actual logo in all themes without reference-source metadata',
+    () async {
+      final content = ShareCardContent.adhkar('سُبْحَانَ اللَّهِ وَبِحَمْدِهِ');
+      expect(content.text, 'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ');
+      expect(content.haqBranding, true);
+      expect(
+        '${content.source} ${content.attribution}',
+        isNot(contains('حصن المسلم')),
+      );
+      expect(content.attribution, isNot(contains('http')));
+      final folder = Directory('build/haq-adhkar-share-preview')
+        ..createSync(recursive: true);
+      for (final theme in ShareCardTheme.values) {
+        final result = await ShareCardRenderer.render(
+          content,
+          ShareCardStyle(theme: theme),
+        );
+        expect(result.bytes.length, greaterThan(10000));
+        File('${folder.path}/${theme.name}.png').writeAsBytesSync(result.bytes);
+        final codec = await ui.instantiateImageCodec(result.bytes);
+        final frame = await codec.getNextFrame();
+        expect(frame.image.width, 1080);
+        frame.image.dispose();
+        codec.dispose();
+      }
+    },
+  );
+  test(
     'canonical verse selection rejects reordered, repeated and cross-surah inputs without normalizing text',
     () {
       final content = ShareCardContent.quran(repository, ['1:1', '1:2']);

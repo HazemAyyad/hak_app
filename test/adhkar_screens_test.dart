@@ -323,6 +323,61 @@ void main() {
     });
   }
   testWidgets(
+    'official dhikr text sharing and copying omit source metadata and text sharing carries Haq identity',
+    (tester) async {
+      final exported = <String>[];
+      final copied = <String>[];
+      const share = MethodChannel('dev.fluttercommunity.plus/share');
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(share, (call) async {
+        if (call.method == 'share') {
+          exported.add((call.arguments as Map)['text'] as String);
+        }
+        return 'com.whatsapp';
+      });
+      messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+        if (call.method == 'Clipboard.setData') {
+          copied.add((call.arguments as Map)['text'] as String);
+        }
+        return null;
+      });
+      addTearDown(() {
+        messenger.setMockMethodCallHandler(share, null);
+        messenger.setMockMethodCallHandler(SystemChannels.platform, null);
+      });
+      await pump(tester, width: 390, scale: 1);
+      final group = source.groups.firstWhere((g) => g.id == 'daily:morning');
+      final item = source.items[group.itemIds.first]!;
+      unawaitedForTest(host.currentState!.openGroup(group.id));
+      await until(
+        tester,
+        () => find.byKey(ValueKey('count-${item.id}')).evaluate().isNotEmpty,
+      );
+      await Scrollable.ensureVisible(
+        tester.element(find.byTooltip('خيارات الذكر').first),
+        alignment: .4,
+      );
+      await tester.pumpAndSettle();
+      await tap(tester, find.byTooltip('خيارات الذكر').first);
+      await tap(tester, find.text('نسخ النص'));
+      expect(copied.single, item.text);
+      await Scrollable.ensureVisible(
+        tester.element(find.text('مشاركة').first),
+        alignment: .4,
+      );
+      await tester.pumpAndSettle();
+      await tap(tester, find.text('مشاركة').first);
+      await tap(tester, find.text('مشاركة النص'));
+      expect(exported.single, contains(item.text));
+      expect(exported.single, contains('تطبيق حق'));
+      expect(exported.single, isNot(contains('حصن المسلم')));
+      expect(exported.single, isNot(contains(item.sourceUrl ?? 'https://')));
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+  testWidgets(
     'personal editor normalizes digits; groups and empty group fit narrow enlarged RTL',
     (tester) async {
       await pump(tester, width: 320, scale: 1.2);

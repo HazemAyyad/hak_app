@@ -19,7 +19,14 @@ class ShareCardContent {
     required this.source,
     required this.attribution,
     this.verseKeys = const [],
+    this.haqBranding = false,
   });
+  factory ShareCardContent.adhkar(String text) => ShareCardContent(
+    text: text,
+    source: 'تطبيق حق',
+    attribution: 'خير أقرب إليك',
+    haqBranding: true,
+  );
   factory ShareCardContent.quran(
     QuranRepository repository,
     List<String> keys,
@@ -45,6 +52,7 @@ class ShareCardContent {
     );
   }
   final String text, source, attribution;
+  final bool haqBranding;
   final List<String> verseKeys;
 }
 
@@ -143,7 +151,42 @@ class ShareCardRenderer {
         color: Color(0xFFC7A45A),
       ),
     )..layout(maxWidth: 900);
-    heading.paint(canvas, Offset((1080 - heading.width) / 2, 85));
+    if (content.haqBranding) {
+      final data = await rootBundle.load(
+        'assets/branding/haq_logo_transparent.png',
+      );
+      final codec = await ui.instantiateImageCodec(
+        data.buffer.asUint8List(),
+        targetWidth: 180,
+      );
+      final logo = (await codec.getNextFrame()).image;
+      final plate = RRect.fromRectAndRadius(
+        const Rect.fromLTWH(488, 66, 104, 104),
+        const Radius.circular(24),
+      );
+      canvas.drawRRect(plate, Paint()..color = const Color(0xFFFFFCF7));
+      final rect = applyBoxFit(
+        BoxFit.contain,
+        Size(logo.width.toDouble(), logo.height.toDouble()),
+        const Size(86, 86),
+      ).destination;
+      canvas.drawImageRect(
+        logo,
+        Rect.fromLTWH(0, 0, logo.width.toDouble(), logo.height.toDouble()),
+        Rect.fromCenter(
+          center: const Offset(540, 118),
+          width: rect.width,
+          height: rect.height,
+        ),
+        Paint()..filterQuality = FilterQuality.high,
+      );
+      logo.dispose();
+      codec.dispose();
+    }
+    heading.paint(
+      canvas,
+      Offset((1080 - heading.width) / 2, content.haqBranding ? 186 : 85),
+    );
     final footer = painter(
       content.source,
       TextStyle(fontFamily: 'QuranUI', fontSize: 28, color: ink),
@@ -156,7 +199,7 @@ class ShareCardRenderer {
         color: ink.withValues(alpha: .78),
       ),
     )..layout(maxWidth: 870);
-    final top = 190.0,
+    final top = content.haqBranding ? 250.0 : 190.0,
         bottom = size.height - 155 - footer.height - attribution.height;
     var fontSize = style.fontSize;
     TextPainter? text;
@@ -558,7 +601,9 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
               Column(
                 children: [
                   Semantics(
-                    label: 'معاينة الصورة بالنص والمصدر',
+                    label: content.haqBranding
+                        ? 'معاينة صورة الذكر بشعار حق'
+                        : 'معاينة الصورة بالنص والمصدر',
                     image: true,
                     child: Image.memory(
                       _image!.bytes,
@@ -598,7 +643,9 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
             if (_working) const LinearProgressIndicator(),
             const SizedBox(height: 16),
             Text(
-              'النص والمصدر محفوظان كما هما؛ لا يمكن تعديل نص الآية داخل المصمم.',
+              content.haqBranding
+                  ? 'نص الذكر محفوظ كما هو، وبطاقة المشاركة تحمل شعار حق.'
+                  : 'النص والمصدر محفوظان كما هما؛ لا يمكن تعديل نص الآية داخل المصمم.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 12, color: p.muted),
             ),

@@ -247,14 +247,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
   void _share(DhikrEntry item) {
     unawaited(
       _overlay(
-        () => chooseContentShare(
-          context,
-          ShareCardContent(
-            text: item.text,
-            source: item.source,
-            attribution: item.sourceUrl ?? '',
-          ),
-        ),
+        () => chooseContentShare(context, ShareCardContent.adhkar(item.text)),
       ),
     );
   }
@@ -266,9 +259,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
       case 'save':
         await _favorite(item);
       case 'copy':
-        await Clipboard.setData(
-          ClipboardData(text: '${item.text}\n${item.source}'),
-        );
+        await Clipboard.setData(ClipboardData(text: item.text));
         widget.host._message('تم نسخ الذكر');
       case 'complete':
         await c.count(item.id, complete: true);
