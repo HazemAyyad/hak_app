@@ -1,8 +1,8 @@
 {
   "summary": {
-    "generated_utc": "2026-10-26T21:53:08.467058+00:00",
-    "flutter_head": "c15900562ad7a4f24982de06b4ac292b3d141ed5",
-    "backend_head": "be475c9140c7710a0bb3d0c70f6732488edb712d",
+    "generated_utc": "2026-10-27T06:43:38.694365+00:00",
+    "flutter_head": "6cb2607122182a23493d228f84888db70a105972",
+    "backend_head": "7e2a3bce349d6d19e7bbb2de8541cea96d151926",
     "features": 50,
     "design_states": 309,
     "section_counts": {
@@ -30,15 +30,15 @@
     "missing_evidence_paths": [],
     "suite_evidence": {
       "flutter": {
-        "path": "C:\\flutter_projects\\haq_app\\build\\p12-final-full.log",
+        "path": "C:\\flutter_projects\\haq_app\\build\\p15-final-full.log",
         "passed": true,
-        "tests": 312
+        "tests": 331
       },
       "backend": {
-        "path": "C:\\laragon\\www\\haq-foundation\\storage\\logs\\p12-final-tests.log",
+        "path": "C:\\laragon\\www\\haq-foundation\\storage\\logs\\push-tests2.log",
         "passed": true,
-        "tests": 89,
-        "assertions": 1207
+        "tests": 94,
+        "assertions": 1240
       }
     },
     "scope": "Read-only mapping of the original reference to current source and section tests. No individual 309-case visual/device acceptance, native build, staging, migration, purchase, provider request or release is certified.",
@@ -118,10 +118,11 @@
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "document": "docs/community-push-implementation.md",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "design_codes": [
         "R100"
       ]
@@ -630,10 +631,11 @@
       ],
       "tests": [
         "test/prayer_test.dart",
-        "test/prayer_screens_test.dart"
+        "test/prayer_screens_test.dart",
+        "test/qibla_video_test.dart"
       ],
-      "document": "docs/prayer-qibla-implementation.md",
-      "remaining_gate": "مصدر مساجد حي ومعايرة الحساس والموقع والمواقيت",
+      "document": "docs/qibla-video-implementation.md",
+      "remaining_gate": "حساس ومعايرة وأذان/قفل/flip وأذونات وجهاز؛ قيود iOS ومصدر مساجد حي",
       "design_codes": [
         "R064"
       ]
@@ -1001,10 +1003,11 @@
       ],
       "tests": [
         "test/prayer_test.dart",
-        "test/prayer_screens_test.dart"
+        "test/prayer_screens_test.dart",
+        "test/qibla_video_test.dart"
       ],
-      "document": "docs/prayer-qibla-implementation.md",
-      "remaining_gate": "مصدر مساجد حي ومعايرة الحساس والموقع والمواقيت",
+      "document": "docs/qibla-video-implementation.md",
+      "remaining_gate": "حساس ومعايرة وأذان/قفل/flip وأذونات وجهاز؛ قيود iOS ومصدر مساجد حي",
       "design_codes": [
         "R046"
       ]
@@ -1169,10 +1172,11 @@
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "document": "docs/community-push-implementation.md",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "design_codes": [
         "R323"
       ]
@@ -1400,18 +1404,19 @@
       "title": "رسائل حق",
       "section": "15",
       "kind": "messages",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R011 - رسائل حق.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R011 - رسائل حق.png"
     },
@@ -2028,20 +2033,21 @@
       "title": "المساجد القريبة",
       "section": "16",
       "kind": "permission",
-      "phase": "P09",
+      "phase": "P14",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/prayer"
       ],
       "tests": [
         "test/prayer_test.dart",
-        "test/prayer_screens_test.dart"
+        "test/prayer_screens_test.dart",
+        "test/qibla_video_test.dart"
       ],
-      "document": "docs/prayer-qibla-implementation.md",
+      "document": "docs/qibla-video-implementation.md",
       "feature_numbers": [
         43
       ],
-      "remaining_gate": "مصدر مساجد حي ومعايرة الحساس والموقع والمواقيت",
+      "remaining_gate": "حساس ومعايرة وأذان/قفل/flip وأذونات وجهاز؛ قيود iOS ومصدر مساجد حي",
       "light": "16 - القبلة والمساجد/02 - الواجهات الكاملة/فاتح/R046 - المساجد القريبة.png",
       "dark": "16 - القبلة والمساجد/02 - الواجهات الكاملة/داكن/R046 - المساجد القريبة.png"
     },
@@ -2394,18 +2400,19 @@
       "title": "بوصلة القبلة",
       "section": "16",
       "kind": "permission",
-      "phase": "P09",
+      "phase": "P14",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/prayer"
       ],
       "tests": [
         "test/prayer_test.dart",
-        "test/prayer_screens_test.dart"
+        "test/prayer_screens_test.dart",
+        "test/qibla_video_test.dart"
       ],
-      "document": "docs/prayer-qibla-implementation.md",
+      "document": "docs/qibla-video-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "مصدر مساجد حي ومعايرة الحساس والموقع والمواقيت",
+      "remaining_gate": "حساس ومعايرة وأذان/قفل/flip وأذونات وجهاز؛ قيود iOS ومصدر مساجد حي",
       "light": "16 - القبلة والمساجد/02 - الواجهات الكاملة/فاتح/R063 - بوصلة القبلة.png",
       "dark": "16 - القبلة والمساجد/02 - الواجهات الكاملة/داكن/R063 - بوصلة القبلة.png"
     },
@@ -2414,20 +2421,21 @@
       "title": "بوصلة القبلة",
       "section": "16",
       "kind": "empty",
-      "phase": "P09",
+      "phase": "P14",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/prayer"
       ],
       "tests": [
         "test/prayer_test.dart",
-        "test/prayer_screens_test.dart"
+        "test/prayer_screens_test.dart",
+        "test/qibla_video_test.dart"
       ],
-      "document": "docs/prayer-qibla-implementation.md",
+      "document": "docs/qibla-video-implementation.md",
       "feature_numbers": [
         26
       ],
-      "remaining_gate": "مصدر مساجد حي ومعايرة الحساس والموقع والمواقيت",
+      "remaining_gate": "حساس ومعايرة وأذان/قفل/flip وأذونات وجهاز؛ قيود iOS ومصدر مساجد حي",
       "light": "16 - القبلة والمساجد/02 - الواجهات الكاملة/فاتح/R064 - بوصلة القبلة.png",
       "dark": "16 - القبلة والمساجد/02 - الواجهات الكاملة/داكن/R064 - بوصلة القبلة.png"
     },
@@ -3081,20 +3089,21 @@
       "title": "قصص حق",
       "section": "15",
       "kind": "story",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [
         4
       ],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R100 - قصص حق.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R100 - قصص حق.png"
     },
@@ -3572,18 +3581,19 @@
       "title": "رسائل حق",
       "section": "15",
       "kind": "messages",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R129 - رسائل حق.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R129 - رسائل حق.png"
     },
@@ -3592,18 +3602,19 @@
       "title": "خيارات الرسائل",
       "section": "15",
       "kind": "menu",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R130 - خيارات الرسائل.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R130 - خيارات الرسائل.png"
     },
@@ -3612,18 +3623,19 @@
       "title": "خيارات الرسالة",
       "section": "15",
       "kind": "menu",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R131 - خيارات الرسالة.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R131 - خيارات الرسالة.png"
     },
@@ -6672,18 +6684,19 @@
       "title": "رسائل حق",
       "section": "15",
       "kind": "messages",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R318 - رسائل حق.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R318 - رسائل حق.png"
     },
@@ -6692,18 +6705,19 @@
       "title": "تصفية الرسائل",
       "section": "15",
       "kind": "options",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R319 - تصفية الرسائل.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R319 - تصفية الرسائل.png"
     },
@@ -6712,18 +6726,19 @@
       "title": "رسائل حق",
       "section": "15",
       "kind": "messages",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R320 - رسائل حق.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R320 - رسائل حق.png"
     },
@@ -6732,18 +6747,19 @@
       "title": "رسائل حق",
       "section": "15",
       "kind": "messages",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R321 - رسائل حق.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R321 - رسائل حق.png"
     },
@@ -6752,20 +6768,21 @@
       "title": "رسالة فيديو",
       "section": "15",
       "kind": "video",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [
         50
       ],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R323 - رسالة فيديو.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R323 - رسالة فيديو.png"
     },
@@ -6774,18 +6791,19 @@
       "title": "تنبيه رسائل حق",
       "section": "15",
       "kind": "options",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/R325 - تنبيه رسائل حق.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/R325 - تنبيه رسائل حق.png"
     },
@@ -7576,18 +7594,19 @@
       "title": "رسائل خالية",
       "section": "15",
       "kind": "empty",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/S034 - رسائل خالية.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/S034 - رسائل خالية.png"
     },
@@ -7596,18 +7615,19 @@
       "title": "حذف رسالة",
       "section": "15",
       "kind": "dialog",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/S035 - حذف رسالة.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/S035 - حذف رسالة.png"
     },
@@ -7616,18 +7636,19 @@
       "title": "حذف كافة الرسائل",
       "section": "15",
       "kind": "dialog",
-      "phase": "P11",
+      "phase": "P15",
       "evidence_level": "section_mapping_not_individual_visual_acceptance",
       "sources": [
         "lib/features/community"
       ],
       "tests": [
         "test/community_test.dart",
-        "test/community_screens_test.dart"
+        "test/community_screens_test.dart",
+        "test/public_push_test.dart"
       ],
-      "document": "docs/community-implementation.md",
+      "document": "docs/community-push-implementation.md",
       "feature_numbers": [],
-      "remaining_gate": "وسائط HTTPS وفيديو/YouTube على جهاز؛ Push الخلفي غير منفذ",
+      "remaining_gate": "Firebase/APNs مؤجلان؛ وسائط وPush فعلي وتوقيع وجهاز",
       "light": "15 - القصص والرسائل/02 - الواجهات الكاملة/فاتح/S036 - حذف كافة الرسائل.png",
       "dark": "15 - القصص والرسائل/02 - الواجهات الكاملة/داكن/S036 - حذف كافة الرسائل.png"
     },
