@@ -20,6 +20,7 @@ import 'package:haq_app/navigation/feature_routes.dart';
 import 'package:haq_app/navigation/more_page.dart';
 import 'package:haq_app/navigation/section_entry_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,7 @@ void main() {
   final previewKey = GlobalKey();
 
   setUpAll(() async {
+    await loadVisualAuditFonts();
     repository = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -86,7 +88,7 @@ void main() {
   });
 
   Future<void> pumpApp(WidgetTester tester, {double width = 426}) async {
-    tester.view.physicalSize = Size(width, 922);
+    tester.view.physicalSize = visualSize(Size(width, 922));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -115,20 +117,28 @@ void main() {
   }
 
   Future<void> capture(WidgetTester tester, String name) async {
-    if (!const bool.fromEnvironment('NAVIGATION_PREVIEWS')) return;
+    await prepareVisualAuditCapture(tester, previewKey);
+    if (!visualAudit && !const bool.fromEnvironment('NAVIGATION_PREVIEWS')) {
+      return;
+    }
     await tester.runAsync(() async {
       final boundary =
           previewKey.currentContext!.findRenderObject()
               as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: 1.5);
       final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-      final directory = Directory('build/navigation-preview');
+      final directory = Directory(visualPath('build/navigation-preview'));
       await directory.create(recursive: true);
       await File(
         '${directory.path}/$name.png',
       ).writeAsBytes(bytes!.buffer.asUint8List());
       image.dispose();
     });
+    await captureAuditContinuation(
+      tester,
+      previewKey,
+      visualPath('build/navigation-preview/$name.png'),
+    );
   }
 
   testWidgets(
@@ -257,6 +267,28 @@ void main() {
     },
   );
 
+  testWidgets(
+    'directory search normalizes Arabic and clear restores destinations',
+    (tester) async {
+      await pumpApp(tester);
+      await tab(tester, AppSection.more);
+      final search = find.byKey(const ValueKey('more-search'));
+      await tester.enterText(search, 'قُرْآن');
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('feature-quran')), findsOneWidget);
+      expect(find.byKey(const ValueKey('feature-tasbih')), findsNothing);
+      await capture(tester, 'more-search');
+      await tester.enterText(search, 'عبارة غير موجودة');
+      await tester.pumpAndSettle();
+      expect(find.text('لا توجد خدمات تطابق بحثك'), findsOneWidget);
+      await capture(tester, 'more-no-results');
+      await tester.tap(find.byTooltip('مسح البحث'));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('feature-tasbih')), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('More reference preview ${mode.name}', (tester) async {
       await appearance.setMode(mode);
@@ -277,6 +309,14 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       await capture(tester, 'more-${mode.name}');
+      if (visualAudit) {
+        final secondary = find.byKey(
+          const ValueKey('feature-religiousLibrary'),
+        );
+        await tester.ensureVisible(secondary);
+        await tester.pumpAndSettle();
+        await capture(tester, 'more-secondary-${mode.name}');
+      }
       final planned = find.byKey(const ValueKey('feature-ourApps'));
       await Scrollable.ensureVisible(tester.element(planned), alignment: .4);
       await tester.pumpAndSettle();

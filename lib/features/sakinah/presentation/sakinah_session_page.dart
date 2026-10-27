@@ -275,30 +275,64 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
               ),
             ),
             const SizedBox(height: 16),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final controls = [
+                  FilledButton.icon(
+                    key: const ValueKey('breathing-pause'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFF2A8C82),
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(0, 60),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: paused ? session.resume : session.pause,
+                    icon: Icon(paused ? Icons.play_arrow : Icons.pause),
+                    label: Text(paused ? 'متابعة' : 'إيقاف مؤقت'),
+                  ),
+                  FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFFC7A45A),
+                      foregroundColor: const Color(0xFF102A43),
+                      minimumSize: const Size(0, 60),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: _end,
+                    icon: const Icon(Icons.stop_outlined),
+                    label: const Text('إنهاء الجلسة'),
+                  ),
+                ];
+                if (constraints.maxWidth < 310 ||
+                    MediaQuery.textScalerOf(context).scale(1) > 1.15) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      controls[0],
+                      const SizedBox(height: 10),
+                      controls[1],
+                    ],
+                  );
+                }
+                return Row(
+                  children: [
+                    Expanded(child: controls[0]),
+                    const SizedBox(width: 10),
+                    Expanded(child: controls[1]),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(height: 12),
             FilterChip(
               key: const ValueKey('breathing-haptic'),
               avatar: const Icon(Icons.vibration),
               label: const Text('اهتزاز الجلسة'),
               selected: _hapticEnabled,
               onSelected: (v) => setState(() => _hapticEnabled = v),
-            ),
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              alignment: WrapAlignment.center,
-              children: [
-                FilledButton.icon(
-                  key: const ValueKey('breathing-pause'),
-                  onPressed: paused ? session.resume : session.pause,
-                  icon: Icon(paused ? Icons.play_arrow : Icons.pause),
-                  label: Text(paused ? 'متابعة' : 'إيقاف مؤقت'),
-                ),
-                FilledButton.tonalIcon(
-                  onPressed: _end,
-                  icon: const Icon(Icons.stop_outlined),
-                  label: const Text('إنهاء الجلسة'),
-                ),
-              ],
             ),
           ],
         ),

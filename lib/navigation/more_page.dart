@@ -3,9 +3,33 @@ import 'package:flutter/material.dart';
 import '../app_appearance.dart';
 import 'feature_routes.dart';
 
-class MorePage extends StatelessWidget {
+class MorePage extends StatefulWidget {
   const MorePage({super.key, required this.onFeature});
   final ValueChanged<AppFeature> onFeature;
+
+  @override
+  State<MorePage> createState() => _MorePageState();
+}
+
+class _MorePageState extends State<MorePage> {
+  final _search = TextEditingController();
+  String _query = '';
+
+  String _normalized(String value) => value
+      .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640]'), '')
+      .replaceAll(RegExp('[أإآٱ]'), 'ا')
+      .replaceAll('ى', 'ي')
+      .trim();
+
+  bool _matches(AppFeature feature) => _normalized(
+    '${feature.title} ${feature.subtitle ?? ''}',
+  ).contains(_query);
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +39,8 @@ class MorePage extends StatelessWidget {
           (feature) =>
               !AppFeature.featured.contains(feature) &&
               feature != AppFeature.settings &&
-              feature != AppFeature.appearance,
+              feature != AppFeature.appearance &&
+              _matches(feature),
         )
         .toList();
     return ColoredBox(
@@ -43,6 +68,37 @@ class MorePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    TextField(
+                      key: const ValueKey('more-search'),
+                      controller: _search,
+                      onChanged: (value) =>
+                          setState(() => _query = _normalized(value)),
+                      decoration: InputDecoration(
+                        hintText: 'ابحث عن خدمة…',
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: _query.isEmpty
+                            ? null
+                            : IconButton(
+                                tooltip: 'مسح البحث',
+                                onPressed: () {
+                                  _search.clear();
+                                  setState(() => _query = '');
+                                },
+                                icon: const Icon(Icons.close),
+                              ),
+                        filled: true,
+                        fillColor: palette.surface,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide(color: palette.border),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide(color: palette.border),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
                     Wrap(
                       alignment: WrapAlignment.end,
                       spacing: 8,
@@ -50,7 +106,7 @@ class MorePage extends StatelessWidget {
                         for (final feature in [
                           AppFeature.settings,
                           AppFeature.appearance,
-                        ])
+                        ].where(_matches))
                           ActionChip(
                             key: ValueKey('feature-${feature.name}'),
                             avatar: Icon(
@@ -59,24 +115,24 @@ class MorePage extends StatelessWidget {
                               color: palette.tealHeading,
                             ),
                             label: Text(feature.title),
-                            onPressed: () => onFeature(feature),
+                            onPressed: () => widget.onFeature(feature),
                             backgroundColor: palette.surface,
                             side: BorderSide(color: palette.border),
                           ),
                       ],
                     ),
                     const SizedBox(height: 10),
-                    for (final feature in AppFeature.featured)
+                    for (final feature in AppFeature.featured.where(_matches))
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: _FeaturedService(
                           feature: feature,
-                          onTap: () => onFeature(feature),
+                          onTap: () => widget.onFeature(feature),
                         ),
                       ),
                     const SizedBox(height: 12),
                     Text(
-                      'اكتشف المزيد',
+                      _query.isEmpty ? 'اكتشف المزيد' : 'نتائج البحث',
                       style: TextStyle(
                         color: palette.heading,
                         fontSize: 20,
@@ -84,69 +140,23 @@ class MorePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    GridView.builder(
-                      primary: false,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 160,
-                        mainAxisExtent:
-                            112 *
-                            MediaQuery.textScalerOf(
-                              context,
-                            ).scale(1).clamp(1.0, 1.8),
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
+                    if (!AppFeature.values.any(_matches))
+                      Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Text(
+                          'لا توجد خدمات تطابق بحثك',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: palette.muted),
+                        ),
                       ),
-                      itemCount: secondary.length,
-                      itemBuilder: (context, index) {
-                        final feature = secondary[index];
-                        return Material(
-                          color: palette.surface,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18),
-                            side: BorderSide(color: palette.border),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: InkWell(
-                            key: ValueKey('feature-${feature.name}'),
-                            onTap: () => onFeature(feature),
-                            child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    feature.icon,
-                                    color: palette.tealHeading,
-                                    size: 28,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    feature.title,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: palette.heading,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  if (!feature.ready)
-                                    Text(
-                                      'قريبًا',
-                                      style: TextStyle(
-                                        color: palette.muted,
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    for (final feature in secondary)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _FeaturedService(
+                          feature: feature,
+                          onTap: () => widget.onFeature(feature),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -304,25 +314,26 @@ class _FeaturedService extends StatelessWidget {
           onTap: onTap,
           child: Stack(
             children: [
-              Positioned(
-                top: 0,
-                bottom: 0,
-                right: 0,
-                width: 143,
-                child: ClipRect(
-                  child: Transform.scale(
-                    scale: feature == AppFeature.sakinah ? 2.2 : 1,
-                    alignment: Alignment.bottomLeft,
-                    child: Image.asset(
-                      feature.imageAsset!,
-                      fit: BoxFit.cover,
-                      alignment: feature == AppFeature.sakinah
-                          ? Alignment.bottomLeft
-                          : Alignment.center,
+              if (feature.imageAsset != null)
+                Positioned(
+                  top: 0,
+                  bottom: 0,
+                  right: 0,
+                  width: 143,
+                  child: ClipRect(
+                    child: Transform.scale(
+                      scale: feature == AppFeature.sakinah ? 2.2 : 1,
+                      alignment: Alignment.bottomLeft,
+                      child: Image.asset(
+                        feature.imageAsset!,
+                        fit: BoxFit.cover,
+                        alignment: feature == AppFeature.sakinah
+                            ? Alignment.bottomLeft
+                            : Alignment.center,
+                      ),
                     ),
                   ),
                 ),
-              ),
               Positioned(
                 top: 0,
                 bottom: 0,
@@ -345,7 +356,12 @@ class _FeaturedService extends StatelessWidget {
               ConstrainedBox(
                 constraints: const BoxConstraints(minHeight: 78),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 12, 85, 12),
+                  padding: EdgeInsets.fromLTRB(
+                    8,
+                    12,
+                    feature.imageAsset == null ? 16 : 85,
+                    12,
+                  ),
                   child: Row(
                     children: [
                       Expanded(
@@ -367,7 +383,7 @@ class _FeaturedService extends StatelessWidget {
                             ),
                             const SizedBox(height: 3),
                             Text(
-                              feature.subtitle!,
+                              feature.subtitle ?? _description(feature),
                               style: TextStyle(
                                 color: palette.muted,
                                 fontSize: 11,
@@ -409,3 +425,21 @@ class _FeaturedService extends StatelessWidget {
     );
   }
 }
+
+String _description(AppFeature feature) => switch (feature) {
+  AppFeature.religiousLibrary => 'أدعية وأسماء الله الحسنى ورقية شرعية',
+  AppFeature.duaTogether => 'شارك الدعاء وتفاعل مع المجتمع',
+  AppFeature.circles => 'ذكر مشترك ومتابعة المساهمات',
+  AppFeature.statistics => 'تابع نشاطك وإنجازاتك المسجلة',
+  AppFeature.personalAdhkar => 'أذكارك ومجموعاتك الخاصة',
+  AppFeature.names => 'أسماء الله الحسنى ومعانيها',
+  AppFeature.ramadan => 'ورد وأدعية وأعمال رمضان',
+  AppFeature.sunnah || AppFeature.friday => 'سنن وآداب من الهدي النبوي',
+  AppFeature.hadith || AppFeature.nawawi => 'أحاديث نبوية مع الشرح والمصدر',
+  AppFeature.mosques => 'ابحث عن المساجد القريبة منك',
+  AppFeature.messages || AppFeature.stories => 'رسائل ومحتوى إيماني من حق',
+  AppFeature.assistant => 'افتح المساعد وسجل محادثاتك',
+  AppFeature.subscription => 'تفاصيل الباكج وإدارة الاشتراك',
+  AppFeature.ourApps => 'تعرف على تطبيقات حق',
+  _ => 'افتح القسم واستكشف محتواه',
+};

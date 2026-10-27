@@ -482,6 +482,55 @@ class _ProgressHomeState extends State<_ProgressHome> {
         onSelectionChanged: (v) => setState(() => _allStats = v.first),
       ),
       const SizedBox(height: 16),
+      _panel(
+        context,
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              _allStats ? 'رحلتك مع حق' : 'رحلتك اليوم',
+              style: TextStyle(color: AppPalette.of(context).tealHeading),
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                for (final (label, count) in [
+                  ('قراءة ذكر', totals.adhkar),
+                  ('تسبيحة', totals.tasbih),
+                  ('صفحة قرآن', totals.pages),
+                ])
+                  Expanded(
+                    child: Column(
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '$count',
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w800,
+                              color: AppPalette.of(context).tealHeading,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          label,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: AppPalette.of(context).muted,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
+        tinted: true,
+      ),
       for (final (title, value, unit, icon) in [
         ('الأذكار', totals.adhkar, 'قراءة مسجلة', Icons.eco_outlined),
         ('التسبيح', totals.tasbih, 'تسبيحة', Icons.radio_button_checked),
@@ -494,8 +543,16 @@ class _ProgressHomeState extends State<_ProgressHome> {
           ListTile(
             contentPadding: EdgeInsets.zero,
             leading: Icon(icon, color: const Color(0xFF2A8C82)),
-            title: Text(title),
+            dense: true,
+            minVerticalPadding: 0,
+            title: Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
             subtitle: Text('$value $unit'),
+            trailing: title == 'الأذكار'
+                ? const Icon(Icons.chevron_left)
+                : null,
             onTap: title != 'الأذكار'
                 ? null
                 : () => showDialog<void>(

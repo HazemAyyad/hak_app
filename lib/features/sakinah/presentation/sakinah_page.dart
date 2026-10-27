@@ -83,36 +83,45 @@ class _SakinahPageState extends State<SakinahPage> {
                 subtitle: 'لحظات من الطمأنينة',
                 onBack: () => Navigator.of(this.context).pop(),
                 children: [
-                  _sPanel(
-                    context,
-                    const Text(
-                      'مساحة للتنفس والذكر بهدوء، وليست بديلًا عن المساعدة المختصة. اختر الإيقاع والمدة المناسبين لك.',
-                    ),
-                    tinted: true,
-                  ),
                   for (var i = 0; i < sakinahPaths.length; i++)
                     _sPanel(
                       context,
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        leading: Icon(
-                          [
-                            Icons.air,
-                            Icons.spa_outlined,
-                            Icons.favorite_border,
-                            Icons.eco_outlined,
-                            Icons.wb_sunny_outlined,
-                          ][i],
-                          color: const Color(0xFF2A8C82),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.asset(
+                            [
+                              'assets/navigation/sakinah.png',
+                              'assets/navigation/mood-rest.png',
+                              'assets/navigation/mood-happy.png',
+                              'assets/navigation/more_header.png',
+                              'assets/navigation/header-moods.png',
+                            ][i],
+                            width: 68,
+                            height: 68,
+                            fit: BoxFit.cover,
+                            alignment: i == 0
+                                ? Alignment.bottomLeft
+                                : Alignment.centerLeft,
+                            excludeFromSemantics: true,
+                          ),
                         ),
                         title: Text(
                           sakinahNames[i],
-                          style: const TextStyle(
-                            fontSize: 20,
+                          style: TextStyle(
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: AppPalette.of(context).heading,
                           ),
                         ),
-                        subtitle: const Text('اختر النمط والمدة ثم ابدأ'),
+                        subtitle: Text(
+                          'اختر النمط والمدة ثم ابدأ',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppPalette.of(context).muted,
+                          ),
+                        ),
                         trailing: const Icon(Icons.chevron_left),
                         onTap: () => Navigator.push(
                           context,
@@ -128,7 +137,14 @@ class _SakinahPageState extends State<SakinahPage> {
                           ),
                         ),
                       ),
+                      compact: true,
                     ),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 12),
+                    child: Text(
+                      'تنفّس بهدوء، واختر الإيقاع والمدة المناسبين لك.',
+                    ),
+                  ),
                   OutlinedButton.icon(
                     onPressed: () => Navigator.push(
                       context,
@@ -196,11 +212,16 @@ class _SakinahLayout extends StatelessWidget {
   );
 }
 
-Widget _sPanel(BuildContext context, Widget child, {bool tinted = false}) {
+Widget _sPanel(
+  BuildContext context,
+  Widget child, {
+  bool tinted = false,
+  bool compact = false,
+}) {
   final p = AppPalette.of(context);
   return Container(
     margin: const EdgeInsets.only(bottom: 12),
-    padding: const EdgeInsets.all(18),
+    padding: EdgeInsets.all(compact ? 12 : 18),
     decoration: BoxDecoration(
       color: tinted ? p.paleTeal : p.surface,
       borderRadius: BorderRadius.circular(22),
