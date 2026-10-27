@@ -332,6 +332,7 @@ private final class HaqPrayerDevice: NSObject, CLLocationManagerDelegate, Flutte
   private var pending: FlutterResult?
   private var timeout: DispatchWorkItem?
   private var requested = false
+  private let geocoder = CLGeocoder()
   private var backgroundObserver: NSObjectProtocol?
   init(messenger: FlutterBinaryMessenger) {
     channel = FlutterMethodChannel(name: "com.haqfoundation.haq_app/prayer", binaryMessenger: messenger)
@@ -362,6 +363,28 @@ private final class HaqPrayerDevice: NSObject, CLLocationManagerDelegate, Flutte
       case "settings":
         if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
         result(nil)
+      case "reverseGeocode":
+        guard let args = call.arguments as? [String: Any], let lat = args["lat"] as? Double,
+              let lng = args["lng"] as? Double, lat.isFinite, lng.isFinite,
+              (-90...90).contains(lat), (-180...180).contains(lng) else {
+          result(FlutterError(code: "location", message: "Invalid coordinates", details: nil)); return
+        }
+        let status = CLLocationManager.authorizationStatus()
+        guard status == .authorizedWhenInUse || status == .authorizedAlways else { result(nil); return }
+        var finished = false
+        let timeout = DispatchWorkItem { [weak self] in
+          guard !finished else { return }; finished = true
+          self?.geocoder.cancelGeocode(); result(nil)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.5, execute: timeout)
+        self.geocoder.reverseGeocodeLocation(CLLocation(latitude: lat, longitude: lng), preferredLocale: Locale(identifier: "ar")) { places, _ in
+          DispatchQueue.main.async {
+            guard !finished else { return }; finished = true; timeout.cancel()
+            guard let place = places?.first, let city = place.locality ?? place.subAdministrativeArea,
+                  !city.isEmpty, let country = place.country, !country.isEmpty else { result(nil); return }
+            result(["city": city, "country": country])
+          }
+        }
       case "openMap":
         guard let raw = call.arguments as? String, let url = URL(string: raw), url.scheme == "https", url.host == "www.openstreetmap.org" else {
           result(FlutterError(code: "map", message: "Invalid map URL", details: nil)); return

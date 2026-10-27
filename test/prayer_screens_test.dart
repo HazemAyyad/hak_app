@@ -10,6 +10,7 @@ import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/features/prayer/data/prayer_controller.dart';
 import 'package:haq_app/features/prayer/data/prayer_models.dart';
 import 'package:haq_app/features/prayer/data/place_catalog.dart';
+import 'package:haq_app/features/prayer/data/prayer_alert.dart';
 import 'package:haq_app/features/prayer/data/heading_controller.dart';
 import 'package:haq_app/features/prayer/data/mosque_repository.dart';
 import 'package:haq_app/features/prayer/data/adhan_library.dart';
@@ -236,6 +237,55 @@ void main() {
       },
     );
   }
+  testWidgets(
+    'large adhan catalog is a compact bounded list with searchable selection and independent scrolling',
+    (tester) async {
+      await tester.runAsync(() => c.save(PrayerConfig(location: place())));
+      final temp = await tester.runAsync(
+        () => Directory.systemTemp.createTemp('haq-voices-'),
+      );
+      final library = AdhanLibrary(directory: () async => temp!);
+      await pump(
+        tester,
+        PrayerAlertPage(
+          controller: c,
+          prayer: PrayerName.fajr,
+          library: library,
+        ),
+        scale: 1,
+      );
+      await tester.tap(find.byType(Switch).first);
+      await tester.pump();
+      await tap(tester, 'صوت الأذان');
+      final list = find.byKey(const ValueKey('compact-adhan-voices'));
+      await tester.ensureVisible(list);
+      await settle(tester);
+      expect(tester.getSize(list).height, lessThanOrEqualTo(360));
+      expect(
+        find.byKey(ValueKey('adhan-voice-${adhanVoices.last.id}')),
+        findsNothing,
+      );
+      await tester.enterText(find.byType(TextField).last, 'ملا');
+      await tester.pump();
+      final voice = adhanVoices.firstWhere((v) => v.name.contains('ملا'));
+      await tester.tap(find.byKey(ValueKey('adhan-voice-${voice.id}')));
+      await tester.pump();
+      expect(find.text('المختار: ${voice.name}'), findsOneWidget);
+      FocusManager.instance.primaryFocus?.unfocus();
+      tester.view.physicalSize = const Size(390, 844);
+      await tester.pumpAndSettle();
+      await capture(tester, 'compact-voices-default');
+      await tap(tester, 'احفظ التغييرات');
+      expect(
+        c.config.alert(PrayerName.fajr).voice,
+        'alafasy',
+      ); // No file downloaded: never claim adhan ready.
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      library.dispose();
+      await tester.runAsync(() => temp!.delete(recursive: true));
+    },
+  );
   testWidgets(
     'unknown compass does not request permission until explicit tap and denial shows no fake direction',
     (tester) async {

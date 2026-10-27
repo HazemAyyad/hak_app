@@ -50,8 +50,9 @@ void main() {
             }
             throw StateError('Unexpected query: $sql');
           }
-          if (call.method == 'execute' || call.method == 'closeDatabase')
+          if (call.method == 'execute' || call.method == 'closeDatabase') {
             return null;
+          }
           throw StateError('Unexpected native call: ${call.method}');
         });
   });

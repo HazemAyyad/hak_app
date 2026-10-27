@@ -209,8 +209,7 @@ class PrayerMoment {
   const PrayerMoment(this.name, this.time);
   final PrayerName name;
   final tz.TZDateTime time;
-  String get label =>
-      '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  String get label => prayerClockLabel(time);
 }
 
 class PrayerDay {

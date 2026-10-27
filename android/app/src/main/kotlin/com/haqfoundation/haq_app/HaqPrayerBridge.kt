@@ -12,14 +12,17 @@ import android.view.Surface
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import java.util.TimeZone
+import java.util.Locale
+import java.util.concurrent.Executors
 
-/** Foreground-only location and real orientation readings. No background grant,
- * fake north, reverse geocoding, or location upload. */
+/** Foreground-only location and real orientation. System place naming is used
+ * after an explicit location request, without background location grants. */
 class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel, events: EventChannel) : SensorEventListener {
     companion object { const val PERMISSION = 7351 }
     private val locations = activity.getSystemService(LocationManager::class.java)
     private val sensors = activity.getSystemService(SensorManager::class.java)
     private val handler = Handler(Looper.getMainLooper())
+    private val geocoderWorker = Executors.newSingleThreadExecutor()
     private var pending: MethodChannel.Result? = null
     private var requestRevision = 0L
     private var cancellation: CancellationSignal? = null
@@ -52,6 +55,12 @@ class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel
                         else locate()
                     }
                     "settings" -> { activity.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${activity.packageName}"))); result.success(null) }
+                    "reverseGeocode" -> {
+                        val lat = call.argument<Number>("lat")!!.toDouble()
+                        val lng = call.argument<Number>("lng")!!.toDouble()
+                        require(lat.isFinite() && lng.isFinite() && lat in -90.0..90.0 && lng in -180.0..180.0)
+                        reverseGeocode(lat, lng, result)
+                    }
                     "openMap" -> {
                         val uri = Uri.parse(call.arguments as String)
                         require(uri.scheme == "https" && uri.host == "www.openstreetmap.org")
@@ -88,6 +97,39 @@ class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel
         })
     }
     fun permissionResult() { if (pending != null) { if (permission()) locate() else finishError("denied", "Location permission denied") } }
+    private fun reverseGeocode(lat: Double, lng: Double, result: MethodChannel.Result) {
+        if (!permission() || !Geocoder.isPresent()) { result.success(null); return }
+        var completed = false
+        val timeout = Runnable { if (!completed) { completed = true; result.success(null) } }
+        handler.postDelayed(timeout, 4500)
+        fun finish(addresses: List<Address>?) {
+            handler.post {
+                if (!completed) {
+                    completed = true; handler.removeCallbacks(timeout)
+                    val address = addresses?.firstOrNull()
+                    val city = address?.locality?.takeIf { it.isNotBlank() }
+                        ?: address?.subAdminArea?.takeIf { it.isNotBlank() }
+                    val country = address?.countryName
+                    result.success(if (city != null && !country.isNullOrBlank()) mapOf("city" to city, "country" to country) else null)
+                }
+            }
+        }
+        val geocoder = Geocoder(activity.applicationContext, Locale.forLanguageTag("ar"))
+        try {
+            if (Build.VERSION.SDK_INT >= 33) {
+                geocoder.getFromLocation(lat, lng, 1, object : Geocoder.GeocodeListener {
+                    override fun onGeocode(addresses: MutableList<Address>) { finish(addresses) }
+                    override fun onError(errorMessage: String?) { finish(null) }
+                })
+            } else {
+                geocoderWorker.execute {
+                    @Suppress("DEPRECATION")
+                    val names = try { geocoder.getFromLocation(lat, lng, 1) } catch (_: Exception) { null }
+                    finish(names)
+                }
+            }
+        } catch (_: Exception) { finish(null) }
+    }
     private fun locate() {
         val revision = requestRevision
         try {
@@ -134,7 +176,7 @@ class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel
         sensors.unregisterListener(this); sink = null; gravity = null; magnetic = null
         accuracy = SensorManager.SENSOR_STATUS_UNRELIABLE; lastEmit = 0
     }
-    fun dispose() { stopHeading(); finishError("cancelled", "Activity closed") }
+    fun dispose() { stopHeading(); finishError("cancelled", "Activity closed"); geocoderWorker.shutdownNow() }
     override fun onAccuracyChanged(sensor: Sensor?, value: Int) {
         if (sensor?.type == Sensor.TYPE_MAGNETIC_FIELD || sensor?.type == Sensor.TYPE_ROTATION_VECTOR) accuracy = value
     }

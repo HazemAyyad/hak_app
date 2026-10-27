@@ -1,3 +1,5 @@
+part 'adhan_catalog.dart';
+
 enum PrayerAlertMode {
   chime('نغمة التنبيه'),
   adhan('صوت الأذان'),
@@ -45,9 +47,17 @@ class PrayerAlert {
 }
 
 class AdhanVoice {
-  const AdhanVoice(this.id, this.name, this.file);
-  final String id, name, file;
-  Uri get uri => Uri.https('cdn.aladhan.com', '/audio/adhans/$file');
+  const AdhanVoice(
+    this.id,
+    this.name,
+    this.file, {
+    this.source = 'AlAdhan / Islamic Network',
+    this.sourceUrl = 'https://aladhan.com/download-adhans',
+  });
+  final String id, name, file, source, sourceUrl;
+  Uri get uri => file.startsWith('https://')
+      ? Uri.parse(file)
+      : Uri.https('cdn.aladhan.com', '/audio/adhans/$file');
 }
 
 // Public download catalogue, publisher attribution retained. Never relabel a
@@ -57,4 +67,5 @@ const adhanVoices = [
   AdhanVoice('nafees', 'أحمد النفيس', 'a1.mp3'),
   AdhanVoice('mustafa', 'حافظ مصطفى أوزجان', 'a2.mp3'),
   AdhanVoice('zahrani', 'منصور الزهراني', 'a11-mansour-al-zahrani.mp3'),
+  ..._additionalAdhanVoices,
 ];

@@ -346,15 +346,26 @@ class _QiblaPageState extends State<QiblaPage>
                       ),
                     ),
                     if (c.error case final error?) _notice(context, error),
+                    if (c.locationNotice case final notice?)
+                      _notice(context, notice),
                     if (c.calculationError case final error?)
                       _notice(context, error),
                     FilledButton.icon(
                       onPressed: c.locating ? null : c.locate,
-                      icon: const Icon(Icons.my_location),
+                      icon: c.locating
+                          ? const SizedBox.square(
+                              dimension: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : Icon(
+                              place == null ? Icons.my_location : Icons.refresh,
+                            ),
                       label: Text(
                         c.locating
                             ? 'جارٍ تحديد الموقع…'
-                            : 'السماح بالموقع / إعادة المحاولة',
+                            : place == null
+                            ? 'السماح بالموقع / إعادة المحاولة'
+                            : 'تحديث الموقع',
                       ),
                     ),
                     const SizedBox(height: 10),

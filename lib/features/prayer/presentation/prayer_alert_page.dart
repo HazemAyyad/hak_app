@@ -28,6 +28,7 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
   bool _saving = false, _leaving = false, _mayPop = false;
   int _generation = 0;
   String search = '';
+  final _voicesScroll = ScrollController();
   Map<String, dynamic> device = {};
   String get snapshot => jsonEncode({'enabled': enabled, ...draft.toJson()});
   bool get dirty => snapshot != _initial;
@@ -211,6 +212,7 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
 
   @override
   void dispose() {
+    _voicesScroll.dispose();
     WidgetsBinding.instance.removeObserver(this);
     widget.controller.removeListener(_account);
     if (widget.library == null) {
@@ -219,6 +221,151 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
       unawaited(library.stop());
     }
     super.dispose();
+  }
+
+  Widget _voiceList(BuildContext context) {
+    final p = AppPalette.of(context);
+    final shown = adhanVoices
+        .where(
+          (v) =>
+              normalizePlaceQuery(v.name).contains(normalizePlaceQuery(search)),
+        )
+        .toList();
+    final selected = adhanVoices.firstWhere((v) => v.id == draft.voice);
+    return _panel(
+      context,
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'المختار: ${selected.name}',
+            style: TextStyle(
+              color: p.tealHeading,
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${shown.length} تسجيل • اسحب القائمة للمزيد',
+            style: TextStyle(color: p.muted, fontSize: 11),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: (MediaQuery.sizeOf(context).height * .42).clamp(
+              220.0,
+              360.0,
+            ),
+            child: Scrollbar(
+              controller: _voicesScroll,
+              child: ListView.separated(
+                key: const ValueKey('compact-adhan-voices'),
+                controller: _voicesScroll,
+                primary: false,
+                itemCount: shown.length,
+                separatorBuilder: (_, _) => Divider(height: 1, color: p.border),
+                itemBuilder: (context, i) {
+                  final voice = shown[i];
+                  return InkWell(
+                    key: ValueKey('adhan-voice-${voice.id}'),
+                    onTap: _saving
+                        ? null
+                        : () => setState(
+                            () => draft = draft.copyWith(voice: voice.id),
+                          ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 9),
+                      child: Row(
+                        children: [
+                          Icon(
+                            draft.voice == voice.id
+                                ? Icons.check_circle
+                                : Icons.circle_outlined,
+                            color: draft.voice == voice.id
+                                ? p.tealHeading
+                                : p.muted,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  voice.name,
+                                  style: TextStyle(
+                                    color: p.heading,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  library.downloaded.contains(voice.id)
+                                      ? 'محفوظ على الجهاز'
+                                      : voice.source,
+                                  style: TextStyle(
+                                    color: p.muted,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: library.playing == voice.id
+                                ? 'إيقاف المعاينة'
+                                : 'معاينة ${voice.name}',
+                            onPressed: _saving
+                                ? null
+                                : () => library.preview(voice),
+                            icon: Icon(
+                              library.playing == voice.id
+                                  ? Icons.pause_circle
+                                  : Icons.play_circle_outline,
+                              color: p.tealHeading,
+                            ),
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          IconButton(
+                            tooltip: 'تنزيل ${voice.name}',
+                            onPressed:
+                                _saving ||
+                                    library.downloading != null ||
+                                    library.downloaded.contains(voice.id)
+                                ? null
+                                : () => library.download(voice),
+                            visualDensity: VisualDensity.compact,
+                            icon: library.downloading == voice.id
+                                ? SizedBox.square(
+                                    dimension: 20,
+                                    child: CircularProgressIndicator(
+                                      value: library.progress,
+                                    ),
+                                  )
+                                : Icon(
+                                    library.downloaded.contains(voice.id)
+                                        ? Icons.download_done
+                                        : Icons.download_outlined,
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => launchUrl(
+              Uri.parse(selected.sourceUrl),
+              mode: LaunchMode.externalApplication,
+            ),
+            child: const Text('مصدر التسجيل المختار'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -409,92 +556,23 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                                 hintText: 'ابحث عن المؤذن…',
                                 prefixIcon: Icon(Icons.search),
                               ),
-                              onChanged: (v) =>
-                                  setState(() => search = v.trim()),
+                              onChanged: (v) => setState(() {
+                                search = v.trim();
+                                if (_voicesScroll.hasClients) {
+                                  _voicesScroll.jumpTo(0);
+                                }
+                              }),
                             ),
                             const SizedBox(height: 14),
-                            for (final voice in adhanVoices.where(
-                              (v) => v.name.contains(search),
-                            ))
-                              _panel(
-                                context,
-                                Column(
-                                  children: [
-                                    ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      selected: draft.voice == voice.id,
-                                      selectedColor: p.tealHeading,
-                                      title: Text(voice.name),
-                                      subtitle: Text(
-                                        library.downloaded.contains(voice.id)
-                                            ? 'محفوظ على الجهاز'
-                                            : 'معاينة عبر الإنترنت • تنزيل للتنبيه',
-                                      ),
-                                      leading: Icon(
-                                        draft.voice == voice.id
-                                            ? Icons.check_circle
-                                            : Icons.circle_outlined,
-                                        color: p.gold,
-                                      ),
-                                      onTap: _saving
-                                          ? null
-                                          : () => setState(
-                                              () => draft = draft.copyWith(
-                                                voice: voice.id,
-                                              ),
-                                            ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        IconButton(
-                                          tooltip: library.playing == voice.id
-                                              ? 'إيقاف المعاينة'
-                                              : 'معاينة ${voice.name}',
-                                          onPressed: () =>
-                                              library.preview(voice),
-                                          icon: Icon(
-                                            library.playing == voice.id
-                                                ? Icons.pause_circle
-                                                : Icons.play_circle_outline,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          tooltip: 'تنزيل ${voice.name}',
-                                          onPressed:
-                                              library.downloading != null ||
-                                                  library.downloaded.contains(
-                                                    voice.id,
-                                                  )
-                                              ? null
-                                              : () => library.download(voice),
-                                          icon: library.downloading == voice.id
-                                              ? SizedBox.square(
-                                                  dimension: 22,
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        value: library.progress,
-                                                      ),
-                                                )
-                                              : Icon(
-                                                  library.downloaded.contains(
-                                                        voice.id,
-                                                      )
-                                                      ? Icons.download_done
-                                                      : Icons.download_outlined,
-                                                ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            _voiceList(context),
                             if (!adhanVoices.any(
-                              (v) => v.name.contains(search),
+                              (v) => normalizePlaceQuery(
+                                v.name,
+                              ).contains(normalizePlaceQuery(search)),
                             ))
                               _notice(context, 'لا يوجد مؤذن يطابق البحث'),
                             const Text(
-                              'مصدر التسجيلات: AlAdhan / Islamic Network',
+                              'التسجيلات من AlAdhan ومجموعة الأذان العامة؛ أصحاب التسجيلات مذكورون في المصدر.',
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 12),
                             ),

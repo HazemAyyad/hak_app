@@ -91,14 +91,13 @@ void main() {
         hanafi: true,
       );
       final day = calculatePrayerDay(config, DateTime.utc(2015, 7, 12, 12));
-      expect(day.moments.map((e) => e.label), [
-        '04:42',
-        '06:08',
-        '13:21',
-        '18:22',
-        '20:32',
-        '21:57',
-      ]);
+      expect(
+        day.moments.map(
+          (e) =>
+              '${e.time.hour.toString().padLeft(2, '0')}:${e.time.minute.toString().padLeft(2, '0')}',
+        ),
+        ['04:42', '06:08', '13:21', '18:22', '20:32', '21:57'],
+      );
     },
   );
   test(

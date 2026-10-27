@@ -232,11 +232,40 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                         setState(_fill);
                                       }
                                     },
-                              icon: const Icon(Icons.my_location),
+                              icon: widget.controller.locating
+                                  ? const SizedBox.square(
+                                      dimension: 18,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : Icon(
+                                      widget.controller.config.location == null
+                                          ? Icons.my_location
+                                          : Icons.refresh,
+                                    ),
                               label: Text(
                                 widget.controller.locating
                                     ? 'جارٍ تحديد الموقع…'
-                                    : 'تحديد موقع الجهاز بإذن منك',
+                                    : widget.controller.config.location == null
+                                    ? 'تحديد موقع الجهاز بإذن منك'
+                                    : 'تحديث موقع الجهاز',
+                              ),
+                            ),
+                            if (widget.controller.locationNotice
+                                case final notice?)
+                              Text(
+                                notice,
+                                style: TextStyle(
+                                  color: AppPalette.of(context).tealHeading,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            Text(
+                              'لتسمية المدينة والدولة نستخدم خدمة الأماكن في نظام الجهاز. قد تحتاج إلى الإنترنت.',
+                              style: TextStyle(
+                                color: AppPalette.of(context).muted,
+                                fontSize: 11,
                               ),
                             ),
                             TextButton(

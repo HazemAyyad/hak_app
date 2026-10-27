@@ -1,0 +1,1604 @@
+{
+  "source": "https://github.com/Kiwifu/adhan-mp3",
+  "revision": "b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b",
+  "recordings": 228,
+  "note": "Publisher-provided metadata; attribution is not a recording-rights clearance.",
+  "files": [
+    {
+      "id": "archive-8c0b40d74122a584",
+      "name": "عبد الرزاق صالح - لبنان",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abd_Alrazaq_Saleh_-_Lebanon_%28%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%B1%D8%B2%D8%A7%D9%82_%D8%B5%D8%A7%D9%84%D8%AD_-_%D9%84%D8%A8%D9%86%D8%A7%D9%86%29.mp3",
+      "gitBlobSha": "e292afb8df73228b7e498662874e67f6909bd308",
+      "bytes": 501720
+    },
+    {
+      "id": "archive-cf3f2393e9ddcfa9",
+      "name": "عبد المنعم عبد المبدي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdel_Moneim_Abdel_Mobdi_%28%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D9%85%D9%86%D8%B9%D9%85_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D9%85%D8%A8%D8%AF%D9%8A%29.mp3",
+      "gitBlobSha": "c06fd415ec2cd8f580387ce6c11cbfc06055a410",
+      "bytes": 712147
+    },
+    {
+      "id": "archive-7a2f7e31fe003e7e",
+      "name": "عبد الكريم جابري",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdu_Al_Karem_Jabare_%28%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D9%83%D8%B1%D9%8A%D9%85_%D8%AC%D8%A7%D8%A8%D8%B1%D9%8A%29.mp3",
+      "gitBlobSha": "18cb27873394cc402fe90d113dccb5156af194a7",
+      "bytes": 1634867
+    },
+    {
+      "id": "archive-03da503386685226",
+      "name": "عبدالمجيد السريحي • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdul_Majid_Al_Surehi_1_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%85%D8%AC%D9%8A%D8%AF_%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%AD%D9%8A%29.mp3",
+      "gitBlobSha": "0d05c1cb8763675a58af519fc4f13c765a6824a6",
+      "bytes": 828962
+    },
+    {
+      "id": "archive-d8ab539c8be669d7",
+      "name": "عبدالمجيد السريحي • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdul_Majid_Al_Surehi_2_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%85%D8%AC%D9%8A%D8%AF_%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%AD%D9%8A%29.mp3",
+      "gitBlobSha": "84adbb836ccd832c3e875215f19e1c62e716267d",
+      "bytes": 538407
+    },
+    {
+      "id": "archive-a8e72808653f514f",
+      "name": "عبدالمجيد السريحي • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdul_Majid_Al_Surehi_3_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%85%D8%AC%D9%8A%D8%AF_%D8%A7%D9%84%D8%B3%D8%B1%D9%8A%D8%AD%D9%8A%29.mp3",
+      "gitBlobSha": "bbf4df8ad16600b7c2d5d956bbee0aea22bbd118",
+      "bytes": 3372557
+    },
+    {
+      "id": "archive-1eb16214c45ba493",
+      "name": "عبدالرحمن العراقي • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdul_Rahman_Al_Arake_1_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86_%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82%D9%8A%29.mp3",
+      "gitBlobSha": "33e4db5487abf832624596a8786f0483ac971f79",
+      "bytes": 3331445
+    },
+    {
+      "id": "archive-d5034eb525417712",
+      "name": "عبدالرحمن العراقي • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdul_Rahman_Al_Arake_2_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86_%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82%D9%8A%29.mp3",
+      "gitBlobSha": "c2a1b0f593475e7cdc78c6dcb90526eecb895938",
+      "bytes": 3834703
+    },
+    {
+      "id": "archive-6bf038909393dd65",
+      "name": "عبدالرحمن العراقي • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdul_Rahman_Al_Arake_3_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86_%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82%D9%8A%29.mp3",
+      "gitBlobSha": "adc03fd5618ff1c6a85c1b65502efe4ac8672ad3",
+      "bytes": 4518049
+    },
+    {
+      "id": "archive-3ff00d9c37bb76d0",
+      "name": "عبدالرحمن كساب • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdul_Rahman_Kassab_1_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86_%D9%83%D8%B3%D8%A7%D8%A8%29.mp3",
+      "gitBlobSha": "3c406065ca966c9740432938af81a1511ac8fc63",
+      "bytes": 2348776
+    },
+    {
+      "id": "archive-85f8f2312230f378",
+      "name": "عبدالرحمن كساب • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdul_Rahman_Kassab_2_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86_%D9%83%D8%B3%D8%A7%D8%A8%29.mp3",
+      "gitBlobSha": "8daf042ed7d5550dd9333a48b764e2a9a3aa56f3",
+      "bytes": 6632093
+    },
+    {
+      "id": "archive-1c45557665d0e700",
+      "name": "عبدالرحمن ماجد",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdul_Rahman_Majde_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86_%D9%85%D8%A7%D8%AC%D8%AF%29.mp3",
+      "gitBlobSha": "6fad026363e93d7c982c754a7de0e1610f49e53f",
+      "bytes": 6566058
+    },
+    {
+      "id": "archive-4e6b26035aae0901",
+      "name": "عبدالولي الأركاني",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdul_Wali_Al_Arkani_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%88%D9%84%D9%8A_%D8%A7%D9%84%D8%A3%D8%B1%D9%83%D8%A7%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "ec675059099108ba55cf4f5157d924839b186dd8",
+      "bytes": 2539982
+    },
+    {
+      "id": "archive-35f711b2be3f6790",
+      "name": "عبدالله الذهبي - مصر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdulah_Al_Dahbe_-_Egypt_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%84%D9%87_%D8%A7%D9%84%D8%B0%D9%87%D8%A8%D9%8A_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "a57af4ad3c0895d4278aaf7e05fcd1e972803c03",
+      "bytes": 4352156
+    },
+    {
+      "id": "archive-f5004b15cf4ba5e3",
+      "name": "عبدالله المكناوي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdulah_Al_Maknawe_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%84%D9%87_%D8%A7%D9%84%D9%85%D9%83%D9%86%D8%A7%D9%88%D9%8A%29.mp3",
+      "gitBlobSha": "e0c5d977f79c07a78d2d905646f6b7b1c65fba1b",
+      "bytes": 5569239
+    },
+    {
+      "id": "archive-2e2b114b1b385996",
+      "name": "عبدالله الصباوي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdulah_Al_Sabaawe_%28%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%84%D9%87_%D8%A7%D9%84%D8%B5%D8%A8%D8%A7%D9%88%D9%8A%29.mp3",
+      "gitBlobSha": "f336bd8c1a6f06ce98d5440442503d92200803c3",
+      "bytes": 2994542
+    },
+    {
+      "id": "archive-b74d56e67c032dd3",
+      "name": "عبد الباسط عبد الصمد - مصر • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdulbasit_Abdusamad_1_-_Egypt_%28%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%A8%D8%A7%D8%B3%D8%B7_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%B5%D9%85%D8%AF_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "b809399e83c225e3b089b3903db9f743a01ca54f",
+      "bytes": 489872
+    },
+    {
+      "id": "archive-3b1578d0a707ec08",
+      "name": "عبد الباسط عبد الصمد - مصر • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdulbasit_Abdusamad_2_-_Egypt_%28%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%A8%D8%A7%D8%B3%D8%B7_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%B5%D9%85%D8%AF_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "864b72dc97242af61af75426a941e0406b8e58d2",
+      "bytes": 494336
+    },
+    {
+      "id": "archive-3cd840bfed61229b",
+      "name": "عبد الباسط عبد الصمد - مصر • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdulbasit_Abdusamad_3_-_Egypt_%28%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%A8%D8%A7%D8%B3%D8%B7_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%B5%D9%85%D8%AF_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "2a106e5bf3f9dac81e447d8cbb8ce43340353551",
+      "bytes": 4495998
+    },
+    {
+      "id": "archive-72db10d9587d0ccd",
+      "name": "عبد الباسط عبد الصمد - مصر • تسجيل 4",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdulbasit_Abdusamad_4_-_Egypt_%28%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%A8%D8%A7%D8%B3%D8%B7_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%B5%D9%85%D8%AF_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "1ba204eb2a1b5e1702c80d418f9ebd84220ace7c",
+      "bytes": 4539857
+    },
+    {
+      "id": "archive-78d8b41960d04439",
+      "name": "عبد الباسط عبد الصمد - القاهرة • تسجيل 5",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdulbasit_Abdusamad_5_-_Cairo_%28%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%A8%D8%A7%D8%B3%D8%B7_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%B5%D9%85%D8%AF_-_%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "3d91670218fc36b0167d0f6c1bd1586c34f7a876",
+      "bytes": 405582
+    },
+    {
+      "id": "archive-9693ef4d2b859650",
+      "name": "عبد الباسط عبد الصمد - فجر مصر • تسجيل 6",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdulbasit_Abdusamad_6_-_Fajr_Egypt_%28%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%A8%D8%A7%D8%B3%D8%B7_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%B5%D9%85%D8%AF_-_%D9%81%D8%AC%D8%B1_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "1a47f478fb9e5630c4b974c98947731bd8351c7b",
+      "bytes": 11744593
+    },
+    {
+      "id": "archive-042209148d062588",
+      "name": "عبد الباسط عبد الصمد - فجر مصر • تسجيل 7",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abdulbasit_Abdusamad_7_-_Fajr_Egypt_%28%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%A8%D8%A7%D8%B3%D8%B7_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%B5%D9%85%D8%AF_-_%D9%81%D8%AC%D8%B1_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "c6c4867039779cf0ec29bf54a11cd24efb9e15d3",
+      "bytes": 3095800
+    },
+    {
+      "id": "archive-4ffad68a97e60d7c",
+      "name": "أبو العينين شعيشع - القاهرة",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Abul_Ainain_Shuaisha_-_Cairo_%28%D8%A3%D8%A8%D9%88_%D8%A7%D9%84%D8%B9%D9%8A%D9%86%D9%8A%D9%86_%D8%B4%D8%B9%D9%8A%D8%B4%D8%B9_-_%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "4b1eec0e838357aa8036767ed62bf451e3c18c6d",
+      "bytes": 477002
+    },
+    {
+      "id": "archive-6e3dd5e3f6f3d223",
+      "name": "أبو ياسر الجزائري",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Aby_Yasser_Al_Jazaire_%28%D8%A3%D8%A8%D9%88_%D9%8A%D8%A7%D8%B3%D8%B1_%D8%A7%D9%84%D8%AC%D8%B2%D8%A7%D8%A6%D8%B1%D9%8A%29.mp3",
+      "gitBlobSha": "c0359d0d8271b6ffc6bc5a8b187bc9259e9b411b",
+      "bytes": 2123971
+    },
+    {
+      "id": "archive-4db29d2f926308ce",
+      "name": "عادل مالك عبدالله المصري",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adal_Malek_Abdulah_Al_Massre_%28%D8%B9%D8%A7%D8%AF%D9%84_%D9%85%D8%A7%D9%84%D9%83_%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%84%D9%87_%D8%A7%D9%84%D9%85%D8%B5%D8%B1%D9%8A%29.mp3",
+      "gitBlobSha": "4dad8f2fd1be342ebec19072a75e0e51285ce56c",
+      "bytes": 3869426
+    },
+    {
+      "id": "archive-35c95f7356903978",
+      "name": "آدم أبو سخرة",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adam_Abu_Sakhra_%28%D8%A2%D8%AF%D9%85_%D8%A3%D8%A8%D9%88_%D8%B3%D8%AE%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "268a14d247818ba1e8db1076fab791b8ccb9d49d",
+      "bytes": 1736363
+    },
+    {
+      "id": "archive-4f8d9eb9f526378c",
+      "name": "أدهم الشرقاوي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adham_Al_Sharqawe_%28%D8%A3%D8%AF%D9%87%D9%85_%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D8%A7%D9%88%D9%8A%29.mp3",
+      "gitBlobSha": "7df50c6f02553bd30db4d1b60f95134e82553836",
+      "bytes": 6157422
+    },
+    {
+      "id": "archive-274668d66b8ec730",
+      "name": "أذان عجمان الإمارات",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Ajman_UAE_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%B9%D8%AC%D9%85%D8%A7%D9%86_%D8%A7%D9%84%D8%A5%D9%85%D8%A7%D8%B1%D8%A7%D8%AA%29.mp3",
+      "gitBlobSha": "646ec7dc2732831abd899a52d785b10516769faa",
+      "bytes": 283676
+    },
+    {
+      "id": "archive-6da04fb6bce6c13a",
+      "name": "أذان المسجد الأقصى - القدس",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Al_Aqsa_-_Jerusalem_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%A3%D9%82%D8%B5%D9%89_-_%D8%A7%D9%84%D9%82%D8%AF%D8%B3%29.mp3",
+      "gitBlobSha": "ca609a47af0277d6511ee1027f44662394d5a4d8",
+      "bytes": 307298
+    },
+    {
+      "id": "archive-3c0511fa37474aed",
+      "name": "أذان الحرم المدني - المدينة المنورة • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Al_Haram_Al_Madani_-_Al_Madinah_1_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D8%AF%D9%86%D9%8A_-_%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9_%D8%A7%D9%84%D9%85%D9%86%D9%88%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "20c661653d4c2a4b98432fe7021d52598a1babb9",
+      "bytes": 379784
+    },
+    {
+      "id": "archive-f089bf3a31279e9c",
+      "name": "أذان الحرم المدني - المدينة المنورة • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Al_Haram_Al_Madani_-_Al_Madinah_2_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D8%AF%D9%86%D9%8A_-_%D8%A7%D9%84%D9%85%D8%AF%D9%8A%D9%86%D8%A9_%D8%A7%D9%84%D9%85%D9%86%D9%88%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "40a5beb5b9967216998247318df1e59d6efd1561",
+      "bytes": 475556
+    },
+    {
+      "id": "archive-46a77c97590b9d3d",
+      "name": "أذان بروناي • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Brunei_1_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A8%D8%B1%D9%88%D9%86%D8%A7%D9%8A%29.mp3",
+      "gitBlobSha": "007c8420f5855debccbbaa219026ade961f911ba",
+      "bytes": 415958
+    },
+    {
+      "id": "archive-62250b3c08cb89e0",
+      "name": "أذان بروناي • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Brunei_2_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A8%D8%B1%D9%88%D9%86%D8%A7%D9%8A%29.mp3",
+      "gitBlobSha": "4bf69e6e2529405e698099055e5073c3984cdef5",
+      "bytes": 380678
+    },
+    {
+      "id": "archive-1fba8f10d6f2a533",
+      "name": "أذان بروناي • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Brunei_3_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A8%D8%B1%D9%88%D9%86%D8%A7%D9%8A%29.mp3",
+      "gitBlobSha": "aba71440e46149dd54a74e8e6128e65b0cbf7597",
+      "bytes": 421358
+    },
+    {
+      "id": "archive-9fe4c4d96aaf59bf",
+      "name": "أذان دبي الإمارات",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Dubai_UAE_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%AF%D8%A8%D9%8A_%D8%A7%D9%84%D8%A5%D9%85%D8%A7%D8%B1%D8%A7%D8%AA%29.mp3",
+      "gitBlobSha": "fe5db65b1d3fa3f70fc45d45211ae4e8931acf4c",
+      "bytes": 475184
+    },
+    {
+      "id": "archive-ce83b2a596e6f67f",
+      "name": "أذان الفجر الحرم المدني",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Fajr_Al_Haram_Al_Madani_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%81%D8%AC%D8%B1_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D8%AF%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "424643d0c35e1d0a17313d56f228e7f38ead50cb",
+      "bytes": 561776
+    },
+    {
+      "id": "archive-322d408a6f901e27",
+      "name": "أذان الفجر الحرم المكي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Fajr_Al_Haram_Al_Maki_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%81%D8%AC%D8%B1_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "5c1805d76ee8161cae317518810d4a3ba895e042",
+      "bytes": 450002
+    },
+    {
+      "id": "archive-a49c5589dbcd38b4",
+      "name": "أذان الفجر الجزائر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Fajr_Algeria_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%81%D8%AC%D8%B1_%D8%A7%D9%84%D8%AC%D8%B2%D8%A7%D8%A6%D8%B1%29.mp3",
+      "gitBlobSha": "09c8dabd6d1187fe3cfe4793fe2b5ec74489022d",
+      "bytes": 358472
+    },
+    {
+      "id": "archive-de06c48f7394c0db",
+      "name": "أذان الفجر القاهرة مصر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Fajr_Cairo_Egypt_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%81%D8%AC%D8%B1_%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "a7cb72723cc1aa50af928d639899498c6f1b119b",
+      "bytes": 495158
+    },
+    {
+      "id": "archive-b9d844bd2c958acf",
+      "name": "أذان الفجر الكويت • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Fajr_Kuwait_1_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%81%D8%AC%D8%B1_%D8%A7%D9%84%D9%83%D9%88%D9%8A%D8%AA%29.mp3",
+      "gitBlobSha": "b9eb22cb851a351c9223155c4d6059ef4e1fcf2d",
+      "bytes": 423698
+    },
+    {
+      "id": "archive-42908d36381b1666",
+      "name": "أذان الفجر الكويت • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Fajr_Kuwait_2_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%81%D8%AC%D8%B1_%D8%A7%D9%84%D9%83%D9%88%D9%8A%D8%AA%29.mp3",
+      "gitBlobSha": "e33b388e55bdfa3066231e2a8a0e3c43bb18368f",
+      "bytes": 379202
+    },
+    {
+      "id": "archive-9f9cd18cce394700",
+      "name": "أذان الفجر أم القيوين",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Fajr_Umm_Al_Quwain_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%81%D8%AC%D8%B1_%D8%A3%D9%85_%D8%A7%D9%84%D9%82%D9%8A%D9%88%D9%8A%D9%86%29.mp3",
+      "gitBlobSha": "eb1039aae6bfd71f3752413b553031c38e75fc34",
+      "bytes": 384686
+    },
+    {
+      "id": "archive-b3e4d12a18101259",
+      "name": "أذان جورجيا",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Georgia_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%AC%D9%88%D8%B1%D8%AC%D9%8A%D8%A7%29.mp3",
+      "gitBlobSha": "a4ce18dc8d98d55ab6d2477396284a0e73f308da",
+      "bytes": 5044181
+    },
+    {
+      "id": "archive-37a1d1a9bc737fa9",
+      "name": "أذان الهند",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_India_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%87%D9%86%D8%AF%29.mp3",
+      "gitBlobSha": "00b09180f94f4e6ac84529014bebaa98d9fb9918",
+      "bytes": 220904
+    },
+    {
+      "id": "archive-45dd1e1c69c6cace",
+      "name": "أذان إندونيسيا",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Indonesia_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A5%D9%86%D8%AF%D9%88%D9%86%D9%8A%D8%B3%D9%8A%D8%A7%29.mp3",
+      "gitBlobSha": "f0637d67568b375b9ac2ee10ab5423d089b2e2e5",
+      "bytes": 399128
+    },
+    {
+      "id": "archive-7e155e8263c29205",
+      "name": "أذان كينيا",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Kenya_%28%D8%A3%D8%B0%D8%A7%D9%86_%D9%83%D9%8A%D9%86%D9%8A%D8%A7%29.mp3",
+      "gitBlobSha": "3d55fa9fade6fa3b6c56b9aaeee14b9e17d714b0",
+      "bytes": 3366832
+    },
+    {
+      "id": "archive-5b4ca9eccc209946",
+      "name": "أذان الكويت",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Kuwait_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%83%D9%88%D9%8A%D8%AA%29.mp3",
+      "gitBlobSha": "eb04e151b87e94ed2c6c23dc17215113c58569b4",
+      "bytes": 288590
+    },
+    {
+      "id": "archive-636fb3f62c1476c0",
+      "name": "أذان ماليزيا • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Malaysia_1_%28%D8%A3%D8%B0%D8%A7%D9%86_%D9%85%D8%A7%D9%84%D9%8A%D8%B2%D9%8A%D8%A7%29.mp3",
+      "gitBlobSha": "fe7529e4bbe1fc2683c5f445eaed78c66cb2dc35",
+      "bytes": 400340
+    },
+    {
+      "id": "archive-6c83a62f5f9a0408",
+      "name": "أذان ماليزيا • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Malaysia_2_%28%D8%A3%D8%B0%D8%A7%D9%86_%D9%85%D8%A7%D9%84%D9%8A%D8%B2%D9%8A%D8%A7%29.mp3",
+      "gitBlobSha": "1790b0ccc63be859d86b2df0488118015af28a05",
+      "bytes": 401132
+    },
+    {
+      "id": "archive-f5d31eeadc8ed453",
+      "name": "أذان جزر المالديف",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Maldives_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%AC%D8%B2%D8%B1_%D8%A7%D9%84%D9%85%D8%A7%D9%84%D8%AF%D9%8A%D9%81%29.mp3",
+      "gitBlobSha": "26d61e683450abb2854ba1ee99a285977ffd5ece",
+      "bytes": 375818
+    },
+    {
+      "id": "archive-2aad1e75d25569e2",
+      "name": "أذان مسجد الراجحي السعودية • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Masjid_Al_Rajehe_Saudi_Arabia_1_%28%D8%A3%D8%B0%D8%A7%D9%86_%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%B1%D8%A7%D8%AC%D8%AD%D9%8A_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9%29.mp3",
+      "gitBlobSha": "8c5166e5648a907ec6043fca1929ff2ed1bdc695",
+      "bytes": 494336
+    },
+    {
+      "id": "archive-4fe4141a2a8f5214",
+      "name": "أذان مسجد الراجحي السعودية • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Masjid_Al_Rajehe_Saudi_Arabia_2_%28%D8%A3%D8%B0%D8%A7%D9%86_%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%B1%D8%A7%D8%AC%D8%AD%D9%8A_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9%29.mp3",
+      "gitBlobSha": "047b201b1a7b9b04dcd7bc1708a71d2bfb25aad7",
+      "bytes": 289280
+    },
+    {
+      "id": "archive-af991dd9abd97b9b",
+      "name": "أذان مسجد الراجحي السعودية • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Masjid_Al_Rajehe_Saudi_Arabia_3_%28%D8%A3%D8%B0%D8%A7%D9%86_%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%B1%D8%A7%D8%AC%D8%AD%D9%8A_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9%29.mp3",
+      "gitBlobSha": "90fd9c77896033bf1827b3b46e13592894332f04",
+      "bytes": 298136
+    },
+    {
+      "id": "archive-13f9789a16834edd",
+      "name": "أذان مسقط عُمان",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Muscat_Oman_%28%D8%A3%D8%B0%D8%A7%D9%86_%D9%85%D8%B3%D9%82%D8%B7_%D8%B9%D9%8F%D9%85%D8%A7%D9%86%29.mp3",
+      "gitBlobSha": "2e4f1350edf14a7f5615fd747d720ffa0be73632",
+      "bytes": 307190
+    },
+    {
+      "id": "archive-f7da68a16fe879cd",
+      "name": "أذان باكستان",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Pakistan_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A8%D8%A7%D9%83%D8%B3%D8%AA%D8%A7%D9%86%29.mp3",
+      "gitBlobSha": "ae2950c387903e88987663a80ecdb547e7984ff0",
+      "bytes": 369236
+    },
+    {
+      "id": "archive-48efc3167f917a12",
+      "name": "أذان الرياض السعودية",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Riyadh_Saudi_Arabia_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9%29.mp3",
+      "gitBlobSha": "30f02c80b1d71a24e1581a5d6b7264e733d48bf2",
+      "bytes": 2938812
+    },
+    {
+      "id": "archive-604c288894addcb9",
+      "name": "أذان سوريا",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Syria_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%B3%D9%88%D8%B1%D9%8A%D8%A7%29.mp3",
+      "gitBlobSha": "87a4985aca5e49f282a97db11209207fe14418b3",
+      "bytes": 446624
+    },
+    {
+      "id": "archive-1cf8f750a65c344a",
+      "name": "أذان تونس",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Tunisia_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%AA%D9%88%D9%86%D8%B3%29.mp3",
+      "gitBlobSha": "60d65c07bf33855b1f96503f87f2ed24438c485a",
+      "bytes": 291746
+    },
+    {
+      "id": "archive-245e1c45f338ba9a",
+      "name": "أذان تركيا • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Turkey_1_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%AA%D8%B1%D9%83%D9%8A%D8%A7%29.mp3",
+      "gitBlobSha": "e82095fa955f2bb9ac0b87482a68e3e723bd2600",
+      "bytes": 360584
+    },
+    {
+      "id": "archive-ffeab08da16c1de8",
+      "name": "أذان تركيا • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Adhan_Turkey_2_%28%D8%A3%D8%B0%D8%A7%D9%86_%D8%AA%D8%B1%D9%83%D9%8A%D8%A7%29.mp3",
+      "gitBlobSha": "8971c6a5e8b1058b0c5ff947f9e128a26fc5fd58",
+      "bytes": 98792
+    },
+    {
+      "id": "archive-9357044a752068a0",
+      "name": "أحمد عامر محمد",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Aamer_Muhammad_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%B9%D8%A7%D9%85%D8%B1_%D9%85%D8%AD%D9%85%D8%AF%29.mp3",
+      "gitBlobSha": "b9fe18c8174857c6345f031c1401f9ed0ad66789",
+      "bytes": 2868342
+    },
+    {
+      "id": "archive-e0ef49e750de8d3b",
+      "name": "أحمد العاني",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Al_Aane_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B9%D8%A7%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "4867adc4040685e9a8ad742748a0c1bebf8525b8",
+      "bytes": 4240918
+    },
+    {
+      "id": "archive-ba508d2dd495a891",
+      "name": "أحمد العمادي - قطر • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Al_Amade_1_-_Qatar_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B9%D9%85%D8%A7%D8%AF%D9%8A_-_%D9%82%D8%B7%D8%B1%29.mp3",
+      "gitBlobSha": "10ef1619d0210ee57bc4be931891b9907eda44eb",
+      "bytes": 381080
+    },
+    {
+      "id": "archive-162ddaa779a3b5b8",
+      "name": "أحمد العمادي - قطر • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Al_Amade_2_-_Qatar_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B9%D9%85%D8%A7%D8%AF%D9%8A_-_%D9%82%D8%B7%D8%B1%29.mp3",
+      "gitBlobSha": "fe57bdefe38a748dc4e7e373fa2da3325067fcc9",
+      "bytes": 7230102
+    },
+    {
+      "id": "archive-824933270a43c67c",
+      "name": "أحمد البطل",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Al_Batal_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%A8%D8%B7%D9%84%29.mp3",
+      "gitBlobSha": "1118cc382380e387cabb3e165a754de7205b1463",
+      "bytes": 1199539
+    },
+    {
+      "id": "archive-10c3dec56e924596",
+      "name": "أحمد الحراسيس",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Al_Harasses_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%AD%D8%B1%D8%A7%D8%B3%D9%8A%D8%B3%29.mp3",
+      "gitBlobSha": "3752488024185a59e22826edda7306d17297b60c",
+      "bytes": 5866437
+    },
+    {
+      "id": "archive-5faf039305035fe2",
+      "name": "أحمد النفيس",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Al_Nafees_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D9%86%D9%81%D9%8A%D8%B3%29.mp3",
+      "gitBlobSha": "ce1afef7f7f5441b7d6486d4a86ff9083a783f95",
+      "bytes": 3409337
+    },
+    {
+      "id": "archive-a053d05f0bcc87f7",
+      "name": "أحمد علي • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Ali_1_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%B9%D9%84%D9%8A%29.mp3",
+      "gitBlobSha": "c8fe16fc3201ee6d3f79f355444b1bcdd594428a",
+      "bytes": 1589801
+    },
+    {
+      "id": "archive-efd4decb1439a558",
+      "name": "أحمد علي - مصر • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Ali_2_-_Egypt_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%B9%D9%84%D9%8A_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "1f8d4c94de9b38ba50af93486e1dd295cc5ed0e4",
+      "bytes": 3370652
+    },
+    {
+      "id": "archive-80607c3009ec51f3",
+      "name": "أحمد علي مرتضى",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Ali_Murtada_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%B9%D9%84%D9%8A_%D9%85%D8%B1%D8%AA%D8%B6%D9%89%29.mp3",
+      "gitBlobSha": "bcce9ed1d6108f73b9ab13e0df54be05e62b16bf",
+      "bytes": 1504130
+    },
+    {
+      "id": "archive-1326edd16e478dbc",
+      "name": "أحمد فخرو - قطر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Fakhru_-_Qatar_%28%D8%A3%D8%AD%D9%85%D8%AF_%D9%81%D8%AE%D8%B1%D9%88_-_%D9%82%D8%B7%D8%B1%29.mp3",
+      "gitBlobSha": "f62fe9782f9b3eeb8eef38891ada6ccd579a35ad",
+      "bytes": 6237325
+    },
+    {
+      "id": "archive-7c0a7e598a324976",
+      "name": "أحمد نواف المجلد • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Nawaf_Al_Mejlad_1_%28%D8%A3%D8%AD%D9%85%D8%AF_%D9%86%D9%88%D8%A7%D9%81_%D8%A7%D9%84%D9%85%D8%AC%D9%84%D8%AF%29.mp3",
+      "gitBlobSha": "a3f662af0ade298dec34d760bdd4987fb9539da5",
+      "bytes": 1378902
+    },
+    {
+      "id": "archive-9d5ec439edd7aa45",
+      "name": "أحمد نواف المجلد - الفجر • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmad_Nawaf_Al_Mejlad_2_-_Fajr_%28%D8%A3%D8%AD%D9%85%D8%AF_%D9%86%D9%88%D8%A7%D9%81_%D8%A7%D9%84%D9%85%D8%AC%D9%84%D8%AF_-_%D8%A7%D9%84%D9%81%D8%AC%D8%B1%29.mp3",
+      "gitBlobSha": "cfad1a5c4381758d34d95a95378e99f599a1c54d",
+      "bytes": 1557417
+    },
+    {
+      "id": "archive-78a31e9cf1279041",
+      "name": "أحمد الطرابلسي - فجر الكويت",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmd_At-Trablsy_-_Fajr_Kuwait_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B7%D8%B1%D8%A7%D8%A8%D9%84%D8%B3%D9%8A_-_%D9%81%D8%AC%D8%B1_%D8%A7%D9%84%D9%83%D9%88%D9%8A%D8%AA%29.mp3",
+      "gitBlobSha": "4bc4de48fac3307d8f3e751333e7c4495e75eab8",
+      "bytes": 1038532
+    },
+    {
+      "id": "archive-11ac20f91b1c3e19",
+      "name": "أحمد الطرابلسي • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmd_At-Trablsy_1_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B7%D8%B1%D8%A7%D8%A8%D9%84%D8%B3%D9%8A%29.mp3",
+      "gitBlobSha": "4f383aef0bc141c48e52c916bbfff53fd08df29d",
+      "bytes": 5702213
+    },
+    {
+      "id": "archive-5bde5ca86f564472",
+      "name": "أحمد الطرابلسي • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmd_At-Trablsy_2_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B7%D8%B1%D8%A7%D8%A8%D9%84%D8%B3%D9%8A%29.mp3",
+      "gitBlobSha": "6275e21f117d9442455e6ce266195b86bc96b393",
+      "bytes": 7779102
+    },
+    {
+      "id": "archive-8921d11ee687c196",
+      "name": "أحمد الطرابلسي • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmd_At-Trablsy_3_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B7%D8%B1%D8%A7%D8%A8%D9%84%D8%B3%D9%8A%29.mp3",
+      "gitBlobSha": "4f57e0f7f04f0337e430b4ca4840ffe0da6ad6bf",
+      "bytes": 6352398
+    },
+    {
+      "id": "archive-53b28943b6fde55a",
+      "name": "أحمد الطرابلسي • تسجيل 4",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmd_At-Trablsy_4_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B7%D8%B1%D8%A7%D8%A8%D9%84%D8%B3%D9%8A%29.mp3",
+      "gitBlobSha": "99d0519afd88a94c802ced949498d045674991dd",
+      "bytes": 4109008
+    },
+    {
+      "id": "archive-b167ebb47b1a4ead",
+      "name": "أحمد الطرابلسي • تسجيل 5",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmd_At-Trablsy_5_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B7%D8%B1%D8%A7%D8%A8%D9%84%D8%B3%D9%8A%29.mp3",
+      "gitBlobSha": "4bc4de48fac3307d8f3e751333e7c4495e75eab8",
+      "bytes": 1038532
+    },
+    {
+      "id": "archive-94aac7a5b43154eb",
+      "name": "أحمد الحداد",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmed_Al-Haddad_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%AD%D8%AF%D8%A7%D8%AF%29.mp3",
+      "gitBlobSha": "4e4afac7ea3d5deea24e6d1f3c2596b8c1e39883",
+      "bytes": 2477560
+    },
+    {
+      "id": "archive-53db4ab890cc7c97",
+      "name": "أحمد الكردي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmed_El_Kourdi_%28%D8%A3%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D9%83%D8%B1%D8%AF%D9%8A%29.mp3",
+      "gitBlobSha": "e59cbebea23f69f6e98a84bfff74a759f85f3469",
+      "bytes": 3164421
+    },
+    {
+      "id": "archive-a5b717c4189c0abd",
+      "name": "أحمد نعينع - مصر • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmed_Nuinaa_1_-_Egypt_%28%D8%A3%D8%AD%D9%85%D8%AF_%D9%86%D8%B9%D9%8A%D9%86%D8%B9_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "c8004825801f54e268dd08c5df77b6f0969eae8c",
+      "bytes": 409592
+    },
+    {
+      "id": "archive-7820244b2702c51e",
+      "name": "أحمد نعينع - القاهرة • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ahmed_Nuinaa_2_-_Cairo_%28%D8%A3%D8%AD%D9%85%D8%AF_%D9%86%D8%B9%D9%8A%D9%86%D8%B9_-_%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "0e14d6a334fdbb2640ac90fa6c00f20868d65ac3",
+      "bytes": 424140
+    },
+    {
+      "id": "archive-1cd290c90db706aa",
+      "name": "أخدام بن المداني",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Akhdam_Bnu_Al_Madane_%28%D8%A3%D8%AE%D8%AF%D8%A7%D9%85_%D8%A8%D9%86_%D8%A7%D9%84%D9%85%D8%AF%D8%A7%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "5a9e2114b0c1b8a9532076bfe7b1042956522256",
+      "bytes": 7133527
+    },
+    {
+      "id": "archive-e40fffd9f01799a5",
+      "name": "الأمين محمد قانيوح",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Al_Ameen_Muhammad_Qanyouh_%28%D8%A7%D9%84%D8%A3%D9%85%D9%8A%D9%86_%D9%85%D8%AD%D9%85%D8%AF_%D9%82%D8%A7%D9%86%D9%8A%D9%88%D8%AD%29.mp3",
+      "gitBlobSha": "a0b484ad6602f0abddd0480584561f45421b04a5",
+      "bytes": 3173849
+    },
+    {
+      "id": "archive-1210a19c49dc2f6b",
+      "name": "البهلول أبو عرقوب • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Al_Bahlul_Abu_Arqub_1_%28%D8%A7%D9%84%D8%A8%D9%87%D9%84%D9%88%D9%84_%D8%A3%D8%A8%D9%88_%D8%B9%D8%B1%D9%82%D9%88%D8%A8%29.mp3",
+      "gitBlobSha": "82c621b357691720f40769de0d12c83011948f96",
+      "bytes": 1672056
+    },
+    {
+      "id": "archive-97b58bb8c1b31d2b",
+      "name": "البهلول أبو عرقوب • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Al_Bahlul_Abu_Arqub_2_%28%D8%A7%D9%84%D8%A8%D9%87%D9%84%D9%88%D9%84_%D8%A3%D8%A8%D9%88_%D8%B9%D8%B1%D9%82%D9%88%D8%A8%29.mp3",
+      "gitBlobSha": "c8bbde3101bf5bcb9dc3cde872ae3ba852d0cc30",
+      "bytes": 1801428
+    },
+    {
+      "id": "archive-39ea53e0dac0e6aa",
+      "name": "الدقالي محمد العلام",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Al_Duqale_Muhammad_Al_Alam_%28%D8%A7%D9%84%D8%AF%D9%82%D8%A7%D9%84%D9%8A_%D9%85%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B9%D9%84%D8%A7%D9%85%29.mp3",
+      "gitBlobSha": "33aa1e0bbbee99cccb0c9dee8442a1da23ab4ece",
+      "bytes": 1044857
+    },
+    {
+      "id": "archive-ea5071e5da61ed36",
+      "name": "السيد متولي الآل",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Al_Saed_Metwale_AL_Aal_%28%D8%A7%D9%84%D8%B3%D9%8A%D8%AF_%D9%85%D8%AA%D9%88%D9%84%D9%8A_%D8%A7%D9%84%D8%A2%D9%84%29.mp3",
+      "gitBlobSha": "7b0c31592773a20edfb9ab392a3b7ab8d3f93df0",
+      "bytes": 342244
+    },
+    {
+      "id": "archive-31028d63b4a9ad39",
+      "name": "السيد مسلم",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Al_Sayed_Muslim_%28%D8%A7%D9%84%D8%B3%D9%8A%D8%AF_%D9%85%D8%B3%D9%84%D9%85%29.mp3",
+      "gitBlobSha": "8dce78dbf09ea534266ffb336a21d7a4a2dc3130",
+      "bytes": 5180032
+    },
+    {
+      "id": "archive-f449b70743af3db2",
+      "name": "علي حسن عبد الخالق - قطر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ali_Hassan_Abd_Al_Khaliq_-_Qatar_%28%D8%B9%D9%84%D9%8A_%D8%AD%D8%B3%D9%86_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%AE%D8%A7%D9%84%D9%82_-_%D9%82%D8%B7%D8%B1%29.mp3",
+      "gitBlobSha": "35ee38461c245349bf8df7679379b08f76d78c8d",
+      "bytes": 5379519
+    },
+    {
+      "id": "archive-cd945c8aaf5849dc",
+      "name": "علي بن أحمد ملا • جودة عالية",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ali_Ibn_Ahmad_Mala_-_HQ_%28%D8%B9%D9%84%D9%8A_%D8%A8%D9%86_%D8%A3%D8%AD%D9%85%D8%AF_%D9%85%D9%84%D8%A7%29.mp3",
+      "gitBlobSha": "ccf0c757c0ba22072f142e9999f9ecfd47fc268b",
+      "bytes": 3914232
+    },
+    {
+      "id": "archive-02a6cb691a6381a9",
+      "name": "علي بن أحمد ملا - الحرم المكي • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ali_Ibn_Ahmad_Mala_1_-_Al_Haram_Al_Maki_%28%D8%B9%D9%84%D9%8A_%D8%A8%D9%86_%D8%A3%D8%AD%D9%85%D8%AF_%D9%85%D9%84%D8%A7_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "32e0def5c23af8467c61e12f65dc481db5bf2b58",
+      "bytes": 492824
+    },
+    {
+      "id": "archive-f9fea8b459b3fdc1",
+      "name": "علي بن أحمد ملا - الحرم المكي • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ali_Ibn_Ahmad_Mala_2_-_Al_Haram_Al_Maki_%28%D8%B9%D9%84%D9%8A_%D8%A8%D9%86_%D8%A3%D8%AD%D9%85%D8%AF_%D9%85%D9%84%D8%A7_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "678d5be2e64b847c13bd56df34418e0754c1a1d0",
+      "bytes": 429968
+    },
+    {
+      "id": "archive-6c9fc133edc08560",
+      "name": "علي بن أحمد ملا - الحرم المكي • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ali_Ibn_Ahmad_Mala_3_-_Al_Haram_Al_Maki_%28%D8%B9%D9%84%D9%8A_%D8%A8%D9%86_%D8%A3%D8%AD%D9%85%D8%AF_%D9%85%D9%84%D8%A7_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "75e997bbf8bef506d9874bd460a86ec36717069e",
+      "bytes": 409088
+    },
+    {
+      "id": "archive-4b495b5b86e0ce37",
+      "name": "علي بن أحمد ملا - الحرم المكي • تسجيل 4",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ali_Ibn_Ahmad_Mala_4_-_Al_Haram_Al_Maki_%28%D8%B9%D9%84%D9%8A_%D8%A8%D9%86_%D8%A3%D8%AD%D9%85%D8%AF_%D9%85%D9%84%D8%A7_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "3d9db9317368b99e02c87a8e46a404f03d6de634",
+      "bytes": 317576
+    },
+    {
+      "id": "archive-5148eec76546b390",
+      "name": "علي بن أحمد ملا - الحرم المكي • تسجيل 5",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ali_Ibn_Ahmad_Mala_5_-_Al_Haram_Al_Maki_%28%D8%B9%D9%84%D9%8A_%D8%A8%D9%86_%D8%A3%D8%AD%D9%85%D8%AF_%D9%85%D9%84%D8%A7_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "3167cfe7b3d990320933157c583a4ab92d9c0017",
+      "bytes": 409092
+    },
+    {
+      "id": "archive-3fd6fe9b6198ce39",
+      "name": "علي بن أحمد ملا - الحرم المكي • تسجيل 6",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ali_Ibn_Ahmad_Mala_6_-_Al_Haram_Al_Maki_%28%D8%B9%D9%84%D9%8A_%D8%A8%D9%86_%D8%A3%D8%AD%D9%85%D8%AF_%D9%85%D9%84%D8%A7_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "6a5e9b36c6674fc6c74b1fef1ac81e9674b04f05",
+      "bytes": 354804
+    },
+    {
+      "id": "archive-9b92fc4bce9e4c2a",
+      "name": "أنوار دومان - تركيا",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Anuar_Duman_-_Turkey_%28%D8%A3%D9%86%D9%88%D8%A7%D8%B1_%D8%AF%D9%88%D9%85%D8%A7%D9%86_-_%D8%AA%D8%B1%D9%83%D9%8A%D8%A7%29.mp3",
+      "gitBlobSha": "42998c7f6d9877453b17f6651bcc89c0f6dd4295",
+      "bytes": 4716557
+    },
+    {
+      "id": "archive-697a75fc44f5eb9d",
+      "name": "عاصم بخراري - الحرم المكي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Assem_Bukhrare_-_Al_Haram_Al_Maki_%28%D8%B9%D8%A7%D8%B5%D9%85_%D8%A8%D8%AE%D8%B1%D8%A7%D8%B1%D9%8A_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "6f9696c4ea3b2036a265a91aac859e47d7c0e938",
+      "bytes": 563672
+    },
+    {
+      "id": "archive-38cf61f077b0a585",
+      "name": "بديع جادو • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Badee_Jadu_1_%28%D8%A8%D8%AF%D9%8A%D8%B9_%D8%AC%D8%A7%D8%AF%D9%88%29.mp3",
+      "gitBlobSha": "95f32f9384c5fde9edfc6165d6d81bbc4ab144c6",
+      "bytes": 3308288
+    },
+    {
+      "id": "archive-ba4d1b2462997632",
+      "name": "بديع جادو • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Badee_Jadu_2_%28%D8%A8%D8%AF%D9%8A%D8%B9_%D8%AC%D8%A7%D8%AF%D9%88%29.mp3",
+      "gitBlobSha": "a01b5649cfecb84246eb4101436db27390e606d9",
+      "bytes": 3706189
+    },
+    {
+      "id": "archive-1b9c0a59c612db2a",
+      "name": "بديع جادو • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Badee_Jadu_3_%28%D8%A8%D8%AF%D9%8A%D8%B9_%D8%AC%D8%A7%D8%AF%D9%88%29.mp3",
+      "gitBlobSha": "8ebd572a630b32da661e18c24e652d9d7690f0c2",
+      "bytes": 3122718
+    },
+    {
+      "id": "archive-a0cd6b871567f686",
+      "name": "بلباشر عبد القادر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/BalBaSher_Abdel_Qadir_%28%D8%A8%D9%84%D8%A8%D8%A7%D8%B4%D8%B1_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D9%82%D8%A7%D8%AF%D8%B1%29.mp3",
+      "gitBlobSha": "0ebdde7af0414353da0e3e5d7e7d5eb3e1863625",
+      "bytes": 1871462
+    },
+    {
+      "id": "archive-a6ee8fc1da84b3df",
+      "name": "بن سوانة • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Bnu_Sawana_1_%28%D8%A8%D9%86_%D8%B3%D9%88%D8%A7%D9%86%D8%A9%29.mp3",
+      "gitBlobSha": "19eb66be60dcbd0573c6a3274458669a4ecc984d",
+      "bytes": 3572596
+    },
+    {
+      "id": "archive-4e4954e44f84effc",
+      "name": "بن سوانة • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Bnu_Sawana_2_%28%D8%A8%D9%86_%D8%B3%D9%88%D8%A7%D9%86%D8%A9%29.mp3",
+      "gitBlobSha": "3e6d2be5892d3e991d9753b51063cabbd720a317",
+      "bytes": 3489224
+    },
+    {
+      "id": "archive-a685b8e6b7219752",
+      "name": "عز الدين عمارنة",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ezzedine_Amarna_%28%D8%B9%D8%B2_%D8%A7%D9%84%D8%AF%D9%8A%D9%86_%D8%B9%D9%85%D8%A7%D8%B1%D9%86%D8%A9%29.mp3",
+      "gitBlobSha": "d23fa0624dd710ebcb1697d38cb222879082aabe",
+      "bytes": 2429885
+    },
+    {
+      "id": "archive-41b8888abb4af8d0",
+      "name": "اذان الفجر بصوت نصر الدين طوبار",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Fajr_Adhan_by_Nasreddine_Toubar_%28%D8%A7%D8%B0%D8%A7%D9%86_%D8%A7%D9%84%D9%81%D8%AC%D8%B1_%D8%A8%D8%B5%D9%88%D8%AA_%D9%86%D8%B5%D8%B1_%D8%A7%D9%84%D8%AF%D9%8A%D9%86_%D8%B7%D9%88%D8%A8%D8%A7%D8%B1%29.mp3",
+      "gitBlobSha": "65eb92a3cd53451088f8e3ec47287d0b6a68b6a0",
+      "bytes": 4653465
+    },
+    {
+      "id": "archive-ff6d5cad56403f06",
+      "name": "فارس عبد الغني",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Fares_Abdul_Ghane_%28%D9%81%D8%A7%D8%B1%D8%B3_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%BA%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "92c3f4482b2f9d7da1974c06523087969ce31f9e",
+      "bytes": 4164823
+    },
+    {
+      "id": "archive-c63e9bec5bc0eaeb",
+      "name": "فاروق عبدالرحمن حضراوي - الحرم المكي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Faruq_Abdul_Rahman_Hadrawe_-_Al_Haram_Al_Maki_%28%D9%81%D8%A7%D8%B1%D9%88%D9%82_%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86_%D8%AD%D8%B6%D8%B1%D8%A7%D9%88%D9%8A_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "a128988f264d8a23c3a10404c8d8d6205395de00",
+      "bytes": 559496
+    },
+    {
+      "id": "archive-8fce2f8266581dc9",
+      "name": "فواز فرحان الدماني",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Fawaz_Farhan_Al_Dumane_%28%D9%81%D9%88%D8%A7%D8%B2_%D9%81%D8%B1%D8%AD%D8%A7%D9%86_%D8%A7%D9%84%D8%AF%D9%85%D8%A7%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "cb3b6142f97b20ea751b24116116c3cf1c653ac1",
+      "bytes": 2378528
+    },
+    {
+      "id": "archive-a3f04f7b7475fe25",
+      "name": "فايز عبد السلام",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Fayz_Abd_Al_Salam_%28%D9%81%D8%A7%D9%8A%D8%B2_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%29.mp3",
+      "gitBlobSha": "1e6aa1140e3d160b14ef45d18721269cb3d71074",
+      "bytes": 2123088
+    },
+    {
+      "id": "archive-26ca563406b68b3e",
+      "name": "غرم البيشي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Gharm_Al_Bishi_%28%D8%BA%D8%B1%D9%85_%D8%A7%D9%84%D8%A8%D9%8A%D8%B4%D9%8A%29.mp3",
+      "gitBlobSha": "93a285768bfff274e3531edfa9669a827ecc2a44",
+      "bytes": 2950836
+    },
+    {
+      "id": "archive-203f7764d9e7e377",
+      "name": "غازي السعدون",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ghazi_Al_Saadoun_%28%D8%BA%D8%A7%D8%B2%D9%8A_%D8%A7%D9%84%D8%B3%D8%B9%D8%AF%D9%88%D9%86%29.mp3",
+      "gitBlobSha": "38e810b96e1c4f9f8b3608cf3219719aeae67779",
+      "bytes": 3486242
+    },
+    {
+      "id": "archive-7159df759a7cdac1",
+      "name": "حافظ حسين عرق",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hafed_Hessen_Erq_%28%D8%AD%D8%A7%D9%81%D8%B8_%D8%AD%D8%B3%D9%8A%D9%86_%D8%B9%D8%B1%D9%82%29.mp3",
+      "gitBlobSha": "ecdb4589824a201bf0d9fbcf90dc923324b0a159",
+      "bytes": 225914
+    },
+    {
+      "id": "archive-2ca411055ad55c51",
+      "name": "حاج سليمان مختار - الجزائر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Haj_Sulaiman_Mukhtar_-_Algeria_%28%D8%AD%D8%A7%D8%AC_%D8%B3%D9%84%D9%8A%D9%85%D8%A7%D9%86_%D9%85%D8%AE%D8%AA%D8%A7%D8%B1_-_%D8%A7%D9%84%D8%AC%D8%B2%D8%A7%D8%A6%D8%B1%29.mp3",
+      "gitBlobSha": "ef34a09a264999cf5d18008293ebf5a7b83878f4",
+      "bytes": 1368557
+    },
+    {
+      "id": "archive-a68d5498c3146215",
+      "name": "حمد الدغريري",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hamad_Al_Daghriri_%28%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%AF%D8%BA%D8%B1%D9%8A%D8%B1%D9%8A%29.mp3",
+      "gitBlobSha": "55bc52bdffce4b0d97c69af36d1b597a95c89cf2",
+      "bytes": 3078763
+    },
+    {
+      "id": "archive-dac9f1a9709770bb",
+      "name": "حمد الدغريري • تسجيل 2 • جودة عالية",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hamad_Al_Daghriri_-_HQ_%28%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%AF%D8%BA%D8%B1%D9%8A%D8%B1%D9%8A%29.mp3",
+      "gitBlobSha": "f09f77f9cb4fa74446febbbb016a41cad45501da",
+      "bytes": 619042
+    },
+    {
+      "id": "archive-6bf360743c28bfa1",
+      "name": "حمدان الملكي - نجران السعودية",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hamdan_Al_Maleke_-_Najran_Saudi_Arabia_%28%D8%AD%D9%85%D8%AF%D8%A7%D9%86_%D8%A7%D9%84%D9%85%D9%84%D9%83%D9%8A_-_%D9%86%D8%AC%D8%B1%D8%A7%D9%86_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9%29.mp3",
+      "gitBlobSha": "989c18129a90c7a34800ee1eafc002199a020912",
+      "bytes": 4271573
+    },
+    {
+      "id": "archive-123b39b384a72cfe",
+      "name": "حمزة الحلبي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hamza_Al_Halabea_%28%D8%AD%D9%85%D8%B2%D8%A9_%D8%A7%D9%84%D8%AD%D9%84%D8%A8%D9%8A%29.mp3",
+      "gitBlobSha": "960a91c7f8d475fd9e0a2dd34a2cdbd1b95fe527",
+      "bytes": 969110
+    },
+    {
+      "id": "archive-57c6c6010b6cd837",
+      "name": "حمزة المجالي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hamza_Al_Majale_%28%D8%AD%D9%85%D8%B2%D8%A9_%D8%A7%D9%84%D9%85%D8%AC%D8%A7%D9%84%D9%8A%29.mp3",
+      "gitBlobSha": "dea5fc523aeabfe5615fe76e88cb9d1909c28a3b",
+      "bytes": 5587265
+    },
+    {
+      "id": "archive-dddf2906bbfb8cda",
+      "name": "حسن خلفان - قطر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hassan_Khalfan_-_Qatar_%28%D8%AD%D8%B3%D9%86_%D8%AE%D9%84%D9%81%D8%A7%D9%86_-_%D9%82%D8%B7%D8%B1%29.mp3",
+      "gitBlobSha": "4f739e0210d48de83052ff3a8a301a8f0cf593da",
+      "bytes": 2867044
+    },
+    {
+      "id": "archive-9dacae59715e7a71",
+      "name": "حسن محمود باره",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hassan_Mahmud_Bare_%28%D8%AD%D8%B3%D9%86_%D9%85%D8%AD%D9%85%D9%88%D8%AF_%D8%A8%D8%A7%D8%B1%D9%87%29.mp3",
+      "gitBlobSha": "c0e0088f2d3b97db4e87f72d33c9d1e2ba629bae",
+      "bytes": 6570850
+    },
+    {
+      "id": "archive-01e50b12ca83d635",
+      "name": "حسن صالح بعلول",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hassan_Salah_Baalul_%28%D8%AD%D8%B3%D9%86_%D8%B5%D8%A7%D9%84%D8%AD_%D8%A8%D8%B9%D9%84%D9%88%D9%84%29.mp3",
+      "gitBlobSha": "60df6f124c5f8f9a708fc16e4fbf06285d20c60a",
+      "bytes": 2975109
+    },
+    {
+      "id": "archive-953f7e37d3b0c10d",
+      "name": "هشام خليل",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hecham_Khalel_%28%D9%87%D8%B4%D8%A7%D9%85_%D8%AE%D9%84%D9%8A%D9%84%29.mp3",
+      "gitBlobSha": "e2f72f0626348c85e0ebd8edf6b8a8871f8e1a95",
+      "bytes": 3121511
+    },
+    {
+      "id": "archive-53be1f6c7f2ab873",
+      "name": "حسين عفيفي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hussain_Afifi_%28%D8%AD%D8%B3%D9%8A%D9%86_%D8%B9%D9%81%D9%8A%D9%81%D9%8A%29.mp3",
+      "gitBlobSha": "ca1f5321796f477e7af8feb644dd4c14fbc28b14",
+      "bytes": 3574161
+    },
+    {
+      "id": "archive-2134538206bc8c12",
+      "name": "حسام الدين عبادة",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Hussam_Al_Deen_Obade_%28%D8%AD%D8%B3%D8%A7%D9%85_%D8%A7%D9%84%D8%AF%D9%8A%D9%86_%D8%B9%D8%A8%D8%A7%D8%AF%D8%A9%29.mp3",
+      "gitBlobSha": "9f0579e0af4bc1e5563ade29185aba81b7d66f87",
+      "bytes": 3503245
+    },
+    {
+      "id": "archive-4b2bae4272e78f77",
+      "name": "إبراهيم الجميل",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ibraheem_Al_Jumayle_%28%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85_%D8%A7%D9%84%D8%AC%D9%85%D9%8A%D9%84%29.mp3",
+      "gitBlobSha": "ad4bf5047daaa23da1a94c60ba127a32faa67e8d",
+      "bytes": 2462513
+    },
+    {
+      "id": "archive-747a41da406edef7",
+      "name": "إبراهيم جابر • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ibraheem_Jabar_1_%28%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85_%D8%AC%D8%A7%D8%A8%D8%B1%29.mp3",
+      "gitBlobSha": "8b8b180b7a7ba51dad77ca7e07fa42c65a72a449",
+      "bytes": 1697041
+    },
+    {
+      "id": "archive-3d1a71dd0dda6607",
+      "name": "إبراهيم جابر • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ibraheem_Jabar_2_%28%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85_%D8%AC%D8%A7%D8%A8%D8%B1%29.mp3",
+      "gitBlobSha": "e4fa6c39fe7328b638c89f171e5aed7ea8d7e830",
+      "bytes": 1753442
+    },
+    {
+      "id": "archive-2a63a5d478c66d58",
+      "name": "إبراهيم جبر أبو رحيق",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ibraheem_Jabr_Abu_Raheq_%28%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85_%D8%AC%D8%A8%D8%B1_%D8%A3%D8%A8%D9%88_%D8%B1%D8%AD%D9%8A%D9%82%29.mp3",
+      "gitBlobSha": "8843f6347da1517d154da02988044d0c86420eca",
+      "bytes": 4708955
+    },
+    {
+      "id": "archive-6b654ee9ddab1588",
+      "name": "إبراهيم جبر أبو رحيق - الفجر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ibraheem_Jabr_Abu_Raheq_-_Fajr_%28%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85_%D8%AC%D8%A8%D8%B1_%D8%A3%D8%A8%D9%88_%D8%B1%D8%AD%D9%8A%D9%82_-_%D8%A7%D9%84%D9%81%D8%AC%D8%B1%29.mp3",
+      "gitBlobSha": "0b4cf1621c6428d7c261bbc97cee80a92eadc11f",
+      "bytes": 2341317
+    },
+    {
+      "id": "archive-6e471ea160a80833",
+      "name": "إحسان حامد الدليمي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ihssan_Hamed_Al_Dulayme_%28%D8%A5%D8%AD%D8%B3%D8%A7%D9%86_%D8%AD%D8%A7%D9%85%D8%AF_%D8%A7%D9%84%D8%AF%D9%84%D9%8A%D9%85%D9%8A%29.mp3",
+      "gitBlobSha": "7fa6134ed5bbdbdaa143f8b5c8cdf6e7a78bcd33",
+      "bytes": 3416533
+    },
+    {
+      "id": "archive-a28fbdd93d269dbf",
+      "name": "إسلام ياسين",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Islam_Yassen_%28%D8%A5%D8%B3%D9%84%D8%A7%D9%85_%D9%8A%D8%A7%D8%B3%D9%8A%D9%86%29.mp3",
+      "gitBlobSha": "2200b2a2d095ac758cb54dcdef952154b16feb4b",
+      "bytes": 1856766
+    },
+    {
+      "id": "archive-666d0c782e2f50dc",
+      "name": "إسماعيل الشيخ",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Ismail_Al_Sheikh_%28%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84_%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%29.mp3",
+      "gitBlobSha": "c745816d250eb7d38bb604cac03a612ee918eaea",
+      "bytes": 1609060
+    },
+    {
+      "id": "archive-64503dcf1eecd36c",
+      "name": "عيسى الهجلاوي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Issa_Al_Hajlawe_%28%D8%B9%D9%8A%D8%B3%D9%89_%D8%A7%D9%84%D9%87%D8%AC%D9%84%D8%A7%D9%88%D9%8A%29.mp3",
+      "gitBlobSha": "3a76ea23f846fd1db0876c47531e8ee40d80f919",
+      "bytes": 2300307
+    },
+    {
+      "id": "archive-82253087cac872a5",
+      "name": "جمال أبو الحامد الجعفري",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Jamal_Abu_Al_Hamed_Al_Jaafare_%28%D8%AC%D9%85%D8%A7%D9%84_%D8%A3%D8%A8%D9%88_%D8%A7%D9%84%D8%AD%D8%A7%D9%85%D8%AF_%D8%A7%D9%84%D8%AC%D8%B9%D9%81%D8%B1%D9%8A%29.mp3",
+      "gitBlobSha": "44ba062d88e35632776f3d2cd4b0eaaebe065231",
+      "bytes": 2616215
+    },
+    {
+      "id": "archive-80ecf7b0c734745f",
+      "name": "كمال محمد المرعوش • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Kamal_Muhammad_Al_Marush_1_%28%D9%83%D9%85%D8%A7%D9%84_%D9%85%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D9%85%D8%B1%D8%B9%D9%88%D8%B4%29.mp3",
+      "gitBlobSha": "e5ce3894d0bbdb142d0bf65e4af204ed245bc274",
+      "bytes": 5088335
+    },
+    {
+      "id": "archive-663cb9af9c937fef",
+      "name": "كمال محمد المرعوش - المغرب • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Kamal_Muhammad_Al_Marush_2_-_Morocco_%28%D9%83%D9%85%D8%A7%D9%84_%D9%85%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D9%85%D8%B1%D8%B9%D9%88%D8%B4_-_%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8%29.mp3",
+      "gitBlobSha": "61e413f1c77bfd6a7b4d20209c6a181f3de1e748",
+      "bytes": 3354741
+    },
+    {
+      "id": "archive-92ec04d544c8ad28",
+      "name": "لافي العوني",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Lafi_Al_Awni_%28%D9%84%D8%A7%D9%81%D9%8A_%D8%A7%D9%84%D8%B9%D9%88%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "04bfe0b61fcf29eca53d9cd5059557b83ac4829b",
+      "bytes": 2241429
+    },
+    {
+      "id": "archive-0212c70c6ac36b80",
+      "name": "مهدي البشي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mahde_Al_Bechee_%28%D9%85%D9%87%D8%AF%D9%8A_%D8%A7%D9%84%D8%A8%D8%B4%D9%8A%29.mp3",
+      "gitBlobSha": "1c6664006a555be1020c61855abc7060a9f48ad5",
+      "bytes": 442496
+    },
+    {
+      "id": "archive-ea651bcd1c14f111",
+      "name": "محمود الفوازي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mahmoud_Al_Fawazi_%28%D9%85%D8%AD%D9%85%D9%88%D8%AF_%D8%A7%D9%84%D9%81%D9%88%D8%A7%D8%B2%D9%8A%29.mp3",
+      "gitBlobSha": "3104288ccf47af157c3b0b9d2979e411c73ef55a",
+      "bytes": 5944936
+    },
+    {
+      "id": "archive-7c9847ad4c7cd990",
+      "name": "محمود علي البنا - القاهرة",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mahmoud_Ali_Al_Banna_-_Cairo_%28%D9%85%D8%AD%D9%85%D9%88%D8%AF_%D8%B9%D9%84%D9%8A_%D8%A7%D9%84%D8%A8%D9%86%D8%A7_-_%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "562f7ff5b371bb64b5ad3b4355b7bb6976375575",
+      "bytes": 335954
+    },
+    {
+      "id": "archive-5fdb8eeb25c5a98f",
+      "name": "محمود حجازي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mahmoud_Hijazi_%28%D9%85%D8%AD%D9%85%D9%88%D8%AF_%D8%AD%D8%AC%D8%A7%D8%B2%D9%8A%29.mp3",
+      "gitBlobSha": "b71a66a426fca5c6b31fb7ecf7f0105d6d5f21d1",
+      "bytes": 3434415
+    },
+    {
+      "id": "archive-a2eb680945282882",
+      "name": "محمود خليل الحصري - القاهرة",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mahmoud_Khalil_Al_Hussary_-_Cairo_%28%D9%85%D8%AD%D9%85%D9%88%D8%AF_%D8%AE%D9%84%D9%8A%D9%84_%D8%A7%D9%84%D8%AD%D8%B5%D8%B1%D9%8A_-_%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "2c022d588ef78298b62df55eea6ce0c17093ab3c",
+      "bytes": 258926
+    },
+    {
+      "id": "archive-2c369ca53387fed2",
+      "name": "محمود الطواخ • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mahmud_Al_Tawakh_1_%28%D9%85%D8%AD%D9%85%D9%88%D8%AF_%D8%A7%D9%84%D8%B7%D9%88%D8%A7%D8%AE%29.mp3",
+      "gitBlobSha": "d8ca647ffd16076e454499b17c0b545e7de3a883",
+      "bytes": 2653025
+    },
+    {
+      "id": "archive-458ef2ed6b9d8bb5",
+      "name": "محمود الطواخ - مسجد الرفاعي القاهرة • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mahmud_Al_Tawakh_2_-_Masjid_Al_Rifai_Cairo_%28%D9%85%D8%AD%D9%85%D9%88%D8%AF_%D8%A7%D9%84%D8%B7%D9%88%D8%A7%D8%AE_-_%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%B1%D9%81%D8%A7%D8%B9%D9%8A_%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "08dcd4f9e26ca13d5f88c1e7e3999388499522ae",
+      "bytes": 3174554
+    },
+    {
+      "id": "archive-ac900e12303d285c",
+      "name": "محمود مصطفى النجار",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mahmud_Mustafa_Al_Najar_%28%D9%85%D8%AD%D9%85%D9%88%D8%AF_%D9%85%D8%B5%D8%B7%D9%81%D9%89_%D8%A7%D9%84%D9%86%D8%AC%D8%A7%D8%B1%29.mp3",
+      "gitBlobSha": "9af1db92387df94f6dda9510cdd590bbc1468991",
+      "bytes": 2439950
+    },
+    {
+      "id": "archive-4fafe8cdc5f3eea8",
+      "name": "ماجد الزامل",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Majid_Al_Zamel_%28%D9%85%D8%A7%D8%AC%D8%AF_%D8%A7%D9%84%D8%B2%D8%A7%D9%85%D9%84%29.mp3",
+      "gitBlobSha": "e47e8607d3bfcf5826a5962640585dfab10ad162",
+      "bytes": 2774457
+    },
+    {
+      "id": "archive-8d0855454e975b9f",
+      "name": "منصور الزهراني",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mansur_Al_Zahrane_%28%D9%85%D9%86%D8%B5%D9%88%D8%B1_%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "3f6fdcf75c339e21e45db3f2867f510df1123d4f",
+      "bytes": 2959028
+    },
+    {
+      "id": "archive-dec840e7ae620a8c",
+      "name": "منصور الزهراني • تسجيل 2 • جودة عالية",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mansur_Al_Zahrane_-_HQ_%28%D9%85%D9%86%D8%B5%D9%88%D8%B1_%D8%A7%D9%84%D8%B2%D9%87%D8%B1%D8%A7%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "f60e323da5a0692e97c2a36353815910cbf00365",
+      "bytes": 763133
+    },
+    {
+      "id": "archive-a07c69f89fa6b3db",
+      "name": "مشاري العفاسي • جودة عالية",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mishary_Al_Afasy_-_HQ_%28%D9%85%D8%B4%D8%A7%D8%B1%D9%8A_%D8%A7%D9%84%D8%B9%D9%81%D8%A7%D8%B3%D9%8A%29.mp3",
+      "gitBlobSha": "c43d4072bb43e3cd55af54065273ed156b67d8fb",
+      "bytes": 621967
+    },
+    {
+      "id": "archive-29dfec29276fb32f",
+      "name": "مشاري راشد العفاسي - الكويت • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mishary_Rashid_Alafasy_1_-_Kuwait_%28%D9%85%D8%B4%D8%A7%D8%B1%D9%8A_%D8%B1%D8%A7%D8%B4%D8%AF_%D8%A7%D9%84%D8%B9%D9%81%D8%A7%D8%B3%D9%8A_-_%D8%A7%D9%84%D9%83%D9%88%D9%8A%D8%AA%29.mp3",
+      "gitBlobSha": "d9db83fa921a6669f8750044f83ce56bbccecaa3",
+      "bytes": 1931082
+    },
+    {
+      "id": "archive-c1dfd4d19c971433",
+      "name": "مشاري راشد العفاسي - الكويت • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mishary_Rashid_Alafasy_2_-_Kuwait_%28%D9%85%D8%B4%D8%A7%D8%B1%D9%8A_%D8%B1%D8%A7%D8%B4%D8%AF_%D8%A7%D9%84%D8%B9%D9%81%D8%A7%D8%B3%D9%8A_-_%D8%A7%D9%84%D9%83%D9%88%D9%8A%D8%AA%29.mp3",
+      "gitBlobSha": "15c9d3409b2223084c95bbf3f5dffcd1b3ca0753",
+      "bytes": 2062113
+    },
+    {
+      "id": "archive-b09c61c4eebb3bd9",
+      "name": "مشاري راشد العفاسي - فجر الكويت • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mishary_Rashid_Alafasy_3_-_Fajr_Kuwait_%28%D9%85%D8%B4%D8%A7%D8%B1%D9%8A_%D8%B1%D8%A7%D8%B4%D8%AF_%D8%A7%D9%84%D8%B9%D9%81%D8%A7%D8%B3%D9%8A_-_%D9%81%D8%AC%D8%B1_%D8%A7%D9%84%D9%83%D9%88%D9%8A%D8%AA%29.mp3",
+      "gitBlobSha": "8754d3c7a361fe16dbae48ccac5945fbb1da7bb6",
+      "bytes": 1503337
+    },
+    {
+      "id": "archive-a84bb09033d416ea",
+      "name": "مشاري راشد العفاسي - فجر الكويت • تسجيل 4",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mishary_Rashid_Alafasy_4_-_Fajr_Kuwait_%28%D9%85%D8%B4%D8%A7%D8%B1%D9%8A_%D8%B1%D8%A7%D8%B4%D8%AF_%D8%A7%D9%84%D8%B9%D9%81%D8%A7%D8%B3%D9%8A_-_%D9%81%D8%AC%D8%B1_%D8%A7%D9%84%D9%83%D9%88%D9%8A%D8%AA%29.mp3",
+      "gitBlobSha": "01f72a718e885c10fd033f69cd0d6c6027d9ce7a",
+      "bytes": 2312715
+    },
+    {
+      "id": "archive-4803770b34f8c72b",
+      "name": "محمد صديق المنشاوي - أفغانستان",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mohamed_Siddiq_El-Minshawi_-_Afghanistan_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%B5%D8%AF%D9%8A%D9%82_%D8%A7%D9%84%D9%85%D9%86%D8%B4%D8%A7%D9%88%D9%8A_-_%D8%A3%D9%81%D8%BA%D8%A7%D9%86%D8%B3%D8%AA%D8%A7%D9%86%29.mp3",
+      "gitBlobSha": "a60ce1435efba5659ea9df249ddcf7d44893fc22",
+      "bytes": 2619286
+    },
+    {
+      "id": "archive-2cd1443072cf4199",
+      "name": "محمد صديق المنشاوي - مصر • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mohamed_Siddiq_El-Minshawi_-_Egypt_1_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%B5%D8%AF%D9%8A%D9%82_%D8%A7%D9%84%D9%85%D9%86%D8%B4%D8%A7%D9%88%D9%8A_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "3c7e865a158bfbfffe5428d59beee75b7183c66a",
+      "bytes": 503264
+    },
+    {
+      "id": "archive-66ee959eddb4d941",
+      "name": "محمد صديق المنشاوي - مصر • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mohamed_Siddiq_El-Minshawi_-_Egypt_2_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%B5%D8%AF%D9%8A%D9%82_%D8%A7%D9%84%D9%85%D9%86%D8%B4%D8%A7%D9%88%D9%8A_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "f9d15ca176f22c45c1545dfb98e7277a37032a1b",
+      "bytes": 3955074
+    },
+    {
+      "id": "archive-4ae94ac8a91def30",
+      "name": "محمد صلاح الدين كبارة • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mohammed_Salahuddin_Kabbara_1_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%B5%D9%84%D8%A7%D8%AD_%D8%A7%D9%84%D8%AF%D9%8A%D9%86_%D9%83%D8%A8%D8%A7%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "830e40486dfa3d2a56e157716b6069c573d789dd",
+      "bytes": 6204909
+    },
+    {
+      "id": "archive-74a5b2ddc7a21c47",
+      "name": "محمد صلاح الدين كبارة • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mohammed_Salahuddin_Kabbara_2_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%B5%D9%84%D8%A7%D8%AD_%D8%A7%D9%84%D8%AF%D9%8A%D9%86_%D9%83%D8%A8%D8%A7%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "d1622f6a666005238fe0afad6c58b9bffa10f367",
+      "bytes": 5816207
+    },
+    {
+      "id": "archive-f2d8f2e9c1de61eb",
+      "name": "معاذ القاسمي - قطر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muad_Al_Qaseme_-_Qatar_%28%D9%85%D8%B9%D8%A7%D8%B0_%D8%A7%D9%84%D9%82%D8%A7%D8%B3%D9%85%D9%8A_-_%D9%82%D8%B7%D8%B1%29.mp3",
+      "gitBlobSha": "ff5ce588e03318187cc6c6e597a2b1487fee69d2",
+      "bytes": 9108675
+    },
+    {
+      "id": "archive-373053e44739927d",
+      "name": "محمد عبد الحكم",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Abd_Al_Hakem_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%AD%D9%83%D9%85%29.mp3",
+      "gitBlobSha": "8493171e481734b964955f35fb9ffa6e6149d1bd",
+      "bytes": 2167043
+    },
+    {
+      "id": "archive-0464e968b7cb89ea",
+      "name": "محمد أبو المقارم",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Abu_Al_Maqarem_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%A3%D8%A8%D9%88_%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B1%D9%85%29.mp3",
+      "gitBlobSha": "db8251812d37b16a9400f89852f8ef48766518b7",
+      "bytes": 1265080
+    },
+    {
+      "id": "archive-ebe7710cb1fb41ea",
+      "name": "محمد عادل",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Adel_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%B9%D8%A7%D8%AF%D9%84%29.mp3",
+      "gitBlobSha": "b0e8f9adcaf08770ad98d92ff2391626c1572792",
+      "bytes": 1746800
+    },
+    {
+      "id": "archive-9c6e30f7b9d58673",
+      "name": "محمد الدمرداش",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Al_Damradash_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%AF%D9%85%D8%B1%D8%AF%D8%A7%D8%B4%29.mp3",
+      "gitBlobSha": "6452913ce417dc04d46708766c254614477c9737",
+      "bytes": 2820682
+    },
+    {
+      "id": "archive-fe35cc1787c7455c",
+      "name": "محمد القرين الملوكي • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Al_Kurayne_Al_Maluke_1_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D9%82%D8%B1%D9%8A%D9%86_%D8%A7%D9%84%D9%85%D9%84%D9%88%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "46703b528ca15f09981d47a5ac32ab4ea0616790",
+      "bytes": 8280719
+    },
+    {
+      "id": "archive-54a09e64a2f44f95",
+      "name": "محمد القرين الملوكي • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Al_Kurayne_Al_Maluke_2_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D9%82%D8%B1%D9%8A%D9%86_%D8%A7%D9%84%D9%85%D9%84%D9%88%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "0ab2ef5aa9c752f16f3c2282d5ced9db799f64ac",
+      "bytes": 5011441
+    },
+    {
+      "id": "archive-3fe437564463cf74",
+      "name": "محمد السيد ماهر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Al_Saed_Maher_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B3%D9%8A%D8%AF_%D9%85%D8%A7%D9%87%D8%B1%29.mp3",
+      "gitBlobSha": "48d83132f68d9314a3891a9e2caf142b4ecf4c71",
+      "bytes": 1516957
+    },
+    {
+      "id": "archive-f30bcbc2b3a34f9e",
+      "name": "محمد الزاهد",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Al_Zahid_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D8%B2%D8%A7%D9%87%D8%AF%29.mp3",
+      "gitBlobSha": "6239fb9b36c2001f3880b9b70d00eacb229f8916",
+      "bytes": 3882467
+    },
+    {
+      "id": "archive-9110a4def9f63f17",
+      "name": "محمد أشرف عوض",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Ashraf_Aawad_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%A3%D8%B4%D8%B1%D9%81_%D8%B9%D9%88%D8%B6%29.mp3",
+      "gitBlobSha": "babe28d5e032655af5d6602d3716697e756f4c4e",
+      "bytes": 2894643
+    },
+    {
+      "id": "archive-6a0638c2d33fff61",
+      "name": "محمد بن موسى",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Ben_Mussa_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%A8%D9%86_%D9%85%D9%88%D8%B3%D9%89%29.mp3",
+      "gitBlobSha": "811c468148132383550fd8506656f95835e0caed",
+      "bytes": 1306236
+    },
+    {
+      "id": "archive-e914fc445a090848",
+      "name": "محمد فتحي حنتور",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Fathe_Hantur_%28%D9%85%D8%AD%D9%85%D8%AF_%D9%81%D8%AA%D8%AD%D9%8A_%D8%AD%D9%86%D8%AA%D9%88%D8%B1%29.mp3",
+      "gitBlobSha": "497a550778dfcdce6db968dea1e9660053348fa5",
+      "bytes": 3113105
+    },
+    {
+      "id": "archive-a0bfd23526c61113",
+      "name": "محمد حمود",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Hamud_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%AD%D9%85%D9%88%D8%AF%29.mp3",
+      "gitBlobSha": "44ce979e51dbb24cb70ba3fb180afc25660db019",
+      "bytes": 3466898
+    },
+    {
+      "id": "archive-52eacd288cb81ac6",
+      "name": "محمد حمود - كولومبيا",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Hamud_-_Colombia_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%AD%D9%85%D9%88%D8%AF_-_%D9%83%D9%88%D9%84%D9%88%D9%85%D8%A8%D9%8A%D8%A7%29.mp3",
+      "gitBlobSha": "08a587a78799a96f9df7dac98c0d694f07723e79",
+      "bytes": 2788240
+    },
+    {
+      "id": "archive-83a8d2faf95693ae",
+      "name": "محمد حسن الشهاوي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Hessen_Al_Shahawe_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%AD%D8%B3%D9%86_%D8%A7%D9%84%D8%B4%D9%87%D8%A7%D9%88%D9%8A%29.mp3",
+      "gitBlobSha": "3793019bca3468d2f1b9b4c3b7d9992978c3d1ab",
+      "bytes": 2541089
+    },
+    {
+      "id": "archive-a4de13220b1d4b85",
+      "name": "محمد خليل رمل - الحرم المكي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Khaleel_Raml_-_Al_Haram_Al_Maki_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%AE%D9%84%D9%8A%D9%84_%D8%B1%D9%85%D9%84_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "b61b251a0cd7374b1d0bd8d8ae88d76f3a8aa0c4",
+      "bytes": 383744
+    },
+    {
+      "id": "archive-a0ccd9a23a116bcb",
+      "name": "محمد ناجي • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Najee_1_%28%D9%85%D8%AD%D9%85%D8%AF_%D9%86%D8%A7%D8%AC%D9%8A%29.mp3",
+      "gitBlobSha": "d6767683b4d9eadf6feeebbe264061975464f222",
+      "bytes": 1690531
+    },
+    {
+      "id": "archive-505546d278508115",
+      "name": "محمد ناجي • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Najee_2_%28%D9%85%D8%AD%D9%85%D8%AF_%D9%86%D8%A7%D8%AC%D9%8A%29.mp3",
+      "gitBlobSha": "c97fdf0041c2e042844992ca2ea09574751b11ba",
+      "bytes": 3524964
+    },
+    {
+      "id": "archive-beb83d4bb8878e2c",
+      "name": "محمد ناجي • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Najee_3_%28%D9%85%D8%AD%D9%85%D8%AF_%D9%86%D8%A7%D8%AC%D9%8A%29.mp3",
+      "gitBlobSha": "b5780fc6fe602faa7bb317ec85f565150e866508",
+      "bytes": 3277322
+    },
+    {
+      "id": "archive-932e160af8228425",
+      "name": "محمد ناصر الدين الألباني - الأردن",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Nasser_Al_Dine_Al_Albane_-_Jordan_%28%D9%85%D8%AD%D9%85%D8%AF_%D9%86%D8%A7%D8%B5%D8%B1_%D8%A7%D9%84%D8%AF%D9%8A%D9%86_%D8%A7%D9%84%D8%A3%D9%84%D8%A8%D8%A7%D9%86%D9%8A_-_%D8%A7%D9%84%D8%A3%D8%B1%D8%AF%D9%86%29.mp3",
+      "gitBlobSha": "61b6bcf6b526ee2502b88683aa63d3a6ce534c66",
+      "bytes": 1276793
+    },
+    {
+      "id": "archive-f384291c7ef9a22c",
+      "name": "محمد رمضان سعد - الحرم المكي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Ramadan_Saad_-_Al_Haram_Al_Maki_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%B1%D9%85%D8%B6%D8%A7%D9%86_%D8%B3%D8%B9%D8%AF_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "8b6d0cb58ed257c2f14d928ecee5e2023ca2d080",
+      "bytes": 3515711
+    },
+    {
+      "id": "archive-6a15b81f7a6970d5",
+      "name": "محمد رفعت - القاهرة",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammad_Refaat_-_Cairo_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%B1%D9%81%D8%B9%D8%AA_-_%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9%29.mp3",
+      "gitBlobSha": "3ec390763206ff19586e30a4054a2ab46b6c403e",
+      "bytes": 411318
+    },
+    {
+      "id": "archive-b7f45dd26fa3c2b3",
+      "name": "محمد إبراهيم إسماعيل عبدالله",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Muhammed_Ibrahem_Ismael_Abd_Allah_%28%D9%85%D8%AD%D9%85%D8%AF_%D8%A5%D8%A8%D8%B1%D8%A7%D9%87%D9%8A%D9%85_%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84_%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%84%D9%87%29.mp3",
+      "gitBlobSha": "9bfd0f2fbaa7893126863dfb2fea8c054a462a1f",
+      "bytes": 2911433
+    },
+    {
+      "id": "archive-dd44b2e29b07cd7b",
+      "name": "مختار عبد الحميد حافظ",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mukhtar_Abelhamed_Hafed_%28%D9%85%D8%AE%D8%AA%D8%A7%D8%B1_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%AD%D9%85%D9%8A%D8%AF_%D8%AD%D8%A7%D9%81%D8%B8%29.mp3",
+      "gitBlobSha": "e14bb60280e555f8047cd08ceaeacede79470eda",
+      "bytes": 2987997
+    },
+    {
+      "id": "archive-2bae4b8f2c666dd2",
+      "name": "مصطفى إسماعيل - مصر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mustafa_Ismail_-_Egypt_%28%D9%85%D8%B5%D8%B7%D9%81%D9%89_%D8%A5%D8%B3%D9%85%D8%A7%D8%B9%D9%8A%D9%84_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "069897484854ebe383af5838c05df5e340aeb127",
+      "bytes": 739896
+    },
+    {
+      "id": "archive-b16de985178d9bd1",
+      "name": "مصطفى وليد",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Mustafa_Waled_%28%D9%85%D8%B5%D8%B7%D9%81%D9%89_%D9%88%D9%84%D9%8A%D8%AF%29.mp3",
+      "gitBlobSha": "068599463c2a81ca7412063280b7920ae8159ef7",
+      "bytes": 8273830
+    },
+    {
+      "id": "archive-e7d46f10cd5042c3",
+      "name": "ناجي قزاز - المسجد الأقصى القدس",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Najee_Qazaz_-_Al_Aqsa_Jerusalem_%28%D9%86%D8%A7%D8%AC%D9%8A_%D9%82%D8%B2%D8%A7%D8%B2_-_%D8%A7%D9%84%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%A3%D9%82%D8%B5%D9%89_%D8%A7%D9%84%D9%82%D8%AF%D8%B3%29.mp3",
+      "gitBlobSha": "771d5f3321aaa796852613102a2bc859e621a22f",
+      "bytes": 452864
+    },
+    {
+      "id": "archive-078a66c6d1afb9c5",
+      "name": "نصر الدين طوبار",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Nasreddine_Toubar_%28%D9%86%D8%B5%D8%B1_%D8%A7%D9%84%D8%AF%D9%8A%D9%86_%D8%B7%D9%88%D8%A8%D8%A7%D8%B1%29.mp3",
+      "gitBlobSha": "a852b00862617d7e81a908d34c6b5c143e34efd2",
+      "bytes": 4231673
+    },
+    {
+      "id": "archive-00e1d0917f452cbc",
+      "name": "ناصر عبد الجبار - قطر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Nasser_Al_Abd_Al_Jabar_-_Qatar_%28%D9%86%D8%A7%D8%B5%D8%B1_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%AC%D8%A8%D8%A7%D8%B1_-_%D9%82%D8%B7%D8%B1%29.mp3",
+      "gitBlobSha": "c60a4faa4e02377cce0fb7c44b6972017ff58ae9",
+      "bytes": 6865607
+    },
+    {
+      "id": "archive-0a25f1458e0031e6",
+      "name": "ناصر العبيد • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Nasser_Al_Obaid_1_%28%D9%86%D8%A7%D8%B5%D8%B1_%D8%A7%D9%84%D8%B9%D8%A8%D9%8A%D8%AF%29.mp3",
+      "gitBlobSha": "3a337aca43529edfdeebf3e461a9da47d79b4fc8",
+      "bytes": 4810608
+    },
+    {
+      "id": "archive-8d1a7a1ccbb6c24f",
+      "name": "ناصر العبيد • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Nasser_Al_Obaid_2_%28%D9%86%D8%A7%D8%B5%D8%B1_%D8%A7%D9%84%D8%B9%D8%A8%D9%8A%D8%AF%29.mp3",
+      "gitBlobSha": "5c8c5ea8e6d593371c7dec114ddaf7e33aa88969",
+      "bytes": 2593990
+    },
+    {
+      "id": "archive-e67748fc23afab83",
+      "name": "ناصر العبيد • تسجيل 3",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Nasser_Al_Obaid_3_%28%D9%86%D8%A7%D8%B5%D8%B1_%D8%A7%D9%84%D8%B9%D8%A8%D9%8A%D8%AF%29.mp3",
+      "gitBlobSha": "1819136b97d55cebc078ea33e441015b2699889b",
+      "bytes": 3518117
+    },
+    {
+      "id": "archive-0763484d570dd2df",
+      "name": "ناصر القطامي • جودة عالية",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Nasser_Al_Qatami_-_HQ_%28%D9%86%D8%A7%D8%B5%D8%B1_%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A%29.mp3",
+      "gitBlobSha": "4b29123c754eecaa81bcb85ffaa46699d879b37f",
+      "bytes": 530748
+    },
+    {
+      "id": "archive-d7e58e89bfcd4fe2",
+      "name": "ناصر القطامي - المملكة العربية السعودية • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Nasser_Al_Qatami_1_-_Saudi_Arabia_%28%D9%86%D8%A7%D8%B5%D8%B1_%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A_-_%D8%A7%D9%84%D9%85%D9%85%D9%84%D9%83%D8%A9_%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9%29.mp3",
+      "gitBlobSha": "7f09b9e2027d08eb177df23e18f1036a7074441b",
+      "bytes": 2117341
+    },
+    {
+      "id": "archive-6d7c737ff634ce32",
+      "name": "ناصر القطامي - الرياض • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Nasser_Al_Qatami_2_-_Riyadh_%28%D9%86%D8%A7%D8%B5%D8%B1_%D8%A7%D9%84%D9%82%D8%B7%D8%A7%D9%85%D9%8A_-_%D8%A7%D9%84%D8%B1%D9%8A%D8%A7%D8%B6%29.mp3",
+      "gitBlobSha": "437f43044cde854104fafbd8805e6b4d0c4b7868",
+      "bytes": 2176705
+    },
+    {
+      "id": "archive-afdc7c961223694e",
+      "name": "نايف فداح - الحرم المكي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Nayf_Fedah_-_Al_Haram_Al_Maki_%28%D9%86%D8%A7%D9%8A%D9%81_%D9%81%D8%AF%D8%A7%D8%AD_-_%D8%A7%D9%84%D8%AD%D8%B1%D9%85_%D8%A7%D9%84%D9%85%D9%83%D9%8A%29.mp3",
+      "gitBlobSha": "db377f6e5882c010a4a7b33b0b9d1cb6d37a68ae",
+      "bytes": 421256
+    },
+    {
+      "id": "archive-ed527a8d8982d9fd",
+      "name": "نور الدين حمزة المغربي - المسجد الأقصى القدس",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/NurDin_Hamza_Al_Maghriby_-_Al_Aqsa_Jerusalem_%28%D9%86%D9%88%D8%B1_%D8%A7%D9%84%D8%AF%D9%8A%D9%86_%D8%AD%D9%85%D8%B2%D8%A9_%D8%A7%D9%84%D9%85%D8%BA%D8%B1%D8%A8%D9%8A_-_%D8%A7%D9%84%D9%85%D8%B3%D8%AC%D8%AF_%D8%A7%D9%84%D8%A3%D9%82%D8%B5%D9%89_%D8%A7%D9%84%D9%82%D8%AF%D8%B3%29.mp3",
+      "gitBlobSha": "30f5ae9ea9e3516cab257ada2558d961087982ed",
+      "bytes": 370280
+    },
+    {
+      "id": "archive-cec34f443d76dd7d",
+      "name": "عمر القزابري",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Omar_Al_Kazabri_%28%D8%B9%D9%85%D8%B1_%D8%A7%D9%84%D9%82%D8%B2%D8%A7%D8%A8%D8%B1%D9%8A%29.mp3",
+      "gitBlobSha": "7411ae8296856a375917510046f332568f495c8b",
+      "bytes": 1897034
+    },
+    {
+      "id": "archive-10ed3c979d41b569",
+      "name": "عمر العمير",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Omar_Al_Omayr_%28%D8%B9%D9%85%D8%B1_%D8%A7%D9%84%D8%B9%D9%85%D9%8A%D8%B1%29.mp3",
+      "gitBlobSha": "7cf5cb199e9e41e29e54a567f391ca1834f365b9",
+      "bytes": 611101
+    },
+    {
+      "id": "archive-926cce81b18717ec",
+      "name": "عمران منصور - مصر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Omran_Mansur_-_Egypt_%28%D8%B9%D9%85%D8%B1%D8%A7%D9%86_%D9%85%D9%86%D8%B5%D9%88%D8%B1_-_%D9%85%D8%B5%D8%B1%29.mp3",
+      "gitBlobSha": "e3696a57802ecad312dbafdcde23f8d91fcb4a93",
+      "bytes": 654560
+    },
+    {
+      "id": "archive-91c6f516fbf8c37f",
+      "name": "عمرو صبحي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Omru_Sobhe_%28%D8%B9%D9%85%D8%B1%D9%88_%D8%B5%D8%A8%D8%AD%D9%8A%29.mp3",
+      "gitBlobSha": "4bc90f181ae9fb1332a96e90aae7d3558e8526aa",
+      "bytes": 3314680
+    },
+    {
+      "id": "archive-279795ac65e35770",
+      "name": "عثمان المسعمي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Othman_Al_Masseme_%28%D8%B9%D8%AB%D9%85%D8%A7%D9%86_%D8%A7%D9%84%D9%85%D8%B3%D8%B9%D9%85%D9%8A%29.mp3",
+      "gitBlobSha": "f7fd79ad6c2e03d70a609914a7de22a80ad47916",
+      "bytes": 2810994
+    },
+    {
+      "id": "archive-c38442283c421f36",
+      "name": "ربيع عبد الرحيم عيسى",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Rabee_Abdul_Raheem_Essa_%28%D8%B1%D8%A8%D9%8A%D8%B9_%D8%B9%D8%A8%D8%AF_%D8%A7%D9%84%D8%B1%D8%AD%D9%8A%D9%85_%D8%B9%D9%8A%D8%B3%D9%89%29.mp3",
+      "gitBlobSha": "421ff71486f0f1ce9a16b9edc7e4d331601f5111",
+      "bytes": 3659977
+    },
+    {
+      "id": "archive-223d12977ea20bd6",
+      "name": "رابح بن دراح الجزائري",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Rabeh_Ibn_Darah_Al_Jazairi_%28%D8%B1%D8%A7%D8%A8%D8%AD_%D8%A8%D9%86_%D8%AF%D8%B1%D8%A7%D8%AD_%D8%A7%D9%84%D8%AC%D8%B2%D8%A7%D8%A6%D8%B1%D9%8A%29.mp3",
+      "gitBlobSha": "13ded7ac3b5bc1447b2ce78746d3c7379f034674",
+      "bytes": 4174784
+    },
+    {
+      "id": "archive-5f3455c36228a184",
+      "name": "رياض الجزائري - الجزائر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Riad_Al_Djazairi_-_Algeria_%28%D8%B1%D9%8A%D8%A7%D8%B6_%D8%A7%D9%84%D8%AC%D8%B2%D8%A7%D8%A6%D8%B1%D9%8A_-_%D8%A7%D9%84%D8%AC%D8%B2%D8%A7%D8%A6%D8%B1%29.mp3",
+      "gitBlobSha": "a53162ccf48d91efd8ca54a81592646950a25ca6",
+      "bytes": 2885125
+    },
+    {
+      "id": "archive-cfc399a22edfa780",
+      "name": "صاحب هاني خطاب - فلسطين",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Saheb_Hane_Khatab_-_Palestine_%28%D8%B5%D8%A7%D8%AD%D8%A8_%D9%87%D8%A7%D9%86%D9%8A_%D8%AE%D8%B7%D8%A7%D8%A8_-_%D9%81%D9%84%D8%B3%D8%B7%D9%8A%D9%86%29.mp3",
+      "gitBlobSha": "7d6c11427871f8aed1b872be46cba46238406802",
+      "bytes": 736254
+    },
+    {
+      "id": "archive-28949e2efb5bd38f",
+      "name": "صالح النابت - قطر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Saleh_Al_Nabet_-_Qatar_%28%D8%B5%D8%A7%D9%84%D8%AD_%D8%A7%D9%84%D9%86%D8%A7%D8%A8%D8%AA_-_%D9%82%D8%B7%D8%B1%29.mp3",
+      "gitBlobSha": "e1f27a6f38a0a117f81e1478cabfef8ab84115a3",
+      "bytes": 7652293
+    },
+    {
+      "id": "archive-ce9d06130983be8f",
+      "name": "سالم حمدة",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Salem_Hamde_%28%D8%B3%D8%A7%D9%84%D9%85_%D8%AD%D9%85%D8%AF%D8%A9%29.mp3",
+      "gitBlobSha": "2d1dc7ed96421f93d2bbd3dbbe6ed0b435a74534",
+      "bytes": 1049247
+    },
+    {
+      "id": "archive-1bd65d1db49d6a51",
+      "name": "سامر الصغير",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Samer_Al_Sagher_%28%D8%B3%D8%A7%D9%85%D8%B1_%D8%A7%D9%84%D8%B5%D8%BA%D9%8A%D8%B1%29.mp3",
+      "gitBlobSha": "52e2162d127069c22043c46d826b999c1593620f",
+      "bytes": 3040091
+    },
+    {
+      "id": "archive-c159eea95f521b46",
+      "name": "الشيخ النقشبندى",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Sheikh_Al_Naqshbandi_%28%D8%A7%D9%84%D8%B4%D9%8A%D8%AE_%D8%A7%D9%84%D9%86%D9%82%D8%B4%D8%A8%D9%86%D8%AF%D9%89%29.mp3",
+      "gitBlobSha": "8c212d50eee385140d6899c1d57bb9db154b038c",
+      "bytes": 2219550
+    },
+    {
+      "id": "archive-cbbcf20e956356d5",
+      "name": "الشيخ طارق محمد",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Sheikh_Tariq_Muhammad_%28%D8%A7%D9%84%D8%B4%D9%8A%D8%AE_%D8%B7%D8%A7%D8%B1%D9%82_%D9%85%D8%AD%D9%85%D8%AF%29.mp3",
+      "gitBlobSha": "932e90ef483fe74b06a0443433b30c275b116f24",
+      "bytes": 10402822
+    },
+    {
+      "id": "archive-ca78188aea56283a",
+      "name": "طه الجنيد",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Taha_Al_Junayd_%28%D8%B7%D9%87_%D8%A7%D9%84%D8%AC%D9%86%D9%8A%D8%AF%29.mp3",
+      "gitBlobSha": "095d4e507418dd25e117cd6d5df6701564313c63",
+      "bytes": 3639215
+    },
+    {
+      "id": "archive-d4a698074c931420",
+      "name": "طالب القنوبي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Taleb_Al_Qanube_%28%D8%B7%D8%A7%D9%84%D8%A8_%D8%A7%D9%84%D9%82%D9%86%D9%88%D8%A8%D9%8A%29.mp3",
+      "gitBlobSha": "0f1e826a819479a7b1b18bbbc6fea5eb4812642b",
+      "bytes": 3015877
+    },
+    {
+      "id": "archive-d4283ed41d220823",
+      "name": "تامر إسلام",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Tamer_Islam_%28%D8%AA%D8%A7%D9%85%D8%B1_%D8%A5%D8%B3%D9%84%D8%A7%D9%85%29.mp3",
+      "gitBlobSha": "bee8618938fd139e10c7e6f3967ca2f641600a15",
+      "bytes": 4385073
+    },
+    {
+      "id": "archive-abb83447dccea74c",
+      "name": "طارق فتح أحمد",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Tareq_Fathe_Ahmad_%28%D8%B7%D8%A7%D8%B1%D9%82_%D9%81%D8%AA%D8%AD_%D8%A3%D8%AD%D9%85%D8%AF%29.mp3",
+      "gitBlobSha": "da0247d8f03e717fe85e75790f828c6331e58fd1",
+      "bytes": 2629435
+    },
+    {
+      "id": "archive-e84075ce9fe50a05",
+      "name": "وديع اليمني",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Wadi_Al_Yamani_%28%D9%88%D8%AF%D9%8A%D8%B9_%D8%A7%D9%84%D9%8A%D9%85%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "7213b02504128decf384e8c54ad3ffb7cb2e3ecf",
+      "bytes": 3203702
+    },
+    {
+      "id": "archive-693340a8b9f7ce6d",
+      "name": "وادي حمد اليماني",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Wadi_Hamad_Al-Yamani_%28%D9%88%D8%A7%D8%AF%D9%8A_%D8%AD%D9%85%D8%AF_%D8%A7%D9%84%D9%8A%D9%85%D8%A7%D9%86%D9%8A%29.mp3",
+      "gitBlobSha": "b11d1e8a4f647cd16539b584f0a6c09fb96fa095",
+      "bytes": 3206036
+    },
+    {
+      "id": "archive-b9dbd96125a5908d",
+      "name": "وليد محساس • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Waled_Mahsas_1_%28%D9%88%D9%84%D9%8A%D8%AF_%D9%85%D8%AD%D8%B3%D8%A7%D8%B3%29.mp3",
+      "gitBlobSha": "66a0c4f8f32a4dec627a177b560ce79b3d1a4dea",
+      "bytes": 8662123
+    },
+    {
+      "id": "archive-c5a8d98d20202f3b",
+      "name": "وليد محساس - الجزائر • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Waled_Mahsas_2_-_Algeria_%28%D9%88%D9%84%D9%8A%D8%AF_%D9%85%D8%AD%D8%B3%D8%A7%D8%B3_-_%D8%A7%D9%84%D8%AC%D8%B2%D8%A7%D8%A6%D8%B1%29.mp3",
+      "gitBlobSha": "60c995c56fcf4397f41221d1091b85bb961e6ee4",
+      "bytes": 1854437
+    },
+    {
+      "id": "archive-d83d7301bff6b45f",
+      "name": "ياسين الأسف • تسجيل 1",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Yaseen_Al_Aassaf_1_%28%D9%8A%D8%A7%D8%B3%D9%8A%D9%86_%D8%A7%D9%84%D8%A3%D8%B3%D9%81%29.mp3",
+      "gitBlobSha": "1293d66ba3f71d83da8de9d75993c23dc9eb1e47",
+      "bytes": 1382675
+    },
+    {
+      "id": "archive-b6c6a29a9833daa8",
+      "name": "ياسين الأسف - فجر العراق • تسجيل 2",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Yaseen_Al_Aassaf_2_-_Fajr_Iraq_%28%D9%8A%D8%A7%D8%B3%D9%8A%D9%86_%D8%A7%D9%84%D8%A3%D8%B3%D9%81_-_%D9%81%D8%AC%D8%B1_%D8%A7%D9%84%D8%B9%D8%B1%D8%A7%D9%82%29.mp3",
+      "gitBlobSha": "ca2d47e5033e18cae5cf740885f01efafe2d56a9",
+      "bytes": 5165716
+    },
+    {
+      "id": "archive-a12a70aa65b10da4",
+      "name": "ياسر عبدالله الهوري - قطر",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Yasser_Abdu_Allah_Al_Hawre_-_Qatar_%28%D9%8A%D8%A7%D8%B3%D8%B1_%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%84%D9%87_%D8%A7%D9%84%D9%87%D9%88%D8%B1%D9%8A_-_%D9%82%D8%B7%D8%B1%29.mp3",
+      "gitBlobSha": "83ce657fcaf0e2d208b44175945516302a0e875b",
+      "bytes": 3882513
+    },
+    {
+      "id": "archive-0ceb0b0ea3638f36",
+      "name": "ياسر الدوسري - المملكة العربية السعودية",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Yasser_Al-Dosari_-_Saudi_Arabia_%28%D9%8A%D8%A7%D8%B3%D8%B1_%D8%A7%D9%84%D8%AF%D9%88%D8%B3%D8%B1%D9%8A_-_%D8%A7%D9%84%D9%85%D9%85%D9%84%D9%83%D8%A9_%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9_%D8%A7%D9%84%D8%B3%D8%B9%D9%88%D8%AF%D9%8A%D8%A9%29.mp3",
+      "gitBlobSha": "250f875ae777b7efda0361f528962d8fb957929c",
+      "bytes": 1462921
+    },
+    {
+      "id": "archive-d37f3ca19d2a8a90",
+      "name": "ياسر الفيلكاوي",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Yasser_Al_Filkawi_%28%D9%8A%D8%A7%D8%B3%D8%B1_%D8%A7%D9%84%D9%81%D9%8A%D9%84%D9%83%D8%A7%D9%88%D9%8A%29.mp3",
+      "gitBlobSha": "6edb4a0c13e8e026d8f58dd0c54d022e377b5813",
+      "bytes": 863966
+    },
+    {
+      "id": "archive-9e3e9b53e0a7c0bc",
+      "name": "زاهر محمد طريش",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Zaher_Muhammad_Taresh_%28%D8%B2%D8%A7%D9%87%D8%B1_%D9%85%D8%AD%D9%85%D8%AF_%D8%B7%D8%B1%D9%8A%D8%B4%29.mp3",
+      "gitBlobSha": "292848cdc729cb695890d7151eebd98daf3f09db",
+      "bytes": 369560
+    },
+    {
+      "id": "archive-cb79f918ccdee743",
+      "name": "زيد العاطية",
+      "url": "https://raw.githubusercontent.com/Kiwifu/adhan-mp3/b9180a2bb769f74cff8e378ef2cc7aaf8db5cd5b/Zayd_Al_Aatya_%28%D8%B2%D9%8A%D8%AF_%D8%A7%D9%84%D8%B9%D8%A7%D8%B7%D9%8A%D8%A9%29.mp3",
+      "gitBlobSha": "571d2d2946a592973db9b2a0e0b841ee2d7bef31",
+      "bytes": 1435597
+    }
+  ]
+}

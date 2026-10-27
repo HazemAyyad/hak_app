@@ -38,6 +38,30 @@ void main() {
     label: 'اختبار',
   );
   test(
+    'expanded named catalog preserves old voices, uses unique IDs and pinned HTTPS audio, and round-trips alerts',
+    () {
+      expect(adhanVoices.length, greaterThan(200));
+      expect(adhanVoices.map((v) => v.id).toSet().length, adhanVoices.length);
+      expect(adhanVoices.take(4).map((v) => v.id), [
+        'alafasy',
+        'nafees',
+        'mustafa',
+        'zahrani',
+      ]);
+      for (final voice in adhanVoices) {
+        expect(voice.uri.scheme, 'https');
+        expect(voice.uri.path, endsWith('.mp3'));
+        expect(voice.name.trim(), isNotEmpty);
+        expect(
+          PrayerAlert.fromJson(PrayerAlert(voice: voice.id).toJson()).voice,
+          voice.id,
+        );
+      }
+      expect(adhanVoices.any((v) => v.name.contains('عبد الباسط')), true);
+      expect(adhanVoices.any((v) => v.name.contains('ملا')), true);
+    },
+  );
+  test(
     'per-prayer audio modes survive save and old configuration remains readable',
     () async {
       SharedPreferences.setMockInitialValues({});

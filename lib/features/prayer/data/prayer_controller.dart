@@ -8,6 +8,7 @@ import '../../settings/data/app_settings.dart';
 import '../../settings/data/reminder_plan.dart';
 import 'prayer_models.dart';
 import 'prayer_alert.dart';
+import 'place_catalog.dart';
 
 class PrayerController extends ChangeNotifier {
   PrayerController(
@@ -17,6 +18,8 @@ class PrayerController extends ChangeNotifier {
     DateTime Function()? clock,
     MethodChannel? channel,
     this.autoTick = true,
+    this.placeCatalog = PlaceCatalog.load,
+    this.timeZoneAt = prayerZoneAt,
   }) : account = account,
        clock = clock ?? DateTime.now,
        channel =
@@ -32,23 +35,28 @@ class PrayerController extends ChangeNotifier {
   final DateTime Function() clock;
   final MethodChannel channel;
   final bool autoTick;
+  final Future<PlaceCatalog> Function() placeCatalog;
+  final Future<String?> Function(double, double) timeZoneAt;
   final scheduleChanged = ChangeNotifier();
   late String scope;
   PrayerConfig config = PrayerConfig();
   PrayerDay? today;
   PrayerMoment? upcoming;
   String? error, calculationError;
+  String? locationNotice;
   bool locating = false,
       _disposed = false,
       _corrupt = false,
       _foreground = true;
   int _revision = 0;
+  int _locationRequest = 0;
   Timer? _timer;
   Future<void> _writes = Future.value();
   String? _day;
   DateTime get now => clock();
   void _restore() {
     error = null;
+    locationNotice = null;
     _corrupt = false;
     try {
       final raw = preferences.getString('prayer.config.v1.$scope');
@@ -67,6 +75,7 @@ class PrayerController extends ChangeNotifier {
     if (_disposed || scope == scopeOf()) return;
     scope = scopeOf();
     _revision++;
+    _locationRequest++;
     locating = false;
     _restore();
     notifyListeners();
@@ -74,6 +83,7 @@ class PrayerController extends ChangeNotifier {
 
   void reloadBackup() {
     ++_revision;
+    _locationRequest++;
     locating = false;
     _restore();
     notifyListeners();
@@ -164,6 +174,7 @@ class PrayerController extends ChangeNotifier {
         if (!_disposed && scope == owner && revision == _revision) {
           config = next;
           error = null;
+          locationNotice = null;
           _calculate();
           notifyListeners();
         }
@@ -184,7 +195,9 @@ class PrayerController extends ChangeNotifier {
     final owner = scope;
     final revision = ++_revision;
     locating = true;
+    final request = ++_locationRequest;
     error = null;
+    locationNotice = null;
     notifyListeners();
     try {
       final raw = await channel.invokeMapMethod<String, dynamic>(
@@ -192,7 +205,7 @@ class PrayerController extends ChangeNotifier {
       );
       if (_disposed || scope != owner || revision != _revision) return;
       if (raw == null) throw StateError('No location');
-      final place = PrayerLocation(
+      final measured = PrayerLocation(
         latitude: (raw['lat'] as num).toDouble(),
         longitude: (raw['lng'] as num).toDouble(),
         zone: raw['zone'] as String,
@@ -204,12 +217,71 @@ class PrayerController extends ChangeNotifier {
           isUtc: true,
         ),
       );
-      if (place.accuracy! > 5000 ||
-          now.difference(place.measuredAt!).abs() >
+      if (measured.accuracy! > 5000 ||
+          now.difference(measured.measuredAt!).abs() >
               const Duration(minutes: 5)) {
         throw StateError('Stale location');
       }
-      await save(config.copyWith(location: place));
+      Map<String, dynamic>? names;
+      PlaceCatalog? catalog;
+      String? zone;
+      await Future.wait([
+        (() async {
+          try {
+            names = await channel
+                .invokeMapMethod<String, dynamic>('reverseGeocode', {
+                  'lat': measured.latitude,
+                  'lng': measured.longitude,
+                })
+                .timeout(const Duration(seconds: 5));
+          } catch (_) {
+            /* Retain measured coordinates if system naming fails. */
+          }
+        })(),
+        (() async {
+          try {
+            catalog = await placeCatalog();
+          } catch (_) {}
+        })(),
+        (() async {
+          try {
+            zone = await timeZoneAt(measured.latitude, measured.longitude);
+          } catch (_) {}
+        })(),
+      ]);
+      if (_disposed || scope != owner || revision != _revision) return;
+      final city = names?['city'], country = names?['country'];
+      final validNames =
+          city is String &&
+          city.trim().isNotEmpty &&
+          country is String &&
+          country.trim().isNotEmpty;
+      final near = catalog?.nearby(measured.latitude, measured.longitude);
+      final label = validNames
+          ? '${city.trim()}، ${country.trim()}'
+          : near == null
+          ? 'موقع الجهاز'
+          : 'قرب ${near.label}';
+      final place = PrayerLocation(
+        latitude: measured.latitude,
+        longitude: measured.longitude,
+        zone: zone ?? measured.zone,
+        label: label.length > 100 ? label.substring(0, 100) : label,
+        fromDevice: true,
+        accuracy: measured.accuracy,
+        measuredAt: measured.measuredAt,
+      );
+      final saved = await save(config.copyWith(location: place));
+      if (saved &&
+          !_disposed &&
+          scope == owner &&
+          identical(config.location, place)) {
+        locationNotice = validNames
+            ? 'تم تحديث الموقع: ${place.label}'
+            : near != null
+            ? 'تم تحديث الإحداثيات؛ اسم أقرب مدينة تقريبي.'
+            : 'تم تحديث الإحداثيات؛ تعذّر تحديد اسم المدينة والدولة. أعد التحديث أو اختر المدينة يدويًا.';
+      }
     } on PlatformException catch (e) {
       if (!_disposed && scope == owner && revision == _revision) {
         error = switch (e.code) {
@@ -232,7 +304,7 @@ class PrayerController extends ChangeNotifier {
             'الموقع غير دقيق أو المنطقة الزمنية غير معروفة؛ استخدم الإدخال اليدوي.';
       }
     } finally {
-      if (!_disposed && scope == owner) {
+      if (!_disposed && scope == owner && request == _locationRequest) {
         locating = false;
         notifyListeners();
       }
