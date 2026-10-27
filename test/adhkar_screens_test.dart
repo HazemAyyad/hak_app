@@ -23,6 +23,7 @@ import 'package:haq_app/features/religious_content/data/religious_catalog.dart';
 import 'package:haq_app/features/religious_content/data/religious_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +39,7 @@ void main() {
   final host = GlobalKey<AdhkarSectionPageState>(), preview = GlobalKey();
   late ValueNotifier<bool> visible;
   setUpAll(() async {
+    await loadVisualAuditFonts();
     quranData = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -117,7 +119,7 @@ void main() {
     ThemeMode mode = ThemeMode.light,
     bool fullApp = false,
   }) async {
-    tester.view.physicalSize = Size(width, 1100);
+    tester.view.physicalSize = visualSize(Size(width, 1100));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -144,7 +146,7 @@ void main() {
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(
                 context,
-              ).copyWith(textScaler: TextScaler.linear(scale)),
+              ).copyWith(textScaler: TextScaler.linear(visualScale(scale))),
               child: child!,
             ),
             home: fullApp
@@ -229,14 +231,15 @@ void main() {
   }
 
   Future<void> capture(WidgetTester tester, String name) async {
+    await prepareVisualAuditCapture(tester, preview);
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    if (!const bool.fromEnvironment('ADHKAR_PREVIEWS')) return;
+    if (!visualAudit && !const bool.fromEnvironment('ADHKAR_PREVIEWS')) return;
     await tester.runAsync(() async {
       final boundary =
           preview.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: 1.5),
-          folder = Directory('build/adhkar-preview');
+          folder = Directory(visualPath('build/adhkar-preview'));
       await folder.create(recursive: true);
       final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
       await File(
@@ -244,6 +247,11 @@ void main() {
       ).writeAsBytes(bytes!.buffer.asUint8List());
       image.dispose();
     });
+    await captureAuditContinuation(
+      tester,
+      preview,
+      visualPath('build/adhkar-preview/$name.png'),
+    );
   }
 
   Future<String> fixture() async {
@@ -267,6 +275,25 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('لا توجد مجموعات تطابق بحثك'), findsOneWidget);
+      if (visualAudit) {
+        await capture(tester, 'no-results-${mode.name}');
+        await tester.enterText(find.byKey(const ValueKey('adhkar-search')), '');
+        await tester.pumpAndSettle();
+        unawaitedForTest(host.currentState!.openGroup('daily:morning'));
+        await until(
+          tester,
+          () => find
+              .byKey(const ValueKey('count-hisn-api-075'))
+              .evaluate()
+              .isNotEmpty,
+        );
+        await capture(tester, 'morning-${mode.name}');
+        await tap(tester, find.byKey(const ValueKey('adhkar-mode-list')));
+        await capture(tester, 'morning-list-${mode.name}');
+        await tap(tester, find.byKey(const ValueKey('adhkar-mode-focus')));
+        await tap(tester, find.widgetWithText(ActionChip, 'العرض'));
+        await capture(tester, 'display-${mode.name}');
+      }
       await tester.pumpWidget(const SizedBox());
     });
     testWidgets('reader counter 3 to red zero, undo and exit ${mode.name}', (
@@ -600,7 +627,15 @@ void main() {
         const Offset(0, -450),
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('feature-personalAdhkar')));
+      final personalEntry = find.byKey(
+        const ValueKey('feature-personalAdhkar'),
+      );
+      await Scrollable.ensureVisible(
+        tester.element(personalEntry),
+        alignment: .4,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(personalEntry);
       await until(
         tester,
         () => find

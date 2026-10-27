@@ -21,6 +21,7 @@ import 'package:haq_app/features/religious_content/data/religious_controller.dar
 import 'package:haq_app/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +38,7 @@ void main() {
   late QuranKhatma khatma;
   final preview = GlobalKey();
   setUpAll(() async {
+    await loadVisualAuditFonts();
     repo = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -132,7 +134,7 @@ void main() {
     bool dark = false,
     bool app = false,
   }) async {
-    tester.view.physicalSize = const Size(320, 1000);
+    tester.view.physicalSize = visualSize(const Size(320, 1000));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -159,7 +161,7 @@ void main() {
                   builder: (context, child) => MediaQuery(
                     data: MediaQuery.of(
                       context,
-                    ).copyWith(textScaler: TextScaler.linear(1.3)),
+                    ).copyWith(textScaler: TextScaler.linear(visualScale(1.3))),
                     child: child!,
                   ),
                   home: ProgressPage(controller: religious, section: section),
@@ -171,17 +173,23 @@ void main() {
   }
 
   Future<void> capture(WidgetTester tester, String name) async {
+    await prepareVisualAuditCapture(tester, preview);
     expect(tester.takeException(), isNull, reason: name);
     await tester.runAsync(() async {
       final boundary =
           preview.currentContext!.findRenderObject()! as RenderRepaintBoundary;
       final picture = await boundary.toImage(pixelRatio: 1.5);
       final bytes = await picture.toByteData(format: ui.ImageByteFormat.png);
-      final file = File('build/progress-preview/$name.png');
+      final file = File(visualPath('build/progress-preview/$name.png'));
       await file.parent.create(recursive: true);
       await file.writeAsBytes(bytes!.buffer.asUint8List());
       picture.dispose();
     });
+    await captureAuditContinuation(
+      tester,
+      preview,
+      visualPath('build/progress-preview/$name.png'),
+    );
   }
 
   for (final dark in [false, true]) {

@@ -1,0 +1,546 @@
+{
+  "date": "2026-10-27",
+  "sections": [
+    {
+      "section": "01",
+      "title": "الرئيسية والمزيد",
+      "status": "updated",
+      "note": "الرئيسية محفوظة. أضيف البحث الحقيقي للمزيد ووُحّدت بطاقات بقية الخدمات مع الصفوف المصورة المعتمدة."
+    },
+    {
+      "section": "02",
+      "title": "الأذكار",
+      "status": "aligned",
+      "note": "فُحص الفهرس والقارئ والعدّ والإعدادات بالنص الطبيعي. أزرار إدارة الأذكار الشخصية والمحفوظه إضافات وظيفية مقصودة."
+    },
+    {
+      "section": "03",
+      "title": "القرآن الكريم",
+      "status": "preserved",
+      "note": "حُفظ تنفيذ القرآن وقارئه ومشغله وفق قرار التصميم. مرجع الشكل الجديد لا يلغي تصميم القرآن المعتمد؛ خيارات الخط والتجويد من P20 باقية."
+    },
+    {
+      "section": "04",
+      "title": "الختمة",
+      "status": "adapted",
+      "note": "بطاقة الختمة وخطتها وقارئ الورد موجودة. الخطة الفعلية تعرض بيانات المستخدم، ولا تنسخ أقسامًا أو نسب إنجاز تجريبية من الصورة."
+    },
+    {
+      "section": "05",
+      "title": "الأدعية والأسماء والرقية",
+      "status": "preserved",
+      "note": "أُبقيت قوائم وتفاصيل المحتوى الغنية بالمصدر والتبويبات وفق قرار الحماية؛ فُحصت في الفاتح والداكن."
+    },
+    {
+      "section": "06",
+      "title": "المسبحة الإلكترونية",
+      "status": "adapted",
+      "note": "راجعت القائمة وأشكال العد الستة. المسبحة الدائرية تعرض حبات مرسومة، وبقية الأشكال لها تكوينها؛ وظائف التراجع والإجمالي محفوظة."
+    },
+    {
+      "section": "07",
+      "title": "بماذا تشعر؟",
+      "status": "aligned",
+      "note": "بطاقات المشاعر المصورة بهوية حق، مع 17 شعورًا. اختلاف عدد البطاقات الظاهرة يتبع حجم الشاشة والتمرير."
+    },
+    {
+      "section": "08",
+      "title": "السنن والجمعة",
+      "status": "preserved",
+      "note": "بقي قارئ السنن والجمعة الحالي الأوسع بالمصادر والتفاصيل، بدل استبداله ببطاقة مرجعية مختصرة."
+    },
+    {
+      "section": "09",
+      "title": "رمضان",
+      "status": "adapted",
+      "note": "مدخل رمضان وأيام الدعاء الثلاثون بمحتوى موثق؛ صور المرجع لا تحدد تاريخ اليوم أو تنسب إنجازًا للمستخدم."
+    },
+    {
+      "section": "10",
+      "title": "الأحاديث والأربعون",
+      "status": "preserved",
+      "note": "القائمة والمتن والشرح بقيت بتصميمها الحالي وفق القرار السابق، مع فصل الشرح وعدم تقليص المحتوى إلى صورة."
+    },
+    {
+      "section": "11",
+      "title": "سكينة",
+      "status": "updated",
+      "note": "أضيفت صور خيارات الجلسة، وضُبطت كثافة الصفوف. أزرار الإيقاف والإنهاء بارزة بالتركوازي والذهبي وتتحول إلى ترتيب عمودي عند تكبير النص."
+    },
+    {
+      "section": "12",
+      "title": "العادات والإحصائيات",
+      "status": "updated",
+      "note": "ملخص علوي بالأذكار والتسبيح وصفحات القرآن المسجلة فعلًا، وبطاقات تفاصيل أكثر اختصارًا؛ لم تُنشأ نسب أو أهداف إحصائية غير موجودة."
+    },
+    {
+      "section": "13",
+      "title": "حلقات الذكر",
+      "status": "adapted",
+      "note": "قائمة وبطاقات وتقدم الحلقة تستعمل بيانات الخدمة المحاكية في المعاينة؛ ليست حلقات أو مساهمات حية باسم المستخدم."
+    },
+    {
+      "section": "14",
+      "title": "ادع معي",
+      "status": "adapted",
+      "note": "بطاقات الدعاء والتفاعل بهوية حق؛ النص المعروض في الصورة مادة اختبار، وخيارات الحساب والمراجعة تضيف أدوات لازمة للتنفيذ."
+    },
+    {
+      "section": "15",
+      "title": "القصص والرسائل",
+      "status": "adapted",
+      "note": "الرسائل والقصص تتبع نوع المحتوى الفعلي؛ معاينة القصة النصية لا يُستبدل محتواها بصورة تجريبية لمجرد مطابقة المرجع."
+    },
+    {
+      "section": "16",
+      "title": "القبلة والصلاة والمساجد",
+      "status": "superseded",
+      "note": "اعتمد طلب الفيديو اللاحق في P14 بدل مرجع إذن البوصلة القديم. المؤشر والتأثيرات والأذان والبحث عن المدينة/الخريطة مراجعة مختلفة عن الصورة القديمة."
+    },
+    {
+      "section": "17",
+      "title": "الإعدادات والتنبيهات",
+      "status": "preserved",
+      "note": "فُحصت صفحة الإعدادات والمظهر والتذكيرات والإشعارات بالحجم الطبيعي. حفظ تصميم المظهر القائم مقصود، وليس نقصًا عن المرجع."
+    },
+    {
+      "section": "18",
+      "title": "الحساب والنسخ الاحتياطي",
+      "status": "adapted",
+      "note": "الدخول والتسجيل وحالة البيانات والنسخ مجتمعة في المسار الموحد. هذا اختلاف وظيفي عن قائمة الملف الشخصي المرجعية، مع حفظ هوية القرآن المعتمدة."
+    },
+    {
+      "section": "19",
+      "title": "المساعد والباكج",
+      "status": "adapted",
+      "note": "شاشات الباكج والمحادثة وحالة عدم الإتاحة تعرض عقد الخدمة الحالي وحدودها، بدل صورة خطأ الاشتراك التاريخية."
+    },
+    {
+      "section": "20",
+      "title": "المفضلة والمشاركة",
+      "status": "preserved",
+      "note": "المحفوظات ومصمم المشاركة الحاليان محفوظان. بطاقات مشاركة الأذكار تحمل شعار حق؛ هذه معاينات تصدير فعلية وليست صور تطبيق على هاتف."
+    }
+  ],
+  "comparisons": [
+    {
+      "section": "01",
+      "code": "R001",
+      "title": "الرئيسية المحفوظة",
+      "light": "home-preview/light.png",
+      "dark": "home-preview/dark.png",
+      "note": "تصميم قائم محفوظ؛ طول اللقطة يختلف عن نافذة الهاتف."
+    },
+    {
+      "section": "01",
+      "code": "R012",
+      "title": "المزيد والبطاقات الأساسية",
+      "light": "navigation-preview/more-light.png",
+      "dark": "navigation-preview/more-dark.png",
+      "note": ""
+    },
+    {
+      "section": "01",
+      "code": "R023",
+      "title": "بقية بطاقات المزيد",
+      "light": "navigation-preview/more-secondary-light.png",
+      "dark": "navigation-preview/more-secondary-dark.png",
+      "note": ""
+    },
+    {
+      "section": "02",
+      "code": "R002",
+      "title": "فهرس الأذكار",
+      "light": "adhkar-preview/index-light.png",
+      "dark": "adhkar-preview/index-dark.png",
+      "note": ""
+    },
+    {
+      "section": "02",
+      "code": "R004",
+      "title": "أذكار الصباح — القارئ",
+      "light": "adhkar-preview/morning-light.png",
+      "dark": "adhkar-preview/morning-dark.png",
+      "note": "نص ذكر رسمي؛ لا يستخدم الذكر الشخصي التجريبي بدل الصباح."
+    },
+    {
+      "section": "02",
+      "code": "R137",
+      "title": "عرض الأذكار والجلسة",
+      "light": "adhkar-preview/display-light.png",
+      "dark": "adhkar-preview/display-dark.png",
+      "note": ""
+    },
+    {
+      "section": "02",
+      "code": "S002",
+      "title": "البحث بلا نتائج",
+      "light": "adhkar-preview/no-results-light.png",
+      "dark": "adhkar-preview/no-results-dark.png",
+      "note": ""
+    },
+    {
+      "section": "03",
+      "code": "R007",
+      "title": "القرآن — التصميم القائم",
+      "light": "quran-preview/quran-home-merged.png",
+      "dark": "quran-preview/quran-home-dark.png",
+      "note": "إبقاء التصميم القائم قرار سابق معتمد."
+    },
+    {
+      "section": "03",
+      "code": "R008",
+      "title": "صفحة المصحف الأصلية",
+      "light": "quran-preview/fixed-page.png",
+      "dark": null,
+      "note": "المعاينة بخط الصفحة؛ اختيار خط النص لا يغيّر توزيعها."
+    },
+    {
+      "section": "03",
+      "code": "R092",
+      "title": "التفسير والمعاني",
+      "light": "quran-preview/tafsir.png",
+      "dark": null,
+      "note": ""
+    },
+    {
+      "section": "04",
+      "code": "R025",
+      "title": "الختمات",
+      "light": "progress-preview/khatma-light.png",
+      "dark": "progress-preview/khatma-dark.png",
+      "note": ""
+    },
+    {
+      "section": "04",
+      "code": "S015",
+      "title": "إنشاء خطة ختمة",
+      "light": "progress-preview/khatma-create.png",
+      "dark": null,
+      "note": ""
+    },
+    {
+      "section": "04",
+      "code": "S016",
+      "title": "تفاصيل خطة الختمة",
+      "light": "progress-preview/khatma-details.png",
+      "dark": null,
+      "note": ""
+    },
+    {
+      "section": "05",
+      "code": "R019",
+      "title": "أسماء الله الحسنى",
+      "light": "religious-preview/D03-names.png",
+      "dark": "religious-preview/dark-names.png",
+      "note": ""
+    },
+    {
+      "section": "05",
+      "code": "R020",
+      "title": "تفاصيل الاسم",
+      "light": "religious-preview/D11-name-01.png",
+      "dark": "religious-preview/dark-detail-name-01.png",
+      "note": ""
+    },
+    {
+      "section": "05",
+      "code": "R065",
+      "title": "الرقية الشرعية",
+      "light": "religious-preview/D09-ruqya.png",
+      "dark": "religious-preview/dark-ruqya.png",
+      "note": "القارئ الحالي محفوظ؛ يختلف عن قارئ العدّ العام في المرجع."
+    },
+    {
+      "section": "05",
+      "code": "R073",
+      "title": "الأدعية القرآنية",
+      "light": "religious-preview/D04-quran-duas.png",
+      "dark": "religious-preview/dark-quran-duas.png",
+      "note": ""
+    },
+    {
+      "section": "06",
+      "code": "R015",
+      "title": "قائمة المسبحة",
+      "light": "tasbih-preview/library-light.png",
+      "dark": "tasbih-preview/library-dark.png",
+      "note": ""
+    },
+    {
+      "section": "06",
+      "code": "R016",
+      "title": "واجهة العدّ",
+      "light": "tasbih-preview/classic-light.png",
+      "dark": "tasbih-preview/classic-dark.png",
+      "note": ""
+    },
+    {
+      "section": "06",
+      "code": "R234",
+      "title": "المسبحة — أزرار الزيادة والنقصان",
+      "light": "tasbih-preview/buttons-light.png",
+      "dark": "tasbih-preview/buttons-dark.png",
+      "note": "نفس عائلة الأزرار في المرجع، مع حفظ التراجع والإجمالي والسجل."
+    },
+    {
+      "section": "07",
+      "code": "R017",
+      "title": "بطاقات المشاعر",
+      "light": "content-preview/moods-light.png",
+      "dark": "content-preview/moods-dark.png",
+      "note": ""
+    },
+    {
+      "section": "07",
+      "code": "R264",
+      "title": "قارئ المشاعر والعدّ",
+      "light": "content-preview/mood-count.png",
+      "dark": null,
+      "note": "المعاينة تقارن عائلة قارئ المشاعر؛ مضمون الذكر وحالته يتبعان المادة المختارة في الاختبار."
+    },
+    {
+      "section": "08",
+      "code": "R034",
+      "title": "قائمة السنن",
+      "light": "religious-preview/D19-sunnah.png",
+      "dark": "religious-preview/dark-sunnah.png",
+      "note": ""
+    },
+    {
+      "section": "08",
+      "code": "R033",
+      "title": "سنن الجمعة",
+      "light": "religious-preview/D17-friday.png",
+      "dark": "religious-preview/dark-friday.png",
+      "note": ""
+    },
+    {
+      "section": "09",
+      "code": "R036",
+      "title": "رمضان",
+      "light": "content-preview/ramadan-light.png",
+      "dark": "content-preview/ramadan-dark.png",
+      "note": ""
+    },
+    {
+      "section": "09",
+      "code": "R037",
+      "title": "أيام أدعية رمضان",
+      "light": "content-preview/ramadan-duas-light.png",
+      "dark": "content-preview/ramadan-duas-dark.png",
+      "note": ""
+    },
+    {
+      "section": "10",
+      "code": "R048",
+      "title": "الأربعون النووية",
+      "light": "religious-preview/D06-nawawi.png",
+      "dark": "religious-preview/dark-nawawi.png",
+      "note": ""
+    },
+    {
+      "section": "10",
+      "code": "R049",
+      "title": "متن الحديث",
+      "light": "religious-preview/D12-nawawi-01.png",
+      "dark": "religious-preview/dark-detail-nawawi-01.png",
+      "note": ""
+    },
+    {
+      "section": "10",
+      "code": "R040",
+      "title": "شرح الحديث",
+      "light": "content-preview/hadith-explanation.png",
+      "dark": null,
+      "note": ""
+    },
+    {
+      "section": "11",
+      "code": "R042",
+      "title": "خيارات سكينة المصورة",
+      "light": "sakinah-preview/paths-light.png",
+      "dark": "sakinah-preview/paths-dark.png",
+      "note": ""
+    },
+    {
+      "section": "11",
+      "code": "R043",
+      "title": "إعداد جلسة سكينة",
+      "light": "sakinah-preview/custom-light.png",
+      "dark": "sakinah-preview/custom-dark.png",
+      "note": "لقطة بعد اختيار النمط المخصص والانتقال إلى إعداداته؛ موضع التمرير مختلف عن بداية المرجع."
+    },
+    {
+      "section": "11",
+      "code": "S030",
+      "title": "جلسة التنفس وأزرارها",
+      "light": "sakinah-preview/exhale.png",
+      "dark": null,
+      "note": "العداد يتبع الساعة المحاكية؛ موضع القوس يتبع المرحلة الفعلية في اللقطة."
+    },
+    {
+      "section": "11",
+      "code": "S031",
+      "title": "مرحلة الحبس",
+      "light": "sakinah-preview/hold-reduced.png",
+      "dark": null,
+      "note": ""
+    },
+    {
+      "section": "12",
+      "code": "R055",
+      "title": "العادات اليومية",
+      "light": "progress-preview/habits-light.png",
+      "dark": "progress-preview/habits-dark.png",
+      "note": "توجد عادة اختبار في التنفيذ؛ المرجع يعرض الحالة الخالية."
+    },
+    {
+      "section": "12",
+      "code": "R053",
+      "title": "ملخص الإحصائيات",
+      "light": "progress-preview/statistics-light.png",
+      "dark": "progress-preview/statistics-dark.png",
+      "note": "الأصفار ناتجة عن حالة بلا سجل؛ لا تُنسخ أرقام المرجع التجريبية."
+    },
+    {
+      "section": "13",
+      "code": "R107",
+      "title": "حلقات الذكر",
+      "light": "p11-previews/circles-light.png",
+      "dark": "p11-previews/circles-dark.png",
+      "note": ""
+    },
+    {
+      "section": "14",
+      "code": "R110",
+      "title": "بطاقات ادع معي",
+      "light": "p11-previews/prayers-light.png",
+      "dark": "p11-previews/prayers-dark.png",
+      "note": ""
+    },
+    {
+      "section": "15",
+      "code": "R011",
+      "title": "رسائل حق",
+      "light": "p11-previews/messages-light.png",
+      "dark": "p11-previews/messages-dark.png",
+      "note": ""
+    },
+    {
+      "section": "15",
+      "code": "R100",
+      "title": "قائمة القصص",
+      "light": "p11-previews/stories-light.png",
+      "dark": "p11-previews/stories-dark.png",
+      "note": "المرجع قصة مصورة؛ بيانات الاختبار قصة نصية، فلا تدعي اللقطة قبول عارض الصورة/الفيديو."
+    },
+    {
+      "section": "16",
+      "code": "R063",
+      "title": "القبلة — مرجع الفيديو الأحدث",
+      "light": "qibla-video-previews/video-qibla-light.png",
+      "dark": "qibla-video-previews/video-qibla-dark.png",
+      "note": "المقارنة مع الصورة القديمة للتتبع فقط؛ الحركة لا تثبتها لقطة ثابتة."
+    },
+    {
+      "section": "16",
+      "code": "R046",
+      "title": "المساجد وإذن الموقع",
+      "light": "qibla-video-previews/mosques-light.png",
+      "dark": "qibla-video-previews/mosques-dark.png",
+      "note": ""
+    },
+    {
+      "section": "17",
+      "code": "R013",
+      "title": "إعدادات التطبيق",
+      "light": "p08-previews/root-light.png",
+      "dark": "p08-previews/root-dark.png",
+      "note": ""
+    },
+    {
+      "section": "17",
+      "code": "R047",
+      "title": "المظهر المعتمد",
+      "light": "p08-previews/appearance-light.png",
+      "dark": "p08-previews/appearance-dark.png",
+      "note": ""
+    },
+    {
+      "section": "17",
+      "code": "R076",
+      "title": "التذكيرات",
+      "light": "p08-previews/reminders-light.png",
+      "dark": "p08-previews/reminders-dark.png",
+      "note": ""
+    },
+    {
+      "section": "17",
+      "code": "R078",
+      "title": "خيارات التنبيه",
+      "light": "p08-previews/notifications-light.png",
+      "dark": "p08-previews/notifications-dark.png",
+      "note": ""
+    },
+    {
+      "section": "18",
+      "code": "S042",
+      "title": "تسجيل الدخول",
+      "light": "p10-account-preview/light.png",
+      "dark": "p10-account-preview/dark.png",
+      "note": ""
+    },
+    {
+      "section": "18",
+      "code": "S043",
+      "title": "إنشاء حساب",
+      "light": "p10-account-preview/register-light.png",
+      "dark": "p10-account-preview/register-dark.png",
+      "note": ""
+    },
+    {
+      "section": "18",
+      "code": "R119",
+      "title": "حالة البيانات والنسخ — أسفل الصفحة",
+      "light": "p10-account-preview/light-scroll-1.png",
+      "dark": "p10-account-preview/dark-scroll-1.png",
+      "note": ""
+    },
+    {
+      "section": "19",
+      "code": "R094",
+      "title": "باكج المساعد",
+      "light": "p12-previews/gate-light.png",
+      "dark": "p12-previews/gate-dark.png",
+      "note": "هذه حالة مستخدم مسجل دون اشتراك، وليست حالة الضيف المقفلة في المرجع."
+    },
+    {
+      "section": "19",
+      "code": "R102",
+      "title": "الاشتراك المتاح من الخدمة",
+      "light": "p12-previews/subscription-light.png",
+      "dark": "p12-previews/subscription-dark.png",
+      "note": "المرجع يعرض خطأ تاريخيًا؛ لم يُجبر التنفيذ على إظهار خطأ عند توفر بيانات الباكج."
+    },
+    {
+      "section": "20",
+      "code": "R089",
+      "title": "المفضلة والعلامات",
+      "light": "quran-preview/05-favorites.png",
+      "dark": null,
+      "note": ""
+    },
+    {
+      "section": "20",
+      "code": "R097",
+      "title": "مصمم المشاركة",
+      "light": "content-preview/editor-light.png",
+      "dark": "content-preview/editor-dark.png",
+      "note": "لقطة فعلية من واجهة مصمم المشاركة الحالي، لا بطاقة PNG المصدّرة وحدها."
+    }
+  ],
+  "individual_309_visual_acceptance": false,
+  "scope": "مراجعة تركيب الواجهات الأساسية وعائلاتها، مع تتبع كل الحالات المرجعية. ليست شهادة مطابقة فردية لكل حالة أو تشغيل هاتف.",
+  "completed_date": "2026-10-28"
+}

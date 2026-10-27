@@ -19,6 +19,7 @@ import 'package:haq_app/features/religious_content/data/religious_controller.dar
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'tasbih_test.dart' show FakeSpeech;
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,7 @@ void main() {
   late FakeSpeech speech;
   final boundary = GlobalKey();
   setUpAll(() async {
+    await loadVisualAuditFonts();
     repository = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -100,7 +102,7 @@ void main() {
     bool dark = false,
     double width = 426,
   }) async {
-    tester.view.physicalSize = Size(width, 1100);
+    tester.view.physicalSize = visualSize(Size(width, 1100));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -118,9 +120,11 @@ void main() {
             ),
           ),
           builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(
-              context,
-            ).copyWith(textScaler: TextScaler.linear(width == 320 ? 1.2 : 1)),
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(
+                visualScale(width == 320 ? 1.2 : 1),
+              ),
+            ),
             child: Directionality(
               textDirection: TextDirection.rtl,
               child: child!,
@@ -138,6 +142,7 @@ void main() {
   }
 
   Future<void> capture(WidgetTester tester, String name) async {
+    await prepareVisualAuditCapture(tester, boundary);
     await tester.pump();
     await tester.runAsync(() async {
       final node =
@@ -145,7 +150,7 @@ void main() {
       final img = await node.toImage();
       final bytes = await img.toByteData(format: ui.ImageByteFormat.png);
       img.dispose();
-      final file = File('build/tasbih-preview/$name.png');
+      final file = File(visualPath('build/tasbih-preview/$name.png'));
       await file.parent.create(recursive: true);
       await file.writeAsBytes(bytes!.buffer.asUint8List());
     });
@@ -278,6 +283,13 @@ void main() {
       expect(tester.takeException(), isNull);
       await tester.tap(find.text('تم'));
       await settle(tester);
+      if (find.text('تعديل').evaluate().isEmpty) {
+        await tester.scrollUntilVisible(
+          find.text('تعديل'),
+          250,
+          scrollable: find.byType(Scrollable).last,
+        );
+      }
       await tester.ensureVisible(find.text('تعديل'));
       await tester.tap(find.text('تعديل'));
       await settle(tester);
@@ -297,6 +309,13 @@ void main() {
     (tester) async {
       await pump(tester);
       final mic = find.byKey(const ValueKey('tasbih-mic'));
+      if (mic.evaluate().isEmpty) {
+        await tester.scrollUntilVisible(
+          mic,
+          250,
+          scrollable: find.byType(Scrollable).last,
+        );
+      }
       await tester.ensureVisible(mic);
       await tester.tap(mic);
       await settle(tester);
@@ -342,7 +361,7 @@ void main() {
   testWidgets(
     'account change closes private counter/editor and does not leak its library or writes',
     (tester) async {
-      tester.view.physicalSize = const Size(426, 1100);
+      tester.view.physicalSize = visualSize(const Size(426, 1100));
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -367,6 +386,13 @@ void main() {
       await settle(tester);
       await tester.tap(find.text(private.text));
       await settle(tester);
+      if (find.text('تعديل').evaluate().isEmpty) {
+        await tester.scrollUntilVisible(
+          find.text('تعديل'),
+          250,
+          scrollable: find.byType(Scrollable).last,
+        );
+      }
       await tester.ensureVisible(find.text('تعديل'));
       await tester.tap(find.text('تعديل'));
       await settle(tester);
@@ -390,4 +416,52 @@ void main() {
       counter.dispose();
     },
   );
+  if (visualAudit) {
+    testWidgets('visual review tasbih library in both appearances', (
+      tester,
+    ) async {
+      final religious = ReligiousController(
+        quran: quran,
+        activityFactory: () async => activity,
+        initialCatalog: ReligiousCatalog.fromJson(
+          jsonDecode(File('assets/religious/catalog.json').readAsStringSync())
+              as Map<String, dynamic>,
+        ),
+      );
+      await religious.load();
+      tester.view.physicalSize = const Size(390, 1000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      for (final dark in [false, true]) {
+        await tester.pumpWidget(
+          RepaintBoundary(
+            key: boundary,
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                fontFamily: 'QuranUI',
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: const Color(0xFF2A8C82),
+                  primary: const Color(0xFF2A8C82),
+                  secondary: const Color(0xFFC7A45A),
+                  brightness: dark ? Brightness.dark : Brightness.light,
+                ),
+                brightness: dark ? Brightness.dark : Brightness.light,
+              ),
+              home: TasbihPage(controller: religious, speech: speech),
+            ),
+          ),
+        );
+        await settle(tester);
+        await capture(tester, 'library-${dark ? 'dark' : 'light'}');
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+        await settle(tester);
+      }
+      religious.dispose();
+      await settle(tester);
+      counter.dispose();
+    });
+  }
 }

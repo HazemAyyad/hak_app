@@ -16,6 +16,7 @@ import 'package:haq_app/features/prayer/data/mosque_repository.dart';
 import 'package:haq_app/features/prayer/data/adhan_library.dart';
 import 'package:haq_app/features/prayer/presentation/prayer_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ void main() {
   final preview = GlobalKey();
   final calls = <MethodCall>[];
   setUpAll(() async {
+    await loadVisualAuditFonts();
     initializePrayerZones();
     for (final (family, path) in [
       ('QuranUI', 'assets/fonts/Cairo.ttf'),
@@ -95,7 +97,7 @@ void main() {
     bool dark = false,
     double scale = 1.3,
   }) async {
-    tester.view.physicalSize = const Size(320, 1000);
+    tester.view.physicalSize = visualSize(const Size(320, 1000));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -115,7 +117,7 @@ void main() {
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(
                 context,
-              ).copyWith(textScaler: TextScaler.linear(scale)),
+              ).copyWith(textScaler: TextScaler.linear(visualScale(scale))),
               child: child!,
             ),
             home: page,
@@ -127,6 +129,7 @@ void main() {
   }
 
   Future<void> capture(WidgetTester tester, String name) async {
+    await prepareVisualAuditCapture(tester, preview);
     await tester.runAsync(() async {
       final image =
           await (preview.currentContext!.findRenderObject()
@@ -134,7 +137,7 @@ void main() {
               .toImage(pixelRatio: 1.5);
       final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
-      final dir = Directory('build/qibla-video-previews')
+      final dir = Directory(visualPath('build/qibla-video-previews'))
         ..createSync(recursive: true);
       File(
         '${dir.path}/$name.png',
@@ -180,7 +183,7 @@ void main() {
           dark: dark,
           scale: 1,
         );
-        tester.view.physicalSize = const Size(390, 1800);
+        tester.view.physicalSize = visualSize(const Size(390, 1800));
         stream.add({'degrees': 100.0, 'accuracy': 3, 'trueNorth': true});
         await settle(tester);
         await capture(tester, 'video-qibla-${dark ? 'dark' : 'light'}');
@@ -272,7 +275,7 @@ void main() {
       await tester.pump();
       expect(find.text('المختار: ${voice.name}'), findsOneWidget);
       FocusManager.instance.primaryFocus?.unfocus();
-      tester.view.physicalSize = const Size(390, 844);
+      tester.view.physicalSize = visualSize(const Size(390, 844));
       await tester.pumpAndSettle();
       await capture(tester, 'compact-voices-default');
       await tap(tester, 'احفظ التغييرات');

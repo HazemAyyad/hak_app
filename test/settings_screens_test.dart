@@ -19,6 +19,7 @@ import 'package:haq_app/features/settings/data/reminder_controller.dart';
 import 'package:haq_app/settings_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,7 @@ void main() {
   const channel = MethodChannel('test.haq.settings.screens');
   final preview = GlobalKey();
   setUpAll(() async {
+    await loadVisualAuditFonts();
     repo = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -125,8 +127,9 @@ void main() {
     SettingKind kind, {
     bool dark = false,
     double scale = 1.3,
+    bool root = false,
   }) async {
-    tester.view.physicalSize = const Size(360, 1000);
+    tester.view.physicalSize = visualSize(const Size(360, 1000));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -145,14 +148,16 @@ void main() {
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(
                 context,
-              ).copyWith(textScaler: TextScaler.linear(scale)),
+              ).copyWith(textScaler: TextScaler.linear(visualScale(scale))),
               child: child!,
             ),
-            home: SettingsDetailPage(
-              key: ValueKey('${kind.name}.$dark'),
-              kind: kind,
-              reminders: c,
-            ),
+            home: root
+                ? SettingsPage(reminders: c)
+                : SettingsDetailPage(
+                    key: ValueKey('${kind.name}.$dark'),
+                    kind: kind,
+                    reminders: c,
+                  ),
           ),
         ),
       ),
@@ -169,6 +174,7 @@ void main() {
   }
 
   Future<void> capture(WidgetTester tester, String name) async {
+    await prepareVisualAuditCapture(tester, preview);
     await tester.runAsync(() async {
       final image =
           await (preview.currentContext!.findRenderObject()
@@ -176,11 +182,17 @@ void main() {
               .toImage(pixelRatio: 1.5);
       final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
-      final dir = Directory('build/p08-previews')..createSync(recursive: true);
+      final dir = Directory(visualPath('build/p08-previews'))
+        ..createSync(recursive: true);
       File(
         '${dir.path}/$name.png',
       ).writeAsBytesSync(bytes!.buffer.asUint8List());
     });
+    await captureAuditContinuation(
+      tester,
+      preview,
+      visualPath('build/p08-previews/$name.png'),
+    );
   }
 
   testWidgets(
@@ -284,6 +296,22 @@ void main() {
           }
         }
         await tester.pumpWidget(const SizedBox());
+      },
+    );
+  }
+  if (visualAudit) {
+    testWidgets(
+      'visual review root settings and preserved appearance at normal size',
+      (tester) async {
+        for (final dark in [false, true]) {
+          await appearance.setMode(dark ? ThemeMode.dark : ThemeMode.light);
+          await pump(tester, SettingKind.appearance, dark: dark, root: true);
+          await capture(tester, 'root-${dark ? 'dark' : 'light'}');
+          await tester.pumpWidget(const SizedBox());
+          await pump(tester, SettingKind.appearance, dark: dark);
+          await capture(tester, 'appearance-${dark ? 'dark' : 'light'}');
+          await tester.pumpWidget(const SizedBox());
+        }
       },
     );
   }

@@ -21,6 +21,7 @@ import 'package:haq_app/features/religious_content/data/religious_catalog.dart';
 import 'package:haq_app/features/religious_content/data/religious_controller.dart';
 import 'community_test.dart'
     show CommunityCloud, circleFixture, publicationFixture;
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ void main() {
   late ReligiousCatalog catalog;
   final capture = GlobalKey();
   setUpAll(() async {
+    await loadVisualAuditFonts();
     repo = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -108,7 +110,7 @@ void main() {
     Size size = const Size(360, 950),
     PublicPushController? push,
   }) async {
-    await tester.binding.setSurfaceSize(size);
+    await tester.binding.setSurfaceSize(visualSize(size));
     await tester.pumpWidget(
       AppearanceScope(
         controller: appearance,
@@ -123,8 +125,8 @@ void main() {
           ),
           home: MediaQuery(
             data: MediaQueryData(
-              size: size,
-              textScaler: TextScaler.linear(scale),
+              size: visualSize(size),
+              textScaler: TextScaler.linear(visualScale(scale)),
             ),
             child: RepaintBoundary(
               key: capture,
@@ -187,7 +189,7 @@ void main() {
                   .toImage(pixelRatio: 1.5);
           final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
           image.dispose();
-          final dir = Directory('build/push-previews')
+          final dir = Directory(visualPath('build/push-previews'))
             ..createSync(recursive: true);
           File(
             '${dir.path}/${dark ? 'dark' : 'light'}.png',
@@ -350,7 +352,7 @@ void main() {
         'title': 'من مكتبة حق',
         'content': content,
       };
-      final folder = Directory('build/p11-previews')
+      final folder = Directory(visualPath('build/p11-previews'))
         ..createSync(recursive: true);
       for (final dark in [false, true]) {
         for (final section in CommunitySection.values) {

@@ -20,6 +20,7 @@ import 'package:haq_app/features/quran/presentation/quran_download_pages.dart';
 import 'package:haq_app/features/quran/presentation/quran_tafsir.dart';
 import 'package:haq_app/features/quran/presentation/quran_home_sections.dart';
 import 'package:haq_app/main.dart';
+import 'support/visual_audit.dart';
 
 class PreviewContent extends QuranContent {
   @override
@@ -35,7 +36,7 @@ class PreviewContent extends QuranContent {
 
   @override
   Future<TafsirText> tafsir(String key, int source) async {
-    final file = File('build/quran-fixtures/tafsir.json');
+    final file = File(visualPath('build/quran-fixtures/tafsir.json'));
     final data = file.existsSync()
         ? jsonDecode(file.readAsStringSync())['tafsir'] as Map
         : {'text': '<p>نص المصدر في الاختبار</p>'};
@@ -46,7 +47,7 @@ class PreviewContent extends QuranContent {
 
   @override
   Future<VerseMeanings> meanings(String key) async {
-    final file = File('build/quran-fixtures/meanings.json');
+    final file = File(visualPath('build/quran-fixtures/meanings.json'));
     final data = file.existsSync()
         ? jsonDecode(file.readAsStringSync())['result'] as Map
         : {'translation': 'كلمة: معنى في الاختبار'};
@@ -91,6 +92,7 @@ void main() {
   late Directory directory;
   final boundary = GlobalKey();
   setUpAll(() async {
+    await loadVisualAuditFonts();
     for (final font in [
       ('QuranUI', 'assets/fonts/Cairo.ttf'),
       ('AmiriQuran', 'assets/fonts/AmiriQuran.ttf'),
@@ -148,7 +150,7 @@ void main() {
     WidgetTester tester, {
     Size size = const Size(430, 932),
   }) async {
-    tester.view.physicalSize = size;
+    tester.view.physicalSize = visualSize(size);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -181,7 +183,10 @@ void main() {
   }
 
   Future<void> capture(WidgetTester tester, String name) async {
-    final output = Platform.environment['QURAN_CAPTURE_DIR'];
+    await prepareVisualAuditCapture(tester, boundary);
+    final output = visualAudit
+        ? visualPath('build/quran-preview')
+        : Platform.environment['QURAN_CAPTURE_DIR'];
     if (output == null) return;
     await tester.runAsync(() async {
       final render =
@@ -319,7 +324,7 @@ void main() {
   testWidgets(
     'reciter spotlight cards fit actual font metrics at small and large text scales',
     (tester) async {
-      tester.view.physicalSize = const Size(320, 800);
+      tester.view.physicalSize = visualSize(const Size(320, 800));
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -336,7 +341,9 @@ void main() {
                 child: MaterialApp(
                   theme: ThemeData(fontFamily: font.family),
                   home: MediaQuery(
-                    data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+                    data: MediaQueryData(
+                      textScaler: TextScaler.linear(visualScale(scale)),
+                    ),
                     child: Directionality(
                       textDirection: TextDirection.rtl,
                       child: Scaffold(
@@ -434,4 +441,15 @@ void main() {
       await tester.pumpAndSettle();
     },
   );
+  if (visualAudit) {
+    testWidgets('visual review preserved Quran home in dark appearance', (
+      tester,
+    ) async {
+      await appearance.setMode(ThemeMode.dark);
+      await showApp(tester);
+      await capture(tester, 'quran-home-dark');
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
 }

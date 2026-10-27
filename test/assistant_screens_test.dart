@@ -19,6 +19,7 @@ import 'package:haq_app/features/religious_content/data/religious_catalog.dart';
 import 'package:haq_app/features/religious_content/data/religious_controller.dart';
 import 'assistant_test.dart'
     show AssistantCloud, TestBillingStore, assistantReceipt;
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +33,7 @@ void main() {
   late ReligiousCatalog catalog;
   final capture = GlobalKey();
   setUpAll(() async {
+    await loadVisualAuditFonts();
     repo = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -109,7 +111,7 @@ void main() {
     double scale = 1,
     Size size = const Size(360, 1100),
   }) async {
-    await tester.binding.setSurfaceSize(size);
+    await tester.binding.setSurfaceSize(visualSize(size));
     await tester.pumpWidget(
       AppearanceScope(
         controller: appearance,
@@ -124,8 +126,8 @@ void main() {
           ),
           home: MediaQuery(
             data: MediaQueryData(
-              size: size,
-              textScaler: TextScaler.linear(scale),
+              size: visualSize(size),
+              textScaler: TextScaler.linear(visualScale(scale)),
             ),
             child: RepaintBoundary(
               key: capture,
@@ -266,7 +268,7 @@ void main() {
   testWidgets(
     'assistant subscription chat and unavailable previews in approved light and dark identity',
     (tester) async {
-      final folder = Directory('build/p12-previews');
+      final folder = Directory(visualPath('build/p12-previews'));
       await tester.runAsync(() => folder.create(recursive: true));
       final canonical = catalog.items.firstWhere(
         (e) => e.text.isNotEmpty && e.source.isNotEmpty,

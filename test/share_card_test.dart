@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'support/visual_audit.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
@@ -11,6 +13,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late QuranRepository repository;
   setUpAll(() async {
+    await loadVisualAuditFonts();
     repository = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -213,4 +216,83 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     },
   );
+  if (visualAudit) {
+    testWidgets(
+      'visual review share editor in both appearances at normal text size',
+      (tester) async {
+        tester.view.physicalSize = const Size(390, 1000);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        final boundary = GlobalKey();
+        for (final dark in [false, true]) {
+          Future<ShareCardImage?>? pending;
+          await tester.pumpWidget(
+            RepaintBoundary(
+              key: boundary,
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  fontFamily: 'QuranUI',
+                  brightness: dark ? Brightness.dark : Brightness.light,
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: const Color(0xFF2A8C82),
+                    primary: const Color(0xFF2A8C82),
+                    secondary: const Color(0xFFC7A45A),
+                    brightness: dark ? Brightness.dark : Brightness.light,
+                  ),
+                  scaffoldBackgroundColor: dark
+                      ? const Color(0xFF081722)
+                      : const Color(0xFFFFFCF7),
+                ),
+                home: ShareCardEditor(
+                  content: ShareCardContent.quran(repository, ['1:2']),
+                  repository: repository,
+                  renderer: (content, style) async {
+                    pending = tester.runAsync(
+                      () => ShareCardRenderer.render(content, style),
+                    );
+                    return (await pending)!;
+                  },
+                ),
+              ),
+            ),
+          );
+          await pending;
+          await tester.pumpAndSettle();
+          await prepareVisualAuditCapture(tester, boundary);
+          expect(
+            find.byKey(const ValueKey('share-card-preview')),
+            findsOneWidget,
+          );
+          await tester.runAsync(() async {
+            final image =
+                await (boundary.currentContext!.findRenderObject()
+                        as RenderRepaintBoundary)
+                    .toImage();
+            final bytes = await image.toByteData(
+              format: ui.ImageByteFormat.png,
+            );
+            image.dispose();
+            final file = File(
+              visualPath(
+                'build/content-preview/editor-${dark ? 'dark' : 'light'}.png',
+              ),
+            );
+            await file.parent.create(recursive: true);
+            await file.writeAsBytes(bytes!.buffer.asUint8List());
+          });
+          await captureAuditContinuation(
+            tester,
+            boundary,
+            visualPath(
+              'build/content-preview/editor-${dark ? 'dark' : 'light'}.png',
+            ),
+          );
+          expect(tester.takeException(), isNull);
+          await tester.pumpWidget(const SizedBox());
+        }
+      },
+    );
+  }
 }

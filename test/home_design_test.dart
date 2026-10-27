@@ -10,6 +10,7 @@ import 'package:haq_app/main.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,7 @@ void main() {
   late AppAppearance appearance;
   late QuranController quran;
   setUpAll(() async {
+    await loadVisualAuditFonts();
     repository = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -144,7 +146,7 @@ void main() {
             .toImage(pixelRatio: 1.5)
             .timeout(const Duration(seconds: 10));
         final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-        final directory = Directory('build/home-preview');
+        final directory = Directory(visualPath('build/home-preview'));
         await directory.create(recursive: true);
         await File(
           '${directory.path}/${mode.name}.png',

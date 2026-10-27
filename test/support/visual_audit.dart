@@ -28,6 +28,14 @@ Future<void> loadVisualAuditFonts() async {
         ..addFont(rootBundle.load('assets/fonts/Tajawal-Regular.ttf'))
         ..addFont(rootBundle.load('assets/fonts/Tajawal-Bold.ttf')))
       .load();
+  final icons = File(
+    'C:/src/flutter/bin/cache/artifacts/material_fonts/materialicons-regular.otf',
+  );
+  if (icons.existsSync()) {
+    await (FontLoader('MaterialIcons')
+          ..addFont(Future.value(icons.readAsBytesSync().buffer.asByteData())))
+        .load();
+  }
 }
 
 Future<void> prepareVisualAuditCapture(
@@ -40,7 +48,7 @@ Future<void> prepareVisualAuditCapture(
       .descendant(of: find.byKey(boundaryKey), matching: find.byType(Image))
       .evaluate()
       .map((element) => (element.widget as Image).image)
-      .whereType<AssetImage>()
+      .where((provider) => provider is AssetImage || provider is MemoryImage)
       .toSet();
   await tester.runAsync(() async {
     await Future.wait(

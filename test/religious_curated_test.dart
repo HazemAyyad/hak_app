@@ -19,6 +19,7 @@ import 'package:haq_app/features/religious_content/data/religious_controller.dar
 import 'package:haq_app/features/religious_content/presentation/religious_host.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ void main() {
   late AppAppearance appearance;
   final host = GlobalKey<ReligiousHostState>(), preview = GlobalKey();
   setUpAll(() async {
+    await loadVisualAuditFonts();
     quranData = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -120,7 +122,7 @@ void main() {
     bool dark = false,
     double width = 426,
   }) async {
-    tester.view.physicalSize = Size(width, 1100);
+    tester.view.physicalSize = visualSize(Size(width, 1100));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -133,12 +135,22 @@ void main() {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
               fontFamily: 'QuranUI',
+              colorScheme: visualAudit
+                  ? ColorScheme.fromSeed(
+                      seedColor: const Color(0xFF2A8C82),
+                      primary: const Color(0xFF2A8C82),
+                      secondary: const Color(0xFFC7A45A),
+                      brightness: dark ? Brightness.dark : Brightness.light,
+                    )
+                  : null,
               brightness: dark ? Brightness.dark : Brightness.light,
             ),
             builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(width == 320 ? 1.2 : 1)),
+              data: MediaQuery.of(context).copyWith(
+                textScaler: TextScaler.linear(
+                  visualScale(width == 320 ? 1.2 : 1),
+                ),
+              ),
               child: Directionality(
                 textDirection: TextDirection.rtl,
                 child: child!,
@@ -161,6 +173,7 @@ void main() {
   }
 
   Future<void> capture(WidgetTester tester, String name) async {
+    await prepareVisualAuditCapture(tester, preview);
     await tester.pump();
     await tester.runAsync(() async {
       final boundary =
@@ -168,10 +181,15 @@ void main() {
       final image = await boundary.toImage();
       final data = await image.toByteData(format: ui.ImageByteFormat.png);
       image.dispose();
-      final file = File('build/content-preview/$name.png');
+      final file = File(visualPath('build/content-preview/$name.png'));
       await file.parent.create(recursive: true);
       await file.writeAsBytes(data!.buffer.asUint8List());
     });
+    await captureAuditContinuation(
+      tester,
+      preview,
+      visualPath('build/content-preview/$name.png'),
+    );
   }
 
   test(
@@ -355,4 +373,17 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     },
   );
+  if (visualAudit) {
+    testWidgets('Ramadan entry and its real daily content at normal size', (
+      tester,
+    ) async {
+      for (final dark in [false, true]) {
+        for (final category in ['ramadan', 'ramadan-duas']) {
+          await pump(tester, category, dark: dark);
+          await capture(tester, '$category-${dark ? 'dark' : 'light'}');
+          await tester.pumpWidget(const SizedBox());
+        }
+      }
+    });
+  }
 }

@@ -19,6 +19,7 @@ import 'package:haq_app/features/religious_activity/data/activity_controller.dar
 import 'package:haq_app/features/religious_activity/data/activity_store.dart';
 import 'quran_media_test.dart' show StubHttp;
 import 'package:haq_app/app_appearance.dart';
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,7 @@ void main() {
   late AppAppearance appearance;
   final capture = GlobalKey();
   setUpAll(() async {
+    await loadVisualAuditFonts();
     await (FontLoader(
       'QuranUI',
     )..addFont(rootBundle.load('assets/fonts/Cairo.ttf'))).load();
@@ -100,7 +102,7 @@ void main() {
     double scale = 1,
     Size size = const Size(360, 1000),
   }) async {
-    await tester.binding.setSurfaceSize(size);
+    await tester.binding.setSurfaceSize(visualSize(size));
     await tester.pumpWidget(
       MaterialApp(
         theme: ThemeData(
@@ -117,8 +119,8 @@ void main() {
         ),
         home: MediaQuery(
           data: MediaQueryData(
-            size: size,
-            textScaler: TextScaler.linear(scale),
+            size: visualSize(size),
+            textScaler: TextScaler.linear(visualScale(scale)),
           ),
           child: Directionality(
             textDirection: TextDirection.rtl,
@@ -180,7 +182,7 @@ void main() {
     },
   );
   testWidgets('account preview light and dark', (tester) async {
-    final folder = Directory('build/p10-account-preview')
+    final folder = Directory(visualPath('build/p10-account-preview'))
       ..createSync(recursive: true);
     for (final dark in [false, true]) {
       await mount(tester, dark: dark, size: const Size(390, 2300));
@@ -200,6 +202,34 @@ void main() {
         }
       });
       expect(tester.takeException(), isNull);
+      if (visualAudit) {
+        await captureAuditContinuation(
+          tester,
+          capture,
+          '${folder.path}/${dark ? 'dark' : 'light'}.png',
+        );
+        final register = find.text('إنشاء حساب جديد');
+        await tester.ensureVisible(register);
+        await tester.tap(register);
+        await tester.pumpAndSettle();
+        final firstScroll = find.byType(Scrollable).first;
+        final scrollState = tester.state<ScrollableState>(firstScroll);
+        scrollState.position.jumpTo(0);
+        await tester.pump();
+        await tester.runAsync(() async {
+          final image =
+              await (capture.currentContext!.findRenderObject()
+                      as RenderRepaintBoundary)
+                  .toImage();
+          final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+          image.dispose();
+          await File(
+            '${folder.path}/register-${dark ? 'dark' : 'light'}.png',
+          ).writeAsBytes(bytes!.buffer.asUint8List());
+        });
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pump();
+      }
     }
     await tester.pumpWidget(const SizedBox.shrink());
   });

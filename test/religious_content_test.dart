@@ -18,6 +18,7 @@ import 'package:haq_app/features/religious_content/presentation/religious_host.d
 import 'package:haq_app/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'support/visual_audit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ void main() {
   final hostKey = GlobalKey<ReligiousHostState>();
   final previewKey = GlobalKey();
   setUpAll(() async {
+    await loadVisualAuditFonts();
     quranData = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -122,7 +124,7 @@ void main() {
     double scale = 1,
     ThemeMode mode = ThemeMode.light,
   }) async {
-    tester.view.physicalSize = Size(width, 922);
+    tester.view.physicalSize = visualSize(Size(width, 922));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -150,7 +152,7 @@ void main() {
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(
                 context,
-              ).copyWith(textScaler: TextScaler.linear(scale)),
+              ).copyWith(textScaler: TextScaler.linear(visualScale(scale))),
               child: child!,
             ),
             home: Directionality(
@@ -172,8 +174,11 @@ void main() {
   }
 
   Future<void> capture(WidgetTester tester, String name) async {
+    await prepareVisualAuditCapture(tester, previewKey);
     expect(tester.takeException(), isNull, reason: name);
-    if (!const bool.fromEnvironment('RELIGIOUS_PREVIEWS')) return;
+    if (!visualAudit && !const bool.fromEnvironment('RELIGIOUS_PREVIEWS')) {
+      return;
+    }
     await tester.runAsync(() async {
       final context = previewKey.currentContext!;
       for (final image in Directory(
@@ -192,13 +197,18 @@ void main() {
               as RenderRepaintBoundary;
       final image = await boundary.toImage(pixelRatio: 2);
       final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-      final dir = Directory('build/religious-preview');
+      final dir = Directory(visualPath('build/religious-preview'));
       await dir.create(recursive: true);
       await File(
         '${dir.path}/$name.png',
       ).writeAsBytes(bytes!.buffer.asUint8List());
       image.dispose();
     });
+    await captureAuditContinuation(
+      tester,
+      previewKey,
+      visualPath('build/religious-preview/$name.png'),
+    );
   }
 
   void reset() {
@@ -315,54 +325,52 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets(
-    'copy actions omit source metadata for every content type',
-    (tester) async {
-      String? clipboardText;
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-        SystemChannels.platform,
-        (call) async {
-          if (call.method == 'Clipboard.setData') {
-            clipboardText = (call.arguments as Map)['text'] as String;
-          }
-          return null;
-        },
-      );
-      addTearDown(
-        () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
-          SystemChannels.platform,
-          null,
-        ),
-      );
-      await pump(tester);
-      for (final id in [
-        'qdua-goodness',
-        'hisn-001',
-        'nawawi-02',
-        'name-01',
-        'sunnah-hands',
-      ]) {
-        final item = catalog.byId[id]!;
-        hostKey.currentState!.openItem(item);
-        await tester.pumpAndSettle();
-        final button = find.byTooltip('نسخ');
-        await Scrollable.ensureVisible(tester.element(button), alignment: .3);
-        await tester.pumpAndSettle();
-        await tester.tap(button);
-        await tester.pumpAndSettle();
-        expect(clipboardText, item.copyText);
-        expect(clipboardText, isNot(contains(item.sourceUrl)));
-        expect(clipboardText, isNot(contains(item.source)));
-        if (item.type == 'hadith') {
-          expect(clipboardText, isNot(contains('(رواه')));
+  testWidgets('copy actions omit source metadata for every content type', (
+    tester,
+  ) async {
+    String? clipboardText;
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'Clipboard.setData') {
+          clipboardText = (call.arguments as Map)['text'] as String;
         }
-        hostKey.currentState!.back();
-        await tester.pumpAndSettle();
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+    await pump(tester);
+    for (final id in [
+      'qdua-goodness',
+      'hisn-001',
+      'nawawi-02',
+      'name-01',
+      'sunnah-hands',
+    ]) {
+      final item = catalog.byId[id]!;
+      hostKey.currentState!.openItem(item);
+      await tester.pumpAndSettle();
+      final button = find.byTooltip('نسخ');
+      await Scrollable.ensureVisible(tester.element(button), alignment: .3);
+      await tester.pumpAndSettle();
+      await tester.tap(button);
+      await tester.pumpAndSettle();
+      expect(clipboardText, item.copyText);
+      expect(clipboardText, isNot(contains(item.sourceUrl)));
+      expect(clipboardText, isNot(contains(item.source)));
+      if (item.type == 'hadith') {
+        expect(clipboardText, isNot(contains('(رواه')));
       }
-      await tester.pumpWidget(const SizedBox());
-    },
-    timeout: const Timeout(Duration(seconds: 45)),
-  );
+      hostKey.currentState!.back();
+      await tester.pumpAndSettle();
+    }
+    await tester.pumpWidget(const SizedBox());
+  }, timeout: const Timeout(Duration(seconds: 45)));
   testWidgets(
     'disposing while local catalog is loading leaves no background timer',
     (tester) async {
@@ -490,7 +498,7 @@ void main() {
   testWidgets(
     'actual home prayer shortcut opens section and system back returns to More',
     (tester) async {
-      tester.view.physicalSize = const Size(426, 922);
+      tester.view.physicalSize = visualSize(const Size(426, 922));
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.resetPhysicalSize);
       addTearDown(tester.view.resetDevicePixelRatio);
@@ -514,4 +522,40 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     },
   );
+  if (visualAudit) {
+    testWidgets(
+      'preserved religious lists and detail screens in dark appearance',
+      (tester) async {
+        await pump(tester, mode: ThemeMode.dark);
+        for (final id in [
+          'names',
+          'ruqya',
+          'quran-duas',
+          'prophetic-duas',
+          'sunnah',
+          'friday',
+          'nawawi',
+        ]) {
+          reset();
+          await tester.pumpAndSettle();
+          hostKey.currentState!.openCategory(id);
+          await tester.pumpAndSettle();
+          await capture(tester, 'dark-$id');
+        }
+        for (final id in [
+          'name-01',
+          'nawawi-01',
+          'sunnah-hands',
+          'ruqya-kursi',
+        ]) {
+          reset();
+          await tester.pumpAndSettle();
+          hostKey.currentState!.openItem(catalog.byId[id]!);
+          await tester.pumpAndSettle();
+          await capture(tester, 'dark-detail-$id');
+        }
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  }
 }
