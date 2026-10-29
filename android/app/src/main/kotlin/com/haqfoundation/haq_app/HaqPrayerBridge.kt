@@ -108,10 +108,11 @@ class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel
                     completed = true; handler.removeCallbacks(timeout)
                     val address = addresses?.firstOrNull()
                     val city = address?.locality?.takeIf { it.isNotBlank() }
-                        ?: address?.subLocality?.takeIf { it.isNotBlank() }
                         ?: address?.subAdminArea?.takeIf { it.isNotBlank() }
+                        ?: address?.adminArea?.takeIf { it.isNotBlank() }
+                    val district = address?.subLocality?.takeIf { it.isNotBlank() && it != city }
                     val country = address?.countryName
-                    result.success(if (city != null && !country.isNullOrBlank()) mapOf("city" to city, "country" to country) else null)
+                    result.success(if ((city != null || district != null) && !country.isNullOrBlank()) mapOf("city" to city, "district" to district, "country" to country, "countryCode" to address?.countryCode) else null)
                 }
             }
         }
@@ -164,7 +165,8 @@ class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel
         }
         pending = null; requestRevision++; cleanupLocation()
         result.success(mapOf("lat" to location.latitude, "lng" to location.longitude, "accuracy" to location.accuracy.toDouble(),
-            "measured" to location.time, "zone" to TimeZone.getDefault().id))
+            "measured" to location.time, "zone" to TimeZone.getDefault().id,
+            "precise" to (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)))
     }
     private fun cleanupLocation() {
         handler.removeCallbacks(timeout); cancellation?.cancel(); cancellation = null

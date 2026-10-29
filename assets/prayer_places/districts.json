@@ -1,0 +1,1877 @@
+{
+  "version": 1,
+  "districts": [
+    {
+      "id": 281788,
+      "name": "Silwān",
+      "english": "Silwān",
+      "countryCode": "PS",
+      "city": "القدس القديمة",
+      "latitude": 31.76836,
+      "longitude": 35.23805
+    },
+    {
+      "id": 283342,
+      "name": "خربة كنعان",
+      "english": "Khirbat Kan‘ān",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.51036,
+      "longitude": 35.07446
+    },
+    {
+      "id": 283382,
+      "name": "كفر عقب",
+      "english": "Kafr ‘Aqab",
+      "countryCode": "PS",
+      "city": "‘Aţārūt",
+      "latitude": 31.87963,
+      "longitude": 35.22047
+    },
+    {
+      "id": 283980,
+      "name": "Esh Sheikh Jarrāḥ",
+      "english": "Esh Sheikh Jarrāḥ",
+      "countryCode": "PS",
+      "city": "وادي الجوز",
+      "latitude": 31.8,
+      "longitude": 35.23333
+    },
+    {
+      "id": 284592,
+      "name": "عسكر البلد",
+      "english": "‘Askar al Balad",
+      "countryCode": "PS",
+      "city": "Balāţah",
+      "latitude": 32.22009,
+      "longitude": 35.29328
+    },
+    {
+      "id": 285094,
+      "name": "Al Ḩaram ash Sharīf",
+      "english": "Al Ḩaram ash Sharīf",
+      "countryCode": "PS",
+      "city": "القدس الشرقية",
+      "latitude": 31.78333,
+      "longitude": 35.23333
+    },
+    {
+      "id": 6945291,
+      "name": "القدس القديمة",
+      "english": "Old City",
+      "countryCode": "PS",
+      "city": "القدس القديمة",
+      "latitude": 31.77667,
+      "longitude": 35.23417
+    },
+    {
+      "id": 7302441,
+      "name": "حي الرمال",
+      "english": "Remal",
+      "countryCode": "PS",
+      "city": "جباليا",
+      "latitude": 31.53078,
+      "longitude": 34.45502
+    },
+    {
+      "id": 7303419,
+      "name": "القدس الشرقية",
+      "english": "East Jerusalem",
+      "countryCode": "PS",
+      "city": "القدس الشرقية",
+      "latitude": 31.78336,
+      "longitude": 35.23388
+    },
+    {
+      "id": 7577060,
+      "name": "Dayr Abū Ţūr",
+      "english": "Dayr Abū Ţūr",
+      "countryCode": "PS",
+      "city": "القدس القديمة",
+      "latitude": 31.76667,
+      "longitude": 35.23333
+    },
+    {
+      "id": 8041215,
+      "name": "التزكمان",
+      "english": "At Turkmān",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.49313,
+      "longitude": 34.47271
+    },
+    {
+      "id": 8041217,
+      "name": "الزيتون",
+      "english": "Az Zaytūn",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.49642,
+      "longitude": 34.45215
+    },
+    {
+      "id": 8041218,
+      "name": "الصبرا",
+      "english": "Aş Şabrā",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.50585,
+      "longitude": 34.45309
+    },
+    {
+      "id": 8041219,
+      "name": "الفوايدة",
+      "english": "Al Fawāyidah",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.50642,
+      "longitude": 34.4425
+    },
+    {
+      "id": 8041220,
+      "name": "الشيخ عجلين",
+      "english": "Ash Shaykh ‘Ijlīn",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.50981,
+      "longitude": 34.42739
+    },
+    {
+      "id": 8041222,
+      "name": "ميدان فلسطين",
+      "english": "Mīdān Filasţīn",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.50682,
+      "longitude": 34.45808
+    },
+    {
+      "id": 8041255,
+      "name": "الرمال الجنوبي",
+      "english": "Ar Rimāl al Janūbī",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.51603,
+      "longitude": 34.43921
+    },
+    {
+      "id": 8041656,
+      "name": "الرمال الشمالي",
+      "english": "Ar Rimāl ash Shamālī",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.52294,
+      "longitude": 34.45325
+    },
+    {
+      "id": 8041662,
+      "name": "النصر الشرقي",
+      "english": "An Naşr ash Sharqī",
+      "countryCode": "PS",
+      "city": "جباليا",
+      "latitude": 31.52841,
+      "longitude": 34.45975
+    },
+    {
+      "id": 8041663,
+      "name": "النصر الغربي",
+      "english": "An Naşr al Gharbī",
+      "countryCode": "PS",
+      "city": "جباليا",
+      "latitude": 31.53384,
+      "longitude": 34.45335
+    },
+    {
+      "id": 8041664,
+      "name": "الشيخ رضوان",
+      "english": "Ash Shaykh Raḑwān",
+      "countryCode": "PS",
+      "city": "جباليا",
+      "latitude": 31.53494,
+      "longitude": 34.46671
+    },
+    {
+      "id": 8041665,
+      "name": "الدرج",
+      "english": "Ad Daraj",
+      "countryCode": "PS",
+      "city": "جباليا",
+      "latitude": 31.52148,
+      "longitude": 34.46263
+    },
+    {
+      "id": 8042019,
+      "name": "التفاح",
+      "english": "At Tuffāḩ",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.51338,
+      "longitude": 34.47514
+    },
+    {
+      "id": 8042056,
+      "name": "الجديدة",
+      "english": "Al Jadīdah",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.50355,
+      "longitude": 34.47985
+    },
+    {
+      "id": 8042073,
+      "name": "ميدان الشجاعية",
+      "english": "Maydān ash Shujā‘īyah",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.49889,
+      "longitude": 34.46771
+    },
+    {
+      "id": 8042074,
+      "name": "المدينة القديمة",
+      "english": "Al Madīnah al Qadīmah",
+      "countryCode": "PS",
+      "city": "غزة",
+      "latitude": 31.50429,
+      "longitude": 34.46547
+    },
+    {
+      "id": 8051589,
+      "name": "المعترض",
+      "english": "Al Mu‘tariḑ",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.40184,
+      "longitude": 34.35941
+    },
+    {
+      "id": 8051590,
+      "name": "المنطقة الصناعية",
+      "english": "Al Minţaqah aş Şinā‘īyah",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41041,
+      "longitude": 34.36693
+    },
+    {
+      "id": 8051591,
+      "name": "الرسم",
+      "english": "Ar Rasm",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41192,
+      "longitude": 34.35485
+    },
+    {
+      "id": 8051592,
+      "name": "المطاين",
+      "english": "Al Maţţāyin",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41519,
+      "longitude": 34.35659
+    },
+    {
+      "id": 8051593,
+      "name": "الحارة الشرقية",
+      "english": "Al Ḩārah ash Sharqīyah",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41916,
+      "longitude": 34.35662
+    },
+    {
+      "id": 8051594,
+      "name": "أبو أسد",
+      "english": "Abū Asad",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.42317,
+      "longitude": 34.35993
+    },
+    {
+      "id": 8051595,
+      "name": "أبو ستة",
+      "english": "Abū Sittah",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.42751,
+      "longitude": 34.35855
+    },
+    {
+      "id": 8051596,
+      "name": "حمادة",
+      "english": "Ḩamādah",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.42389,
+      "longitude": 34.35176
+    },
+    {
+      "id": 8051597,
+      "name": "تونس",
+      "english": "Tūnis",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.4246,
+      "longitude": 34.34744
+    },
+    {
+      "id": 8051598,
+      "name": "المسيحي",
+      "english": "Al Masīḩī",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.42458,
+      "longitude": 34.3434
+    },
+    {
+      "id": 8051599,
+      "name": "العمرة",
+      "english": "Al ‘Amrah",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.42038,
+      "longitude": 34.34909
+    },
+    {
+      "id": 8051600,
+      "name": "البروك",
+      "english": "Al Brawk",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.42041,
+      "longitude": 34.33902
+    },
+    {
+      "id": 8051602,
+      "name": "أبو فياض",
+      "english": "Abū Fayyāḑ",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41749,
+      "longitude": 34.33349
+    },
+    {
+      "id": 8051603,
+      "name": "عمران",
+      "english": "‘Umrān",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41448,
+      "longitude": 34.33974
+    },
+    {
+      "id": 8051604,
+      "name": "القطعة",
+      "english": "Al Qaţa‘ah",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41157,
+      "longitude": 34.33543
+    },
+    {
+      "id": 8051605,
+      "name": "الحكر",
+      "english": "Al Ḩakar",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.40926,
+      "longitude": 34.34393
+    },
+    {
+      "id": 8051606,
+      "name": "الحدبة",
+      "english": "Al Ḩadabah",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41475,
+      "longitude": 34.34844
+    },
+    {
+      "id": 8051607,
+      "name": "الفرش",
+      "english": "Al Farsh",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.40837,
+      "longitude": 34.33784
+    },
+    {
+      "id": 8051608,
+      "name": "أم العزبان",
+      "english": "Umm al ‘Azbān",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.40451,
+      "longitude": 34.33887
+    },
+    {
+      "id": 8051609,
+      "name": "أبو عريف",
+      "english": "Abū ‘Arīf",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.4084,
+      "longitude": 34.35001
+    },
+    {
+      "id": 8051610,
+      "name": "بشارة",
+      "english": "Bishārah",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41618,
+      "longitude": 34.34433
+    },
+    {
+      "id": 8051611,
+      "name": "Qā‘ūd",
+      "english": "Qā‘ūd",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41822,
+      "longitude": 34.34701
+    },
+    {
+      "id": 8051612,
+      "name": "البلدة القديمة",
+      "english": "Al Baldah al Qadīmah",
+      "countryCode": "PS",
+      "city": "دير البلح",
+      "latitude": 31.41869,
+      "longitude": 34.3521
+    },
+    {
+      "id": 8051618,
+      "name": "المعسكر",
+      "english": "Al Mu‘askar",
+      "countryCode": "PS",
+      "city": "خان يونس",
+      "latitude": 31.34889,
+      "longitude": 34.29758
+    },
+    {
+      "id": 8051624,
+      "name": "الشيخ ناصر",
+      "english": "Ash Shaykh Nāşir",
+      "countryCode": "PS",
+      "city": "خان يونس",
+      "latitude": 31.34182,
+      "longitude": 34.31381
+    },
+    {
+      "id": 8051625,
+      "name": "مركز المدينة",
+      "english": "Markaz al Madīnah",
+      "countryCode": "PS",
+      "city": "خان يونس",
+      "latitude": 31.344,
+      "longitude": 34.30485
+    },
+    {
+      "id": 8051626,
+      "name": "بطن السمين",
+      "english": "Baţn as Samīn",
+      "countryCode": "PS",
+      "city": "خان يونس",
+      "latitude": 31.34087,
+      "longitude": 34.2983
+    },
+    {
+      "id": 8051627,
+      "name": "جورة اللوت",
+      "english": "Jūrat al Lūt",
+      "countryCode": "PS",
+      "city": "خان يونس",
+      "latitude": 31.33508,
+      "longitude": 34.30617
+    },
+    {
+      "id": 8051628,
+      "name": "معن",
+      "english": "Ma‘n",
+      "countryCode": "PS",
+      "city": "خان يونس",
+      "latitude": 31.33417,
+      "longitude": 34.31609
+    },
+    {
+      "id": 8051629,
+      "name": "قاع القرين",
+      "english": "Qā‘ al Qarīn",
+      "countryCode": "PS",
+      "city": "بني سهيلا",
+      "latitude": 31.328,
+      "longitude": 34.31996
+    },
+    {
+      "id": 8051630,
+      "name": "المنارة",
+      "english": "Al Manārah",
+      "countryCode": "PS",
+      "city": "خان يونس",
+      "latitude": 31.32903,
+      "longitude": 34.31283
+    },
+    {
+      "id": 8051631,
+      "name": "Qīzān",
+      "english": "Qīzān",
+      "countryCode": "PS",
+      "city": "خان يونس",
+      "latitude": 31.33516,
+      "longitude": 34.29229
+    },
+    {
+      "id": 8051632,
+      "name": "أبو رشوان",
+      "english": "Abū Rashwān",
+      "countryCode": "PS",
+      "city": "خان يونس",
+      "latitude": 31.3281,
+      "longitude": 34.2841
+    },
+    {
+      "id": 8051669,
+      "name": "Ḩijāzī",
+      "english": "Ḩijāzī",
+      "countryCode": "PS",
+      "city": "رفح",
+      "latitude": 31.2933,
+      "longitude": 34.24482
+    },
+    {
+      "id": 8051670,
+      "name": "تل الزعرب",
+      "english": "Tall az Zu‘rub",
+      "countryCode": "PS",
+      "city": "رفح",
+      "latitude": 31.28975,
+      "longitude": 34.24557
+    },
+    {
+      "id": 8051671,
+      "name": "حوض جي",
+      "english": "Ḩawḑ Jī",
+      "countryCode": "PS",
+      "city": "رفح",
+      "latitude": 31.28805,
+      "longitude": 34.24645
+    },
+    {
+      "id": 8051672,
+      "name": "حوض واو",
+      "english": "Ḩawḑ Wāw",
+      "countryCode": "PS",
+      "city": "رفح",
+      "latitude": 31.28139,
+      "longitude": 34.24972
+    },
+    {
+      "id": 8051673,
+      "name": "يبنا",
+      "english": "Yibnā",
+      "countryCode": "PS",
+      "city": "رفح",
+      "latitude": 31.2842,
+      "longitude": 34.24819
+    },
+    {
+      "id": 8051674,
+      "name": "قشطة",
+      "english": "Qishţah",
+      "countryCode": "PS",
+      "city": "رفح",
+      "latitude": 31.27525,
+      "longitude": 34.25036
+    },
+    {
+      "id": 8051675,
+      "name": "البرازيل",
+      "english": "Al Barāzīl",
+      "countryCode": "PS",
+      "city": "رفح",
+      "latitude": 31.2721,
+      "longitude": 34.25315
+    },
+    {
+      "id": 8051676,
+      "name": "السلام",
+      "english": "As Salām",
+      "countryCode": "PS",
+      "city": "شوكة الصوفي",
+      "latitude": 31.26779,
+      "longitude": 34.25668
+    },
+    {
+      "id": 8052421,
+      "name": "حي تل الصفا",
+      "english": "Ḩayy Tall aş Şafā",
+      "countryCode": "PS",
+      "city": "بيتونيا",
+      "latitude": 31.92167,
+      "longitude": 35.1718
+    },
+    {
+      "id": 8052422,
+      "name": "حي الزيتونة",
+      "english": "Ḩayy az Zaytūnah",
+      "countryCode": "PS",
+      "city": "بيتونيا",
+      "latitude": 31.91605,
+      "longitude": 35.17376
+    },
+    {
+      "id": 8052423,
+      "name": "حي خلة العدس",
+      "english": "Ḩayy Khallat al ‘Adas",
+      "countryCode": "PS",
+      "city": "بيتونيا",
+      "latitude": 31.92028,
+      "longitude": 35.17739
+    },
+    {
+      "id": 8052424,
+      "name": "الطيرة",
+      "english": "Aţ Ţīrah",
+      "countryCode": "PS",
+      "city": "بيتونيا",
+      "latitude": 31.91677,
+      "longitude": 35.18045
+    },
+    {
+      "id": 8052425,
+      "name": "حي عين القصر",
+      "english": "Ḩayy ‘Ayn al Qaşr",
+      "countryCode": "PS",
+      "city": "بيتونيا",
+      "latitude": 31.91969,
+      "longitude": 35.18279
+    },
+    {
+      "id": 8052464,
+      "name": "حي الجدول",
+      "english": "Ḩayy al Jadwal",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.91291,
+      "longitude": 35.18663
+    },
+    {
+      "id": 8052465,
+      "name": "حي عين الكرزم",
+      "english": "Ḩayy ‘Ayn al Kurzum",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.91133,
+      "longitude": 35.1978
+    },
+    {
+      "id": 8052466,
+      "name": "حي الجبل",
+      "english": "Ḩayy al Jabal",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91279,
+      "longitude": 35.20215
+    },
+    {
+      "id": 8052467,
+      "name": "حي دار جريس",
+      "english": "Ḩayy Dār Jirīs",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.9188,
+      "longitude": 35.20461
+    },
+    {
+      "id": 8052468,
+      "name": "حي المركز",
+      "english": "Ḩayy al Markaz",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91326,
+      "longitude": 35.20631
+    },
+    {
+      "id": 8052470,
+      "name": "حي الحساسنة",
+      "english": "Ḩayy al Ḩasāsnah",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91485,
+      "longitude": 35.20335
+    },
+    {
+      "id": 8052728,
+      "name": "حي المصايف",
+      "english": "Ḩayy Maşāyif",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91024,
+      "longitude": 35.20595
+    },
+    {
+      "id": 8052787,
+      "name": "حي السرية",
+      "english": "Ḩayy as Sarrīyah",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.90919,
+      "longitude": 35.19144
+    },
+    {
+      "id": 8053602,
+      "name": "حي البالوع",
+      "english": "Ḩayy al Bālū‘",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.92252,
+      "longitude": 35.21599
+    },
+    {
+      "id": 8053606,
+      "name": "حي بئر الراس",
+      "english": "Ḩayy Bi’r ar Rās",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91822,
+      "longitude": 35.21796
+    },
+    {
+      "id": 8053608,
+      "name": "حي القبارصة",
+      "english": "Ḩayy al Qabārişah",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91773,
+      "longitude": 35.22109
+    },
+    {
+      "id": 8053609,
+      "name": "حي الجور التحتا",
+      "english": "Ḩayy al Jawr at Taḩtā",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91692,
+      "longitude": 35.2233
+    },
+    {
+      "id": 8053610,
+      "name": "حي سهل عواد",
+      "english": "Ḩayy Sahl ‘Awwād",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91518,
+      "longitude": 35.22142
+    },
+    {
+      "id": 8053913,
+      "name": "البلدة القديمة بيتونيا",
+      "english": "Al Baldah al Qadīmah Baytūnyā",
+      "countryCode": "PS",
+      "city": "بيتونيا",
+      "latitude": 31.8862,
+      "longitude": 35.16895
+    },
+    {
+      "id": 8054005,
+      "name": "حي الجور الفوقا",
+      "english": "Ḩayy al Jawr al Fawqā",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91435,
+      "longitude": 35.21219
+    },
+    {
+      "id": 8054006,
+      "name": "حي قطعة شيبات",
+      "english": "Ḩayy Qiţ‘at Shaybāt",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91459,
+      "longitude": 35.21462
+    },
+    {
+      "id": 8054007,
+      "name": "حي حريقة حرب",
+      "english": "Ḩayy Ḩarīqat Ḩarb",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91236,
+      "longitude": 35.21466
+    },
+    {
+      "id": 8054008,
+      "name": "حي أم علي",
+      "english": "Ḩayy Umm ‘Alī",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91043,
+      "longitude": 35.21452
+    },
+    {
+      "id": 8054009,
+      "name": "حي الغربية",
+      "english": "Ḩayy al Gharbīyah",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.91151,
+      "longitude": 35.21061
+    },
+    {
+      "id": 8054010,
+      "name": "حي البلدية",
+      "english": "Ḩayy al Baladīyah",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.90914,
+      "longitude": 35.2166
+    },
+    {
+      "id": 8054011,
+      "name": "حي غرس الغار",
+      "english": "Ḩayy Ghars al Ghār",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.90879,
+      "longitude": 35.21811
+    },
+    {
+      "id": 8054063,
+      "name": "البلدة القديمة البيرة",
+      "english": "Al Baldah al Qadīmah al Bīrah",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.90622,
+      "longitude": 35.21549
+    },
+    {
+      "id": 8054066,
+      "name": "حي البلدة القديمة",
+      "english": "Ḩayy al Baldah al Qadīmah",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.90309,
+      "longitude": 35.21729
+    },
+    {
+      "id": 8054067,
+      "name": "حي كرم جاسر",
+      "english": "Ḩayy Karam Jāsir",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.90557,
+      "longitude": 35.21728
+    },
+    {
+      "id": 8054068,
+      "name": "حي البص",
+      "english": "Ḩayy al Buş",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.90279,
+      "longitude": 35.21311
+    },
+    {
+      "id": 8054069,
+      "name": "حي راس الطاحونة",
+      "english": "Ḩayy Rās aţ Ţāḩūnah",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.90752,
+      "longitude": 35.21239
+    },
+    {
+      "id": 8054070,
+      "name": "حي صبيحة",
+      "english": "Ḩayy Şabīḩah",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.90722,
+      "longitude": 35.20955
+    },
+    {
+      "id": 8054071,
+      "name": "حي العرقان",
+      "english": "Ḩayy al ‘Arqān",
+      "countryCode": "PS",
+      "city": "البيرة",
+      "latitude": 31.90529,
+      "longitude": 35.21023
+    },
+    {
+      "id": 8055429,
+      "name": "حي الشيخ الشمالي",
+      "english": "Ḩayy ash Shaykh ash Shamālī",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89286,
+      "longitude": 35.21541
+    },
+    {
+      "id": 8055430,
+      "name": "حي الشيخ الجنوبي",
+      "english": "Ḩayy ash Shaykh ash Janūbī",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89122,
+      "longitude": 35.21974
+    },
+    {
+      "id": 8055431,
+      "name": "حي التل",
+      "english": "Ḩayy at Tall",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.88904,
+      "longitude": 35.21667
+    },
+    {
+      "id": 8055432,
+      "name": "حي الشعب الأحمر",
+      "english": "Ḩayy ash Sha‘b al Aḩmar",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89553,
+      "longitude": 35.2141
+    },
+    {
+      "id": 8055433,
+      "name": "حي الشرفة",
+      "english": "Ḩayy ash Shurfah",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89791,
+      "longitude": 35.21178
+    },
+    {
+      "id": 8055434,
+      "name": "حي الدوارة",
+      "english": "Ḩayy ad Duwārah",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89841,
+      "longitude": 35.21625
+    },
+    {
+      "id": 8055435,
+      "name": "حي البقيع",
+      "english": "Ḩayy al Baqī‘",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89364,
+      "longitude": 35.21211
+    },
+    {
+      "id": 8055559,
+      "name": "حي المبارخ",
+      "english": "Ḩayy al Mabārikh",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89225,
+      "longitude": 35.21112
+    },
+    {
+      "id": 8055560,
+      "name": "حي البصوص",
+      "english": "Ḩayy al Başūş",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.898,
+      "longitude": 35.20587
+    },
+    {
+      "id": 8055561,
+      "name": "حي راس حسين",
+      "english": "Ḩayy Rās Ḩusayn",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89887,
+      "longitude": 35.20841
+    },
+    {
+      "id": 8055791,
+      "name": "حي الفواقا",
+      "english": "Ḩayy al Fawāqā",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89214,
+      "longitude": 35.19562
+    },
+    {
+      "id": 8055792,
+      "name": "حي النهضة",
+      "english": "Ḩayy an Nahḑah",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89119,
+      "longitude": 35.20148
+    },
+    {
+      "id": 8055793,
+      "name": "حي بور سعيد",
+      "english": "Ḩayy Būr Sa‘īd",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.8977,
+      "longitude": 35.19808
+    },
+    {
+      "id": 8055794,
+      "name": "حي الشقرة",
+      "english": "Ḩayy ash Shaqrah",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89838,
+      "longitude": 35.1953
+    },
+    {
+      "id": 8055916,
+      "name": "حي عين ترفيديا",
+      "english": "Ḩayy ‘Ayn Tarfīdyā",
+      "countryCode": "PS",
+      "city": "بيتونيا",
+      "latitude": 31.90254,
+      "longitude": 35.18508
+    },
+    {
+      "id": 8055917,
+      "name": "حي دار جغب",
+      "english": "Ḩayy Dār Jaghab",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.90285,
+      "longitude": 35.18956
+    },
+    {
+      "id": 8055918,
+      "name": "حي القسطل",
+      "english": "Ḩayy al Qasţal",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.90239,
+      "longitude": 35.1927
+    },
+    {
+      "id": 8056549,
+      "name": "حي الميدان",
+      "english": "Ḩayy al Maydān",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.90234,
+      "longitude": 35.20988
+    },
+    {
+      "id": 8056550,
+      "name": "حي قدورة",
+      "english": "Ḩayy Qaddūrah",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.9022,
+      "longitude": 35.20629
+    },
+    {
+      "id": 8056551,
+      "name": "حي دار عواد",
+      "english": "Ḩayy Dār ‘Awwād",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.9004,
+      "longitude": 35.20169
+    },
+    {
+      "id": 8056552,
+      "name": "حي المنارة",
+      "english": "Ḩayy al Manārah",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.90405,
+      "longitude": 35.20583
+    },
+    {
+      "id": 8056622,
+      "name": "البلدة القديمة رام الله",
+      "english": "Al Baldah al Qadīmah Rām Allah",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.90413,
+      "longitude": 35.19525
+    },
+    {
+      "id": 8056623,
+      "name": "حي القديرة",
+      "english": "Ḩayy al Qadīrah",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.9056,
+      "longitude": 35.19847
+    },
+    {
+      "id": 8056624,
+      "name": "حي المغتربين",
+      "english": "Ḩayy al Mughtaribīn",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.90556,
+      "longitude": 35.20202
+    },
+    {
+      "id": 8067773,
+      "name": "Ḩayy al Murayjimah",
+      "english": "Ḩayy al Murayjimah",
+      "countryCode": "PS",
+      "city": "رام الله",
+      "latitude": 31.89104,
+      "longitude": 35.19149
+    },
+    {
+      "id": 8067828,
+      "name": "حي الطباخ",
+      "english": "Ḩayy aţ Ţabbākh",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.46901,
+      "longitude": 35.28851
+    },
+    {
+      "id": 8067829,
+      "name": "حي العرمة",
+      "english": "Ḩayy al ‘Armah",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.47137,
+      "longitude": 35.29612
+    },
+    {
+      "id": 8067831,
+      "name": "حي نهر المقطع",
+      "english": "Ḩayy Nahr al Muqaţţa‘",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.46614,
+      "longitude": 35.29633
+    },
+    {
+      "id": 8067833,
+      "name": "حي حومات",
+      "english": "Ḩayy Ḩawmāt",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.47196,
+      "longitude": 35.30055
+    },
+    {
+      "id": 8067835,
+      "name": "حي السلاطين",
+      "english": "Ḩayy as Salāţīn",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.4705,
+      "longitude": 35.30522
+    },
+    {
+      "id": 8068242,
+      "name": "حي الميدان",
+      "english": "Ḩayy al Maydān",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.47105,
+      "longitude": 35.31139
+    },
+    {
+      "id": 8068243,
+      "name": "حي السدرة",
+      "english": "Ḩayy as Sudrah",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.46677,
+      "longitude": 35.31504
+    },
+    {
+      "id": 8068244,
+      "name": "حي الصناعة",
+      "english": "Ḩayy aş Şinā‘ah",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.46592,
+      "longitude": 35.31091
+    },
+    {
+      "id": 8068245,
+      "name": "حي البيادر",
+      "english": "Ḩayy al Bayādir",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.46286,
+      "longitude": 35.30663
+    },
+    {
+      "id": 8068246,
+      "name": "حي الإسكان الشرقي",
+      "english": "Ḩayy al Iskān ash Sharqī",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.46198,
+      "longitude": 35.31236
+    },
+    {
+      "id": 8068247,
+      "name": "حي الالمانية",
+      "english": "Ḩayy al Almānīyah",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.4624,
+      "longitude": 35.31663
+    },
+    {
+      "id": 8068263,
+      "name": "حي البساتين الشمالية",
+      "english": "Ḩayy al Basātīn ash Shamālīyah",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.4671,
+      "longitude": 35.30356
+    },
+    {
+      "id": 8068288,
+      "name": "حي الجابريات",
+      "english": "Ḩayy al Jābirīyāt",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.45506,
+      "longitude": 35.28755
+    },
+    {
+      "id": 8068289,
+      "name": "حي واد بلعمة",
+      "english": "Ḩayy Wād Bal‘amah",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.45336,
+      "longitude": 35.30104
+    },
+    {
+      "id": 8068290,
+      "name": "حي المراح",
+      "english": "Ḩayy al Marāḩ",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.45687,
+      "longitude": 35.3016
+    },
+    {
+      "id": 8068291,
+      "name": "حي مراح سعد",
+      "english": "Ḩayy Marāḩ Sa‘d",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.45538,
+      "longitude": 35.30495
+    },
+    {
+      "id": 8068301,
+      "name": "حي الهدف",
+      "english": "Ḩayy al Hadaf",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.46205,
+      "longitude": 35.28636
+    },
+    {
+      "id": 8068302,
+      "name": "حي المخيم",
+      "english": "Ḩayy al Mukhayyam",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.45906,
+      "longitude": 35.28922
+    },
+    {
+      "id": 8068303,
+      "name": "حي باب الواد",
+      "english": "Ḩayy Bāb al Wād",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.4606,
+      "longitude": 35.29514
+    },
+    {
+      "id": 8068304,
+      "name": "حي خلة الصوحة",
+      "english": "Ḩayy Khallat aş Şawḩah",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.45789,
+      "longitude": 35.29407
+    },
+    {
+      "id": 8068305,
+      "name": "حي أبو ظهير",
+      "english": "Ḩayy Abū Z̧uhayr",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.45618,
+      "longitude": 35.29776
+    },
+    {
+      "id": 8068316,
+      "name": "حي الزهراء",
+      "english": "Ḩayy az Zahrā’",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.46515,
+      "longitude": 35.28951
+    },
+    {
+      "id": 8068317,
+      "name": "حي السرايا",
+      "english": "Ḩayy as Sarāyā",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.46346,
+      "longitude": 35.29495
+    },
+    {
+      "id": 8068324,
+      "name": "حي الحواكير",
+      "english": "Ḩayy al Ḩawākīr",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.45849,
+      "longitude": 35.30786
+    },
+    {
+      "id": 8068325,
+      "name": "حي المنصورة",
+      "english": "Ḩayy al Manşūrah",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.45907,
+      "longitude": 35.31151
+    },
+    {
+      "id": 8068326,
+      "name": "البلدة القديمة",
+      "english": "Al Baldah al Qadīmah",
+      "countryCode": "PS",
+      "city": "جنين",
+      "latitude": 32.46086,
+      "longitude": 35.30193
+    },
+    {
+      "id": 8068527,
+      "name": "حي الفريز",
+      "english": "Ḩayy al Farīz",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.09145,
+      "longitude": 35.16744
+    },
+    {
+      "id": 8068528,
+      "name": "حي حزونة",
+      "english": "Ḩayy Ḩazawnah",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.08846,
+      "longitude": 35.16863
+    },
+    {
+      "id": 8068529,
+      "name": "حي خلة الشيخ",
+      "english": "Ḩayy Khallat ash Shaykh",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.0904,
+      "longitude": 35.17441
+    },
+    {
+      "id": 8068530,
+      "name": "حي الرويس",
+      "english": "Ḩayy ar Ruways",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.0872,
+      "longitude": 35.17443
+    },
+    {
+      "id": 8068531,
+      "name": "حي الكبارة",
+      "english": "Ḩayy al Kubbārah",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.08956,
+      "longitude": 35.17952
+    },
+    {
+      "id": 8068532,
+      "name": "حي باب الوعر",
+      "english": "Ḩayy Bāb al Wa‘r",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.08944,
+      "longitude": 35.18348
+    },
+    {
+      "id": 8068835,
+      "name": "حي البلاعة",
+      "english": "Ḩayy al Ballā‘ah",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.08739,
+      "longitude": 35.17882
+    },
+    {
+      "id": 8068836,
+      "name": "حي الرقبة",
+      "english": "Ḩayy ar Raqbah",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.08691,
+      "longitude": 35.18303
+    },
+    {
+      "id": 8068837,
+      "name": "حي النثر",
+      "english": "Ḩayy an Nathr",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.08847,
+      "longitude": 35.18907
+    },
+    {
+      "id": 8068838,
+      "name": "حي أبو زعرور",
+      "english": "Ḩayy Abū Zu‘rūr",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.08665,
+      "longitude": 35.1694
+    },
+    {
+      "id": 8068839,
+      "name": "حي العروض",
+      "english": "Ḩayy al ‘Urūḑ",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.07755,
+      "longitude": 35.17863
+    },
+    {
+      "id": 8068840,
+      "name": "حي بعقان مياح",
+      "english": "Ḩayy Buq‘ān Mayyāḩ",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.07753,
+      "longitude": 35.18475
+    },
+    {
+      "id": 8068841,
+      "name": "حي بقعان البلاط",
+      "english": "Ḩayy Buq‘ān al Ballāţ",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.07969,
+      "longitude": 35.1885
+    },
+    {
+      "id": 8068842,
+      "name": "حي المحفرة",
+      "english": "Ḩayy al Miḩfarah",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.0824,
+      "longitude": 35.18934
+    },
+    {
+      "id": 8068843,
+      "name": "حي المزة",
+      "english": "Ḩayy al Mizzah",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.07969,
+      "longitude": 35.18446
+    },
+    {
+      "id": 8068844,
+      "name": "حي المدارس",
+      "english": "Ḩayy al Madāris",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.08215,
+      "longitude": 35.18601
+    },
+    {
+      "id": 8068845,
+      "name": "الحارة الغربية",
+      "english": "Al Ḩārah al Gharbīyah",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.0846,
+      "longitude": 35.17827
+    },
+    {
+      "id": 8068846,
+      "name": "الحارة الشرقية",
+      "english": "Al Ḩārah ash Sharqīyah",
+      "countryCode": "PS",
+      "city": "سلفيت",
+      "latitude": 32.08384,
+      "longitude": 35.18836
+    },
+    {
+      "id": 8069013,
+      "name": "Al Khawarej",
+      "english": "Al Khawarej",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.33067,
+      "longitude": 35.35594
+    },
+    {
+      "id": 8069014,
+      "name": "Wadi Hamad",
+      "english": "Wadi Hamad",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.32783,
+      "longitude": 35.36125
+    },
+    {
+      "id": 8069015,
+      "name": "Al Aqaba",
+      "english": "Al Aqaba",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.32984,
+      "longitude": 35.36928
+    },
+    {
+      "id": 8069016,
+      "name": "Al Sarara",
+      "english": "Al Sarara",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.33187,
+      "longitude": 35.37496
+    },
+    {
+      "id": 8069017,
+      "name": "Al Masreyah",
+      "english": "Al Masreyah",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.32472,
+      "longitude": 35.38557
+    },
+    {
+      "id": 8069019,
+      "name": "Al Tal",
+      "english": "Al Tal",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.31474,
+      "longitude": 35.3789
+    },
+    {
+      "id": 8069020,
+      "name": "Khallet Mahfouz",
+      "english": "Khallet Mahfouz",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.31517,
+      "longitude": 35.37024
+    },
+    {
+      "id": 8069021,
+      "name": "Al Kaffa",
+      "english": "Al Kaffa",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.31784,
+      "longitude": 35.36722
+    },
+    {
+      "id": 8069022,
+      "name": "Al Safeh",
+      "english": "Al Safeh",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.31174,
+      "longitude": 35.37478
+    },
+    {
+      "id": 8069023,
+      "name": "Kishk al Sharqi",
+      "english": "Kishk al Sharqi",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.30646,
+      "longitude": 35.37073
+    },
+    {
+      "id": 8069025,
+      "name": "Al Badlah al Qadīmah",
+      "english": "Al Badlah al Qadīmah",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.32107,
+      "longitude": 35.36899
+    },
+    {
+      "id": 8069031,
+      "name": "Al Amayer",
+      "english": "Al Amayer",
+      "countryCode": "PS",
+      "city": "طوباس",
+      "latitude": 32.33317,
+      "longitude": 35.36114
+    },
+    {
+      "id": 8070388,
+      "name": "الضاحية",
+      "english": "Aḑ Ḑāḩiyah",
+      "countryCode": "PS",
+      "city": "Balāţah",
+      "latitude": 32.20701,
+      "longitude": 35.28136
+    },
+    {
+      "id": 8070389,
+      "name": "عراق التاية",
+      "english": "‘Irāq at Tāyah",
+      "countryCode": "PS",
+      "city": "Balāţah",
+      "latitude": 32.21692,
+      "longitude": 35.28596
+    },
+    {
+      "id": 8071247,
+      "name": "المساكن الشعبية الشرقية",
+      "english": "Al Masākin ash Sha‘bīyah ash Sharqīyah",
+      "countryCode": "PS",
+      "city": "Balāţah",
+      "latitude": 32.22747,
+      "longitude": 35.30148
+    },
+    {
+      "id": 8071269,
+      "name": "المخفية",
+      "english": "Al Makhfīyah",
+      "countryCode": "PS",
+      "city": "نابلس",
+      "latitude": 32.21974,
+      "longitude": 35.23544
+    },
+    {
+      "id": 8071902,
+      "name": "خلة الرهبان",
+      "english": "Khallat ar Ruhbān",
+      "countryCode": "PS",
+      "city": "Balāţah",
+      "latitude": 32.22049,
+      "longitude": 35.27565
+    },
+    {
+      "id": 8072467,
+      "name": "خلة العامود",
+      "english": "Khallat al ‘Āmūd",
+      "countryCode": "PS",
+      "city": "Balāţah",
+      "latitude": 32.2128,
+      "longitude": 35.27035
+    },
+    {
+      "id": 8072866,
+      "name": "البلدة القديمة",
+      "english": "Al Baldah al Qadīmah",
+      "countryCode": "PS",
+      "city": "نابلس",
+      "latitude": 32.21915,
+      "longitude": 35.26244
+    },
+    {
+      "id": 8072969,
+      "name": "ضاحية إسكان البلدية",
+      "english": "Ḑāḩiyat Iskān al Baladīyah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.50398,
+      "longitude": 35.09218
+    },
+    {
+      "id": 8073005,
+      "name": "البصة",
+      "english": "Al Başşah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.51868,
+      "longitude": 35.07854
+    },
+    {
+      "id": 8073006,
+      "name": "الحاووز",
+      "english": "Al Ḩāwūz",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.52153,
+      "longitude": 35.08629
+    },
+    {
+      "id": 8073007,
+      "name": "حبل الرحمة",
+      "english": "Jabal ar Raḩmah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.5229,
+      "longitude": 35.09568
+    },
+    {
+      "id": 8073008,
+      "name": "وادي التفاح الجديد",
+      "english": "Wādī at Tuffāḩ al Jadīd",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.52744,
+      "longitude": 35.0947
+    },
+    {
+      "id": 8073009,
+      "name": "وادي التفاح القديم",
+      "english": "Wādī at Tuffāḩ al Qadīm",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.53145,
+      "longitude": 35.09549
+    },
+    {
+      "id": 8073013,
+      "name": "مربعة سبتة",
+      "english": "Murabba‘at Sabtah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.53287,
+      "longitude": 35.0879
+    },
+    {
+      "id": 8073069,
+      "name": "الجلدة",
+      "english": "Al Jaldah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.53618,
+      "longitude": 35.08356
+    },
+    {
+      "id": 8073070,
+      "name": "المحاور",
+      "english": "Al Maḩāwir",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.53815,
+      "longitude": 35.09163
+    },
+    {
+      "id": 8073072,
+      "name": "عين سارة",
+      "english": "‘Ayn Sārah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.53649,
+      "longitude": 35.09882
+    },
+    {
+      "id": 8073090,
+      "name": "فرش الهوى",
+      "english": "Farsh al Hawá",
+      "countryCode": "PS",
+      "city": "حلحول",
+      "latitude": 31.55992,
+      "longitude": 35.08009
+    },
+    {
+      "id": 8073101,
+      "name": "راس الجورة",
+      "english": "Rās al Jūrah",
+      "countryCode": "PS",
+      "city": "حلحول",
+      "latitude": 31.55618,
+      "longitude": 35.10061
+    },
+    {
+      "id": 8073102,
+      "name": "قيزون",
+      "english": "Qayzūn",
+      "countryCode": "PS",
+      "city": "حلحول",
+      "latitude": 31.55778,
+      "longitude": 35.10985
+    },
+    {
+      "id": 8073103,
+      "name": "الرامة",
+      "english": "Ar Rāmah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.5516,
+      "longitude": 35.10957
+    },
+    {
+      "id": 8073104,
+      "name": "نمرة",
+      "english": "Nimrah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.54488,
+      "longitude": 35.10767
+    },
+    {
+      "id": 8073393,
+      "name": "خلة قشقلة",
+      "english": "Khallat Qashqalah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.53172,
+      "longitude": 35.10692
+    },
+    {
+      "id": 8073412,
+      "name": "البلدة القديمة",
+      "english": "Al Baldah al Qadīmah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.52639,
+      "longitude": 35.10766
+    },
+    {
+      "id": 8073413,
+      "name": "باب الزاوية",
+      "english": "Bāb az Zāwiyah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.52776,
+      "longitude": 35.10139
+    },
+    {
+      "id": 8073414,
+      "name": "السهلة",
+      "english": "As Sahlah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.52326,
+      "longitude": 35.1072
+    },
+    {
+      "id": 8073415,
+      "name": "وادي الهرية",
+      "english": "Wādī al Hariyah",
+      "countryCode": "PS",
+      "city": "الخليل",
+      "latitude": 31.51594,
+      "longitude": 35.09664
+    }
+  ]
+}

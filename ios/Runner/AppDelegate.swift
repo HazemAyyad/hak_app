@@ -408,9 +408,15 @@ private final class HaqPrayerDevice: NSObject, CLLocationManagerDelegate, Flutte
         self.geocoder.reverseGeocodeLocation(CLLocation(latitude: lat, longitude: lng), preferredLocale: Locale(identifier: "ar")) { places, _ in
           DispatchQueue.main.async {
             guard !finished else { return }; finished = true; timeout.cancel()
-            guard let place = places?.first, let city = place.locality ?? place.subAdministrativeArea,
-                  !city.isEmpty, let country = place.country, !country.isEmpty else { result(nil); return }
-            result(["city": city, "country": country])
+            guard let place = places?.first, let country = place.country, !country.isEmpty else { result(nil); return }
+            let city = place.locality ?? place.subAdministrativeArea ?? place.administrativeArea
+            let district = place.subLocality
+            guard city?.isEmpty == false || district?.isEmpty == false else { result(nil); return }
+            var names: [String: String] = ["country": country]
+            if let city = city, !city.isEmpty { names["city"] = city }
+            if let district = district, !district.isEmpty, district != city { names["district"] = district }
+            if let code = place.isoCountryCode { names["countryCode"] = code }
+            result(names)
           }
         }
       case "openMap":
@@ -439,9 +445,11 @@ private final class HaqPrayerDevice: NSObject, CLLocationManagerDelegate, Flutte
     guard let location = locations.last, location.horizontalAccuracy >= 0, location.horizontalAccuracy <= 5000,
           abs(location.timestamp.timeIntervalSinceNow) <= 300 else { fail("stale", "No accurate recent location"); return }
     pending = nil; timeout?.cancel(); timeout = nil
-    result(["lat": location.coordinate.latitude, "lng": location.coordinate.longitude,
+    var response: [String: Any] = ["lat": location.coordinate.latitude, "lng": location.coordinate.longitude,
             "accuracy": location.horizontalAccuracy, "measured": Int64(location.timestamp.timeIntervalSince1970 * 1000),
-            "zone": TimeZone.current.identifier])
+            "zone": TimeZone.current.identifier]
+    if #available(iOS 14.0, *) { response["precise"] = manager.accuracyAuthorization == .fullAccuracy }
+    result(response)
   }
   func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
     if pending != nil { fail((error as? CLError)?.code == .denied ? "denied" : "location", "Location unavailable") }

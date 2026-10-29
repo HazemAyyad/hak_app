@@ -83,6 +83,8 @@ class PrayerLocation {
     this.measuredAt,
     this.city,
     this.country,
+    this.district,
+    this.approximateName = false,
   }) {
     initializePrayerZones();
     tz.getLocation(zone);
@@ -98,7 +100,8 @@ class PrayerLocation {
   }
   final double latitude, longitude;
   final String zone, label;
-  final String? city, country;
+  final String? city, country, district;
+  final bool approximateName;
   final bool fromDevice;
   final double? accuracy;
   final DateTime? measuredAt;
@@ -111,6 +114,8 @@ class PrayerLocation {
     'device': fromDevice,
     if (city != null) 'city': city,
     if (country != null) 'country': country,
+    if (district != null) 'district': district,
+    if (approximateName) 'approximateName': true,
     'accuracy': accuracy,
     'measured': measuredAt?.toUtc().toIso8601String(),
   };
@@ -122,6 +127,8 @@ class PrayerLocation {
     fromDevice: data['device'] == true,
     city: data['city'] as String?,
     country: data['country'] as String?,
+    district: data['district'] as String?,
+    approximateName: data['approximateName'] == true,
     accuracy: (data['accuracy'] as num?)?.toDouble(),
     measuredAt: data['measured'] == null
         ? null

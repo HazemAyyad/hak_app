@@ -23,6 +23,16 @@ The map supports exact points outside the search catalog. A nearby-city
 label explicitly says "near"; it is not a claimed country/city boundary.
 No prayer time is inferred from a country's center or the nearest city.
 
+`districts.json` adds 208 Palestinian neighborhood points (`PPLX`) from the
+GeoNames country extract and language-tagged Arabic alternate names. Refresh
+with `python tool/build_prayer_districts.py`. `districts-manifest.json` records
+the source and asset hashes. Associated city names are nearby-city hints.
+These points have no neighborhood boundary polygons: automatic naming uses
+them only within 800m of a precise GPS fix (accuracy at most 200m), away from
+competing neighborhood points, and explicitly labels them "near". They never
+replace measured coordinates or the polygon-derived time zone. Other countries
+continue to use system neighborhood names and the worldwide city catalog.
+
 Data © [GeoNames](https://www.geonames.org/), licensed under
 [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 Modified here by selecting/reformatting fields and joining country names.

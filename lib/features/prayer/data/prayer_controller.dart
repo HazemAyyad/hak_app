@@ -268,15 +268,45 @@ class PrayerController extends ChangeNotifier {
         })(),
       ]);
       if (_disposed || scope != owner || revision != _revision) return;
-      final city = names?['city'], country = names?['country'];
-      final validNames =
-          city is String &&
-          city.trim().isNotEmpty &&
-          country is String &&
-          country.trim().isNotEmpty;
+      String? name(String key) {
+        final value = names?[key];
+        return value is String &&
+                value.trim().isNotEmpty &&
+                value.trim().length <= 100
+            ? value.trim()
+            : null;
+      }
+
+      var city = name('city'), country = name('country');
+      final precise = raw['precise'] != false && measured.accuracy! <= 200;
+      var district = precise ? name('district') : null;
+      final validNames = country != null && (city != null || district != null);
+      final nearbyDistrict = precise && district == null
+          ? catalog?.nearbyDistrict(
+              measured.latitude,
+              measured.longitude,
+              accuracy: measured.accuracy!,
+              countryCode: name('countryCode'),
+            )
+          : null;
+      if (nearbyDistrict != null) {
+        district = nearbyDistrict.name;
+        city ??= nearbyDistrict.city;
+        country ??= nearbyDistrict.country.name;
+      }
+      final parts = <String>[];
+      final normalized = <String>{};
+      for (final part in [district, city, country]) {
+        if (part != null && normalized.add(normalizePlaceQuery(part))) {
+          parts.add(part);
+        }
+      }
       final near = catalog?.nearby(measured.latitude, measured.longitude);
-      final label = validNames
-          ? '${city.trim()}، ${country.trim()}'
+      final approximateName = nearbyDistrict != null || !validNames;
+      final label = nearbyDistrict != null
+          ? 'قرب ${parts.join('، ')}'
+          : validNames
+          ? parts.join('، ')
           : near == null
           ? 'موقع الجهاز'
           : 'قرب ${near.label}';
@@ -285,8 +315,10 @@ class PrayerController extends ChangeNotifier {
         longitude: measured.longitude,
         zone: zone ?? measured.zone,
         label: label.length > 100 ? label.substring(0, 100) : label,
-        city: validNames ? city.trim() : null,
-        country: validNames ? country.trim() : null,
+        city: validNames || nearbyDistrict != null ? city : null,
+        country: validNames || nearbyDistrict != null ? country : null,
+        district: district,
+        approximateName: approximateName,
         fromDevice: true,
         accuracy: measured.accuracy,
         measuredAt: measured.measuredAt,
@@ -296,8 +328,10 @@ class PrayerController extends ChangeNotifier {
           !_disposed &&
           scope == owner &&
           identical(config.location, place)) {
-        locationNotice = validNames
-            ? 'تم تحديث الموقع: ${place.label}'
+        locationNotice = nearbyDistrict != null
+            ? 'تم تحديث الإحداثيات؛ اسم أقرب حي تقريبي: ${place.label}.'
+            : validNames
+            ? 'تم تحديث الموقع: ${place.label}${precise ? '' : '؛ اسم الحي يحتاج موقعًا أدق. فعّل الموقع الدقيق وأعد التحديث.'}'
             : near != null
             ? 'تم تحديث الإحداثيات؛ اسم أقرب مدينة تقريبي.'
             : 'تم تحديث الإحداثيات؛ تعذّر تحديد اسم المدينة والدولة. أعد التحديث أو اختر المدينة يدويًا.';

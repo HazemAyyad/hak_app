@@ -1,0 +1,11 @@
+# Neighborhood location labels
+
+Android and iOS reverse-geocoding now return a separate neighborhood (`subLocality`), city, country and country code. Flutter displays the available parts in order: neighborhood, city, country, suppressing duplicates. The shared saved location label reaches Home, prayer settings and Qibla without separate copies of naming logic. New `district` and `approximateName` fields survive preferences/backup round trips; older saved locations remain readable.
+
+Neighborhood naming requires a measured accuracy of at most 200m. Approximate-only permission on Android or iOS also prevents a neighborhood claim, even if the reported accuracy is small. Broad fixes can still supply prayer coordinates and a city label; the refresh notice explains that a more precise location is needed for the neighborhood.
+
+When the system omits the neighborhood, a small public GeoNames dataset supplies nearby-name hints for 208 Palestinian neighborhoods, including Sheikh Ijlin at 31.50981, 34.42739, with Gaza as its nearby city. This is a 46KB asset, independent of the Nusuk APK. A candidate must be within 800m including measurement uncertainty, agree with a known country code, and be separated from the next candidate by more than twice the measurement accuracy. The label explicitly says `قرب الشيخ عجلين، غزة، فلسطين`; it does not assert containment in a neighborhood boundary. System-provided names display `الشيخ عجلين، غزة، فلسطين`.
+
+No neighborhood point replaces the actual GPS coordinates or the separately resolved time-zone polygon. System neighborhood naming and the existing worldwide city catalog remain available in other countries, including Egypt; the offline neighborhood supplement currently covers Palestine only. Source links and SHA-256 receipts are in `assets/prayer_places/districts-manifest.json`; data is GeoNames CC BY 4.0.
+
+Validation covers system and offline neighborhood labels, coarse permission/accuracy, neighboring-point ambiguity, foreign country codes, persistence, old settings, the Sheikh Ijlin fixture and an Egyptian fixture. Native Android sources compile through `tool/check_reminders_android.ps1`. No APK installation or live geocoder/device result is implied by these source tests; iOS requires validation on its build/device environment.

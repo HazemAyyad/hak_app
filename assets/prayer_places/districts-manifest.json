@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "districtCount": 208,
+  "sources": {
+    "PS.zip": {
+      "url": "https://download.geonames.org/export/dump/PS.zip",
+      "sha256": "1be78a41e78af65be5f4d32f2612a3b652e9c5b78299c766a28c1c3ff8307756"
+    },
+    "alternates-PS.zip": {
+      "url": "https://download.geonames.org/export/dump/alternatenames/PS.zip",
+      "sha256": "ea8c42e60f434e4d62e87b1de23daeb6f0268aa1d8f65e19e80838810cb186bc"
+    }
+  },
+  "assetSha256": "84dd74c49c07bdcc85cf0d49135e96a39159dce4fd00b1298de57cc053a61bd6",
+  "bytes": 46198,
+  "parentCitiesAssetSha256": "94ab97b3c0864dd59dea83558c67d3182e9d98416466e8bfa0b38aeb64efa046",
+  "license": "GeoNames CC BY 4.0",
+  "scope": "Palestinian PPLX neighborhood points; nearby city names are distance hints, not administrative boundaries."
+}
