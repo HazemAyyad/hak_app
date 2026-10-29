@@ -12,12 +12,14 @@ class QuranOfflinePage extends StatelessWidget {
     required this.data,
     required this.selected,
     required this.onSelect,
+    this.onOptions,
     this.paper = const Color(0xFFFFFCF5),
     this.ink = const Color(0xFF231F20),
   });
   final QuranOfflinePageData data;
-  final String selected;
+  final String? selected;
   final ValueChanged<String> onSelect;
+  final ValueChanged<String>? onOptions;
   final Color paper, ink;
 
   @override
@@ -46,6 +48,15 @@ class QuranOfflinePage extends StatelessWidget {
                 GestureDetector(
                   key: ValueKey('offline-mushaf-image-${data.page}'),
                   behavior: HitTestBehavior.opaque,
+                  onLongPressStart: (details) {
+                    final local = details.localPosition;
+                    final point = Offset(
+                      box.left + local.dx / (width - 54) * box.width,
+                      box.top + local.dy / artHeight * box.height,
+                    );
+                    final key = data.verseAt(point);
+                    if (key != null) onOptions?.call(key);
+                  },
                   onTapUp: (details) {
                     final local = details.localPosition;
                     final point = Offset(
@@ -105,7 +116,7 @@ class QuranOfflinePage extends StatelessWidget {
 class _SelectedAyah extends CustomPainter {
   _SelectedAyah(this.data, this.selected);
   final QuranOfflinePageData data;
-  final String selected;
+  final String? selected;
   @override
   void paint(Canvas canvas, Size size) {
     final box = data.displayBox;

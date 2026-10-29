@@ -29,6 +29,8 @@ class QuranPlayerPanel extends StatelessWidget {
     this.onReciter,
     this.onOpen,
     this.onStart,
+    this.onPlay,
+    this.verseReciter,
     this.initialTitle,
     this.floating = false,
     this.collapsed = false,
@@ -40,6 +42,8 @@ class QuranPlayerPanel extends StatelessWidget {
   final QuranRepository repository;
   final bool compact;
   final VoidCallback? onReciter, onOpen, onStart;
+  final VoidCallback? onPlay;
+  final bool? verseReciter;
   final String? initialTitle;
   final bool floating, collapsed;
   final VoidCallback? onToggleCollapsed, onMinimize, onClose;
@@ -81,7 +85,9 @@ class QuranPlayerPanel extends StatelessWidget {
       media.current?.reciter ??
       (media.catalog == null
           ? 'حفص عن عاصم'
-          : media.selection(verse: compact && onStart != null).name);
+          : media
+                .selection(verse: verseReciter ?? (compact && onStart != null))
+                .name);
 
   Widget _compact(BuildContext context) => Column(
     mainAxisSize: MainAxisSize.min,
@@ -499,9 +505,7 @@ class QuranPlayerPanel extends StatelessWidget {
         customBorder: const CircleBorder(),
         onTap: media.buffering
             ? null
-            : media.current == null
-            ? onStart
-            : media.toggle,
+            : onPlay ?? (media.current == null ? onStart : media.toggle),
         child: SizedBox.square(
           dimension: size,
           child: media.buffering

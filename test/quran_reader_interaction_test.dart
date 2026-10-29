@@ -19,6 +19,8 @@ import 'package:haq_app/features/quran/presentation/quran_mushaf.dart';
 import 'package:haq_app/features/quran/presentation/quran_mushaf_line.dart';
 import 'package:haq_app/features/quran/presentation/quran_offline_page.dart';
 import 'package:haq_app/features/quran/presentation/quran_page_viewport.dart';
+import 'package:haq_app/features/quran/presentation/quran_reader_player.dart';
+import 'package:haq_app/features/quran/presentation/quran_widgets.dart';
 
 class ReaderContent extends QuranContent {
   final pageRequests = <int>[];
@@ -183,13 +185,82 @@ void main() {
   }
 
   testWidgets(
-    'direct ayah tap opens its options and swipes cross surahs in both directions',
+    'surah starts unselected and header can be hidden without losing navigation',
+    (tester) async {
+      await open(tester, '1:1', QuranReadingMode.continuous);
+      expect(
+        tester
+            .widget<QuranReaderPlayer>(find.byType(QuranReaderPlayer))
+            .selected,
+        isNull,
+      );
+      expect(find.text('سورة الفاتحة كاملة'), findsOneWidget);
+      expect(find.byType(QuranHeader), findsOneWidget);
+      await capture(tester, 'fatiha-implemented');
+      final ayah = find.byKey(const ValueKey('quran-select-1:3'));
+      await tester.tap(ayah);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<QuranReaderPlayer>(find.byType(QuranReaderPlayer))
+            .selected
+            ?.key,
+        '1:3',
+      );
+      expect(find.text('نسخ الآية'), findsNothing);
+      await tester.tap(ayah);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<QuranReaderPlayer>(find.byType(QuranReaderPlayer))
+            .selected,
+        isNull,
+      );
+      await tester.tap(find.byTooltip('إخفاء الهيدر'));
+      await tester.pumpAndSettle();
+      expect(find.byType(QuranHeader), findsNothing);
+      expect(find.byTooltip('رجوع'), findsOneWidget);
+      await capture(tester, 'fatiha-header-hidden');
+      await tester.tap(find.text('انتقال'));
+      await tester.pumpAndSettle();
+      expect(find.text('إعدادات القراءة'), findsOneWidget);
+      expect(find.byType(DropdownButton<int>), findsNWidgets(3));
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('إظهار الهيدر'));
+      await tester.pumpAndSettle();
+      expect(find.byType(QuranHeader), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'ayah taps toggle selection, long press opens options, and swipes cross surahs',
     (tester) async {
       await open(tester, '1:7', QuranReadingMode.ayah);
       await tester.tap(find.text(repository.byKey['1:7']!.text));
       await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<QuranReaderPlayer>(find.byType(QuranReaderPlayer))
+            .selected
+            ?.key,
+        '1:7',
+      );
+      expect(find.text('نسخ الآية'), findsNothing);
+      await tester.tap(find.text(repository.byKey['1:7']!.text));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<QuranReaderPlayer>(find.byType(QuranReaderPlayer))
+            .selected,
+        isNull,
+      );
+      await tester.longPress(find.text(repository.byKey['1:7']!.text));
+      await tester.pumpAndSettle();
       expect(find.text('نسخ الآية'), findsOneWidget);
-      expect(find.text('سورة الفاتحة • الآية 7'), findsOneWidget);
+      expect(find.text('سورة الفاتحة • الآية 7'), findsNWidgets(2));
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
       await tester.drag(
@@ -286,7 +357,7 @@ void main() {
   );
 
   testWidgets(
-    'page tap opens options, page swipes and labels agree, and RTL controls stay at the right edge',
+    'page taps toggle exact ayahs, options remain available, and page swipes agree',
     (tester) async {
       await open(tester, '2:2', QuranReadingMode.pages);
       await capture(tester, 'page-download-choice');
@@ -297,15 +368,24 @@ void main() {
       await tester.pumpAndSettle();
       final back = find.byTooltip('رجوع').last;
       expect(tester.getCenter(back).dx, greaterThan(370));
-      expect(
-        tester.getCenter(find.byIcon(Icons.fullscreen)).dx,
-        greaterThan(370),
-      );
+      expect(tester.getCenter(find.byIcon(Icons.fullscreen)).dx, lessThan(100));
       final data = await controller.content.page(2, repository);
       final word = data.words.firstWhere((w) => w.key == '2:2');
       await tester.tap(find.text(word.glyph));
       await tester.pumpAndSettle();
-      expect(find.text('سورة البقرة • الآية 2'), findsOneWidget);
+      expect(
+        tester.widget<QuranMushaf>(find.byType(QuranMushaf)).selected,
+        '2:2',
+      );
+      await tester.tap(find.text(word.glyph));
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<QuranMushaf>(find.byType(QuranMushaf)).selected,
+        isNull,
+      );
+      await tester.longPress(find.text(word.glyph));
+      await tester.pumpAndSettle();
+      expect(find.text('سورة البقرة • الآية 2'), findsNWidgets(2));
       expect(find.text('نسخ الآية'), findsOneWidget);
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
@@ -416,18 +496,32 @@ void main() {
       final point = region.path.getBounds().center;
       expect(data.verseAt(point), '1:1');
       final image = find.byKey(const ValueKey('offline-mushaf-image-1'));
-      final rect = tester.getRect(image);
       final box = data.displayBox;
-      final tap =
-          rect.topLeft +
-          Offset(
-            (point.dx - box.left) / box.width * rect.width,
-            (point.dy - box.top) / box.height * rect.height,
-          );
-      await tester.tapAt(tap);
+      Offset versePoint() {
+        final rect = tester.getRect(image);
+        return rect.topLeft +
+            Offset(
+              (point.dx - box.left) / box.width * rect.width,
+              (point.dy - box.top) / box.height * rect.height,
+            );
+      }
+
+      await tester.tapAt(versePoint());
       await tester.pumpAndSettle();
       expect(controller.lastKey, '1:1');
-      expect(find.text('سورة الفاتحة • الآية 1'), findsOneWidget);
+      expect(
+        tester.widget<QuranOfflinePage>(find.byType(QuranOfflinePage)).selected,
+        '1:1',
+      );
+      await tester.tapAt(versePoint());
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<QuranOfflinePage>(find.byType(QuranOfflinePage)).selected,
+        isNull,
+      );
+      await tester.longPressAt(versePoint());
+      await tester.pumpAndSettle();
+      expect(find.text('سورة الفاتحة • الآية 1'), findsNWidgets(2));
       expect(find.text('نسخ الآية'), findsOneWidget);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
@@ -483,7 +577,10 @@ void main() {
         await tester.tap(find.text(words.first.glyph).first);
         await tester.pump();
         expect(chosen, '2:2');
+        expect(options, isNull);
+        await tester.longPress(find.text(words.first.glyph).first);
         expect(options, '2:2');
+        options = null;
       }
       await tester.pumpWidget(const SizedBox());
     },

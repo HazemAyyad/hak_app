@@ -8,7 +8,8 @@ import '../data/quran_repository.dart';
 import 'quran_widgets.dart';
 import 'quran_account.dart';
 import 'quran_mushaf.dart';
-import 'quran_audio_widgets.dart';
+import 'quran_reader_player.dart';
+import 'quran_audio_widgets.dart' show chooseVerseRange;
 import 'quran_audio_pages.dart';
 import 'quran_tafsir.dart';
 import 'quran_page_download_sheet.dart';
@@ -37,6 +38,9 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   ItemScrollController items = ItemScrollController();
   late final ValueNotifier<QuranVerse> active;
   late int surahId;
+  QuranVerse? selected;
+  bool playerExpanded = false;
+  bool showHeader = true;
   bool fullscreen = false;
   double initialAlignment = 0;
   late int fixedPage;
@@ -108,7 +112,10 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     widget.onFullscreenChanged(value);
   }
 
-  void _go(QuranVerse verse) {
+  void _go(QuranVerse verse, {bool fromAudio = false}) {
+    if (!fromAudio || verse.surah != surahId) {
+      setState(() => selected = null);
+    }
     fixedPage = verse.page;
     if (verse.surah != surahId) {
       setState(() {
@@ -141,6 +148,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   void _onPreferencesChanged() {
     if (!mounted || previousMode == controller.mode) return;
     setState(() {
+      selected = null;
       if (controller.mode == QuranReadingMode.pages) {
         fixedPage = active.value.page;
       }
@@ -205,7 +213,9 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
       return;
     }
     final verse = repo.byKey['${track.surah}:${track.ayah}'];
-    if (verse != null && verse.key != active.value.key) _go(verse);
+    if (verse != null && verse.key != active.value.key) {
+      _go(verse, fromAudio: true);
+    }
   }
 
   void _turnPage(int page) {
@@ -213,15 +223,22 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     setState(() {
       fixedPage = page;
       surahId = verse.surah;
+      selected = null;
     });
     active.value = verse;
     controller.remember(verse, page: page);
   }
 
   void _selectPageVerse(QuranVerse verse) {
-    setState(() => surahId = verse.surah);
+    setState(() {
+      selected = selected?.key == verse.key ? null : verse;
+      surahId = verse.surah;
+    });
     active.value = verse;
-    controller.remember(verse, page: fixedPage);
+    controller.remember(
+      verse,
+      page: controller.mode == QuranReadingMode.pages ? fixedPage : null,
+    );
   }
 
   @override
@@ -266,7 +283,8 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
             color: _paper(context),
             child: Column(
               children: [
-                if (!fullscreen)
+                if (!fullscreen) _toolbar(context, verse),
+                if (!fullscreen && showHeader)
                   QuranHeader(
                     title: 'سورة ${chapter.name}',
                     subtitle:
@@ -275,17 +293,21 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                     onBack: () => Navigator.pop(context),
                     actions: [
                       QCircleButton(
-                        icon: controller.bookmarks.containsKey(verse.key)
+                        icon:
+                            controller.bookmarks.containsKey(
+                              (selected ?? verse).key,
+                            )
                             ? Icons.bookmark
                             : Icons.bookmark_outline,
                         label: 'علامة مرجعية',
-                        onTap: () => controller.toggleBookmark(verse.key),
+                        onTap: () =>
+                            controller.toggleBookmark((selected ?? verse).key),
                         color: qNavy,
                       ),
                       QCircleButton(
                         icon: Icons.menu_book_outlined,
                         label: 'تفسير الآية',
-                        onTap: () => _explanation(verse),
+                        onTap: () => _explanation(selected ?? verse),
                       ),
                       QCircleButton(
                         icon: Icons.settings_outlined,
@@ -301,80 +323,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                       tooltip: 'إغلاق التكبير',
                       onPressed: () => _setFullscreen(false),
                       icon: Icon(Icons.close, color: _ink(context)),
-                    ),
-                  ),
-                if (!fullscreen)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 6, 12, 8),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _selector<int>(
-                            context,
-                            controller.mode == QuranReadingMode.pages
-                                ? fixedPage
-                                : verse.ayah,
-                            List.generate(
-                              controller.mode == QuranReadingMode.pages
-                                  ? 604
-                                  : chapter.ayahCount,
-                              (i) => DropdownMenuItem(
-                                value: i + 1,
-                                child: Text(
-                                  '${controller.mode == QuranReadingMode.pages ? 'الصفحة' : 'الآية'} ${i + 1}',
-                                  style: qText(context, size: 11),
-                                ),
-                              ),
-                            ),
-                            (id) => controller.mode == QuranReadingMode.pages
-                                ? _turnPage(id)
-                                : _go(repo.byKey['$surahId:$id']!),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        Expanded(
-                          child: _selector<int>(
-                            context,
-                            surahId,
-                            repo.surahs
-                                .map(
-                                  (s) => DropdownMenuItem(
-                                    value: s.id,
-                                    child: Text(
-                                      'سورة ${s.name}',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: qText(context, size: 11),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            (id) => _go(repo.byKey['$id:1']!),
-                          ),
-                        ),
-                        const SizedBox(width: 5),
-                        Expanded(
-                          child: _selector<int>(
-                            context,
-                            verse.juz,
-                            repo.juzs
-                                .map(
-                                  (j) => DropdownMenuItem(
-                                    value: j.id,
-                                    child: Text(
-                                      juzName(j.id),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: qText(context, size: 11),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            (id) =>
-                                _go(repo.byKey[repo.juzs[id - 1].startKey]!),
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                 if (widget.highlight != null && !fullscreen)
@@ -409,7 +357,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                           content: controller.content,
                           repository: repo,
                           page: fixedPage,
-                          selected: verse.key,
+                          selected: selected?.key,
                           onPage: _turnPage,
                           onSelect: _selectPageVerse,
                           onOptions: _options,
@@ -421,84 +369,19 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                       ? _continuous(context, chapter)
                       : _single(context, verse),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 2, 12, 4),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: TextButton.icon(
-                            style: TextButton.styleFrom(
-                              foregroundColor: qNavy,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 5,
-                              ),
-                            ),
-                            label: Text(
-                              fullscreen
-                                  ? 'إغلاق التكبير'
-                                  : (controller.mode == QuranReadingMode.ayah
-                                        ? 'تكبير الآية'
-                                        : controller.mode ==
-                                              QuranReadingMode.pages
-                                        ? 'تكبير الصفحة'
-                                        : 'تكبير السورة'),
-                              style: qText(context, size: 11),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            icon: Icon(
-                              fullscreen
-                                  ? Icons.fullscreen_exit
-                                  : Icons.fullscreen,
-                              size: 24,
-                            ),
-                            onPressed: () => _setFullscreen(!fullscreen),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      if (controller.mode == QuranReadingMode.pages) ...[
-                        QCircleButton(
-                          icon: Icons.download_for_offline_outlined,
-                          label: 'تنزيل صفحات المصحف',
-                          onTap: () => showQuranPageDownloadSheet(
-                            context,
-                            downloads: controller.pageDownloads,
-                            repository: repo,
-                            surahId: surahId,
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                      QCircleButton(
-                        icon: Icons.format_list_bulleted,
-                        label: 'طريقة العرض',
-                        onTap: _chooseMode,
-                      ),
-                      const SizedBox(width: 8),
-                      QCircleButton(
-                        icon: Icons.more_horiz,
-                        label: 'خيارات الآية',
-                        onTap: () => _options(active.value),
-                      ),
-                    ],
-                  ),
-                ),
-                // The app shell keeps its existing navigation; reserve room for extendBody.
+                if (selected != null) _selectionTools(context),
                 if (!fullscreen)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: QuranPlayerPanel(
+                    padding: const EdgeInsets.fromLTRB(14, 8, 14, 9),
+                    child: QuranReaderPlayer(
                       media: controller.audio,
                       repository: repo,
-                      compact: true,
-                      onReciter: _reciter,
-                      initialTitle:
-                          'سورة ${chapter.name} • الآية ${verse.ayah}',
-                      onStart: () => controller.audio.playVerse(verse),
+                      surah: surahId,
+                      selected: selected,
+                      expanded: playerExpanded,
+                      onToggleExpanded: () =>
+                          setState(() => playerExpanded = !playerExpanded),
+                      onReciter: () => _reciter(),
                     ),
                   ),
                 if (!fullscreen) const SizedBox(height: 78),
@@ -506,6 +389,206 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
             ),
           );
         },
+      ),
+    ),
+  );
+
+  Widget _toolbar(BuildContext context, QuranVerse verse) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    child: LayoutBuilder(
+      builder: (context, constraints) => Row(
+        children: [
+          if (!showHeader)
+            IconButton(
+              tooltip: 'رجوع',
+              onPressed: () => Navigator.pop(context),
+              icon: const Icon(Icons.arrow_forward_ios, size: 20),
+            ),
+          Flexible(
+            child: TextButton.icon(
+              onPressed: _navigation,
+              icon: Icon(Icons.unfold_more, size: 19, color: qAccent(context)),
+              label: Text(
+                'انتقال',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: qText(context, size: 12, color: qAccent(context)),
+              ),
+            ),
+          ),
+          if (constraints.maxWidth > 390)
+            Text(
+              'الصفحة ${controller.mode == QuranReadingMode.pages ? fixedPage : verse.page}',
+              style: qText(
+                context,
+                size: 11,
+                color: AppPalette.of(context).muted,
+              ),
+            ),
+          const Spacer(),
+          IconButton(
+            key: const ValueKey('quran-toggle-header'),
+            tooltip: showHeader ? 'إخفاء الهيدر' : 'إظهار الهيدر',
+            onPressed: () => setState(() => showHeader = !showHeader),
+            icon: Icon(
+              showHeader
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_outlined,
+              size: 21,
+            ),
+          ),
+          if (controller.mode == QuranReadingMode.pages)
+            IconButton(
+              tooltip: 'تنزيل صفحات المصحف',
+              onPressed: () => showQuranPageDownloadSheet(
+                context,
+                downloads: controller.pageDownloads,
+                repository: repo,
+                surahId: surahId,
+              ),
+              icon: const Icon(Icons.download_for_offline_outlined, size: 21),
+            ),
+          IconButton(
+            tooltip: 'طريقة العرض',
+            onPressed: _chooseMode,
+            icon: const Icon(Icons.chrome_reader_mode_outlined, size: 21),
+          ),
+          IconButton(
+            tooltip: 'تكبير السورة',
+            onPressed: () => _setFullscreen(true),
+            icon: const Icon(Icons.fullscreen, size: 24),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _selectionTools(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    child: Row(
+      children: [
+        Text(
+          'الآية ${selected!.ayah}',
+          style: qText(context, size: 12, color: qAccent(context)),
+        ),
+        const Spacer(),
+        TextButton.icon(
+          onPressed: () => _explanation(selected!),
+          icon: const Icon(Icons.menu_book_outlined, size: 18),
+          label: const Text('التفسير'),
+        ),
+        IconButton(
+          tooltip: 'خيارات الآية',
+          onPressed: () => _options(selected!),
+          icon: const Icon(Icons.more_horiz),
+        ),
+        IconButton(
+          tooltip: 'إلغاء التحديد',
+          onPressed: () => setState(() => selected = null),
+          icon: const Icon(Icons.close, size: 18),
+        ),
+      ],
+    ),
+  );
+
+  Future<void> _navigation() => showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: AppPalette.of(context).surface,
+    showDragHandle: true,
+    isScrollControlled: true,
+    builder: (sheetContext) => SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'انتقال',
+              style: qText(context, size: 20, weight: FontWeight.w800),
+            ),
+            const SizedBox(height: 12),
+            Text('السورة', style: qText(context, size: 12)),
+            _selector<int>(
+              context,
+              surahId,
+              [
+                for (final chapter in repo.surahs)
+                  DropdownMenuItem(
+                    value: chapter.id,
+                    child: Text(
+                      'سورة ${chapter.name}',
+                      style: qText(context, size: 13),
+                    ),
+                  ),
+              ],
+              (id) {
+                Navigator.pop(sheetContext);
+                _go(repo.byKey['$id:1']!);
+              },
+            ),
+            const SizedBox(height: 12),
+            Text(
+              controller.mode == QuranReadingMode.pages ? 'الصفحة' : 'الآية',
+              style: qText(context, size: 12),
+            ),
+            _selector<int>(
+              context,
+              controller.mode == QuranReadingMode.pages
+                  ? fixedPage
+                  : active.value.ayah,
+              List.generate(
+                controller.mode == QuranReadingMode.pages
+                    ? 604
+                    : repo.surah(surahId).ayahCount,
+                (i) => DropdownMenuItem(
+                  value: i + 1,
+                  child: Text(
+                    '${controller.mode == QuranReadingMode.pages ? 'الصفحة' : 'الآية'} ${i + 1}',
+                    style: qText(context, size: 13),
+                  ),
+                ),
+              ),
+              (id) {
+                Navigator.pop(sheetContext);
+                if (controller.mode == QuranReadingMode.pages) {
+                  _turnPage(id);
+                } else {
+                  _go(repo.byKey['$surahId:$id']!);
+                }
+              },
+            ),
+            const SizedBox(height: 12),
+            Text('الجزء', style: qText(context, size: 12)),
+            _selector<int>(
+              context,
+              active.value.juz,
+              [
+                for (final part in repo.juzs)
+                  DropdownMenuItem(
+                    value: part.id,
+                    child: Text(
+                      juzName(part.id),
+                      style: qText(context, size: 13),
+                    ),
+                  ),
+              ],
+              (id) {
+                Navigator.pop(sheetContext);
+                _go(repo.byKey[repo.juzs[id - 1].startKey]!);
+              },
+            ),
+            const SizedBox(height: 12),
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pop(sheetContext);
+                _settings();
+              },
+              icon: const Icon(Icons.settings_outlined),
+              label: const Text('إعدادات القراءة'),
+            ),
+          ],
+        ),
       ),
     ),
   );
@@ -604,12 +687,18 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
             verse.key == widget.verse.key && widget.highlight != null;
         return Semantics(
           label: 'سورة ${chapter.name} الآية ${verse.ayah}',
+          selected: selected?.key == verse.key,
           child: InkWell(
+            key: ValueKey('quran-select-${verse.key}'),
             onLongPress: () => _options(verse),
-            onTap: () => _options(verse),
+            onTap: () => _selectPageVerse(verse),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              color: highlighted ? qGold.withValues(alpha: .13) : null,
+              color: selected?.key == verse.key
+                  ? qAccent(context).withValues(alpha: .09)
+                  : highlighted
+                  ? qGold.withValues(alpha: .13)
+                  : null,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -643,6 +732,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   Widget _single(BuildContext context, QuranVerse verse) => GestureDetector(
     key: const ValueKey('quran-ayah-swipe'),
     behavior: HitTestBehavior.opaque,
+    onLongPress: () => _options(verse),
     onHorizontalDragStart: (_) => _ayahDrag = 0,
     onHorizontalDragUpdate: (details) => _ayahDrag += details.delta.dx,
     onHorizontalDragEnd: (details) {
@@ -658,8 +748,13 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
         children: [
           QCard(
             key: ValueKey('quran-ayah-${verse.key}'),
-            onTap: () => _options(verse),
-            color: _paper(context),
+            onTap: () => _selectPageVerse(verse),
+            color: selected?.key == verse.key
+                ? Color.alphaBlend(
+                    qAccent(context).withValues(alpha: .09),
+                    _paper(context),
+                  )
+                : _paper(context),
             child: Column(
               children: [
                 QMedallion(
@@ -746,6 +841,10 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   }
 
   void _options(QuranVerse verse) {
+    setState(() {
+      selected = verse;
+      surahId = verse.surah;
+    });
     active.value = verse;
     controller.remember(
       verse,
@@ -818,7 +917,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                     title: const Text('اختيار قارئ الآيات'),
                     onTap: () {
                       Navigator.pop(sheetContext);
-                      _reciter();
+                      _reciter(verse: true);
                     },
                   ),
                   ListTile(
@@ -922,7 +1021,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
           ),
         ),
       );
-  Future<void> _reciter() async {
+  Future<void> _reciter({bool? verse}) async {
     if (mounted) {
       await Navigator.push(
         context,
@@ -931,7 +1030,10 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
             backgroundColor: AppPalette.of(context).background,
             body: SafeArea(
               bottom: false,
-              child: QuranReciterPicker(media: controller.audio, verse: true),
+              child: QuranReciterPicker(
+                media: controller.audio,
+                verse: verse ?? selected != null,
+              ),
             ),
           ),
         ),

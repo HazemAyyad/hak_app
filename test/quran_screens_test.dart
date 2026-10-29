@@ -253,7 +253,7 @@ void main() {
       expect(find.text('الصفحة 2 من 604'), findsOneWidget);
       expect(tester.takeException(), isNull);
       await capture(tester, 'fixed-page');
-      await tester.tap(find.text('تكبير الصفحة'));
+      await tester.tap(find.byTooltip('تكبير السورة'));
       await tester.pumpAndSettle();
       expect(find.byType(NavigationBar), findsNothing);
       expect(find.text('الصفحة 2 من 604'), findsOneWidget);

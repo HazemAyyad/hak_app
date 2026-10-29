@@ -22,7 +22,8 @@ class QuranMushafLine extends StatefulWidget {
     this.showTajweed = true,
   });
   final List<MushafWord> words;
-  final String fontFamily, selected;
+  final String fontFamily;
+  final String? selected;
   final double fontSize;
   final bool centered;
   final QuranRepository repository;
@@ -97,11 +98,9 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
                       onTap: () {
                         final verse = widget.repository.byKey[word.key]!;
                         widget.onSelect(verse);
-                        widget.onOptions(verse);
                       },
                       onLongPress: () {
                         final verse = widget.repository.byKey[word.key]!;
-                        widget.onSelect(verse);
                         widget.onOptions(verse);
                       },
                       child: Semantics(

@@ -186,7 +186,7 @@ void main() {
       expect(find.byType(QuranReader), findsOneWidget);
       expect(controller.lastVerse!.surah, 2);
       await _capture(tester, boundary, '03-reader');
-      await tester.tap(find.text('تكبير السورة'));
+      await tester.tap(find.byTooltip('تكبير السورة'));
       await tester.pumpAndSettle();
       expect(find.byType(NavigationBar), findsNothing);
       expect(find.byTooltip('إغلاق التكبير'), findsOneWidget);

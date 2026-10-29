@@ -29,7 +29,7 @@ class QuranMushaf extends StatefulWidget {
   final QuranContent content;
   final QuranRepository repository;
   final int page;
-  final String selected;
+  final String? selected;
   final ValueChanged<int> onPage;
   final ValueChanged<QuranVerse> onSelect, onOptions;
   final Color paper, ink;
@@ -167,7 +167,10 @@ class _QuranMushafState extends State<QuranMushaf> {
                         final verse = widget.repository.byKey[key];
                         if (verse == null) return;
                         widget.onSelect(verse);
-                        widget.onOptions(verse);
+                      },
+                      onOptions: (key) {
+                        final verse = widget.repository.byKey[key];
+                        if (verse != null) widget.onOptions(verse);
                       },
                     ),
                   );
@@ -297,7 +300,7 @@ class MushafCanvas extends StatelessWidget {
   });
   final MushafPageData data;
   final QuranRepository repository;
-  final String selected;
+  final String? selected;
   final Color paper, ink;
   final bool showTajweed;
   final ValueChanged<QuranVerse> onSelect, onOptions;
