@@ -86,6 +86,8 @@ void main() {
       await job;
       expect(c.locating, false);
       expect(c.config.location?.label, 'الخليل، فلسطين');
+      expect(c.config.location?.city, 'الخليل');
+      expect(c.config.location?.country, 'فلسطين');
       expect(c.config.location?.zone, 'Asia/Hebron');
       expect(c.config.location?.latitude, 31.53);
       expect(c.locationNotice, contains('تم تحديث الموقع'));
@@ -99,6 +101,8 @@ void main() {
         autoTick: false,
       );
       expect(reopened.config.location?.label, 'الخليل، فلسطين');
+      expect(reopened.config.location?.city, 'الخليل');
+      expect(reopened.config.location?.country, 'فلسطين');
       reopened.dispose();
       await c.save(
         c.config.copyWith(

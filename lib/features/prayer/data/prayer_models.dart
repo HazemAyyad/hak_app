@@ -1,9 +1,15 @@
+import 'dart:convert';
 import 'dart:math' as math;
+import 'package:crypto/crypto.dart';
 import 'package:adhan_dart/adhan_dart.dart' as adhan;
 import 'package:hijri/hijri_calendar.dart';
 import 'package:timezone/data/latest_all.dart' as data;
 import 'package:timezone/timezone.dart' as tz;
 import 'prayer_alert.dart';
+
+/// Stable local clip ID. A signed-in account never uses another account's clip.
+String prayerReminderVoiceId(String scope, PrayerName prayer) =>
+    'reminder-${sha256.convert(utf8.encode(scope)).toString().substring(0, 16)}-${prayer.name}';
 
 bool _zonesReady = false;
 void initializePrayerZones() {
@@ -60,6 +66,8 @@ class PrayerLocation {
     this.fromDevice = false,
     this.accuracy,
     this.measuredAt,
+    this.city,
+    this.country,
   }) {
     initializePrayerZones();
     tz.getLocation(zone);
@@ -75,6 +83,7 @@ class PrayerLocation {
   }
   final double latitude, longitude;
   final String zone, label;
+  final String? city, country;
   final bool fromDevice;
   final double? accuracy;
   final DateTime? measuredAt;
@@ -85,6 +94,8 @@ class PrayerLocation {
     'zone': zone,
     'label': label,
     'device': fromDevice,
+    if (city != null) 'city': city,
+    if (country != null) 'country': country,
     'accuracy': accuracy,
     'measured': measuredAt?.toUtc().toIso8601String(),
   };
@@ -94,6 +105,8 @@ class PrayerLocation {
     zone: data['zone'] as String,
     label: data['label'] as String,
     fromDevice: data['device'] == true,
+    city: data['city'] as String?,
+    country: data['country'] as String?,
     accuracy: (data['accuracy'] as num?)?.toDouble(),
     measuredAt: data['measured'] == null
         ? null
@@ -111,6 +124,10 @@ class PrayerConfig {
     this.notifications = false,
     this.beforeMinutes = 15,
     this.afterMinutes = 0,
+    this.adhanVolume = 100,
+    this.showAdhanScreen = true,
+    this.iqamaMinutes = 15,
+    this.defaultAlert = const PrayerAlert(),
     Map<String, PrayerAlert> alerts = const {},
     List<String> enabledPrayers = const [
       'fajr',
@@ -122,7 +139,11 @@ class PrayerConfig {
   }) : alerts = Map.unmodifiable(alerts),
        adjustments = Map.unmodifiable(adjustments),
        enabledPrayers = List.unmodifiable(enabledPrayers) {
-    if (alerts.keys.any((k) => !PrayerName.values.any((p) => p.name == k)) ||
+    if (iqamaMinutes < 0 ||
+        iqamaMinutes > 60 ||
+        adhanVolume < 0 ||
+        adhanVolume > 100 ||
+        alerts.keys.any((k) => !PrayerName.values.any((p) => p.name == k)) ||
         !['recommended', 'middle', 'seventh', 'angle'].contains(highLatitude) ||
         beforeMinutes < 0 ||
         beforeMinutes > 60 ||
@@ -145,11 +166,14 @@ class PrayerConfig {
   final bool hanafi, notifications;
   final String highLatitude;
   final Map<String, int> adjustments;
-  final int beforeMinutes, afterMinutes;
+  final int beforeMinutes, afterMinutes, adhanVolume, iqamaMinutes;
+  final bool showAdhanScreen;
+  final PrayerAlert defaultAlert;
   final List<String> enabledPrayers;
   final Map<String, PrayerAlert> alerts;
   PrayerAlert alert(PrayerName name) =>
-      alerts[name.name] ?? const PrayerAlert();
+      alerts[name.name] ??
+      (name == PrayerName.sunrise ? const PrayerAlert() : defaultAlert);
   PrayerConfig copyWith({
     PrayerLocation? location,
     bool clearLocation = false,
@@ -160,6 +184,10 @@ class PrayerConfig {
     bool? notifications,
     int? beforeMinutes,
     int? afterMinutes,
+    int? adhanVolume,
+    int? iqamaMinutes,
+    bool? showAdhanScreen,
+    PrayerAlert? defaultAlert,
     List<String>? enabledPrayers,
     Map<String, PrayerAlert>? alerts,
   }) => PrayerConfig(
@@ -171,6 +199,10 @@ class PrayerConfig {
     notifications: notifications ?? this.notifications,
     beforeMinutes: beforeMinutes ?? this.beforeMinutes,
     afterMinutes: afterMinutes ?? this.afterMinutes,
+    adhanVolume: adhanVolume ?? this.adhanVolume,
+    iqamaMinutes: iqamaMinutes ?? this.iqamaMinutes,
+    showAdhanScreen: showAdhanScreen ?? this.showAdhanScreen,
+    defaultAlert: defaultAlert ?? this.defaultAlert,
     enabledPrayers: enabledPrayers ?? this.enabledPrayers,
     alerts: alerts ?? this.alerts,
   );
@@ -183,6 +215,10 @@ class PrayerConfig {
     'notifications': notifications,
     'before': beforeMinutes,
     'after': afterMinutes,
+    'adhanVolume': adhanVolume,
+    'iqamaMinutes': iqamaMinutes,
+    'showAdhanScreen': showAdhanScreen,
+    'defaultAlert': defaultAlert.toJson(),
     'prayers': enabledPrayers,
     'alerts': alerts.map((key, value) => MapEntry(key, value.toJson())),
   };
@@ -197,6 +233,12 @@ class PrayerConfig {
     notifications: data['notifications'] as bool,
     beforeMinutes: data['before'] as int,
     afterMinutes: data['after'] as int,
+    adhanVolume: data['adhanVolume'] as int? ?? 100,
+    iqamaMinutes: data['iqamaMinutes'] as int? ?? 15,
+    showAdhanScreen: data['showAdhanScreen'] as bool? ?? true,
+    defaultAlert: data['defaultAlert'] == null
+        ? const PrayerAlert()
+        : PrayerAlert.fromJson(data['defaultAlert'] as Map),
     enabledPrayers: List<String>.from(data['prayers'] as List),
     alerts: (data['alerts'] as Map? ?? {}).map(
       (key, value) =>

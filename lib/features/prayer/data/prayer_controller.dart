@@ -267,6 +267,8 @@ class PrayerController extends ChangeNotifier {
         longitude: measured.longitude,
         zone: zone ?? measured.zone,
         label: label.length > 100 ? label.substring(0, 100) : label,
+        city: validNames ? city.trim() : null,
+        country: validNames ? country.trim() : null,
         fromDevice: true,
         accuracy: measured.accuracy,
         measuredAt: measured.measuredAt,
@@ -404,14 +406,21 @@ class PrayerController extends ChangeNotifier {
                 route: entry.key > 0 ? 'adhkar' : 'prayer',
                 minute: 0,
                 at: at.toUtc().millisecondsSinceEpoch,
+                volume: entry.key == 0 ? config.adhanVolume : null,
+                showAdhanScreen: entry.key == 0 ? config.showAdhanScreen : null,
+                iqamaMinutes: entry.key == 0 ? config.iqamaMinutes : null,
                 alertMode: entry.key == 0
                     ? config.alert(m.name).mode.name
+                    : entry.key < 0 && m.name != PrayerName.sunrise
+                    ? 'reminderVoice'
                     : null,
                 voice:
                     entry.key == 0 &&
                         config.alert(m.name).mode == PrayerAlertMode.adhan &&
                         m.name != PrayerName.sunrise
                     ? config.alert(m.name).voice
+                    : entry.key < 0 && m.name != PrayerName.sunrise
+                    ? prayerReminderVoiceId(scope, m.name)
                     : null,
                 fullAdhan:
                     entry.key == 0 &&

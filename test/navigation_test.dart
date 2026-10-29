@@ -142,6 +142,55 @@ void main() {
   }
 
   testWidgets(
+    'home reflects the current account and search opens a real surah',
+    (tester) async {
+      await pumpApp(tester);
+      expect(find.text('ضيف حق'), findsOneWidget);
+      quran.account.profile = {'id': 77, 'name': 'حازم عياد'};
+      await tester.runAsync(() => quran.account.expireSession());
+      await tester.pumpAndSettle();
+      expect(find.text('حازم عياد'), findsOneWidget);
+      expect(find.text('أحمد محمد'), findsNothing);
+      for (var i = 0; i < 8; i++) {
+        expect(
+          tester.widget<InkWell>(find.byKey(ValueKey('home-service-$i'))).onTap,
+          isNotNull,
+        );
+      }
+      await tester.tap(find.byTooltip('البحث في حق'));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.byKey(const ValueKey('haq-global-search')),
+        'الفاتحة',
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('سورة الفاتحة').first);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('haq-global-search')), findsNothing);
+      expect(find.text('الصلاة القادمة'), findsNothing);
+      expect(tester.takeException(), isNull);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 3));
+    },
+  );
+
+  testWidgets('top account and messages actions open their real destinations', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tester.tap(find.byTooltip('رسائل حق'));
+    await tester.pumpAndSettle();
+    expect(find.text('الصلاة القادمة'), findsNothing);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('الحساب'));
+    await tester.pumpAndSettle();
+    expect(find.text('الصلاة القادمة'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
     'five tabs have their own destination; system back returns to home including Quran root',
     (tester) async {
       await pumpApp(tester);

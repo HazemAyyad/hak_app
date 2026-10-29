@@ -8,7 +8,9 @@ class PrayerAlertPage extends StatefulWidget {
     this.library,
     this.beforeAudio,
     this.enableReminders,
+    this.general = false,
   });
+  final bool general;
   final PrayerController controller;
   final PrayerName prayer;
   final AdhanLibrary? library;
@@ -44,10 +46,15 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
   }
 
   void _fill() {
-    draft = widget.controller.config.alert(widget.prayer);
-    enabled =
-        widget.controller.config.notifications &&
-        widget.controller.config.enabledPrayers.contains(widget.prayer.name);
+    draft = widget.general
+        ? widget.controller.config.defaultAlert
+        : widget.controller.config.alert(widget.prayer);
+    enabled = widget.general
+        ? widget.controller.config.notifications
+        : widget.controller.config.notifications &&
+              widget.controller.config.enabledPrayers.contains(
+                widget.prayer.name,
+              );
     _initial = snapshot;
   }
 
@@ -56,7 +63,9 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
       final state = await AdhanLibrary.bridge.invokeMapMethod<String, dynamic>(
         'adhanStatus',
       );
-      if (mounted) setState(() => device = state ?? {});
+      final permissions = await AdhanLibrary.bridge
+          .invokeMapMethod<String, dynamic>('status');
+      if (mounted) setState(() => device = {...?state, ...?permissions});
     } catch (_) {
       /* Unsupported platforms retain an explicit unavailable state. */
     }
@@ -192,17 +201,27 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
     final selection = current.notifications
         ? current.enabledPrayers.toSet()
         : <String>{};
-    if (enabled) {
+    if (widget.general) {
+      selection.addAll(current.enabledPrayers);
+    } else if (enabled) {
       selection.add(widget.prayer.name);
     } else {
       selection.remove(widget.prayer.name);
     }
     final ok = await widget.controller.save(
       current.copyWith(
-        notifications: selection.isNotEmpty,
+        notifications: widget.general ? enabled : selection.isNotEmpty,
         enabledPrayers: selection.toList(),
-        alerts: {...current.alerts, widget.prayer.name: draft},
-        beforeMinutes: 15,
+        defaultAlert: widget.general ? draft : current.defaultAlert,
+        alerts: widget.general
+            ? {
+                ...current.alerts,
+                for (final name in PrayerName.values.where(
+                  (p) => p != PrayerName.sunrise,
+                ))
+                  name.name: draft,
+              }
+            : {...current.alerts, widget.prayer.name: draft},
       ),
     );
     if (!mounted || owner != _owner || generation != _generation) return;
@@ -386,7 +405,9 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
               slivers: [
                 SliverToBoxAdapter(
                   child: DirectoryHeader(
-                    title: 'إعدادات ${widget.prayer.label}',
+                    title: widget.general
+                        ? 'المؤذّن ونمط الأذان العام'
+                        : 'إعدادات ${widget.prayer.label}',
                     subtitle: 'نداء الصلاة… بالصوت الذي تختاره',
                     onBack: _leave,
                   ),
@@ -590,15 +611,22 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                             context,
                             'يلزم تفعيل التذكيرات العامة وإذن الإشعارات. إعدادات الصوت والبطارية في الجهاز قد تؤثر في التنبيه.',
                           ),
-                          TextButton.icon(
-                            onPressed: () async {
-                              await AdhanLibrary.bridge.invokeMethod<void>(
-                                'requestPermission',
-                              );
-                            },
-                            icon: const Icon(Icons.notifications_outlined),
-                            label: const Text('إذن إشعارات الجهاز'),
-                          ),
+                          if (device['allowed'] == true)
+                            const ListTile(
+                              leading: Icon(Icons.check_circle_outline),
+                              title: Text('إذن الإشعارات مفعّل'),
+                            )
+                          else
+                            TextButton.icon(
+                              onPressed: () async {
+                                await AdhanLibrary.bridge.invokeMethod<void>(
+                                  'requestPermission',
+                                );
+                                await _status();
+                              },
+                              icon: const Icon(Icons.notifications_outlined),
+                              label: const Text('إذن إشعارات الجهاز'),
+                            ),
                         ],
                         if (library.error case final error?)
                           _notice(context, error),

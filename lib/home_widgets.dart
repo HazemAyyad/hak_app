@@ -16,7 +16,14 @@ TextStyle _homeText(
 );
 
 class _HeroHeader extends StatelessWidget {
-  const _HeroHeader();
+  const _HeroHeader({
+    required this.name,
+    required this.onAccount,
+    required this.onSearch,
+    required this.onNotifications,
+  });
+  final String name;
+  final VoidCallback onAccount, onSearch, onNotifications;
   @override
   Widget build(BuildContext context) {
     final dark = AppPalette.of(context).dark;
@@ -37,25 +44,25 @@ class _HeroHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              _RoundButton(icon: Icons.person_outline, onTap: () {}),
+              _RoundButton(
+                icon: Icons.person_outline,
+                onTap: onAccount,
+                tooltip: 'الحساب',
+              ),
               const Spacer(),
-              _RoundButton(icon: Icons.search, onTap: () {}),
+              _RoundButton(
+                icon: Icons.search,
+                onTap: onSearch,
+                tooltip: 'البحث في حق',
+              ),
               const SizedBox(width: 10),
               Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  _RoundButton(icon: Icons.notifications_none, onTap: () {}),
-                  Positioned(
-                    right: 1,
-                    top: 1,
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFF15B59),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
+                  _RoundButton(
+                    icon: Icons.notifications_none,
+                    onTap: onNotifications,
+                    tooltip: 'رسائل حق',
                   ),
                 ],
               ),
@@ -95,7 +102,9 @@ class _HeroHeader extends StatelessWidget {
               children: [
                 Text('مرحبًا بك', style: _homeText(context, 13)),
                 Text(
-                  'أحمد محمد',
+                  name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: _homeText(context, 21, weight: FontWeight.w800),
                 ),
                 const SizedBox(height: 4),
@@ -160,7 +169,8 @@ class _LogoAccentsClipper extends CustomClipper<Path> {
 }
 
 class _RoundButton extends StatelessWidget {
-  const _RoundButton({required this.icon, required this.onTap});
+  const _RoundButton({required this.icon, required this.onTap, this.tooltip});
+  final String? tooltip;
   final IconData icon;
   final VoidCallback onTap;
   @override
@@ -170,6 +180,7 @@ class _RoundButton extends StatelessWidget {
         : const Color(0xEEFFFFFF),
     shape: const CircleBorder(),
     child: IconButton(
+      tooltip: tooltip,
       onPressed: onTap,
       constraints: const BoxConstraints.tightFor(width: 44, height: 44),
       padding: EdgeInsets.zero,
@@ -179,7 +190,8 @@ class _RoundButton extends StatelessWidget {
 }
 
 class PrayerCard extends StatelessWidget {
-  const PrayerCard({super.key, this.controller, this.onTap});
+  const PrayerCard({super.key, this.controller, this.onTap, this.onPrayerTap});
+  final ValueChanged<PrayerName>? onPrayerTap;
   final PrayerController? controller;
   final VoidCallback? onTap;
   @override
@@ -317,40 +329,56 @@ class PrayerCard extends StatelessWidget {
                       prayer.$1 == controller?.upcoming?.name.label;
                   final color = selected ? Colors.white : palette.heading;
                   return Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: selected
-                          ? BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF008C96), Color(0xFF00616C)],
+                    child: InkWell(
+                      key: ValueKey(
+                        'home-prayer-${PrayerName.values.firstWhere((p) => p.label == prayer.$1).name}',
+                      ),
+                      onTap: onPrayerTap == null
+                          ? onTap
+                          : () => onPrayerTap!(
+                              PrayerName.values.firstWhere(
+                                (p) => p.label == prayer.$1,
                               ),
-                              borderRadius: BorderRadius.circular(12),
-                            )
-                          : null,
-                      child: Column(
-                        children: [
-                          Icon(
-                            prayer.$3,
-                            size: 23,
-                            color: prayer.$1 == 'العشاء' ? color : _homeGold,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            prayer.$1,
-                            style: _homeText(context, 11, color: color),
-                          ),
-                          const SizedBox(height: 3),
-                          Text(
-                            prayer.$2,
-                            textDirection: TextDirection.ltr,
-                            style: _homeText(
-                              context,
-                              11,
-                              weight: FontWeight.w700,
-                              color: color,
                             ),
-                          ),
-                        ],
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        decoration: selected
+                            ? BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFF008C96),
+                                    Color(0xFF00616C),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              )
+                            : null,
+                        child: Column(
+                          children: [
+                            Icon(
+                              prayer.$3,
+                              size: 23,
+                              color: prayer.$1 == 'العشاء' ? color : _homeGold,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              prayer.$1,
+                              style: _homeText(context, 11, color: color),
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              prayer.$2,
+                              textDirection: TextDirection.ltr,
+                              style: _homeText(
+                                context,
+                                11,
+                                weight: FontWeight.w700,
+                                color: color,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -370,8 +398,20 @@ class QuickServices extends StatelessWidget {
     this.onQuranTap,
     this.onMoreTap,
     this.onDuasTap,
+    this.onAdhkarTap,
+    this.onKhatmaTap,
+    this.onTasbihTap,
+    this.onFeelingsTap,
+    this.onQiblaTap,
   });
-  final VoidCallback? onQuranTap, onMoreTap, onDuasTap;
+  final VoidCallback? onQuranTap,
+      onMoreTap,
+      onDuasTap,
+      onAdhkarTap,
+      onKhatmaTap,
+      onTasbihTap,
+      onFeelingsTap,
+      onQiblaTap;
   @override
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
@@ -426,13 +466,17 @@ class QuickServices extends StatelessWidget {
             color: background,
             borderRadius: BorderRadius.circular(15),
             child: InkWell(
-              onTap: index == 0
-                  ? onQuranTap
-                  : index == 4
-                  ? onMoreTap
-                  : index == 5
-                  ? onDuasTap
-                  : null,
+              key: ValueKey('home-service-$index'),
+              onTap: [
+                onQuranTap,
+                onAdhkarTap,
+                onKhatmaTap,
+                onTasbihTap,
+                onMoreTap,
+                onDuasTap,
+                onFeelingsTap,
+                onQiblaTap,
+              ][index],
               borderRadius: BorderRadius.circular(15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -586,7 +630,8 @@ class ReadingCard extends StatelessWidget {
 }
 
 class DailyVerseCard extends StatelessWidget {
-  const DailyVerseCard({super.key});
+  const DailyVerseCard({super.key, this.onTafsir});
+  final VoidCallback? onTafsir;
   static const verse =
       'وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مِنْ أَمْرِهِ يُسْرًا';
   @override
@@ -645,21 +690,23 @@ class DailyVerseCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 9),
                 OutlinedButton(
-                  onPressed: () => showDialog<void>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('آية اليوم'),
-                      content: const Text(
-                        'سورة الطلاق — الآية 4\n\nالتفسير غير متاح حاليًا دون مصدر تفسير معتمد.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('إغلاق'),
+                  onPressed:
+                      onTafsir ??
+                      () => showDialog<void>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('آية اليوم'),
+                          content: const Text(
+                            'سورة الطلاق — الآية 4\n\nالتفسير غير متاح حاليًا دون مصدر تفسير معتمد.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('إغلاق'),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: palette.heading,
                     backgroundColor: palette.neutral,
@@ -876,12 +923,14 @@ class FridayCard extends StatelessWidget {
 }
 
 class ArticlesRow extends StatelessWidget {
-  const ArticlesRow({super.key});
+  const ArticlesRow({super.key, this.onCongregation, this.onCharity});
+  final VoidCallback? onCongregation, onCharity;
   @override
-  Widget build(BuildContext context) => const Row(
+  Widget build(BuildContext context) => Row(
     children: [
       Expanded(
         child: _ArticleCard(
+          onTap: onCongregation,
           title: 'فضل صلاة الجماعة',
           image: 'assets/home/header_dark.png',
         ),
@@ -889,6 +938,7 @@ class ArticlesRow extends StatelessWidget {
       SizedBox(width: 8),
       Expanded(
         child: _ArticleCard(
+          onTap: onCharity,
           title: 'فضل الصدقة في الإسلام',
           image: 'assets/home/lantern.png',
         ),
@@ -898,42 +948,46 @@ class ArticlesRow extends StatelessWidget {
 }
 
 class _ArticleCard extends StatelessWidget {
-  const _ArticleCard({required this.title, required this.image});
+  const _ArticleCard({required this.title, required this.image, this.onTap});
+  final VoidCallback? onTap;
   final String title, image;
   @override
-  Widget build(BuildContext context) => Container(
-    height: 104 * MediaQuery.textScalerOf(context).scale(1),
-    padding: const EdgeInsets.all(9),
-    decoration: BoxDecoration(
-      image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
-      borderRadius: BorderRadius.circular(9),
-      border: Border.all(color: AppPalette.of(context).border),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 2),
-          decoration: BoxDecoration(
-            color: _homeGold,
-            borderRadius: BorderRadius.circular(7),
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      height: 104 * MediaQuery.textScalerOf(context).scale(1),
+      padding: const EdgeInsets.all(9),
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
+        borderRadius: BorderRadius.circular(9),
+        border: Border.all(color: AppPalette.of(context).border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 2),
+            decoration: BoxDecoration(
+              color: _homeGold,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: Text(
+              'مقالة',
+              style: _homeText(context, 10, color: Colors.white),
+            ),
           ),
-          child: Text(
-            'مقالة',
-            style: _homeText(context, 10, color: Colors.white),
+          Text(
+            title,
+            style: _homeText(
+              context,
+              11,
+              color: Colors.white,
+              weight: FontWeight.w700,
+            ),
           ),
-        ),
-        Text(
-          title,
-          style: _homeText(
-            context,
-            11,
-            color: Colors.white,
-            weight: FontWeight.w700,
-          ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

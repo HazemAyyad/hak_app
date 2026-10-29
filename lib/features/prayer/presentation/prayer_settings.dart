@@ -193,8 +193,8 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
           slivers: [
             SliverToBoxAdapter(
               child: DirectoryHeader(
-                title: 'إعدادات الصلاة',
-                subtitle: 'الموقع والحساب والتنبيهات',
+                title: 'الموقع وحساب المواقيت',
+                subtitle: 'المدينة والدولة وطريقة الحساب',
                 onBack: () => Navigator.maybePop(context),
               ),
             ),
@@ -219,6 +219,18 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            if (widget.controller.config.location
+                                case final location?)
+                              Text(
+                                location.city != null &&
+                                        location.country != null
+                                    ? '${location.city}، ${location.country}'
+                                    : location.label,
+                                key: const ValueKey('saved-prayer-place'),
+                                style: TextStyle(
+                                  color: AppPalette.of(context).tealHeading,
+                                ),
+                              ),
                             const SizedBox(height: 10),
                             FilledButton.icon(
                               onPressed: widget.controller.locating
@@ -528,89 +540,6 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                   ),
                                 ],
                               ),
-                          ],
-                        ),
-                      ),
-                      _panel(
-                        context,
-                        Column(
-                          children: [
-                            SwitchListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: const Text('تذكيرات الصلاة'),
-                              value: _draft.notifications,
-                              onChanged: (v) => setState(
-                                () =>
-                                    _draft = _draft.copyWith(notifications: v),
-                              ),
-                            ),
-                            for (final prayer in PrayerName.values.where(
-                              (p) => p != PrayerName.sunrise,
-                            ))
-                              CheckboxListTile(
-                                contentPadding: EdgeInsets.zero,
-                                title: Text('تنبيه ${prayer.label}'),
-                                value: _draft.enabledPrayers.contains(
-                                  prayer.name,
-                                ),
-                                onChanged: (value) => setState(() {
-                                  final selected = _draft.enabledPrayers
-                                      .toSet();
-                                  if (value == true) {
-                                    selected.add(prayer.name);
-                                  } else {
-                                    selected.remove(prayer.name);
-                                  }
-                                  _draft = _draft.copyWith(
-                                    enabledPrayers: selected.toList(),
-                                  );
-                                }),
-                              ),
-                            DropdownButtonFormField<int>(
-                              initialValue: _draft.beforeMinutes,
-                              isExpanded: true,
-                              decoration: const InputDecoration(
-                                labelText: 'التذكير قبل الصلاة',
-                              ),
-                              items: [
-                                for (final v in [0, 5, 10, 15, 20, 30, 45, 60])
-                                  DropdownMenuItem(
-                                    value: v,
-                                    child: Text(
-                                      v == 0 ? 'بدون تذكير مسبق' : '$v دقيقة',
-                                    ),
-                                  ),
-                              ],
-                              onChanged: (v) => setState(
-                                () =>
-                                    _draft = _draft.copyWith(beforeMinutes: v),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            DropdownButtonFormField<int>(
-                              initialValue: _draft.afterMinutes,
-                              isExpanded: true,
-                              decoration: const InputDecoration(
-                                labelText: 'أذكار بعد الصلاة',
-                              ),
-                              items: [
-                                for (final v in [0, 1, 5, 10, 15, 20, 30])
-                                  DropdownMenuItem(
-                                    value: v,
-                                    child: Text(
-                                      v == 0 ? 'غير مفعّل' : 'بعد $v دقيقة',
-                                    ),
-                                  ),
-                              ],
-                              onChanged: (v) => setState(
-                                () => _draft = _draft.copyWith(afterMinutes: v),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            const Text(
-                              'يلزم أيضاً تفعيل التذكيرات العامة وإذن الإشعارات. لتحديد صوت المؤذن ونمط التنبيه لكل وقت، اضغط أيقونة التنبيه بجانبه في صفحة القبلة. نجدد المواعيد عند فتح التطبيق: Android حتى14 يوماً، وiOS ضمن سعة الطلبات المتاحة. قد يؤخر النظام الإشعار.',
-                              style: TextStyle(fontSize: 12),
-                            ),
                           ],
                         ),
                       ),

@@ -38,6 +38,71 @@ void main() {
     label: 'اختبار',
   );
   test(
+    'new adhan preferences and actual location names preserve legacy data and isolate human clips',
+    () async {
+      final legacy = PrayerConfig(location: place).toJson()
+        ..remove('defaultAlert')
+        ..remove('adhanVolume')
+        ..remove('showAdhanScreen')
+        ..remove('iqamaMinutes');
+      final old = PrayerConfig.fromJson(legacy);
+      expect(old.adhanVolume, 100);
+      expect(old.iqamaMinutes, 15);
+      final config = old.copyWith(
+        adhanVolume: 70,
+        showAdhanScreen: false,
+        iqamaMinutes: 20,
+        defaultAlert: const PrayerAlert(
+          mode: PrayerAlertMode.adhan,
+          voice: 'nafees',
+        ),
+      );
+      final restored = PrayerConfig.fromJson(config.toJson());
+      expect(restored.adhanVolume, 70);
+      expect(restored.showAdhanScreen, false);
+      expect(restored.iqamaMinutes, 20);
+      expect(restored.alert(PrayerName.asr).voice, 'nafees');
+      expect(restored.alert(PrayerName.sunrise).mode, PrayerAlertMode.chime);
+      final location = PrayerLocation(
+        latitude: 31.53,
+        longitude: 35.1,
+        zone: 'Asia/Hebron',
+        label: 'الخليل، فلسطين',
+        city: 'الخليل',
+        country: 'فلسطين',
+      );
+      expect(PrayerLocation.fromJson(location.toJson()).city, 'الخليل');
+      expect(PrayerLocation.fromJson(location.toJson()).country, 'فلسطين');
+      final guest = prayerReminderVoiceId('guest', PrayerName.fajr);
+      expect(guest, matches(RegExp(r'^reminder-[0-9a-f]{16}-fajr$')));
+      expect(guest, isNot(prayerReminderVoiceId('user:1', PrayerName.fajr)));
+      expect(
+        () => PrayerConfig.fromJson({...config.toJson(), 'adhanVolume': 101}),
+        throwsFormatException,
+      );
+      SharedPreferences.setMockInitialValues({});
+      final c = PrayerController(
+        await SharedPreferences.getInstance(),
+        scopeOf: () => 'guest',
+        autoTick: false,
+        clock: () => DateTime.utc(2026, 10, 27, 10),
+      );
+      addTearDown(c.dispose);
+      await c.save(
+        restored.copyWith(notifications: true, enabledPrayers: ['fajr']),
+      );
+      final jobs = c.reminderJobs();
+      final audio = jobs.firstWhere((j) => j.alertMode == 'adhan');
+      expect(audio.toJson()['volume'], 70);
+      expect(audio.toJson()['showAdhanScreen'], false);
+      expect(audio.toJson()['iqamaMinutes'], 20);
+      expect(
+        jobs.firstWhere((j) => j.alertMode == 'reminderVoice').voice,
+        guest,
+      );
+    },
+  );
+  test(
     'expanded named catalog preserves old voices, uses unique IDs and pinned HTTPS audio, and round-trips alerts',
     () {
       expect(adhanVoices.length, greaterThan(200));
@@ -140,10 +205,13 @@ void main() {
       final jobs = c.reminderJobs(days: 1);
       expect(jobs, hasLength(2));
       final at = jobs.singleWhere((j) => j.alertMode == 'adhan');
-      final before = jobs.singleWhere((j) => j.alertMode == null);
+      final before = jobs.singleWhere((j) => j.alertMode == 'reminderVoice');
       expect(at.at! - before.at!, const Duration(minutes: 15).inMilliseconds);
       expect(before.title, 'اقترب أذان الفجر');
-      expect(before.toJson().containsKey('voice'), false);
+      expect(
+        before.toJson()['voice'],
+        prayerReminderVoiceId('guest', PrayerName.fajr),
+      );
       expect(at.toJson()['voice'], 'nafees');
       expect(at.toJson()['fullAdhan'], true);
     },

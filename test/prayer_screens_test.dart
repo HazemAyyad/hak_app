@@ -162,6 +162,69 @@ void main() {
     await settle(tester);
   }
 
+  testWidgets(
+    'granted permission hides the request; live settings persist and preview stays scrollable',
+    (tester) async {
+      var allowed = false;
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(AdhanLibrary.bridge, (call) async {
+            if (call.method == 'requestPermission') {
+              allowed = true;
+              return null;
+            }
+            if (call.method == 'status') return {'allowed': allowed};
+            if (call.method == 'adhanStatus') {
+              return {'platform': 'android', 'exact': true, 'fullScreen': true};
+            }
+            return null;
+          });
+      addTearDown(
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(AdhanLibrary.bridge, null),
+      );
+      await pump(tester, PrayerAdhanSettingsPage(controller: c));
+      await tester.tap(
+        find.byKey(const ValueKey('adhan-notification-permission')),
+      );
+      await settle(tester);
+      expect(
+        find.byKey(const ValueKey('adhan-notification-permission')),
+        findsNothing,
+      );
+      expect(find.text('إذن الإشعارات مفعّل'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('adhan-master')));
+      await settle(tester);
+      expect(c.config.notifications, true);
+      await tester.scrollUntilVisible(
+        find.byKey(const ValueKey('adhan-enabled-fajr')),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('adhan-enabled-fajr')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('adhan-enabled-fajr')));
+      await settle(tester);
+      expect(c.config.enabledPrayers, isNot(contains('fajr')));
+      final saved = PrayerConfig.fromJson(c.config.toJson());
+      expect(saved.enabledPrayers, c.config.enabledPrayers);
+      await capture(tester, 'adhan-global-settings');
+      await pump(tester, AdhanScreenPreview(controller: c));
+      await tester.pump(const Duration(seconds: 11));
+      await settle(tester);
+      expect(tester.takeException(), isNull);
+      await tester.scrollUntilVisible(
+        find.text('أذكار الصلاة'),
+        250,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(find.text('أذكار الصلاة'), findsOneWidget);
+      await capture(tester, 'adhan-screen-preview');
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
   PrayerLocation place() => PrayerLocation(
     latitude: 31.53,
     longitude: 35.1,
@@ -378,7 +441,7 @@ void main() {
         findsOneWidget,
       );
       await capture(tester, 'qibla-reading');
-      await tap(tester, 'تحديد الموقع يدوياً وإعدادات الصلاة');
+      await tap(tester, 'إعدادات الأذان');
       expect(heading.degrees, isNull);
       await tester.tap(find.byTooltip('رجوع').last);
       await settle(tester);

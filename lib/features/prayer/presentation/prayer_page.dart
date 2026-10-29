@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:file_selector/file_selector.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -16,6 +19,9 @@ import 'qibla_dial.dart';
 import 'prayer_location_picker.dart';
 
 part 'prayer_settings.dart';
+part 'prayer_adhan_settings.dart';
+part 'prayer_reminder_recordings.dart';
+part 'adhan_screen_preview.dart';
 part 'prayer_alert_page.dart';
 part 'qibla_page.dart';
 
@@ -42,8 +48,15 @@ Widget _notice(BuildContext context, String text) => _panel(
 );
 
 class PrayerPage extends StatelessWidget {
-  const PrayerPage({super.key, required this.controller});
+  const PrayerPage({
+    super.key,
+    required this.controller,
+    this.beforeAudio,
+    this.enableReminders,
+  });
   final PrayerController controller;
+  final Future<void> Function()? beforeAudio;
+  final Future<bool> Function()? enableReminders;
   @override
   Widget build(BuildContext context) => Directionality(
     textDirection: TextDirection.rtl,
@@ -97,12 +110,11 @@ class PrayerPage extends StatelessWidget {
                         ],
                         if (controller.today case final today?)
                           for (final moment in today.moments)
-                            ListTile(
-                              title: Text(moment.name.label),
-                              trailing: Text(
-                                moment.label,
-                                textDirection: TextDirection.ltr,
-                              ),
+                            _PrayerTimeRow(
+                              controller: controller,
+                              moment: moment,
+                              beforeAudio: beforeAudio,
+                              enableReminders: enableReminders,
                             ),
                       ],
                     ),
@@ -115,12 +127,15 @@ class PrayerPage extends StatelessWidget {
                     onPressed: () => Navigator.push(
                       context,
                       MaterialPageRoute<void>(
-                        builder: (_) =>
-                            PrayerSettingsPage(controller: controller),
+                        builder: (_) => PrayerAdhanSettingsPage(
+                          controller: controller,
+                          beforeAudio: beforeAudio,
+                          enableReminders: enableReminders,
+                        ),
                       ),
                     ),
                     icon: const Icon(Icons.tune),
-                    label: const Text('الموقع والحساب والتنبيهات'),
+                    label: const Text('إعدادات الأذان'),
                   ),
                   const SizedBox(height: 12),
                   _notice(

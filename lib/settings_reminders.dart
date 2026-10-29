@@ -143,11 +143,12 @@ extension _ReminderSettingsUI on _SettingsDetailPageState {
             spacing: 8,
             runSpacing: 8,
             children: [
-              OutlinedButton.icon(
-                onPressed: () => c.action('requestPermission'),
-                icon: const Icon(Icons.notifications_active_outlined),
-                label: const Text('طلب إذن الإشعارات'),
-              ),
+              if (!c.device.allowed)
+                OutlinedButton.icon(
+                  onPressed: () => c.action('requestPermission'),
+                  icon: const Icon(Icons.notifications_active_outlined),
+                  label: const Text('طلب إذن الإشعارات'),
+                ),
               TextButton(
                 onPressed: () => c.action('notificationSettings'),
                 child: const Text('إعدادات الإشعارات في الجهاز'),

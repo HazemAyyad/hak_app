@@ -139,10 +139,16 @@ private final class HaqReminderCenter {
           }
         }
       case "pendingOpen": result(self.pendingRoute); self.pendingRoute = nil; self.dartReady = true
-      case "adhanStatus": result(["platform": "ios", "exact": false, "fullScreen": false])
-      case "prepareAdhan":
+      case "adhanStatus":
+        let recordings = ((try? FileManager.default.contentsOfDirectory(atPath: NSHomeDirectory() + "/Library/Sounds")) ?? []).compactMap { name -> String? in
+          guard name.hasPrefix("haq-adhan-"), name.hasSuffix(".caf") else { return nil }
+          let id = String(name.dropFirst(10).dropLast(4))
+          return id.range(of: "^reminder-[0-9a-f]{16}-(fajr|dhuhr|asr|maghrib|isha)$", options: .regularExpression) != nil ? id : nil
+        }
+        result(["platform": "ios", "exact": false, "fullScreen": false, "reminderRecordings": recordings])
+      case "prepareAdhan", "preparePrayerReminder":
         guard let args = call.arguments as? [String: Any], let id = args["id"] as? String,
-              ["alafasy", "nafees", "mustafa", "zahrani"].contains(id), let path = args["path"] as? String else {
+              (id.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|reminder-[0-9a-f]{16}-(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil), let path = args["path"] as? String else {
           result(FlutterError(code: "audio", message: "Invalid voice", details: nil)); return
         }
         let source = URL(fileURLWithPath: path).standardizedFileURL.resolvingSymlinksInPath()
@@ -152,6 +158,7 @@ private final class HaqReminderCenter {
         DispatchQueue.global(qos: .userInitiated).async {
           do {
             let file = try AVAudioFile(forReading: source)
+            if call.method == "preparePrayerReminder" && Double(file.length) / file.processingFormat.sampleRate > 30 { throw NSError(domain: "HaqAudio", code: 5) }
             let format = file.processingFormat
             guard format.channelCount <= 2, format.sampleRate > 0, format.sampleRate <= 96000 else { throw NSError(domain: "HaqAudio", code: 1) }
             let frames = AVAudioFrameCount(min(file.length, AVAudioFramePosition(format.sampleRate * 25)))
@@ -226,11 +233,11 @@ private final class HaqReminderCenter {
   private func content(_ job: [String: Any]) -> UNMutableNotificationContent {
     let c = UNMutableNotificationContent()
     c.title = job["title"] as? String ?? "حق"; c.body = job["body"] as? String ?? ""
-    c.sound = plan["sound"] as? Bool == false ? nil : .default
+    c.sound = job["alertMode"] != nil || plan["sound"] as? Bool != false ? .default : nil
     if let mode = job["alertMode"] as? String {
       if mode == "silent" || mode == "vibration" { c.sound = nil }
-      else if mode == "adhan", plan["sound"] as? Bool != false,
-              let voice = job["voice"] as? String, ["alafasy", "nafees", "mustafa", "zahrani"].contains(voice) {
+      else if (mode == "adhan" || mode == "reminderVoice"),
+              let voice = job["voice"] as? String, voice.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|reminder-[0-9a-f]{16}-(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil {
         let name = "haq-adhan-\(voice).caf"
         if FileManager.default.fileExists(atPath: NSHomeDirectory() + "/Library/Sounds/" + name) {
           c.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: name))

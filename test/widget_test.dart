@@ -83,7 +83,7 @@ void main() {
       ),
     );
 
-    expect(find.text('أحمد محمد'), findsOneWidget);
+    expect(find.text('ضيف حق'), findsOneWidget);
     expect(find.text('الصلاة القادمة'), findsOneWidget);
     expect(find.text('القرآن الكريم'), findsOneWidget);
     expect(find.text('الرئيسية'), findsOneWidget);
@@ -164,7 +164,7 @@ void main() {
     await tester.tap(find.text('الرئيسية'));
     await tester.pumpAndSettle();
     expect(
-      Theme.of(tester.element(find.text('أحمد محمد'))).brightness,
+      Theme.of(tester.element(find.text('ضيف حق'))).brightness,
       Brightness.dark,
     );
 
@@ -172,13 +172,13 @@ void main() {
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
     await tester.pumpAndSettle();
     expect(
-      Theme.of(tester.element(find.text('أحمد محمد'))).brightness,
+      Theme.of(tester.element(find.text('ضيف حق'))).brightness,
       Brightness.light,
     );
     tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
     await tester.pumpAndSettle();
     expect(
-      Theme.of(tester.element(find.text('أحمد محمد'))).brightness,
+      Theme.of(tester.element(find.text('ضيف حق'))).brightness,
       Brightness.dark,
     );
     tester.platformDispatcher.clearPlatformBrightnessTestValue();

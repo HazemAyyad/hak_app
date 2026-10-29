@@ -8,6 +8,8 @@ import 'app_appearance.dart';
 import 'app_experience.dart';
 import 'settings_pages.dart';
 import 'features/quran/data/quran_controller.dart';
+import 'features/quran/data/quran_repository.dart';
+import 'features/religious_content/data/religious_catalog.dart';
 import 'features/quran/presentation/quran_host.dart';
 import 'features/religious_content/data/religious_controller.dart';
 import 'features/religious_content/presentation/religious_host.dart';
@@ -35,6 +37,7 @@ import 'navigation/more_page.dart';
 import 'navigation/section_entry_page.dart';
 
 part 'home_widgets.dart';
+part 'home_search.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -325,6 +328,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _openFeature(AppFeature.messages);
       case 'prayer':
         _openPrayer();
+      case 'prayer-settings':
+        _openPrayer(settings: true);
+      case 'qibla':
+        _selectSection(AppSection.qibla);
       case 'quran':
         _openQuran();
       case 'khatma':
@@ -395,6 +402,94 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (mounted) setState(() {});
   }
 
+  Future<void> _beforePrayerAudio() async {
+    await _quran.audio.stop();
+    await _religious.media.stop();
+  }
+
+  Future<bool> _enablePrayerReminders() async {
+    final reminders = await _prepareReminders();
+    if (reminders == null) return false;
+    await reminders.settings.set('enabled', true);
+    await reminders.reconcile();
+    return reminders.settings.error == null &&
+        reminders.settings.flag('enabled');
+  }
+
+  Future<void> _openHomeSearch({String initialQuery = ''}) async {
+    final result = await Navigator.push<Object>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => _HomeSearchPage(
+          quran: _quran,
+          religious: _religious,
+          initialQuery: initialQuery,
+        ),
+      ),
+    );
+    if (!mounted || result == null) return;
+    if (result is AppFeature) {
+      _openFeature(result);
+    } else if (result is QuranVerse) {
+      _selectSection(AppSection.quran);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _quranKey.currentState?.openReader(result);
+      });
+    } else if (result is ReligiousItem) {
+      _openReligious();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _religiousKey.currentState?.openItem(result);
+      });
+    }
+  }
+
+  Future<void> _openHomeArticle(String title, String key) async {
+    final verse = _quran.repository?.byKey[key];
+    if (verse == null) return;
+    final explain = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => _HomeArticlePage(
+          title: title,
+          verse: verse,
+          surah: _quran.repository!.surah(verse.surah).name,
+        ),
+      ),
+    );
+    if (!mounted || explain != true) return;
+    _openQuran();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _quranKey.currentState?.openExplanation(verse: verse);
+    });
+  }
+
+  void _openDailyTafsir() {
+    final verse = _quran.repository?.byKey['65:4'];
+    if (verse == null) return;
+    _openQuran();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _quranKey.currentState?.openExplanation(verse: verse);
+      }
+    });
+  }
+
+  void _openPrayerAlert(PrayerName prayer) {
+    _preparePrayer();
+    if (_prayer == null) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => PrayerAlertPage(
+          controller: _prayer!,
+          prayer: prayer,
+          beforeAudio: _beforePrayerAudio,
+          enableReminders: _enablePrayerReminders,
+        ),
+      ),
+    );
+  }
+
   void _openPrayer({bool settings = false}) {
     _preparePrayer();
     final c = _prayer;
@@ -403,8 +498,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       context,
       MaterialPageRoute<void>(
         builder: (_) => settings
-            ? PrayerSettingsPage(controller: c)
-            : PrayerPage(controller: c),
+            ? PrayerAdhanSettingsPage(
+                controller: c,
+                beforeAudio: _beforePrayerAudio,
+                enableReminders: _enablePrayerReminders,
+              )
+            : PrayerPage(
+                controller: c,
+                beforeAudio: _beforePrayerAudio,
+                enableReminders: _enablePrayerReminders,
+              ),
       ),
     );
   }
@@ -618,15 +721,40 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget _buildHome() => CustomScrollView(
     key: const PageStorageKey('home-feed'),
     slivers: [
-      SliverToBoxAdapter(child: _HeroHeader()),
+      SliverToBoxAdapter(
+        child: ListenableBuilder(
+          listenable: _quran.account,
+          builder: (context, _) => _HeroHeader(
+            name:
+                (_quran.account.profile?['name'] as String?)
+                        ?.trim()
+                        .isNotEmpty ==
+                    true
+                ? (_quran.account.profile!['name'] as String).trim()
+                : 'ضيف حق',
+            onAccount: _openQuranAccount,
+            onSearch: _openHomeSearch,
+            onNotifications: () => _openFeature(AppFeature.messages),
+          ),
+        ),
+      ),
       SliverPadding(
         padding: EdgeInsets.fromLTRB(16, 14, 16, 116),
         sliver: SliverList(
           delegate: SliverChildListDelegate.fixed([
-            PrayerCard(controller: _prayer, onTap: _openPrayer),
+            PrayerCard(
+              controller: _prayer,
+              onTap: _openPrayer,
+              onPrayerTap: _openPrayerAlert,
+            ),
             SizedBox(height: 14),
             QuickServices(
               onDuasTap: () => _openReligious(),
+              onAdhkarTap: () => _selectSection(AppSection.adhkar),
+              onKhatmaTap: () => _openFeature(AppFeature.khatma),
+              onTasbihTap: () => _openFeature(AppFeature.tasbih),
+              onFeelingsTap: () => _openFeature(AppFeature.feelings),
+              onQiblaTap: () => _selectSection(AppSection.qibla),
               onQuranTap: () => _openQuran(),
               onMoreTap: () => _selectSection(AppSection.more),
             ),
@@ -638,7 +766,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               onContinue: () => _openQuran(resume: true),
             ),
             SizedBox(height: 14),
-            DailyVerseCard(),
+            DailyVerseCard(onTafsir: _openDailyTafsir),
             SizedBox(height: 20),
             SectionHeader(
               title: 'رحلتك اليوم',
@@ -650,9 +778,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             SizedBox(height: 20),
             FridayCard(onTap: () => _openReligious('friday')),
             SizedBox(height: 20),
-            SectionHeader(title: 'مقالات ومعلومات', action: 'عرض الكل'),
+            SectionHeader(
+              title: 'مقالات ومعلومات',
+              action: 'عرض الكل',
+              onTap: () => _openReligious(),
+            ),
             SizedBox(height: 10),
-            ArticlesRow(),
+            ArticlesRow(
+              onCongregation: () =>
+                  _openHomeArticle('فضل صلاة الجماعة', '2:43'),
+              onCharity: () =>
+                  _openHomeArticle('فضل الصدقة في الإسلام', '2:261'),
+            ),
           ]),
         ),
       ),
@@ -715,17 +852,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         ? QiblaPage(
                             controller: _prayer!,
                             active: _section == AppSection.qibla,
-                            beforeAudio: () async {
-                              await _quran.audio.stop();
-                              await _religious.media.stop();
-                            },
-                            enableReminders: () async {
-                              final reminders = await _prepareReminders();
-                              if (reminders == null) return false;
-                              await reminders.settings.set('enabled', true);
-                              return reminders.settings.error == null &&
-                                  reminders.settings.flag('enabled');
-                            },
+                            beforeAudio: _beforePrayerAudio,
+                            enableReminders: _enablePrayerReminders,
                           )
                         : const FeaturePreparationPage(
                             feature: AppFeature.qibla,

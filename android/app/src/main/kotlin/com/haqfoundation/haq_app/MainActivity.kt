@@ -114,8 +114,10 @@ class MainActivity : AudioServiceActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == HaqPrayerBridge.PERMISSION) prayerDevice?.permissionResult()
+        if (requestCode == HaqReminders.NOTIFICATION_PERMISSION) reminders?.notificationPermissionResult()
     }
     override fun onDestroy() {
+        reminders?.dispose()
         prayerDevice?.dispose()
         super.onDestroy()
     }

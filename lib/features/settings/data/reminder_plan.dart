@@ -16,10 +16,14 @@ class ReminderJob {
     this.alertMode,
     this.voice,
     this.fullAdhan = false,
+    this.volume,
+    this.showAdhanScreen,
+    this.iqamaMinutes,
   });
   final String id, title, body, route;
   final int minute;
-  final int? weekday, interval, at;
+  final int? weekday, interval, at, volume, iqamaMinutes;
+  final bool? showAdhanScreen;
   final String? start, end;
   final String? alertMode, voice;
   final bool fullAdhan;
@@ -37,6 +41,9 @@ class ReminderJob {
     'alertMode': ?alertMode,
     'voice': ?voice,
     if (alertMode == 'adhan') 'fullAdhan': fullAdhan,
+    'volume': ?volume,
+    'showAdhanScreen': ?showAdhanScreen,
+    'iqamaMinutes': ?iqamaMinutes,
   };
 }
 

@@ -373,10 +373,14 @@ class _QiblaPageState extends State<QiblaPage>
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (_) => PrayerSettingsPage(controller: c),
+                          builder: (_) => PrayerAdhanSettingsPage(
+                            controller: c,
+                            beforeAudio: widget.beforeAudio,
+                            enableReminders: widget.enableReminders,
+                          ),
                         ),
                       ),
-                      child: const Text('تحديد الموقع يدوياً وإعدادات الصلاة'),
+                      child: const Text('إعدادات الأذان'),
                     ),
                     if (place != null)
                       TextButton(

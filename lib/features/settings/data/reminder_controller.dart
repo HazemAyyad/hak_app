@@ -51,6 +51,9 @@ class ReminderController extends ChangeNotifier {
     activity.addListener(_activityChanged);
     prayer?.scheduleChanged.addListener(_changed);
     this.channel.setMethodCallHandler((call) async {
+      if (call.method == 'permissionChanged') {
+        await reconcile(force: true);
+      }
       if (call.method == 'open' && call.arguments is String) {
         onOpen?.call(call.arguments as String);
       }

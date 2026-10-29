@@ -347,6 +347,10 @@ class HaqBackup {
             'after',
             'prayers',
             'alerts',
+            'defaultAlert',
+            'adhanVolume',
+            'showAdhanScreen',
+            'iqamaMinutes',
           }.contains(k),
         )) {
           throw const FormatException('إعداد صلاة غير معروف');

@@ -108,6 +108,7 @@ class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel
                     completed = true; handler.removeCallbacks(timeout)
                     val address = addresses?.firstOrNull()
                     val city = address?.locality?.takeIf { it.isNotBlank() }
+                        ?: address?.subLocality?.takeIf { it.isNotBlank() }
                         ?: address?.subAdminArea?.takeIf { it.isNotBlank() }
                     val country = address?.countryName
                     result.success(if (city != null && !country.isNullOrBlank()) mapOf("city" to city, "country" to country) else null)

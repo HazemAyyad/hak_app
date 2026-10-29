@@ -1,0 +1,455 @@
+part of 'prayer_page.dart';
+
+/// The single entry for prayer alerts, shared by Home, Qibla and Settings.
+class PrayerAdhanSettingsPage extends StatefulWidget {
+  const PrayerAdhanSettingsPage({
+    super.key,
+    required this.controller,
+    this.beforeAudio,
+    this.enableReminders,
+  });
+  final PrayerController controller;
+  final Future<void> Function()? beforeAudio;
+  final Future<bool> Function()? enableReminders;
+  @override
+  State<PrayerAdhanSettingsPage> createState() =>
+      _PrayerAdhanSettingsPageState();
+}
+
+class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
+    with WidgetsBindingObserver {
+  Map<String, dynamic> device = {};
+  bool busy = false;
+  int? volumeDraft;
+  String? volumeOwner;
+  PrayerController get c => widget.controller;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    unawaited(_status());
+  }
+
+  Future<void> _status() async {
+    try {
+      final status = await AdhanLibrary.bridge.invokeMapMethod<String, dynamic>(
+        'status',
+      );
+      final alarm = await AdhanLibrary.bridge.invokeMapMethod<String, dynamic>(
+        'adhanStatus',
+      );
+      if (mounted) setState(() => device = {...?status, ...?alarm});
+    } catch (_) {}
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) unawaited(_status());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  Future<void> _save(PrayerConfig next) async {
+    if (busy) return;
+    final owner = c.scope;
+    setState(() => busy = true);
+    try {
+      if (next.notifications &&
+          widget.enableReminders != null &&
+          !await widget.enableReminders!()) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('تعذّر تفعيل التذكيرات؛ أعد المحاولة'),
+            ),
+          );
+        }
+        return;
+      }
+      if (c.scope == owner) await c.save(next);
+    } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  Future<void> _editor({
+    PrayerName prayer = PrayerName.fajr,
+    bool general = false,
+  }) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (_) => PrayerAlertPage(
+          controller: c,
+          prayer: prayer,
+          general: general,
+          beforeAudio: widget.beforeAudio,
+          enableReminders: widget.enableReminders,
+        ),
+      ),
+    );
+    await _status();
+  }
+
+  @override
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.rtl,
+    child: Scaffold(
+      backgroundColor: AppPalette.of(context).background,
+      body: ListenableBuilder(
+        listenable: c,
+        builder: (context, _) {
+          final config = c.config, p = AppPalette.of(context);
+          final voice = adhanVoices.firstWhere(
+            (v) => v.id == config.defaultAlert.voice,
+          );
+          return ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DirectoryHeader(
+                title: 'إعدادات الأذان',
+                subtitle: 'مؤذّنك وتنبيهات صلواتك في مكان واحد',
+                onBack: () => Navigator.maybePop(context),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 40),
+                child: Column(
+                  children: [
+                    if (c.error case final error?) _notice(context, error),
+                    _panel(
+                      context,
+                      Column(
+                        children: [
+                          SwitchListTile(
+                            key: const ValueKey('adhan-master'),
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text('تفعيل تنبيهات الصلاة'),
+                            value: config.notifications,
+                            onChanged: busy
+                                ? null
+                                : (v) =>
+                                      _save(config.copyWith(notifications: v)),
+                          ),
+                          if (device['allowed'] == true)
+                            const ListTile(
+                              leading: Icon(Icons.check_circle_outline),
+                              title: Text('إذن الإشعارات مفعّل'),
+                            )
+                          else
+                            TextButton.icon(
+                              key: const ValueKey(
+                                'adhan-notification-permission',
+                              ),
+                              icon: const Icon(
+                                Icons.notifications_active_outlined,
+                              ),
+                              label: const Text('السماح بإشعارات الصلاة'),
+                              onPressed: () async {
+                                await AdhanLibrary.bridge.invokeMethod<void>(
+                                  'requestPermission',
+                                );
+                                await _status();
+                              },
+                            ),
+                          ListTile(
+                            title: const Text('المؤذّن ونمط الأذان العام'),
+                            subtitle: Text(
+                              '${voice.name} • ${config.defaultAlert.mode.label}',
+                            ),
+                            trailing: const Icon(Icons.chevron_left),
+                            onTap: () => _editor(general: true),
+                          ),
+                          const Text(
+                            'الاختيار العام يطبق على الصلوات الخمس؛ يمكنك تخصيص أي صلاة من القائمة أدناه.',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                    _panel(
+                      context,
+                      Column(
+                        children: [
+                          Text(
+                            'مستوى صوت الأذان: ${volumeDraft ?? config.adhanVolume}٪',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: p.heading,
+                            ),
+                          ),
+                          Slider(
+                            key: const ValueKey('adhan-volume'),
+                            min: 0,
+                            max: 100,
+                            divisions: 10,
+                            value: (volumeDraft ?? config.adhanVolume)
+                                .toDouble(),
+                            label: '${volumeDraft ?? config.adhanVolume}٪',
+                            onChangeStart: (_) => volumeOwner = c.scope,
+                            onChanged: busy
+                                ? null
+                                : (v) =>
+                                      setState(() => volumeDraft = v.round()),
+                            onChangeEnd: (v) async {
+                              if (volumeOwner != c.scope) {
+                                setState(() => volumeDraft = null);
+                                return;
+                              }
+                              await _save(
+                                config.copyWith(adhanVolume: v.round()),
+                              );
+                              if (mounted) setState(() => volumeDraft = null);
+                            },
+                          ),
+                          const Text(
+                            'على Android يُرفع صوت المنبّه وقت الأذان للمستوى المختار ثم يعود كما كان. قيود النظام وعدم الإزعاج تبقى فعّالة.',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          SwitchListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: const Text('شاشة الأذان الكاملة'),
+                            subtitle: Text(
+                              device['platform'] == 'ios'
+                                  ? 'على iPhone يظهر إشعار بصوت قصير حسب قيود النظام'
+                                  : 'بدل الاكتفاء بالإشعار، عندما يسمح الجهاز',
+                            ),
+                            value: config.showAdhanScreen,
+                            onChanged: busy || device['platform'] == 'ios'
+                                ? null
+                                : (v) => _save(
+                                    config.copyWith(showAdhanScreen: v),
+                                  ),
+                          ),
+                          if (device['platform'] == 'android' &&
+                              config.showAdhanScreen &&
+                              device['fullScreen'] != true)
+                            TextButton(
+                              onPressed: () => AdhanLibrary.bridge
+                                  .invokeMethod<void>('fullScreenPermission'),
+                              child: const Text('السماح بالشاشة الكاملة'),
+                            ),
+                          if (device['platform'] == 'android' &&
+                              device['exact'] != true)
+                            TextButton(
+                              onPressed: () => AdhanLibrary.bridge
+                                  .invokeMethod<void>('exactAlarmPermission'),
+                              child: const Text('السماح بالتنبيه الدقيق'),
+                            ),
+                          OutlinedButton.icon(
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    AdhanScreenPreview(controller: c),
+                              ),
+                            ),
+                            icon: const Icon(Icons.preview_outlined),
+                            label: const Text('معاينة شاشة الأذان'),
+                          ),
+                          DropdownButtonFormField<int>(
+                            key: ValueKey('iqama-${config.iqamaMinutes}'),
+                            initialValue: config.iqamaMinutes,
+                            decoration: const InputDecoration(
+                              labelText: 'عدّ الإقامة بعد الأذان',
+                            ),
+                            items: [
+                              for (final n in {
+                                0,
+                                5,
+                                10,
+                                15,
+                                20,
+                                25,
+                                30,
+                                45,
+                                60,
+                                config.iqamaMinutes,
+                              }.toList()..sort())
+                                DropdownMenuItem(
+                                  value: n,
+                                  child: Text(
+                                    n == 0 ? 'إخفاء العدّ' : '$n دقيقة',
+                                  ),
+                                ),
+                            ],
+                            onChanged: busy
+                                ? null
+                                : (v) {
+                                    if (v != null) {
+                                      _save(config.copyWith(iqamaMinutes: v));
+                                    }
+                                  },
+                          ),
+                          const Text(
+                            'مدة الإقامة اختيارك الشخصي، وليست موعدًا رسميًا للمسجد.',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                    _panel(
+                      context,
+                      Column(
+                        children: [
+                          const ListTile(
+                            title: Text('الصلوات التي يصدر لها تنبيه'),
+                          ),
+                          for (final prayer in PrayerName.values.where(
+                            (p) => p != PrayerName.sunrise,
+                          ))
+                            SwitchListTile(
+                              key: ValueKey('adhan-enabled-${prayer.name}'),
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(prayer.label),
+                              value: config.enabledPrayers.contains(
+                                prayer.name,
+                              ),
+                              subtitle: Text(
+                                '${config.alert(prayer).mode.label} • ${adhanVoices.firstWhere((v) => v.id == config.alert(prayer).voice).name}',
+                              ),
+                              secondary: IconButton(
+                                tooltip: 'تخصيص ${prayer.label}',
+                                icon: const Icon(Icons.tune),
+                                onPressed: () => _editor(prayer: prayer),
+                              ),
+                              onChanged: busy
+                                  ? null
+                                  : (v) {
+                                      final selection = config.enabledPrayers
+                                          .toSet();
+                                      v
+                                          ? selection.add(prayer.name)
+                                          : selection.remove(prayer.name);
+                                      _save(
+                                        config.copyWith(
+                                          enabledPrayers: selection.toList(),
+                                        ),
+                                      );
+                                    },
+                            ),
+                        ],
+                      ),
+                    ),
+                    _panel(
+                      context,
+                      Column(
+                        children: [
+                          DropdownButtonFormField<int>(
+                            key: ValueKey('before-${config.beforeMinutes}'),
+                            initialValue: config.beforeMinutes,
+                            decoration: const InputDecoration(
+                              labelText: 'التذكير قبل الصلاة',
+                            ),
+                            items: [
+                              for (final n in {
+                                0,
+                                5,
+                                10,
+                                15,
+                                20,
+                                30,
+                                45,
+                                60,
+                                config.beforeMinutes,
+                              }.toList()..sort())
+                                DropdownMenuItem(
+                                  value: n,
+                                  child: Text(
+                                    n == 0 ? 'بدون تذكير مسبق' : '$n دقيقة',
+                                  ),
+                                ),
+                            ],
+                            onChanged: busy
+                                ? null
+                                : (v) {
+                                    if (v != null) {
+                                      _save(config.copyWith(beforeMinutes: v));
+                                    }
+                                  },
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'التذكير البشري: «اقتربت صلاة الفجر/الظهر/العصر/المغرب/العشاء».',
+                          ),
+                          const Text(
+                            'يُفعّل التسجيل لكل صلاة عند إضافة ملفه الصوتي.',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          OutlinedButton.icon(
+                            onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (_) =>
+                                    PrayerReminderRecordingsPage(controller: c),
+                              ),
+                            ),
+                            icon: const Icon(Icons.record_voice_over),
+                            label: const Text('التسجيلات البشرية للتذكير'),
+                          ),
+                          const SizedBox(height: 12),
+                          DropdownButtonFormField<int>(
+                            key: ValueKey('after-${config.afterMinutes}'),
+                            initialValue: config.afterMinutes,
+                            decoration: const InputDecoration(
+                              labelText: 'أذكار بعد الصلاة',
+                            ),
+                            items: [
+                              for (final n in {
+                                0,
+                                1,
+                                5,
+                                10,
+                                15,
+                                20,
+                                30,
+                                config.afterMinutes,
+                              }.toList()..sort())
+                                DropdownMenuItem(
+                                  value: n,
+                                  child: Text(
+                                    n == 0 ? 'غير مفعّل' : 'بعد $n دقيقة',
+                                  ),
+                                ),
+                            ],
+                            onChanged: busy
+                                ? null
+                                : (v) {
+                                    if (v != null) {
+                                      _save(config.copyWith(afterMinutes: v));
+                                    }
+                                  },
+                          ),
+                        ],
+                      ),
+                    ),
+                    _panel(
+                      context,
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: const Text('الموقع وحساب المواقيت'),
+                        subtitle: Text(
+                          config.location?.label ?? 'حدّد المدينة والدولة',
+                        ),
+                        trailing: const Icon(Icons.chevron_left),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => PrayerSettingsPage(controller: c),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    ),
+  );
+}
