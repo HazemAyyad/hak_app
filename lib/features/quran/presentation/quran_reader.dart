@@ -387,7 +387,11 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                           icon: const Icon(Icons.arrow_forward, size: 16),
                           label: Text(
                             'العودة إلى النتائج',
-                            style: qText(context, size: 11, color: qTeal),
+                            style: qText(
+                              context,
+                              size: 11,
+                              color: qAccent(context),
+                            ),
                           ),
                         ),
                         const Spacer(),
@@ -550,10 +554,10 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
               ),
               Text(
                 'سُورَةُ ${chapter.name}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'AmiriQuran',
                   fontSize: 26,
-                  color: qTeal,
+                  color: qAccent(context),
                 ),
               ),
               Padding(
@@ -689,7 +693,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                           : Icons.favorite_border,
                       label: 'المفضلة',
                       onTap: () => controller.toggleFavorite(verse.key),
-                      color: qTeal,
+                      color: qAccent(context),
                     ),
                     QCircleButton(
                       icon: Icons.more_horiz,
@@ -775,7 +779,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                   ),
                   const SizedBox(height: 12),
                   ListTile(
-                    leading: const Icon(Icons.play_arrow, color: qTeal),
+                    leading: Icon(Icons.play_arrow, color: qAccent(context)),
                     title: const Text('استماع إلى الآية'),
                     onTap: () {
                       Navigator.pop(sheetContext);
@@ -802,7 +806,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.repeat, color: qTeal),
+                    leading: Icon(Icons.repeat, color: qAccent(context)),
                     title: const Text('استماع وتكرار نطاق آيات'),
                     onTap: () {
                       Navigator.pop(sheetContext);
@@ -810,7 +814,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.headphones, color: qTeal),
+                    leading: Icon(Icons.headphones, color: qAccent(context)),
                     title: const Text('اختيار قارئ الآيات'),
                     onTap: () {
                       Navigator.pop(sheetContext);
@@ -818,7 +822,10 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.favorite_border, color: qTeal),
+                    leading: Icon(
+                      Icons.favorite_border,
+                      color: qAccent(context),
+                    ),
                     title: Text(
                       controller.favorites.containsKey(verse.key)
                           ? 'إزالة من المفضلة'
@@ -972,9 +979,9 @@ class QuranReadingSettings extends StatelessWidget {
               QCard(
                 child: ListTile(
                   contentPadding: EdgeInsets.zero,
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.account_circle_outlined,
-                    color: qTeal,
+                    color: qAccent(context),
                   ),
                   title: Text(
                     'الحساب والمزامنة',
@@ -1079,7 +1086,7 @@ class QuranReadingSettings extends StatelessWidget {
                             min: 18,
                             max: 36,
                             divisions: 18,
-                            activeColor: qTeal,
+                            activeColor: qAccent(context),
                             onChanged: controller.mode == QuranReadingMode.pages
                                 ? null
                                 : controller.setFontSize,
@@ -1155,7 +1162,7 @@ class QuranReadingSettings extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(9),
                                         border: Border.all(
                                           color: controller.paper == entry.$1
-                                              ? qTeal
+                                              ? qAccent(context)
                                               : AppPalette.of(context).border,
                                           width: controller.paper == entry.$1
                                               ? 1.5

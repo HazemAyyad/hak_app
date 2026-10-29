@@ -72,7 +72,7 @@ class _HabitFormState extends State<_HabitForm> {
                     Icon(
                       _habitIcon(_icon),
                       size: 38,
-                      color: const Color(0xFF2A8C82),
+                      color: appAccent(context, const Color(0xFF2A8C82)),
                     ),
                     TextFormField(
                       key: const ValueKey('habit-title'),
@@ -532,7 +532,7 @@ class _KhatmaDetails extends StatelessWidget {
                           ).every(pages.contains)
                       ? Icons.check_circle_outline
                       : Icons.menu_book_outlined,
-                  color: const Color(0xFF2A8C82),
+                  color: appAccent(context, const Color(0xFF2A8C82)),
                 ),
                 title: Text('ورد اليوم ${i + 1}'),
                 subtitle: Text(

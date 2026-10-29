@@ -9,6 +9,9 @@ const qNavy = Color(0xFF0C2057);
 const qGold = Color(0xFFB38C42);
 const qCream = Color(0xFFFFFCF7);
 
+Color qAccent(BuildContext context) => appAccent(context, qTeal);
+Color qAccentFill(BuildContext context) => appAccentFill(context, qTeal);
+
 TextStyle qText(
   BuildContext context, {
   double size = 14,
@@ -170,10 +173,10 @@ class QCircleButton extends StatelessWidget {
           width: size,
           height: size,
           child: loading
-              ? const Padding(
+              ? Padding(
                   padding: EdgeInsets.all(9),
                   child: CircularProgressIndicator(
-                    color: qTeal,
+                    color: qAccent(context),
                     strokeWidth: 2,
                   ),
                 )
@@ -394,7 +397,9 @@ class QSegments extends StatelessWidget {
         labels.length,
         (index) => Expanded(
           child: Material(
-            color: selected == index ? qTeal : Colors.transparent,
+            color: selected == index
+                ? qAccentFill(context)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(9),
             child: InkWell(
               onTap: () => onSelect(index),
@@ -436,7 +441,10 @@ class QSectionTitle extends StatelessWidget {
       if (action != null)
         TextButton(
           onPressed: onAction,
-          child: Text(action!, style: qText(context, size: 12, color: qTeal)),
+          child: Text(
+            action!,
+            style: qText(context, size: 12, color: qAccent(context)),
+          ),
         ),
     ],
   );
@@ -468,7 +476,7 @@ class QuranVerseNavigation extends StatelessWidget {
               Icon(
                 icon,
                 textDirection: TextDirection.ltr,
-                color: qTeal,
+                color: qAccent(context),
                 size: 22,
               ),
               const SizedBox(width: 5),
@@ -522,7 +530,7 @@ class QPrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FilledButton.icon(
     style: FilledButton.styleFrom(
-      backgroundColor: qTeal,
+      backgroundColor: qAccentFill(context),
       foregroundColor: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(11)),

@@ -611,7 +611,7 @@ class _ReligiousPlayer extends StatelessWidget {
                     onChanged: maximum > 0
                         ? (v) => media.seek(Duration(milliseconds: v.round()))
                         : null,
-                    activeColor: rTeal,
+                    activeColor: rAccent(context),
                   ),
                 ),
               ),

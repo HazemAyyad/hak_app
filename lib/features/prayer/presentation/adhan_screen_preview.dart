@@ -235,7 +235,10 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                         child: FilledButton(
                           onPressed: () => open('adhkar-after-prayer'),
                           style: FilledButton.styleFrom(
-                            backgroundColor: const Color(0xFF2A8C82),
+                            backgroundColor: appAccentFill(
+                              context,
+                              const Color(0xFF2A8C82),
+                            ),
                             foregroundColor: Colors.white,
                           ),
                           child: const FittedBox(

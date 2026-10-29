@@ -184,12 +184,12 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                         children: [
                                           ReciterAvatar(recitation: entry),
                                           if (entry.id == recitation.id)
-                                            const Positioned(
+                                            Positioned(
                                               top: -4,
                                               right: -8,
                                               child: Icon(
                                                 Icons.check_circle,
-                                                color: qTeal,
+                                                color: qAccent(context),
                                                 size: 16,
                                               ),
                                             ),
@@ -214,7 +214,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                         style: qText(
                                           context,
                                           size: 9,
-                                          color: qTeal,
+                                          color: qAccent(context),
                                         ),
                                       ),
                                     ],
@@ -260,10 +260,10 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                     juz == null ? 'كل القرآن' : juzName(juz!),
                                     style: qText(context, size: 11),
                                   ),
-                                  const Icon(
+                                  Icon(
                                     Icons.expand_more,
                                     size: 18,
-                                    color: qTeal,
+                                    color: qAccent(context),
                                   ),
                                 ],
                               ),
@@ -312,7 +312,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                   : Icons.play_arrow,
                               label: 'استماع إلى سورة ${chapter.name}',
                               loading: current && media.buffering,
-                              color: qTeal,
+                              color: qAccent(context),
                               onTap: () => current
                                   ? media.toggle()
                                   : media.playChapter(chapter.id),
@@ -424,7 +424,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
       padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 12),
       child: Column(
         children: [
-          Icon(icon, color: qTeal, size: 24),
+          Icon(icon, color: qAccent(context), size: 24),
           const SizedBox(height: 7),
           Text(
             text,
@@ -445,7 +445,7 @@ class ReciterAvatar extends StatelessWidget {
     radius: 23,
     backgroundColor: AppPalette.of(context).paleTeal,
     child: reciterPortrait(recitation.name) == null
-        ? const Icon(Icons.person_outline, color: qTeal, size: 28)
+        ? Icon(Icons.person_outline, color: qAccent(context), size: 28)
         : ClipOval(
             child: Image.network(
               reciterPortrait(recitation.name)!,
@@ -453,7 +453,7 @@ class ReciterAvatar extends StatelessWidget {
               height: 46,
               fit: BoxFit.cover,
               errorBuilder: (_, error, stack) =>
-                  const Icon(Icons.person_outline, color: qTeal, size: 28),
+                  Icon(Icons.person_outline, color: qAccent(context), size: 28),
             ),
           ),
   );
@@ -628,7 +628,11 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
                               ),
                               Text(
                                 '${entry.chapters.length} سورة متاحة',
-                                style: qText(context, size: 10, color: qTeal),
+                                style: qText(
+                                  context,
+                                  size: 10,
+                                  color: qAccent(context),
+                                ),
                               ),
                             ],
                           ),
@@ -645,7 +649,7 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
                           ),
                         ),
                         if (selected == entry.id)
-                          const Icon(Icons.check_circle, color: qTeal),
+                          Icon(Icons.check_circle, color: qAccent(context)),
                       ],
                     ),
                   ),

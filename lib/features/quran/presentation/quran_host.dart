@@ -379,7 +379,7 @@ class QuranHomePage extends StatelessWidget {
                                       verse.ayah /
                                       repo.surah(verse.surah).ayahCount,
                                   minHeight: 5,
-                                  color: qTeal,
+                                  color: qAccent(context),
                                   backgroundColor: AppPalette.of(
                                     context,
                                   ).border,
@@ -486,9 +486,9 @@ class QuranHomePage extends StatelessWidget {
                   onTap: onSettings,
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.settings_outlined,
-                        color: qTeal,
+                        color: qAccent(context),
                         size: 27,
                       ),
                       const SizedBox(width: 10),
@@ -562,7 +562,7 @@ class QuranHomePage extends StatelessWidget {
   }) => Expanded(
     child: QCard(
       padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 12),
-      color: active ? qTeal : AppPalette.of(context).neutral,
+      color: active ? qAccentFill(context) : AppPalette.of(context).neutral,
       onTap: onTap,
       child: Column(
         children: [
@@ -594,7 +594,7 @@ class QuranHomePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 14),
       child: Column(
         children: [
-          Icon(icon, color: qTeal, size: 40),
+          Icon(icon, color: qAccent(context), size: 40),
           const SizedBox(height: 8),
           Text(title, style: qText(context, weight: FontWeight.w800)),
           const SizedBox(height: 4),
@@ -608,9 +608,9 @@ class QuranHomePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5),
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
-            child: Icon(Icons.chevron_left, color: qTeal, size: 18),
+            child: Icon(Icons.chevron_left, color: qAccent(context), size: 18),
           ),
         ],
       ),
@@ -856,9 +856,9 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                               ),
                             ),
                             const SizedBox(width: 6),
-                            const Icon(
+                            Icon(
                               Icons.chevron_right,
-                              color: qTeal,
+                              color: qAccent(context),
                               size: 24,
                             ),
                           ],
@@ -933,7 +933,7 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                             padding: const EdgeInsets.all(4),
                             icon: Icon(
                               saved ? Icons.bookmark : Icons.bookmark_outline,
-                              color: saved ? qGold : qTeal,
+                              color: saved ? qGold : qAccent(context),
                               size: 22,
                             ),
                           ),
@@ -985,9 +985,9 @@ class QuranJuzPage extends StatelessWidget {
                 color: AppPalette.of(context).notice,
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.menu_book_outlined,
-                      color: qTeal,
+                      color: qAccent(context),
                       size: 28,
                     ),
                     const SizedBox(width: 12),
@@ -1034,7 +1034,7 @@ class QuranJuzPage extends StatelessWidget {
                     onTap: () => onRead(repo.byKey['${chapter.id}:$start']!),
                     child: Row(
                       children: [
-                        const Icon(Icons.chevron_right, color: qTeal),
+                        Icon(Icons.chevron_right, color: qAccent(context)),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Column(

@@ -197,9 +197,9 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.account_circle_outlined,
-                          color: qTeal,
+                          color: qAccent(context),
                           size: 52,
                         ),
                         Text(

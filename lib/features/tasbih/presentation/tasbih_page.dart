@@ -943,7 +943,10 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                   onPressed: _increment,
                   style: FilledButton.styleFrom(
                     minimumSize: const Size.fromHeight(52),
-                    backgroundColor: const Color(0xFF2A8C82),
+                    backgroundColor: appAccentFill(
+                      context,
+                      const Color(0xFF2A8C82),
+                    ),
                     foregroundColor: Colors.white,
                   ),
                   child: const Text(

@@ -287,9 +287,9 @@ class _ProgressHomeState extends State<_ProgressHome> {
             children: [
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.menu_book_outlined,
-                    color: Color(0xFF2A8C82),
+                    color: appAccent(context, const Color(0xFF2A8C82)),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -387,7 +387,10 @@ class _ProgressHomeState extends State<_ProgressHome> {
             children: [
               Row(
                 children: [
-                  Icon(_habitIcon(h.icon), color: const Color(0xFF2A8C82)),
+                  Icon(
+                    _habitIcon(h.icon),
+                    color: appAccent(context, const Color(0xFF2A8C82)),
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
@@ -542,7 +545,10 @@ class _ProgressHomeState extends State<_ProgressHome> {
           context,
           ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: Icon(icon, color: const Color(0xFF2A8C82)),
+            leading: Icon(
+              icon,
+              color: appAccent(context, const Color(0xFF2A8C82)),
+            ),
             dense: true,
             minVerticalPadding: 0,
             title: Text(

@@ -438,7 +438,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                 const SizedBox(height: 8),
                 FilledButton.icon(
                   style: FilledButton.styleFrom(
-                    backgroundColor: rTeal,
+                    backgroundColor: rAccentFill(context),
                     padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                   onPressed: () {
@@ -603,7 +603,7 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             child: FilledButton.icon(
                               style: FilledButton.styleFrom(
-                                backgroundColor: rTeal,
+                                backgroundColor: rAccentFill(context),
                               ),
                               onPressed: host.controller.hasAudio(item)
                                   ? () => host.play(context, item)
@@ -666,14 +666,20 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                               filled: true,
                               size: 28,
                             ),
-                          const Icon(Icons.expand_more, color: rTeal, size: 18),
+                          Icon(
+                            Icons.expand_more,
+                            color: rAccent(context),
+                            size: 18,
+                          ),
                         ],
                       ),
                     ),
                   const SizedBox(height: 12),
                   if (host.controller.hasAudio(item))
                     FilledButton.icon(
-                      style: FilledButton.styleFrom(backgroundColor: rTeal),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: rAccentFill(context),
+                      ),
                       onPressed: () async {
                         await host.controller.download(item);
                         if (context.mounted) {

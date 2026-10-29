@@ -67,7 +67,7 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
       final results = host.catalog.search(category: scope, query: query);
       return RefreshIndicator(
         onRefresh: host.controller.refresh,
-        color: rTeal,
+        color: rAccent(context),
         child: ListView(
           key: const PageStorageKey('religious-home'),
           padding: EdgeInsets.zero,
@@ -198,11 +198,11 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                               ],
                             ),
                           ),
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.all(8),
                             child: Icon(
                               Icons.chevron_left,
-                              color: rTeal,
+                              color: rAccent(context),
                               textDirection: TextDirection.ltr,
                             ),
                           ),
@@ -668,9 +668,9 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                       host.openItem(host.catalog.byId['ruqya-complete']!),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.play_circle_fill,
-                        color: rTeal,
+                        color: rAccent(context),
                         size: 32,
                       ),
                       const SizedBox(width: 10),
@@ -740,7 +740,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                           Icons.front_hand_outlined,
                           Icons.menu_book_outlined,
                         ][i],
-                        color: rTeal,
+                        color: rAccent(context),
                         size: 22,
                       ),
                       const SizedBox(width: 6),
@@ -766,7 +766,11 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                           ],
                         ),
                       ),
-                      const Icon(Icons.chevron_left, size: 18, color: rTeal),
+                      Icon(
+                        Icons.chevron_left,
+                        size: 18,
+                        color: rAccent(context),
+                      ),
                     ],
                   ),
                 ),

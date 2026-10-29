@@ -206,7 +206,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                       ),
                       SwitchListTile(
                         contentPadding: EdgeInsets.zero,
-                        activeThumbColor: qTeal,
+                        activeThumbColor: qAccent(context),
                         title: Text(
                           'تجميع النتائج حسب السور',
                           style: qText(context, size: 12),
@@ -216,7 +216,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                       ),
                       SwitchListTile(
                         contentPadding: EdgeInsets.zero,
-                        activeThumbColor: qTeal,
+                        activeThumbColor: qAccent(context),
                         title: Text(
                           'عرض نص الآية بالكامل',
                           style: qText(context, size: 12),
@@ -294,7 +294,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                   onSubmit: (_) => _search(),
                   trailing: IconButton(
                     tooltip: 'تصفية نتائج البحث',
-                    icon: const Icon(Icons.tune, color: qTeal),
+                    icon: Icon(Icons.tune, color: qAccent(context)),
                     onPressed: _filters,
                   ),
                 ),
@@ -319,7 +319,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                       ),
                     ),
                   ),
-                if (searching) const LinearProgressIndicator(color: qTeal),
+                if (searching) LinearProgressIndicator(color: qAccent(context)),
                 const SizedBox(height: 6),
                 Row(
                   children: [
@@ -344,7 +344,11 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                             : juzId != null
                             ? juzName(juzId!)
                             : 'كل القرآن',
-                        style: qText(context, size: 11, color: qTeal),
+                        style: qText(
+                          context,
+                          size: 11,
+                          color: qAccent(context),
+                        ),
                       ),
                     ),
                   ],
@@ -429,7 +433,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.chevron_right, color: qTeal),
+                          Icon(Icons.chevron_right, color: qAccent(context)),
                           const SizedBox(width: 7),
                           Expanded(
                             child: Column(
@@ -465,7 +469,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                                     style: qText(
                                       context,
                                       size: 10,
-                                      color: qTeal,
+                                      color: qAccent(context),
                                     ),
                                   ),
                                 Text(

@@ -94,6 +94,8 @@ flutter:
 
   assets:
     - assets/prayer/reminders/
+    - assets/prayer/adhans/nusuk-1/
+    - assets/prayer/adhans/nusuk-2/
     - assets/prayer/reminders/ar-ps/
     - assets/prayer/reminders/ar-eg/
     - assets/prayer/reminders/ar-gulf/

@@ -98,14 +98,18 @@ Future<void> confirmAudioDelete(
                             Text(
                               audioBytes(size),
                               textDirection: TextDirection.ltr,
-                              style: qText(context, size: 10, color: qTeal),
+                              style: qText(
+                                context,
+                                size: 10,
+                                color: qAccent(context),
+                              ),
                             ),
                           ],
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.audiotrack_outlined,
-                        color: qTeal,
+                        color: qAccent(context),
                         size: 24,
                       ),
                     ],
@@ -363,7 +367,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                         style: qText(
                                           context,
                                           size: 12,
-                                          color: qTeal,
+                                          color: qAccent(context),
                                         ),
                                       ),
                                     ),
@@ -403,15 +407,15 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                               style: qText(
                                                 context,
                                                 size: 10,
-                                                color: qTeal,
+                                                color: qAccent(context),
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                      const Icon(
+                                      Icon(
                                         Icons.expand_more,
-                                        color: qTeal,
+                                        color: qAccent(context),
                                       ),
                                     ],
                                   ),
@@ -442,9 +446,9 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                             onTap: _storage,
                             child: Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.storage_outlined,
-                                  color: qTeal,
+                                  color: qAccent(context),
                                   size: 30,
                                 ),
                                 const SizedBox(width: 10),
@@ -470,14 +474,17 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                           style: qText(
                                             context,
                                             size: 12,
-                                            color: qTeal,
+                                            color: qAccent(context),
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                const Icon(Icons.chevron_left, color: qTeal),
+                                Icon(
+                                  Icons.chevron_left,
+                                  color: qAccent(context),
+                                ),
                               ],
                             ),
                           ),
@@ -585,7 +592,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                         style: qText(
                                           context,
                                           size: 11,
-                                          color: qTeal,
+                                          color: qAccent(context),
                                         ),
                                       ),
                                       Text(
@@ -607,7 +614,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                         : completed == tracks.length
                                         ? Icons.check_circle
                                         : Icons.download_outlined,
-                                    color: qTeal,
+                                    color: qAccent(context),
                                   ),
                                 ),
                               ],
@@ -660,9 +667,9 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                             onTap: () => setState(() => tab = 2),
                             child: Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.settings_outlined,
-                                  color: qTeal,
+                                  color: qAccent(context),
                                 ),
                                 const SizedBox(width: 10),
                                 Expanded(
@@ -671,7 +678,10 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                     style: qText(context, size: 14),
                                   ),
                                 ),
-                                const Icon(Icons.chevron_left, color: qTeal),
+                                Icon(
+                                  Icons.chevron_left,
+                                  color: qAccent(context),
+                                ),
                               ],
                             ),
                           ),
@@ -736,7 +746,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                         size: 10,
                         color: entry.state == QuranDownloadState.failed
                             ? Colors.red
-                            : qTeal,
+                            : qAccent(context),
                       ),
                     ),
                     if (entry.state == QuranDownloadState.downloading)
@@ -744,7 +754,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                         value: entry.total > 0
                             ? (entry.received / entry.total).clamp(0, 1)
                             : null,
-                        color: qTeal,
+                        color: qAccent(context),
                       ),
                   ],
                 ],
@@ -772,7 +782,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                     : entry?.state == QuranDownloadState.failed
                     ? Icons.refresh
                     : Icons.download_outlined,
-                color: qTeal,
+                color: qAccent(context),
               ),
             ),
             if (entry != null && tab == 2)
@@ -896,7 +906,7 @@ class QuranDownloadDetail extends StatelessWidget {
                             : Icons.cloud_download_outlined,
                         color: entry.state == QuranDownloadState.failed
                             ? Colors.red
-                            : qTeal,
+                            : qAccent(context),
                         size: 58,
                       ),
                       const SizedBox(height: 14),
@@ -908,7 +918,7 @@ class QuranDownloadDetail extends StatelessWidget {
                           weight: FontWeight.w800,
                           color: entry.state == QuranDownloadState.failed
                               ? Colors.red
-                              : qTeal,
+                              : qAccent(context),
                         ),
                       ),
                       if (entry.error != null)
@@ -925,7 +935,7 @@ class QuranDownloadDetail extends StatelessWidget {
                           value: entry.total > 0
                               ? (entry.received / entry.total).clamp(0, 1)
                               : null,
-                          color: qTeal,
+                          color: qAccent(context),
                         ),
                       const SizedBox(height: 12),
                       Text(
@@ -1036,9 +1046,9 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                           children: [
                             Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.storage_outlined,
-                                  color: qTeal,
+                                  color: qAccent(context),
                                   size: 34,
                                 ),
                                 const SizedBox(width: 12),
@@ -1062,7 +1072,7 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                                         style: qText(
                                           context,
                                           size: 18,
-                                          color: qTeal,
+                                          color: qAccent(context),
                                         ),
                                       ),
                                       if (free != null)
@@ -1086,7 +1096,7 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                                       children: [
                                         CircularProgressIndicator(
                                           value: (used / total).clamp(0, 1),
-                                          color: qTeal,
+                                          color: qAccent(context),
                                           backgroundColor: AppPalette.of(
                                             context,
                                           ).border,
@@ -1105,7 +1115,7 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                               const SizedBox(height: 14),
                               LinearProgressIndicator(
                                 value: (used / total).clamp(0, 1),
-                                color: qTeal,
+                                color: qAccent(context),
                               ),
                               const SizedBox(height: 8),
                               Text(
@@ -1144,7 +1154,11 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                                   entries.isNotEmpty
                               ? 'إلغاء التحديد'
                               : 'تحديد الكل',
-                          style: qText(context, size: 12, color: qTeal),
+                          style: qText(
+                            context,
+                            size: 12,
+                            color: qAccent(context),
+                          ),
                         ),
                       ),
                     ],
@@ -1204,7 +1218,11 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                               ),
                               Text(
                                 '${audioBytes(entry.received)} • ${downloadLabel(entry.state)}',
-                                style: qText(context, size: 10, color: qTeal),
+                                style: qText(
+                                  context,
+                                  size: 10,
+                                  color: qAccent(context),
+                                ),
                               ),
                             ],
                           ),

@@ -184,7 +184,11 @@ class _RoundButton extends StatelessWidget {
       onPressed: onTap,
       constraints: const BoxConstraints.tightFor(width: 44, height: 44),
       padding: EdgeInsets.zero,
-      icon: Icon(icon, size: 25, color: AppPalette.of(context).heading),
+      icon: Icon(
+        icon,
+        size: 25,
+        color: appAccent(context, AppPalette.of(context).heading),
+      ),
     ),
   );
 }
@@ -236,9 +240,10 @@ class PrayerCard extends StatelessWidget {
                   child: Icon(
                     Icons.mosque,
                     size: 48,
-                    color: palette.dark
-                        ? Colors.white
-                        : const Color(0xFF07535D),
+                    color: appAccent(
+                      context,
+                      palette.dark ? Colors.white : const Color(0xFF07535D),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -291,7 +296,7 @@ class PrayerCard extends StatelessWidget {
                           Icon(
                             Icons.location_on,
                             size: 13,
-                            color: palette.heading,
+                            color: appAccent(context, palette.heading),
                           ),
                           const SizedBox(width: 4),
                           Flexible(
@@ -345,10 +350,16 @@ class PrayerCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         decoration: selected
                             ? BoxDecoration(
-                                gradient: const LinearGradient(
+                                gradient: LinearGradient(
                                   colors: [
-                                    Color(0xFF008C96),
-                                    Color(0xFF00616C),
+                                    appAccentFill(
+                                      context,
+                                      const Color(0xFF008C96),
+                                    ),
+                                    appAccentFill(
+                                      context,
+                                      const Color(0xFF00616C),
+                                    ),
                                   ],
                                 ),
                                 borderRadius: BorderRadius.circular(12),
@@ -359,7 +370,15 @@ class PrayerCard extends StatelessWidget {
                             Icon(
                               prayer.$3,
                               size: 23,
-                              color: prayer.$1 == 'العشاء' ? color : _homeGold,
+                              color:
+                                  palette.accent != null &&
+                                      !palette.accent!.original
+                                  ? selected
+                                        ? Colors.white
+                                        : palette.tealHeading
+                                  : prayer.$1 == 'العشاء'
+                                  ? color
+                                  : _homeGold,
                             ),
                             const SizedBox(height: 4),
                             Text(
@@ -442,7 +461,7 @@ class QuickServices extends StatelessWidget {
         itemCount: items.length,
         itemBuilder: (context, index) {
           final warm = index == 5 || index == 6;
-          final background = index == 0
+          final originalBackground = index == 0
               ? (palette.dark
                     ? const Color(0xFF073342)
                     : const Color(0xFF175366))
@@ -455,13 +474,22 @@ class QuickServices extends StatelessWidget {
                     ? const Color(0xFF142E3B)
                     : const Color(0xFF073C45))
               : const Color(0xFFE8F0EC);
-          final color = warm
+          final originalColor = warm
               ? _homeGold
               : index == 0
               ? const Color(0xFFFFF5DD)
               : palette.dark
               ? const Color(0xFFA8D6DD)
               : const Color(0xFF075C69);
+          final custom = palette.accent != null && !palette.accent!.original;
+          final background = custom
+              ? index == 0
+                    ? palette.accent!.strong
+                    : palette.paleTeal
+              : originalBackground;
+          final color = custom && index != 0
+              ? palette.tealHeading
+              : originalColor;
           return Material(
             color: background,
             borderRadius: BorderRadius.circular(15),
@@ -512,50 +540,63 @@ class DhikrCard extends StatelessWidget {
   const DhikrCard({super.key, this.onTap});
   final VoidCallback? onTap;
   @override
-  Widget build(BuildContext context) => _PhotoCard(
-    image: 'assets/home/dawn.png',
-    height: 180,
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          flex: 6,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.wb_sunny_outlined, color: _homeGold, size: 35),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'أذكار الصباح',
-                      style: _homeText(context, 18, weight: FontWeight.w800),
+  Widget build(BuildContext context) {
+    final day = AppearanceScope.of(context).isDaytime;
+    final title = day ? 'أذكار الصباح' : 'أذكار المساء';
+    final invitation = day ? 'ابدأ يومك بذكر الله' : 'اختم يومك بذكر الله';
+    return _PhotoCard(
+      image: day ? 'assets/home/dawn.png' : 'assets/home/lantern.png',
+      height: 180,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 6,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      day
+                          ? Icons.wb_sunny_outlined
+                          : Icons.nights_stay_outlined,
+                      color: appAccent(context, _homeGold),
+                      size: 35,
                     ),
-                  ),
-                ],
-              ),
-              Text('ابدأ يومك بذكر الله', style: _homeText(context, 11)),
-              const SizedBox(height: 9),
-              Text(
-                'مجموعة من الأذكار الصحيحة لبدء يومك بالبركة والطمأنينة.',
-                style: _homeText(context, 10, weight: FontWeight.w500),
-              ),
-              const Spacer(),
-              _HomeButton(label: 'عرض الأذكار', gold: true, onPressed: onTap),
-            ],
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: _homeText(context, 18, weight: FontWeight.w800),
+                      ),
+                    ),
+                  ],
+                ),
+                Text(invitation, style: _homeText(context, 11)),
+                const SizedBox(height: 9),
+                Text(
+                  day
+                      ? 'مجموعة من الأذكار الصحيحة لبدء يومك بالبركة والطمأنينة.'
+                      : 'مجموعة من الأذكار الصحيحة لمساء يملؤه الذكر والطمأنينة.',
+                  style: _homeText(context, 10, weight: FontWeight.w500),
+                ),
+                const Spacer(),
+                _HomeButton(label: 'عرض الأذكار', gold: true, onPressed: onTap),
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: _ShareButton(text: 'ابدأ يومك بذكر الله — أذكار الصباح'),
+          Expanded(
+            flex: 3,
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: _ShareButton(text: '$invitation — $title'),
+            ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
 
 class ReadingCard extends StatelessWidget {
@@ -608,7 +649,7 @@ class ReadingCard extends StatelessWidget {
                   value: verse == null ? 0 : verse.ayah / surah!.ayahCount,
                   minHeight: 6,
                   borderRadius: BorderRadius.circular(6),
-                  color: _homeTeal,
+                  color: appAccent(context, _homeTeal),
                   backgroundColor: AppPalette.of(context).dark
                       ? const Color(0xFF29404A)
                       : const Color(0xFFE4E1DB),
@@ -830,7 +871,10 @@ class JourneyCards extends StatelessWidget {
                     _HomeGlyph(
                       kind: items[i].$4,
                       fallback: items[i].$3,
-                      color: palette.dark ? const Color(0xFF9ED9DF) : _homeTeal,
+                      color: appAccent(
+                        context,
+                        palette.dark ? const Color(0xFF9ED9DF) : _homeTeal,
+                      ),
                       size: 29,
                     ),
                     const SizedBox(height: 7),
@@ -845,7 +889,7 @@ class JourneyCards extends StatelessWidget {
                         value: items[i].$5,
                         minHeight: 7,
                         borderRadius: BorderRadius.circular(8),
-                        color: _homeTeal,
+                        color: appAccent(context, _homeTeal),
                         backgroundColor: palette.dark
                             ? const Color(0xFF263F4C)
                             : const Color(0xFFEAE7E1),
@@ -891,7 +935,7 @@ class FridayCard extends StatelessWidget {
                   Icon(
                     Icons.calendar_month,
                     size: 16,
-                    color: AppPalette.of(context).heading,
+                    color: appAccent(context, AppPalette.of(context).heading),
                   ),
                   const SizedBox(width: 8),
                   Text('محتوى خاص', style: _homeText(context, 10)),
@@ -1109,7 +1153,7 @@ class _HomeButton extends StatelessWidget {
     child: FilledButton(
       onPressed: onPressed,
       style: FilledButton.styleFrom(
-        backgroundColor: gold ? _homeGold : _homeTeal,
+        backgroundColor: gold ? _homeGold : appAccentFill(context, _homeTeal),
         foregroundColor: gold && AppPalette.of(context).dark
             ? AppColors.navy
             : Colors.white,
@@ -1148,7 +1192,11 @@ class _ShareButton extends StatelessWidget {
       tooltip: 'مشاركة',
       constraints: const BoxConstraints.tightFor(width: 30, height: 30),
       padding: EdgeInsets.zero,
-      icon: const Icon(Icons.share_outlined, size: 17, color: AppColors.navy),
+      icon: Icon(
+        Icons.share_outlined,
+        size: 17,
+        color: appAccentFill(context, AppColors.navy),
+      ),
       onPressed: () => SharePlus.instance.share(ShareParams(text: text)),
     ),
   );

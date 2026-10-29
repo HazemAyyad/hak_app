@@ -47,22 +47,23 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('المظهر وإعدادات العرض'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('تجوال'));
+    final fontDropdown = find.byType(DropdownButtonFormField<AppFont>);
+    await tester.ensureVisible(fontDropdown);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('تجوال'));
+    await tester.tap(fontDropdown);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('تجوال').last);
     await tester.pumpAndSettle();
     expect(
-      Theme.of(
-        tester.element(find.text('تجوال')),
-      ).textTheme.bodyMedium!.fontFamily,
+      Theme.of(tester.element(fontDropdown)).textTheme.bodyMedium!.fontFamily,
       'Tajawal',
     );
     final restored = AppAppearance(appearance.preferences);
     expect(restored.font, AppFont.tajawal);
     restored.dispose();
-    await tester.ensureVisible(find.text('خط الجهاز'));
+    await tester.tap(fontDropdown);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('خط الجهاز'));
+    await tester.tap(find.text('خط الجهاز').last);
     await tester.pumpAndSettle();
     expect(appearance.font, AppFont.system);
   });
@@ -72,6 +73,88 @@ void main() {
     final restored = AppAppearance(appearance.preferences);
     expect(restored.font, AppFont.cairo);
     restored.dispose();
+  });
+
+  testWidgets('اختيار اللون ينعكس على الأقسام ويحفظ بعد إعادة الفتح', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      HaqApp(
+        showStartup: false,
+        appearance: appearance,
+        quranController: controller,
+      ),
+    );
+    await tester.tap(find.byIcon(Icons.more_horiz).last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('مظهر التطبيق'));
+    await tester.pumpAndSettle();
+    final choice = find.byKey(const ValueKey('app-color-blue'));
+    await tester.ensureVisible(choice);
+    await tester.pumpAndSettle();
+    await tester.tap(choice);
+    await tester.pumpAndSettle();
+    expect(appearance.color, AppColor.blue);
+    expect(
+      Theme.of(tester.element(choice)).colorScheme.primary,
+      AppColor.blue.seed,
+    );
+    final reopened = AppAppearance(appearance.preferences);
+    expect(reopened.color, AppColor.blue);
+    reopened.dispose();
+    tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('الرئيسية'));
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.text('ضيف حق'))).colorScheme.primary,
+      AppColor.blue.seed,
+    );
+    await tester.tap(find.text('القرآن').last);
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.text('القرآن').last)).colorScheme.primary,
+      AppColor.blue.seed,
+    );
+  });
+
+  testWidgets('الرجوع من الخلفية يحدث بطاقة الرئيسية فورًا مع المظهر اليدوي', (
+    tester,
+  ) async {
+    var now = DateTime(2026, 10, 29, 17, 59);
+    appearance.dispose();
+    appearance = AppAppearance(
+      await SharedPreferences.getInstance(),
+      clock: () => now,
+    );
+    await appearance.setMode(ThemeMode.light);
+    await tester.pumpWidget(
+      HaqApp(
+        showStartup: false,
+        appearance: appearance,
+        quranController: controller,
+      ),
+    );
+    await tester.scrollUntilVisible(
+      find.byType(DhikrCard),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('أذكار الصباح'), findsOneWidget);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    now = DateTime(2026, 10, 29, 21);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+    expect(find.text('أذكار المساء'), findsOneWidget);
+    expect(
+      Theme.of(tester.element(find.byType(DhikrCard))).brightness,
+      Brightness.light,
+    );
   });
 
   testWidgets('تعرض الصفحة الرئيسية الأساسية', (tester) async {
@@ -129,6 +212,8 @@ void main() {
     await tester.tap(find.text('المظهر وإعدادات العرض'));
     await tester.pumpAndSettle();
 
+    await tester.ensureVisible(find.text('داكن'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('داكن'));
     await tester.pumpAndSettle();
     expect(

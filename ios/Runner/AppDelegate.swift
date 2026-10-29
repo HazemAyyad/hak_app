@@ -156,10 +156,16 @@ private final class HaqReminderCenter {
         } catch { result(false) }
       case "prepareAdhan", "preparePrayerReminder":
         guard let args = call.arguments as? [String: Any], let id = args["id"] as? String,
-              (id.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil), let path = args["path"] as? String else {
+              (id.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|nusuk-[1-9][0-9]*|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil), let path = args["path"] as? String else {
           result(FlutterError(code: "audio", message: "Invalid voice", details: nil)); return
         }
-        let source = URL(fileURLWithPath: path).standardizedFileURL.resolvingSymlinksInPath()
+        let shortPath = args["shortPath"] as? String
+        guard !id.hasPrefix("nusuk-") || shortPath != nil else {
+          result(FlutterError(code: "audio", message: "Missing takbeer recording", details: nil)); return
+        }
+        // iOS notification sounds remain limited to 25 seconds. Use the actual
+        // takbeer recording when available rather than cutting the full adhan.
+        let source = URL(fileURLWithPath: shortPath ?? path).standardizedFileURL.resolvingSymlinksInPath()
         guard source.path.hasPrefix(NSHomeDirectory() + "/") else {
           result(FlutterError(code: "audio", message: "Invalid audio path", details: nil)); return
         }
@@ -245,7 +251,7 @@ private final class HaqReminderCenter {
     if let mode = job["alertMode"] as? String {
       if mode == "silent" || mode == "vibration" { c.sound = nil }
       else if (mode == "adhan" || mode == "reminderVoice"),
-              let voice = job["voice"] as? String, voice.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil {
+              let voice = job["voice"] as? String, voice.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|nusuk-[1-9][0-9]*|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil {
         let name = "haq-adhan-\(voice).caf"
         if FileManager.default.fileExists(atPath: NSHomeDirectory() + "/Library/Sounds/" + name) {
           c.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: name))

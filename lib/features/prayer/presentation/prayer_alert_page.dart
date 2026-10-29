@@ -246,16 +246,22 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
     final p = AppPalette.of(context);
     final shown = adhanVoices
         .where(
-          (v) =>
-              normalizePlaceQuery(v.name).contains(normalizePlaceQuery(search)),
+          (v) => normalizePlaceQuery(
+            '${v.name} ${v.englishName ?? ''}',
+          ).contains(normalizePlaceQuery(search)),
         )
         .toList();
-    final selected = adhanVoices.firstWhere((v) => v.id == draft.voice);
+    final selected = adhanVoiceById(draft.voice)!;
     return _panel(
       context,
       Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const Text(
+            'صوتان مرفقان بدون إنترنت، وباقي الأصوات تُنزّل عند الطلب.',
+            style: TextStyle(fontSize: 12),
+          ),
+          const SizedBox(height: 8),
           Text(
             'المختار: ${selected.name}',
             style: TextStyle(
@@ -319,9 +325,11 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                                   ),
                                 ),
                                 Text(
-                                  library.downloaded.contains(voice.id)
+                                  voice.bundled
+                                      ? 'مرفق مع التطبيق • بدون إنترنت'
+                                      : library.downloaded.contains(voice.id)
                                       ? 'محفوظ على الجهاز'
-                                      : voice.source,
+                                      : 'تنزيل من المكتبة • ${(voice.downloadBytes / 1048576).toStringAsFixed(1)} م.ب',
                                   style: TextStyle(
                                     color: p.muted,
                                     fontSize: 10,
@@ -588,23 +596,14 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                             _voiceList(context),
                             if (!adhanVoices.any(
                               (v) => normalizePlaceQuery(
-                                v.name,
+                                '${v.name} ${v.englishName ?? ''}',
                               ).contains(normalizePlaceQuery(search)),
                             ))
                               _notice(context, 'لا يوجد مؤذن يطابق البحث'),
                             const Text(
-                              'التسجيلات من AlAdhan ومجموعة الأذان العامة؛ أصحاب التسجيلات مذكورون في المصدر.',
+                              'تسجيلات المؤذنين من نسك. الأصوات المنزّلة تُحفظ على جهازك وتعمل بدون إنترنت.',
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 12),
-                            ),
-                            TextButton(
-                              onPressed: () => launchUrl(
-                                Uri.parse(
-                                  'https://aladhan.com/download-adhans',
-                                ),
-                                mode: LaunchMode.externalApplication,
-                              ),
-                              child: const Text('المصدر والتسجيلات'),
                             ),
                           ],
                           _notice(

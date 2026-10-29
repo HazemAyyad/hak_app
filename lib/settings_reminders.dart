@@ -70,7 +70,7 @@ extension _ReminderSettingsUI on _SettingsDetailPageState {
                   children: [
                     Expanded(child: Text(option.value)),
                     if (option.key == current)
-                      const Icon(Icons.check, color: _teal),
+                      Icon(Icons.check, color: appAccent(context, _teal)),
                   ],
                 ),
               ),

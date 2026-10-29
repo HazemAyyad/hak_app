@@ -90,7 +90,7 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
           !(device['preparedVoices'] as List? ?? []).contains(voice)) {
         library = AdhanLibrary();
         await library.initialize();
-        final choice = adhanVoices.firstWhere((v) => v.id == voice);
+        final choice = adhanVoiceById(voice)!;
         final ready = library.downloaded.contains(voice)
             ? await library.prepareVoice(voice)
             : await library.download(choice);
@@ -155,9 +155,7 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
         listenable: c,
         builder: (context, _) {
           final config = c.config, p = AppPalette.of(context);
-          final voice = adhanVoices.firstWhere(
-            (v) => v.id == config.defaultAlert.voice,
-          );
+          final voice = adhanVoiceById(config.defaultAlert.voice)!;
           return ListView(
             padding: EdgeInsets.zero,
             children: [
@@ -411,7 +409,7 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                                 prayer.name,
                               ),
                               subtitle: Text(
-                                '${config.alert(prayer).mode.label} • ${adhanVoices.firstWhere((v) => v.id == config.alert(prayer).voice).name}',
+                                '${config.alert(prayer).mode.label} • ${adhanVoiceById(config.alert(prayer).voice)!.name}',
                               ),
                               secondary: IconButton(
                                 tooltip: 'تخصيص ${prayer.label}',

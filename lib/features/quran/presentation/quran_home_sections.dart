@@ -13,7 +13,7 @@ class QuranAudioBanner extends StatelessWidget {
   Widget build(BuildContext context) => ClipRRect(
     borderRadius: BorderRadius.circular(16),
     child: Material(
-      color: qTeal,
+      color: qAccentFill(context),
       child: InkWell(
         onTap: onOpen,
         child: Stack(
@@ -26,7 +26,9 @@ class QuranAudioBanner extends StatelessWidget {
               ),
             ),
             Positioned.fill(
-              child: ColoredBox(color: qTeal.withValues(alpha: .72)),
+              child: ColoredBox(
+                color: qAccentFill(context).withValues(alpha: .72),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 15),
@@ -142,7 +144,7 @@ class QuranDailyVerse extends StatelessWidget {
                   icon: const Icon(Icons.menu_book_outlined, size: 17),
                   label: Text(
                     'قراءة التفسير',
-                    style: qText(context, size: 11, color: qTeal),
+                    style: qText(context, size: 11, color: qAccent(context)),
                   ),
                 ),
               ),
@@ -162,7 +164,7 @@ class QuranDailyVerse extends StatelessWidget {
                   icon: const Icon(Icons.share_outlined, size: 17),
                   label: Text(
                     'مشاركة الآية',
-                    style: qText(context, size: 11, color: qTeal),
+                    style: qText(context, size: 11, color: qAccent(context)),
                   ),
                 ),
               ),

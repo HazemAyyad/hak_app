@@ -152,10 +152,16 @@ class _HaqAppState extends State<HaqApp> {
 
   ThemeData _theme(Brightness brightness) {
     final isDark = brightness == Brightness.dark;
+    final accent = AppAccent(_appearance!.color, brightness);
     final scheme = ColorScheme.fromSeed(
-      seedColor: AppColors.teal,
+      seedColor: _appearance!.color.seed,
       brightness: brightness,
-      primary: AppColors.teal,
+      primary: accent.original ? AppColors.teal : accent.primary,
+      onPrimary: accent.original
+          ? null
+          : isDark
+          ? AppColors.navy
+          : Colors.white,
       secondary: AppColors.gold,
       surface: isDark ? Color(0xFF132331) : Color(0xFFFFFCF7),
     );
@@ -163,6 +169,7 @@ class _HaqAppState extends State<HaqApp> {
       useMaterial3: true,
       brightness: brightness,
       colorScheme: scheme,
+      extensions: [accent],
       scaffoldBackgroundColor: isDark ? Color(0xFF081722) : Color(0xFFFFFCF7),
       fontFamily: _appearance!.font.family,
       navigationBarTheme: NavigationBarThemeData(
@@ -170,7 +177,7 @@ class _HaqAppState extends State<HaqApp> {
           (states) => IconThemeData(
             size: 26,
             color: states.contains(WidgetState.selected)
-                ? _homeTeal
+                ? (accent.original ? _homeTeal : accent.primary)
                 : isDark
                 ? const Color(0xFFB8DFE5)
                 : AppColors.navy,
@@ -184,7 +191,7 @@ class _HaqAppState extends State<HaqApp> {
                 ? FontWeight.w800
                 : FontWeight.w500,
             color: states.contains(WidgetState.selected)
-                ? _homeTeal
+                ? (accent.original ? _homeTeal : accent.primary)
                 : isDark
                 ? const Color(0xFFC6D6DE)
                 : const Color(0xFF71869A),
@@ -362,6 +369,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _prayer?.setForeground(state == AppLifecycleState.resumed);
     if (state == AppLifecycleState.resumed) {
+      AppearanceScope.of(context).refreshTime();
       unawaited(_reminders?.reconcile(force: true) ?? Future.value());
       if (_publicPush?.wanted == true) unawaited(_publicPush!.reconcile());
     }
@@ -533,6 +541,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         if (mounted) _quranKey.currentState?.openLastReading();
       });
     }
+  }
+
+  void _openDailyAdhkar() {
+    final group = AppearanceScope.of(context).dailyAdhkarGroup;
+    _selectSection(AppSection.adhkar);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final host = _adhkarKey.currentState;
+      host?.navigator.currentState?.popUntil((route) => route.isFirst);
+      unawaited(host?.openGroup(group) ?? Future.value());
+    });
   }
 
   void _openReligious([String? category]) {
@@ -773,7 +792,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               onMoreTap: () => _selectSection(AppSection.more),
             ),
             SizedBox(height: 18),
-            DhikrCard(onTap: () => _selectSection(AppSection.adhkar)),
+            DhikrCard(onTap: _openDailyAdhkar),
             SizedBox(height: 14),
             ReadingCard(
               controller: _quran,
@@ -985,7 +1004,7 @@ class SocialMediaSection extends StatelessWidget {
         ),
         SizedBox(height: 12),
         Material(
-          color: AppColors.teal,
+          color: appAccent(context, AppColors.teal),
           borderRadius: BorderRadius.circular(20),
           child: InkWell(
             onTap: null,
@@ -1068,13 +1087,16 @@ class _SocialButton extends StatelessWidget {
               height: 54,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: AppColors.teal.withValues(alpha: .11),
+                color: appAccent(
+                  context,
+                  AppColors.teal,
+                ).withValues(alpha: .11),
                 shape: BoxShape.circle,
               ),
               child: IconTheme(
-                data: IconThemeData(color: AppColors.teal),
+                data: IconThemeData(color: appAccent(context, AppColors.teal)),
                 child: DefaultTextStyle(
-                  style: TextStyle(color: AppColors.teal),
+                  style: TextStyle(color: appAccent(context, AppColors.teal)),
                   child: child,
                 ),
               ),
@@ -1111,11 +1133,14 @@ class SectionHeader extends StatelessWidget {
         ),
         Text(
           action,
-          style: TextStyle(color: AppColors.teal, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            color: appAccent(context, AppColors.teal),
+            fontWeight: FontWeight.w700,
+          ),
         ),
         Icon(
           Icons.chevron_left,
-          color: AppColors.teal,
+          color: appAccent(context, AppColors.teal),
           textDirection: TextDirection.ltr,
         ),
       ],

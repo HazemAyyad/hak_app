@@ -5,14 +5,23 @@ const rTeal = Color(0xFF075158);
 const rGold = Color(0xFF94601D);
 const rCream = Color(0xFFFFFCF6);
 
+Color rAccent(BuildContext context) => appAccent(context, rTeal);
+Color rAccentFill(BuildContext context) => appAccentFill(context, rTeal);
+
 class ReligiousColors {
   ReligiousColors(BuildContext context)
-    : dark = Theme.of(context).brightness == Brightness.dark;
+    : dark = Theme.of(context).brightness == Brightness.dark,
+      palette = AppPalette.of(context);
   final bool dark;
+  final AppPalette palette;
   Color get background =>
       dark ? const Color(0xFF0C2028) : const Color(0xFFFFFDF9);
   Color get card => dark ? const Color(0xFF142D33) : const Color(0xFFFFFDF9);
-  Color get heading => dark ? const Color(0xFFB6DEE0) : rTeal;
+  Color get heading => palette.accent != null && !palette.accent!.original
+      ? palette.tealHeading
+      : dark
+      ? const Color(0xFFB6DEE0)
+      : rTeal;
   Color get text => dark ? const Color(0xFFE2ECEE) : const Color(0xFF293845);
   Color get muted => dark ? const Color(0xFFABBDC4) : const Color(0xFF65717F);
   Color get subtle => dark ? const Color(0xFF203A3E) : const Color(0xFFF6F2E9);
@@ -156,7 +165,9 @@ class ReligiousRoundButton extends StatelessWidget {
         height: size + 8,
         child: Center(
           child: Material(
-            color: filled ? rTeal : ReligiousColors(context).subtle,
+            color: filled
+                ? rAccentFill(context)
+                : ReligiousColors(context).subtle,
             shape: const CircleBorder(),
             child: InkResponse(
               onTap: onTap,
@@ -204,7 +215,7 @@ class ReligiousHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final top = MediaQuery.paddingOf(context).top;
     final scale = MediaQuery.textScalerOf(context).scale(1);
-    final color = light ? rTeal : Colors.white;
+    final color = light ? rAccent(context) : Colors.white;
     final width = MediaQuery.sizeOf(context).width;
     double measured(
       String text,
@@ -365,7 +376,7 @@ class ReligiousHeader extends StatelessWidget {
             dimension: 36,
             child: Icon(
               icon,
-              color: icon == Icons.chevron_left ? rTeal : rGold,
+              color: icon == Icons.chevron_left ? rAccent(context) : rGold,
               size: 22,
             ),
           ),
@@ -435,9 +446,9 @@ class ReligiousSearch extends StatelessWidget {
           ),
         ),
         controller.text.isEmpty
-            ? const Padding(
+            ? Padding(
                 padding: EdgeInsets.all(8),
-                child: Icon(Icons.search, color: rTeal),
+                child: Icon(Icons.search, color: rAccent(context)),
               )
             : IconButton(
                 onPressed: () {
@@ -466,7 +477,7 @@ class ReligiousPill extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsetsDirectional.only(end: 6),
     child: Material(
-      color: selected ? rTeal : ReligiousColors(context).subtle,
+      color: selected ? rAccentFill(context) : ReligiousColors(context).subtle,
       borderRadius: BorderRadius.circular(22),
       child: InkWell(
         onTap: onTap,

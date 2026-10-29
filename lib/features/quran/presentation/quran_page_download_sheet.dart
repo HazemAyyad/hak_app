@@ -92,9 +92,9 @@ class _QuranPageDownloadSheet extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.download_for_offline_outlined,
-                    color: qTeal,
+                    color: qAccent(context),
                     size: 34,
                   ),
                   const SizedBox(height: 10),
@@ -134,7 +134,9 @@ class _QuranPageDownloadSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   FilledButton.icon(
-                    style: FilledButton.styleFrom(backgroundColor: qTeal),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: qAccentFill(context),
+                    ),
                     onPressed: downloads.completed == 604
                         ? null
                         : () => _run(context, downloads.downloadAll),
@@ -153,7 +155,7 @@ class _QuranPageDownloadSheet extends StatelessWidget {
                     const SizedBox(height: 18),
                     LinearProgressIndicator(
                       value: downloads.progress,
-                      color: qTeal,
+                      color: qAccent(context),
                       borderRadius: BorderRadius.circular(6),
                       minHeight: 6,
                     ),

@@ -112,7 +112,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 ),
               ),
             ),
-            if (collapsed) _playButton(size: 32),
+            if (collapsed) _playButton(context, size: 32),
             if (onClose != null)
               IconButton(
                 tooltip: 'إغلاق المشغل وإيقاف الصوت',
@@ -156,6 +156,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 ),
               ),
               _smallButton(
+                context,
                 Icons.timer_outlined,
                 !media.sleepTimerActive ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
                 () => chooseAudioTimer(context, media),
@@ -219,6 +220,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 _timeLabel(context, media.position),
                 const Spacer(),
                 _smallButton(
+                  context,
                   Icons.skip_previous,
                   'التلاوة السابقة',
                   media.handler?.player.hasPrevious == true
@@ -227,9 +229,10 @@ class QuranPlayerPanel extends StatelessWidget {
                   size: 30,
                 ),
                 const SizedBox(width: 8),
-                _playButton(size: 36),
+                _playButton(context, size: 36),
                 const SizedBox(width: 8),
                 _smallButton(
+                  context,
                   Icons.skip_next,
                   'التلاوة التالية',
                   media.handler?.player.hasNext == true
@@ -239,6 +242,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 ),
                 const Spacer(),
                 _smallButton(
+                  context,
                   Icons.repeat,
                   'التكرار',
                   () => chooseAudioRepeat(context, media),
@@ -293,13 +297,17 @@ class QuranPlayerPanel extends StatelessWidget {
                               _reciter,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: qText(context, size: 11, color: qTeal),
+                              style: qText(
+                                context,
+                                size: 11,
+                                color: qAccent(context),
+                              ),
                             ),
                           ),
                           if (onReciter != null)
-                            const Icon(
+                            Icon(
                               Icons.expand_more,
-                              color: qTeal,
+                              color: qAccent(context),
                               size: 18,
                             ),
                         ],
@@ -349,11 +357,11 @@ class QuranPlayerPanel extends StatelessWidget {
             children: [
               Text(
                 audioTime(media.position),
-                style: qText(context, size: 10, color: qTeal),
+                style: qText(context, size: 10, color: qAccent(context)),
               ),
               Text(
                 audioTime(media.duration),
-                style: qText(context, size: 10, color: qTeal),
+                style: qText(context, size: 10, color: qAccent(context)),
               ),
             ],
           ),
@@ -366,6 +374,7 @@ class QuranPlayerPanel extends StatelessWidget {
             children: [
               Expanded(
                 child: _smallButton(
+                  context,
                   Icons.repeat,
                   'التكرار',
                   () => chooseAudioRepeat(context, media),
@@ -374,6 +383,7 @@ class QuranPlayerPanel extends StatelessWidget {
               ),
               Expanded(
                 child: _smallButton(
+                  context,
                   Icons.replay_10,
                   'إرجاع 10 ثوانٍ',
                   () =>
@@ -382,6 +392,7 @@ class QuranPlayerPanel extends StatelessWidget {
               ),
               Expanded(
                 child: _smallButton(
+                  context,
                   Icons.skip_previous,
                   'التلاوة السابقة',
                   media.handler?.player.hasPrevious == true
@@ -389,9 +400,10 @@ class QuranPlayerPanel extends StatelessWidget {
                       : null,
                 ),
               ),
-              _playButton(size: 52),
+              _playButton(context, size: 52),
               Expanded(
                 child: _smallButton(
+                  context,
                   Icons.skip_next,
                   'التلاوة التالية',
                   media.handler?.player.hasNext == true
@@ -401,6 +413,7 @@ class QuranPlayerPanel extends StatelessWidget {
               ),
               Expanded(
                 child: _smallButton(
+                  context,
                   Icons.forward_10,
                   'تقديم 10 ثوانٍ',
                   () =>
@@ -419,7 +432,7 @@ class QuranPlayerPanel extends StatelessWidget {
               icon: const Icon(Icons.speed, size: 17),
               label: Text(
                 '${media.speed.toStringAsFixed(2)}x',
-                style: qText(context, size: 11, color: qTeal),
+                style: qText(context, size: 11, color: qAccent(context)),
               ),
             ),
             TextButton.icon(
@@ -427,7 +440,7 @@ class QuranPlayerPanel extends StatelessWidget {
               icon: const Icon(Icons.timer_outlined, size: 17),
               label: Text(
                 !media.sleepTimerActive ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
-                style: qText(context, size: 11, color: qTeal),
+                style: qText(context, size: 11, color: qAccent(context)),
               ),
             ),
           ],
@@ -458,7 +471,7 @@ class QuranPlayerPanel extends StatelessWidget {
                   ? media.position.inMilliseconds.toDouble().clamp(0, max)
                   : 0,
               max: max > 0 ? max : 1,
-              activeColor: qTeal,
+              activeColor: qAccent(context),
               inactiveColor: AppPalette.of(context).border,
               onChanged: max > 0
                   ? (value) => media.seek(Duration(milliseconds: value.round()))
@@ -467,17 +480,20 @@ class QuranPlayerPanel extends StatelessWidget {
           ),
         ),
         if (media.buffering)
-          const IgnorePointer(
-            child: LinearProgressIndicator(color: qTeal, minHeight: 2),
+          IgnorePointer(
+            child: LinearProgressIndicator(
+              color: qAccent(context),
+              minHeight: 2,
+            ),
           ),
       ],
     );
   }
 
-  Widget _playButton({required double size}) => Tooltip(
+  Widget _playButton(BuildContext context, {required double size}) => Tooltip(
     message: media.playing ? 'إيقاف مؤقت' : 'تشغيل',
     child: Material(
-      color: qTeal,
+      color: qAccentFill(context),
       shape: const CircleBorder(),
       child: InkWell(
         customBorder: const CircleBorder(),
@@ -507,6 +523,7 @@ class QuranPlayerPanel extends StatelessWidget {
   );
 
   Widget _smallButton(
+    BuildContext context,
     IconData icon,
     String label,
     VoidCallback? onTap, {
@@ -529,7 +546,7 @@ class QuranPlayerPanel extends StatelessWidget {
           color: onTap == null
               ? null
               : active
-              ? qTeal
+              ? qAccent(context)
               : qNavy,
           size: 21,
         ),
@@ -543,7 +560,7 @@ class QuranPlayerPanel extends StatelessWidget {
       fit: BoxFit.scaleDown,
       child: Text(
         audioTime(time),
-        style: qText(context, size: 9.5, color: qTeal),
+        style: qText(context, size: 9.5, color: qAccent(context)),
       ),
     ),
   );
@@ -578,7 +595,7 @@ class QuranPlayerPanel extends StatelessWidget {
               title: Text(media.playingTracks[i].title),
               subtitle: Text(media.playingTracks[i].reciter),
               trailing: media.handler?.playbackState.value.queueIndex == i
-                  ? const Icon(Icons.check_circle, color: qTeal)
+                  ? Icon(Icons.check_circle, color: qAccent(context))
                   : null,
               onTap: media.handler == null
                   ? null
@@ -604,15 +621,18 @@ class _AudioPortrait extends StatelessWidget {
       radius: size / 2,
       backgroundColor: AppPalette.of(context).paleTeal,
       child: portrait == null
-          ? Icon(Icons.headphones, color: qTeal, size: size * .6)
+          ? Icon(Icons.headphones, color: qAccent(context), size: size * .6)
           : ClipOval(
               child: Image.network(
                 portrait,
                 width: size,
                 height: size,
                 fit: BoxFit.cover,
-                errorBuilder: (_, error, stack) =>
-                    Icon(Icons.headphones, color: qTeal, size: size * .6),
+                errorBuilder: (_, error, stack) => Icon(
+                  Icons.headphones,
+                  color: qAccent(context),
+                  size: size * .6,
+                ),
               ),
             ),
     );
@@ -635,7 +655,7 @@ Future<void> chooseAudioSpeed(BuildContext context, QuranMedia media) =>
               ListTile(
                 title: Text('${speed}x'),
                 trailing: media.speed == speed
-                    ? const Icon(Icons.check, color: qTeal)
+                    ? Icon(Icons.check, color: qAccent(context))
                     : null,
                 onTap: () {
                   unawaited(media.setSpeed(speed));
@@ -666,7 +686,7 @@ Future<void> chooseAudioRepeat(BuildContext context, QuranMedia media) =>
               ListTile(
                 title: Text(option.$2),
                 trailing: media.repeat == option.$1
-                    ? const Icon(Icons.check, color: qTeal)
+                    ? Icon(Icons.check, color: qAccent(context))
                     : null,
                 onTap: () {
                   unawaited(media.setRepeat(option.$1));

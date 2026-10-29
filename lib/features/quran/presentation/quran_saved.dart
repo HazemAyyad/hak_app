@@ -185,7 +185,7 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                           children: [
                             Icon(
                               tab == 0 ? Icons.favorite : Icons.bookmark,
-                              color: qTeal,
+                              color: qAccent(context),
                               size: 20,
                             ),
                             const SizedBox(height: 8),

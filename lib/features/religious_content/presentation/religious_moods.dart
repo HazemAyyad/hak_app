@@ -382,7 +382,10 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
                               style: FilledButton.styleFrom(
                                 backgroundColor: c.remaining(item.id) == 0
                                     ? const Color(0xFFB84B4B)
-                                    : const Color(0xFF2A8C82),
+                                    : appAccentFill(
+                                        context,
+                                        const Color(0xFF2A8C82),
+                                      ),
                                 foregroundColor: Colors.white,
                               ),
                               child: Text(

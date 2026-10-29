@@ -165,26 +165,27 @@ void main() {
     },
   );
   test(
-    'expanded named catalog preserves old voices, uses unique IDs and pinned HTTPS audio, and round-trips alerts',
+    'Nusuk catalog has two bundled voices and pinned pairs on our backend',
     () {
-      expect(adhanVoices.length, greaterThan(200));
+      expect(adhanVoices.length, 48);
       expect(adhanVoices.map((v) => v.id).toSet().length, adhanVoices.length);
-      expect(adhanVoices.take(4).map((v) => v.id), [
-        'alafasy',
-        'nafees',
-        'mustafa',
-        'zahrani',
+      expect(adhanVoices.where((v) => v.bundled).map((v) => v.id), [
+        'nusuk-1',
+        'nusuk-2',
       ]);
       for (final voice in adhanVoices) {
         expect(voice.uri.scheme, 'https');
-        expect(voice.uri.path, endsWith('.mp3'));
+        expect(voice.uri.path, endsWith('/religious/adhans/${voice.id}/full'));
+        expect(voice.shortUri!.path, endsWith('/${voice.id}/takbeer'));
+        expect(voice.sha256, matches(RegExp(r'^[a-f0-9]{64}$')));
+        expect(voice.shortSha256, matches(RegExp(r'^[a-f0-9]{64}$')));
         expect(voice.name.trim(), isNotEmpty);
         expect(
           PrayerAlert.fromJson(PrayerAlert(voice: voice.id).toJson()).voice,
           voice.id,
         );
       }
-      expect(adhanVoices.any((v) => v.name.contains('عبد الباسط')), true);
+      expect(legacyAdhanVoices.length, greaterThan(200));
       expect(adhanVoices.any((v) => v.name.contains('ملا')), true);
     },
   );
@@ -337,7 +338,7 @@ void main() {
             ),
           ),
         );
-        expect(await library.download(adhanVoices.first), true);
+        expect(await library.download(legacyAdhanVoices.first), true);
         expect(library.downloaded, contains('alafasy'));
         final restored = AdhanLibrary(
           directory: () async => temp,
@@ -354,7 +355,7 @@ void main() {
           audio: PreviewAudio(),
         );
         await corrupt.initialize();
-        expect(corrupt.downloaded, isEmpty);
+        expect(corrupt.downloaded, {'nusuk-1', 'nusuk-2'});
         corrupt.dispose();
       },
     );
@@ -375,8 +376,8 @@ void main() {
             ),
           ),
         );
-        expect(await library.download(adhanVoices.first), false);
-        expect(library.downloaded, isEmpty);
+        expect(await library.download(legacyAdhanVoices.first), false);
+        expect(library.downloaded, {'nusuk-1', 'nusuk-2'});
         expect(
           await library.download(
             const AdhanVoice('../escape', 'fake', 'bad.mp3'),
@@ -390,9 +391,10 @@ void main() {
     test(
       'late preview completion cannot clear a newer preview and stopping completes it',
       () async {
-        final first = library.preview(adhanVoices[0]);
+        await library.initialize();
+        final first = library.preview(legacyAdhanVoices[0]);
         await Future<void>.delayed(const Duration(milliseconds: 10));
-        final second = library.preview(adhanVoices[1]);
+        final second = library.preview(legacyAdhanVoices[1]);
         await Future<void>.delayed(const Duration(milliseconds: 10));
         expect(library.playing, 'nafees');
         await first;

@@ -182,9 +182,9 @@ class _QuranMushafState extends State<QuranMushaf> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.cloud_off_outlined,
-                                color: qTeal,
+                                color: qAccent(context),
                                 size: 34,
                               ),
                               const SizedBox(height: 10),

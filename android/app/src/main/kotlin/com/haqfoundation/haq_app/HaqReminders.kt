@@ -274,10 +274,14 @@ object HaqReminders {
 /** No network, arbitrary file path or religious text in the alarm intent.
  * A persisted current plan is revalidated before the downloaded audio starts. */
 object HaqAdhanRules {
-    fun voiceId(id: String) = id in listOf("alafasy", "nafees", "mustafa", "zahrani") || Regex("archive-[0-9a-f]{16}").matches(id)
+    fun voiceId(id: String) = id in listOf("alafasy", "nafees", "mustafa", "zahrani") || Regex("archive-[0-9a-f]{16}|nusuk-[1-9][0-9]*").matches(id)
     fun reminderId(id: String) = Regex("reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha)").matches(id)
     fun playbackId(id: String) = voiceId(id) || reminderId(id)
     fun targetVolume(maximum: Int, percent: Int) = kotlin.math.ceil(maximum * percent.coerceIn(0, 100) / 100.0).toInt()
+    // Three reference takbeer files contain the full adhan. Keep short mode
+    // bounded while allowing genuine takbeer recordings (up to ~32s) to finish.
+    fun playbackLimit(human: Boolean, full: Boolean, shortRecording: Boolean, duration: Int): Long =
+        if (human) 30000L else if (full) 360000L else if (shortRecording && duration in 1..45000) 45000L else 25000L
     fun timely(at: Long, now: Long) = now >= at && now - at <= 120000
     fun faceDown(x: Float, y: Float, z: Float) = z < -7f && kotlin.math.abs(x) < 6f && kotlin.math.abs(y) < 6f
 }
@@ -322,6 +326,9 @@ class HaqAdhanService : Service(), SensorEventListener {
         val voice = job!!.optString("voice")
         if (!HaqAdhanRules.playbackId(voice)) { stopSelf(); return START_NOT_STICKY }
         var audio = File(filesDir, "adhan/$voice.mp3")
+        val shortAudio = File(filesDir, "adhan/$voice-takbeer.mp3")
+        val useShortRecording = job.optString("alertMode") == "adhan" && !job.optBoolean("fullAdhan") && shortAudio.isFile
+        if (useShortRecording) audio = shortAudio
         if (!audio.isFile && job.optString("alertMode") == "reminderVoice" && HaqAdhanRules.reminderId(voice)) {
             val prayer = voice.substringAfterLast('-')
             val variant=job.optString("reminderVariant","ar-ps").takeIf { it in listOf("ar-ps","ar-eg","ar-gulf","en") } ?: "ar-ps"
@@ -407,10 +414,14 @@ class HaqAdhanService : Service(), SensorEventListener {
                 setDataSource(audio.path)
                 setOnCompletionListener { stopSelf() }
                 setOnErrorListener { _, _, _ -> stopSelf(); true }
-                setOnPreparedListener { prepared = true; it.start() }
+                setOnPreparedListener {
+                    prepared = true
+                    it.start()
+                    handler.postDelayed({ stopSelf() }, HaqAdhanRules.playbackLimit(humanReminder, job.optBoolean("fullAdhan"), useShortRecording, it.duration))
+                }
                 prepareAsync()
             }
-            handler.postDelayed({ stopSelf() }, if (humanReminder) 30000 else if (job.optBoolean("fullAdhan")) 360000 else 25000)
+            handler.postDelayed({ if (!prepared) stopSelf() }, 15000)
         } catch (_: Exception) { HaqReminders.prefs(this).edit().putBoolean("scheduleError", true).apply(); stopSelf() }
         return START_NOT_STICKY
     }
@@ -724,7 +735,7 @@ class HaqRemindersBridge(private val activity: MainActivity, private val channel
                     "adhanStatus" -> result.success(mapOf("platform" to "android", "vendor" to Build.MANUFACTURER.lowercase(Locale.ROOT),
                         "exact" to (Build.VERSION.SDK_INT < 31 || activity.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()),
                         "fullScreen" to (Build.VERSION.SDK_INT < 34 || activity.getSystemService(NotificationManager::class.java).canUseFullScreenIntent()),
-                        "preparedVoices" to (File(activity.filesDir,"adhan").listFiles()?.filter { it.isFile && it.extension=="mp3" && HaqAdhanRules.voiceId(it.nameWithoutExtension) }?.map { it.nameWithoutExtension } ?: emptyList<String>()),
+                        "preparedVoices" to (File(activity.filesDir,"adhan").listFiles()?.filter { it.isFile && it.extension=="mp3" && HaqAdhanRules.voiceId(it.nameWithoutExtension) && (!it.nameWithoutExtension.startsWith("nusuk-") || File(it.parentFile,"${it.nameWithoutExtension}-takbeer.mp3").isFile) }?.map { it.nameWithoutExtension } ?: emptyList<String>()),
                         "reminderRecordings" to (File(activity.filesDir, "adhan").listFiles()?.filter { it.isFile && it.extension == "mp3" && HaqAdhanRules.reminderId(it.nameWithoutExtension) }?.map { it.nameWithoutExtension } ?: emptyList<String>())))
                     "removePrayerReminder" -> {
                         val id=call.argument<String>("id") ?: error("voice")
@@ -737,6 +748,9 @@ class HaqRemindersBridge(private val activity: MainActivity, private val channel
                         require(if (call.method == "preparePrayerReminder") HaqAdhanRules.reminderId(id) else HaqAdhanRules.voiceId(id))
                         val source = File(call.argument<String>("path") ?: error("path")).canonicalFile
                         require(source.path.startsWith(File(activity.applicationInfo.dataDir).canonicalPath + File.separator) && source.isFile && source.length() in 1000..20971520)
+                        val shortSource = call.argument<String>("shortPath")?.let { File(it).canonicalFile }
+                        require(!id.startsWith("nusuk-") || shortSource != null)
+                        if (shortSource != null) require(call.method == "prepareAdhan" && shortSource.path.startsWith(File(activity.applicationInfo.dataDir).canonicalPath + File.separator) && shortSource.isFile && shortSource.length() in 1000..20971520)
                         if (call.method == "preparePrayerReminder") {
                             require(source.length() <= 4194304)
                             val metadata = android.media.MediaMetadataRetriever()
@@ -748,6 +762,12 @@ class HaqRemindersBridge(private val activity: MainActivity, private val channel
                         val temp = File(target.parentFile, "$id.part")
                         source.copyTo(temp, overwrite = true)
                         check(temp.renameTo(target))
+                        if (shortSource != null) {
+                            val shortTarget = File(target.parentFile, "$id-takbeer.mp3")
+                            val shortTemp = File(target.parentFile, "$id-takbeer.part")
+                            shortSource.copyTo(shortTemp, overwrite = true)
+                            check(shortTemp.renameTo(shortTarget))
+                        }
                         result.success(true)
                     }
                     "exactAlarmPermission" -> {

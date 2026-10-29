@@ -305,6 +305,53 @@ void main() {
     },
   );
 
+  for (final daytime in [true, false]) {
+    testWidgets(
+      'home opens the matching daily reader ${daytime ? 'morning' : 'evening'}',
+      (tester) async {
+        appearance.dispose();
+        appearance = AppAppearance(
+          await SharedPreferences.getInstance(),
+          clock: () => DateTime(2026, 10, 29, daytime ? 10 : 21),
+        );
+        await pump(tester, fullApp: true);
+        final title = daytime ? 'أذكار الصباح' : 'أذكار المساء';
+        final button = find.descendant(
+          of: find.byType(DhikrCard),
+          matching: find.text('عرض الأذكار'),
+        );
+        await tester.ensureVisible(button);
+        await tester.pumpAndSettle();
+        await tester.tap(button);
+        final group = daytime ? 'daily:morning' : 'daily:evening';
+        await until(
+          tester,
+          () =>
+              find
+                  .byWidgetPredicate(
+                    (widget) => widget is Text && widget.data == title,
+                  )
+                  .evaluate()
+                  .isNotEmpty &&
+              find.byType(AdhkarSectionPage).evaluate().isNotEmpty &&
+              tester
+                  .state<AdhkarSectionPageState>(find.byType(AdhkarSectionPage))
+                  .navigator
+                  .currentState!
+                  .canPop(),
+        );
+        expect(find.text(title), findsWidgets);
+        final titleContext = tester.element(find.text(title).first);
+        expect(
+          ModalRoute.of(titleContext)?.settings.name,
+          '/adhkar/read/$group',
+        );
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  }
+
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('daily index and no-results ${mode.name}', (tester) async {
       await pump(tester, mode: mode);

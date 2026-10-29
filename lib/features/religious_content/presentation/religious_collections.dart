@@ -67,10 +67,10 @@ class _RamadanDaysPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                const Icon(
+                Icon(
                   Icons.chevron_left,
                   textDirection: TextDirection.ltr,
-                  color: rTeal,
+                  color: rAccent(context),
                 ),
               ],
             ),
@@ -226,10 +226,10 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
                           ],
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.chevron_left,
                         textDirection: TextDirection.ltr,
-                        color: rTeal,
+                        color: rAccent(context),
                       ),
                     ],
                   ),

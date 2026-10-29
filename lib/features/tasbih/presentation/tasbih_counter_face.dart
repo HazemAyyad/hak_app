@@ -36,7 +36,7 @@ class _CounterFace extends StatelessWidget {
             child: CircularProgressIndicator(
               value: counter.current / counter.definition.goal,
               strokeWidth: 7,
-              color: const Color(0xFF2A8C82),
+              color: appAccent(context, const Color(0xFF2A8C82)),
               backgroundColor: p.border,
             ),
           ),

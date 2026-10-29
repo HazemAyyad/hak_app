@@ -81,7 +81,7 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
             ),
             Text(
               'عرض التفسير الكامل',
-              style: qText(context, size: 11, color: qTeal),
+              style: qText(context, size: 11, color: qAccent(context)),
             ),
           ],
         ),
@@ -150,7 +150,7 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
             ),
             Text(
               'المصدر: السراج • QuranEnc',
-              style: qText(context, size: 10, color: qTeal),
+              style: qText(context, size: 10, color: qAccent(context)),
             ),
           ],
         ),
@@ -273,7 +273,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                       Tooltip(
                         message: 'استماع إلى الآية',
                         child: Material(
-                          color: qTeal,
+                          color: qAccentFill(context),
                           shape: const CircleBorder(),
                           child: InkWell(
                             customBorder: const CircleBorder(),
@@ -311,7 +311,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                   icon: const Icon(Icons.share_outlined, size: 16),
                   label: Text(
                     'مشاركة الآية',
-                    style: qText(context, size: 11, color: qTeal),
+                    style: qText(context, size: 11, color: qAccent(context)),
                   ),
                 ),
               ),
@@ -341,7 +341,10 @@ class _QuranExplanationState extends State<QuranExplanation> {
                     return QCard(
                       child: Column(
                         children: [
-                          const Icon(Icons.cloud_off_outlined, color: qTeal),
+                          Icon(
+                            Icons.cloud_off_outlined,
+                            color: qAccent(context),
+                          ),
                           const SizedBox(height: 8),
                           Text(
                             'تعذّر تحميل المحتوى',
@@ -375,9 +378,9 @@ class _QuranExplanationState extends State<QuranExplanation> {
                         children: [
                           Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.menu_book_outlined,
-                                color: qTeal,
+                                color: qAccent(context),
                               ),
                               const SizedBox(width: 8),
                               Expanded(
@@ -530,10 +533,10 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                         ),
                                         onPressed: () =>
                                             _listenWord(entry.word),
-                                        icon: const Icon(
+                                        icon: Icon(
                                           Icons.volume_up_outlined,
                                           size: 21,
-                                          color: qTeal,
+                                          color: qAccent(context),
                                         ),
                                       ),
                                   ],

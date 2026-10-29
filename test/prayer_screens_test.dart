@@ -404,6 +404,7 @@ void main() {
           directory: () async => temp!,
           prepare: (_, _) async => true,
         );
+        await tester.runAsync(library.initialize);
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
             .setMockMethodCallHandler(AdhanLibrary.bridge, (call) async {
               if (call.method == 'adhanStatus') {
@@ -429,6 +430,15 @@ void main() {
         await tap(tester, 'صوت الأذان');
         await capture(tester, 'video-alert-${dark ? 'dark' : 'light'}');
         expect(find.text('الأذان الكامل'), findsOneWidget);
+        // An unbundled choice must still be downloaded explicitly before saving.
+        await tester.enterText(find.byType(TextField).last, 'كاتب');
+        await tester.pump();
+        await tester.ensureVisible(
+          find.byKey(const ValueKey('adhan-voice-nusuk-49')),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const ValueKey('adhan-voice-nusuk-49')));
+        await tester.pump();
         await tap(tester, 'احفظ التغييرات');
         expect(
           c.config.notifications,
@@ -451,7 +461,11 @@ void main() {
       final temp = await tester.runAsync(
         () => Directory.systemTemp.createTemp('haq-voices-'),
       );
-      final library = AdhanLibrary(directory: () async => temp!);
+      final library = AdhanLibrary(
+        directory: () async => temp!,
+        preparePair: (_, _, _) async => true,
+      );
+      await tester.runAsync(library.initialize);
       await pump(
         tester,
         PrayerAlertPage(
@@ -483,10 +497,10 @@ void main() {
       await tester.pumpAndSettle();
       await capture(tester, 'compact-voices-default');
       await tap(tester, 'احفظ التغييرات');
-      expect(
-        c.config.alert(PrayerName.fajr).voice,
-        'alafasy',
-      ); // No file downloaded: never claim adhan ready.
+      expect(c.config.alert(PrayerName.fajr).voice, 'nusuk-1');
+      expect(c.config.alert(PrayerName.fajr).mode, PrayerAlertMode.adhan);
+      expect(c.config.notifications, true);
+      expect(library.error, isNull);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
       library.dispose();

@@ -44,6 +44,8 @@ fun main() {
     check(HaqAdhanRules.voiceId("archive-8c0b40d74122a584"))
     check(!HaqAdhanRules.voiceId("../../sound"))
     check(!HaqAdhanRules.voiceId("archive-INVALID"))
+    for (voice in listOf("nusuk-1", "nusuk-247", "alafasy", "nafees", "mustafa", "zahrani")) check(HaqAdhanRules.voiceId(voice))
+    for (voice in listOf("nusuk-0", "nusuk-01", "nusuk--1", "nusuk-1.mp3", "nusuk-../1", "nusuk-1/../../sound")) check(!HaqAdhanRules.voiceId(voice))
     check(HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-fajr"))
     check(!HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-sunrise"))
     check(HaqAdhanRules.targetVolume(15,100)==15)
@@ -54,5 +56,10 @@ fun main() {
     check(HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-ar-gulf-isha"))
     check(!HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-fr-fajr"))
     check(!HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-en-../fajr"))
-    println("52 native checks passed (scheduling, prayer lateness and face-down detection). No app built or run.")
+    check(HaqAdhanRules.playbackLimit(false, false, true, 29884) == 45000L) // Ali Mulla takbeer finishes at ~30s.
+    check(HaqAdhanRules.playbackLimit(false, false, true, 104516) == 25000L) // Nusuk 25 contains full audio in takbeer.
+    check(HaqAdhanRules.playbackLimit(false, true, true, 251193) == 360000L)
+    check(HaqAdhanRules.playbackLimit(false, false, false, 251193) == 25000L)
+    check(HaqAdhanRules.playbackLimit(true, true, true, 29884) == 30000L)
+    println("69 native checks passed (scheduling, audio identifiers, playback duration, prayer lateness and face-down detection). No app built or run.")
 }

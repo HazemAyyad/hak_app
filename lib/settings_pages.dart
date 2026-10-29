@@ -274,6 +274,67 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
 
   Widget _appearance() => Column(
     children: [
+      _SectionTitle('لون التطبيق'),
+      _Panel(
+        child: LayoutBuilder(
+          builder: (context, constraints) => Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final color in AppColor.values)
+                SizedBox(
+                  width: (constraints.maxWidth - 8) / 2,
+                  child: Semantics(
+                    selected: AppearanceScope.of(context).color == color,
+                    child: OutlinedButton(
+                      key: ValueKey('app-color-${color.name}'),
+                      onPressed: () =>
+                          AppearanceScope.of(context).setColor(color),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 12,
+                        ),
+                        side: BorderSide(
+                          width: AppearanceScope.of(context).color == color
+                              ? 2
+                              : 1,
+                          color: AppearanceScope.of(context).color == color
+                              ? AppPalette.of(context).tealHeading
+                              : AppPalette.of(context).border,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 13,
+                            backgroundColor: color.seed,
+                            child: AppearanceScope.of(context).color == color
+                                ? const Icon(
+                                    Icons.check,
+                                    size: 17,
+                                    color: Colors.white,
+                                  )
+                                : null,
+                          ),
+                          const SizedBox(width: 7),
+                          Expanded(
+                            child: Text(
+                              color.label,
+                              style: TextStyle(
+                                color: AppPalette.of(context).heading,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
       _SectionTitle('وضع التطبيق'),
       Row(
         children: ['فاتح', 'داكن', 'تلقائي']
@@ -312,7 +373,11 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
           onChanged: AppearanceScope.of(context).setTimed,
         ),
       ),
-      if (AppearanceScope.of(context).timed) ...[
+      _InfoBox(
+        'أوقات النهار والليل',
+        'تتبدل بطاقة أذكار الرئيسية بين الصباح والمساء حسب هذين الوقتين، حتى عند اختيار المظهر يدويًا.',
+      ),
+      ...[
         for (final day in [true, false])
           _SettingsTile(
             icon: day ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
@@ -352,29 +417,27 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
       ],
       _SectionTitle('نوع الخط'),
       _Panel(
-        child: RadioGroup<AppFont>(
-          groupValue: AppearanceScope.of(context).font,
+        child: DropdownButtonFormField<AppFont>(
+          key: ValueKey('app-font-${AppearanceScope.of(context).font.name}'),
+          initialValue: AppearanceScope.of(context).font,
+          isExpanded: true,
+          decoration: const InputDecoration(
+            labelText: 'خط التطبيق',
+            border: OutlineInputBorder(),
+          ),
           onChanged: (value) {
             if (value != null) AppearanceScope.of(context).setFont(value);
           },
-          child: Column(
-            children: [
-              for (final font in AppFont.values)
-                RadioListTile<AppFont>(
-                  title: Text(
-                    font.label,
-                    style: TextStyle(fontFamily: font.family),
-                  ),
-                  subtitle: Text(
-                    'تقبّل الله طاعاتك وجعلنا وإياك من أهل القرآن',
-                    style: TextStyle(fontFamily: font.family, fontSize: 12),
-                  ),
-                  value: font,
-                  activeColor: _teal,
-                  contentPadding: EdgeInsets.zero,
+          items: [
+            for (final font in AppFont.values)
+              DropdownMenuItem(
+                value: font,
+                child: Text(
+                  font.label,
+                  style: TextStyle(fontFamily: font.family),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
       _InfoBox(
@@ -394,7 +457,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
               min: .85,
               max: 1.2,
               onChanged: AppearanceScope.of(context).setFontScale,
-              activeColor: _teal,
+              activeColor: appAccent(context, _teal),
             ),
             Row(
               children: [
@@ -493,7 +556,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
                 value: .52,
                 minHeight: 12,
                 backgroundColor: Color(0xFFE4E6E3),
-                color: _teal,
+                color: appAccent(context, _teal),
               ),
             ),
             SizedBox(height: 12),
@@ -716,7 +779,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
     trailing: Switch(
       value: _value(key, initial),
       onChanged: (v) => _toggle(key, v),
-      activeTrackColor: _teal,
+      activeTrackColor: appAccent(context, _teal),
     ),
   );
 }
@@ -832,7 +895,7 @@ class _Header extends StatelessWidget {
                   color: AppPalette.of(context).paleTeal,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: _teal, size: 31),
+                child: Icon(icon, color: appAccent(context, _teal), size: 31),
               ),
               SizedBox(height: 8),
               FittedBox(
@@ -932,7 +995,7 @@ class _SettingsTile extends StatelessWidget {
                   color: AppPalette.of(context).paleTeal,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: _teal, size: 27),
+                child: Icon(icon, color: appAccent(context, _teal), size: 27),
               ),
               SizedBox(width: 12),
               Expanded(
@@ -1063,7 +1126,7 @@ class _FeatureCard extends StatelessWidget {
                   color: AppPalette.of(context).paleTeal,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: _teal, size: 45),
+                child: Icon(icon, color: appAccent(context, _teal), size: 45),
               ),
         SizedBox(height: 10),
         Text(
@@ -1119,7 +1182,9 @@ class _ChoiceCard extends StatelessWidget {
             ? AppPalette.of(context).paleTeal
             : AppPalette.of(context).neutral,
         border: Border.all(
-          color: selected ? _teal : AppPalette.of(context).border,
+          color: selected
+              ? appAccent(context, _teal)
+              : AppPalette.of(context).border,
           width: selected ? 2 : 1,
         ),
         borderRadius: BorderRadius.circular(18),
@@ -1132,7 +1197,7 @@ class _ChoiceCard extends StatelessWidget {
               top: 9,
               child: CircleAvatar(
                 radius: 10,
-                backgroundColor: _teal,
+                backgroundColor: appAccentFill(context, _teal),
                 child: Icon(Icons.check, size: 13, color: Colors.white),
               ),
             ),
@@ -1142,7 +1207,9 @@ class _ChoiceCard extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: selected ? _teal : AppPalette.of(context).gold,
+                  color: selected
+                      ? appAccent(context, _teal)
+                      : AppPalette.of(context).gold,
                   size: 30,
                 ),
                 SizedBox(height: 13),
@@ -1256,7 +1323,7 @@ class _PrimaryButton extends StatelessWidget {
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
         ),
         style: FilledButton.styleFrom(
-          backgroundColor: Color(0xFF075C57),
+          backgroundColor: appAccentFill(context, const Color(0xFF075C57)),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
@@ -1275,7 +1342,7 @@ class _CircleAction extends StatelessWidget {
   Widget build(BuildContext context) => IconButton(
     onPressed: onTap,
     icon: Icon(icon),
-    color: _teal,
+    color: appAccent(context, _teal),
     style: IconButton.styleFrom(
       backgroundColor: AppPalette.of(context).paleTeal,
       fixedSize: Size(58, 58),
@@ -1335,14 +1402,18 @@ class _BottomItem extends StatelessWidget {
       children: [
         Icon(
           icon,
-          color: selected ? _teal : AppPalette.of(context).heading,
+          color: selected
+              ? appAccent(context, _teal)
+              : AppPalette.of(context).heading,
           size: 27,
         ),
         SizedBox(height: 4),
         Text(
           label,
           style: TextStyle(
-            color: selected ? _teal : AppPalette.of(context).heading,
+            color: selected
+                ? appAccent(context, _teal)
+                : AppPalette.of(context).heading,
             fontSize: 11,
             fontWeight: FontWeight.w800,
           ),
