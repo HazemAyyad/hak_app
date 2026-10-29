@@ -134,7 +134,7 @@ extension _ReminderSettingsUI on _SettingsDetailPageState {
               ? 'الجدولة غير متاحة في بيئة العرض الحالية. التفضيلات تبقى محفوظة.'
               : !state!.allowed
               ? 'الإشعارات غير مسموحة. امنح الإذن من الزر أدناه.'
-              : '${state.pending} تذكير في الخطة • ${state.platform == 'android' ? 'قد يؤخر Android التنبيه لتوفير البطارية' : 'تنبيهات iOS المحلية'}',
+              : '${state.pending} تذكير في الخطة • ${state.platform == 'android' ? (state.exact ? 'المواعيد المحددة مجدولة بدقة' : 'قد تتأخر المواعيد حتى تسمح بالتنبيه الدقيق') : 'تنبيهات iOS المحلية'}',
         ),
         if (c?.error case final error?)
           _NoticeBox('الجدولة تحتاج متابعة', error),
@@ -172,6 +172,33 @@ extension _ReminderSettingsUI on _SettingsDetailPageState {
         Icons.notifications_none,
       ),
       _deviceStatus(),
+      if (widget.reminders case final c?
+          when c.device.platform == 'android') ...[
+        const _InfoBox(
+          'منبّه أذكار الصباح والمساء والنوم',
+          'يظهر بشاشة مثل الأذان، ثم تبدأ تسجيلات أذكار المجموعة تلقائيًا بعد النداء. يمكنك فتح الأذكار ومتابعة الاستماع، أو إيقافه وتأجيله من الإشعار.',
+        ),
+        if (!c.device.exact)
+          OutlinedButton(
+            onPressed: () => c.action('exactAlarmPermission'),
+            child: const Text('السماح بالتنبيه في الموعد'),
+          ),
+        if (!c.device.fullScreen)
+          OutlinedButton(
+            onPressed: () => c.action('fullScreenPermission'),
+            child: const Text('السماح بشاشة التذكير عند القفل'),
+          ),
+        _switchTile(
+          'sound',
+          'صوت التذكيرات',
+          'نداء عربي مولّد ثم تسجيلات حصن المسلم، محفوظة دون إنترنت',
+          Icons.volume_up_outlined,
+        ),
+        const _InfoBox(
+          'القراءة الصوتية',
+          'يُقرأ كل تسجيل من المصدر مرة واحدة، وأعداد التكرار ظاهرة في القارئ. الاستماع لا يسجّل إنجازًا تلقائيًا، ويستمر عند إطفاء الشاشة حتى توقفه.',
+        ),
+      ],
       const _SectionTitle('تذكيرات الأذكار'),
       for (final entry in const {
         'morning': 'أذكار الصباح',
@@ -224,6 +251,59 @@ extension _ReminderSettingsUI on _SettingsDetailPageState {
         'تذكير الختمة',
         'يُضبط الموعد من كل ختمة. تُلغى تذكيرات الختمة عند إكمالها أو أرشفتها أو حذفها، ويجب تفعيل التذكيرات العامة هنا.',
       ),
+      if (kDebugMode && widget.reminders?.device.platform == 'android') ...[
+        const _SectionTitle('اختبار التذكيرات على الجهاز'),
+        const _InfoBox(
+          'اختبار بعد 10 ثوانٍ',
+          'يمكنك قفل الشاشة أو تصغير التطبيق. الاختبار لا يغيّر مواعيدك أو يفعّل التذكيرات المعطلة، ولا يسجل إنجازًا.',
+        ),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final entry in const {
+              'morning': 'الصباح',
+              'evening': 'المساء',
+              'sleep': 'النوم',
+              'dailyWird': 'الورد',
+              'friday': 'الجمعة',
+              'khatma': 'الختمة',
+            }.entries)
+              OutlinedButton(
+                onPressed: () async {
+                  try {
+                    await widget.reminders!.channel.invokeMethod<Object>(
+                      'scheduleReminderTest',
+                      {'kind': entry.key},
+                    );
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('اختبار ${entry.value} بعد 10 ثوانٍ'),
+                        ),
+                      );
+                    }
+                  } catch (_) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'تحقق من إذن الإشعارات والتنبيه الدقيق',
+                          ),
+                        ),
+                      );
+                    }
+                  }
+                },
+                child: Text('اختبار ${entry.value}'),
+              ),
+          ],
+        ),
+        TextButton(
+          onPressed: () => widget.reminders!.action('clearReminderTests'),
+          child: const Text('إلغاء الاختبار وإزالة إشعاراته'),
+        ),
+      ],
       const _InfoBox(
         'المحتوى الإيماني',
         'هذا تذكير محلي لفتح المكتبة؛ إشعارات الرسائل الجديدة من الخادم تُنفذ في مرحلة الرسائل.',

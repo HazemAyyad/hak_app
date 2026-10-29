@@ -1,0 +1,22 @@
+{
+  "type": "synthetic",
+  "provider": "Microsoft Edge speech via edge-tts",
+  "voice": "ar-JO-TaimNeural",
+  "clips": {
+    "morning": {
+      "text": "حانَ وَقْتُ أَذْكارِ الصَّباح. اِفْتَحْ أَذْكارَكَ، وَابْدَأْ يَوْمَكَ بِذِكْرِ الله.",
+      "asset": "assets/prayer/reminders/dhikr-morning.mp3",
+      "sha256": "eabb9ddedd45ead7e1e33f4365d7641e33d25cec95de9c1cc0bfb8165e3969eb"
+    },
+    "evening": {
+      "text": "حانَ وَقْتُ أَذْكارِ المَساء. خُذْ لَحَظاتٍ لِذِكْرِ الله، وَاقْرَأْ أَذْكارَ المَساء.",
+      "asset": "assets/prayer/reminders/dhikr-evening.mp3",
+      "sha256": "5a06f3e5ad58e02a2ce614287c484724760911eb7f703d8c0f9695ca33dfe79d"
+    },
+    "sleep": {
+      "text": "حانَ وَقْتُ أَذْكارِ النَّوْم. قَبْلَ أَنْ تَنام، اِفْتَحْ أَذْكارَكَ، وَاخْتِمْ يَوْمَكَ بِذِكْرِ الله.",
+      "asset": "assets/prayer/reminders/dhikr-sleep.mp3",
+      "sha256": "dbc3736536ae840edabc982a8e4571be49545e56d9415c1d255bd330b910edee"
+    }
+  }
+}

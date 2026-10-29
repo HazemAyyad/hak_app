@@ -58,7 +58,7 @@ class _MorePageState extends State<MorePage> {
             child: Transform.translate(
               offset: const Offset(0, -16),
               child: Container(
-                padding: const EdgeInsets.fromLTRB(14, 12, 14, 110),
+                padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
                 decoration: BoxDecoration(
                   color: palette.background,
                   borderRadius: const BorderRadius.vertical(
@@ -149,17 +149,25 @@ class _MorePageState extends State<MorePage> {
                           style: TextStyle(color: palette.muted),
                         ),
                       ),
-                    for (final feature in secondary)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: _FeaturedService(
-                          feature: feature,
-                          onTap: () => widget.onFeature(feature),
-                        ),
-                      ),
                   ],
                 ),
               ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(14, 0, 14, 110),
+            sliver: SliverList.builder(
+              itemCount: secondary.length,
+              itemBuilder: (context, index) {
+                final feature = secondary[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: _FeaturedService(
+                    feature: feature,
+                    onTap: () => widget.onFeature(feature),
+                  ),
+                );
+              },
             ),
           ),
         ],
@@ -427,7 +435,8 @@ class _FeaturedService extends StatelessWidget {
 }
 
 String _description(AppFeature feature) => switch (feature) {
-  AppFeature.religiousLibrary => 'أدعية وأسماء الله الحسنى ورقية شرعية',
+  AppFeature.dailyDuas => 'أدعية وآداب لمواقف يومك',
+  AppFeature.savedContent => 'الأدعية والمحتوى الذي حفظته',
   AppFeature.duaTogether => 'شارك الدعاء وتفاعل مع المجتمع',
   AppFeature.circles => 'ذكر مشترك ومتابعة المساهمات',
   AppFeature.statistics => 'تابع نشاطك وإنجازاتك المسجلة',

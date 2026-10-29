@@ -153,6 +153,44 @@ void main() {
     },
   );
   test(
+    'timed dhikr opens the matching reader with an audible alarm while other reminders stay standard',
+    () async {
+      await settings.set('enabled', true);
+      for (final kind in [
+        'morning',
+        'evening',
+        'sleep',
+        'dailyWird',
+        'friday',
+      ]) {
+        await settings.set(kind, true);
+      }
+      var plan = reminderPlan(settings, [], []);
+      for (final kind in ['morning', 'evening', 'sleep']) {
+        final job = plan.singleWhere((j) => j.id == 'guest:$kind');
+        expect(job.route, 'adhkar-$kind');
+        expect(job.alertMode, 'dhikr');
+        expect(job.voice, 'dhikr-$kind');
+        expect(job.showAdhanScreen, true);
+        expect(job.volume, 100);
+        expect(job.at, isNull); // Must remain a daily wall-clock job.
+      }
+      expect(plan.singleWhere((j) => j.route == 'quran').alertMode, isNull);
+      expect(plan.singleWhere((j) => j.route == 'friday').weekday, 5);
+      await settings.set('sound', false);
+      plan = reminderPlan(settings, [], []);
+      expect(
+        plan.where((j) => j.alertMode == 'dhikr').every((j) => j.volume == 0),
+        true,
+      );
+      await settings.set('evening', false);
+      expect(
+        reminderPlan(settings, [], []).any((j) => j.voice == 'dhikr-evening'),
+        false,
+      );
+    },
+  );
+  test(
     'khatma schedule expires, archives and completes by cycle, and can be cancelled',
     () async {
       await settings.set('enabled', true);

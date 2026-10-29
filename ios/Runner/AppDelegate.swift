@@ -250,6 +250,7 @@ private final class HaqReminderCenter {
     c.sound = job["alertMode"] != nil || plan["sound"] as? Bool != false ? .default : nil
     if let mode = job["alertMode"] as? String {
       if mode == "silent" || mode == "vibration" { c.sound = nil }
+      else if mode == "dhikr" { c.sound = (job["volume"] as? Int ?? 100) > 0 ? .default : nil }
       else if (mode == "adhan" || mode == "reminderVoice"),
               let voice = job["voice"] as? String, voice.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|nusuk-[1-9][0-9]*|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil {
         let name = "haq-adhan-\(voice).caf"

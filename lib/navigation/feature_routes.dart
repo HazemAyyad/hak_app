@@ -3,9 +3,16 @@ import 'package:flutter/material.dart';
 /// Stable destinations shared by the directory, home shortcuts and section tabs.
 /// Planned services have an explicit unavailable route until their own stage.
 enum AppFeature {
-  religiousLibrary(
-    'الأدعية والمحتوى الديني',
-    Icons.front_hand_outlined,
+  dailyDuas(
+    'أدعية الحياة اليومية',
+    Icons.wb_sunny_outlined,
+    category: 'sunnah-daily-life',
+    ready: true,
+  ),
+  savedContent(
+    'الأدعية المحفوظة',
+    Icons.bookmark_border,
+    category: 'favorites',
     ready: true,
   ),
   duaTogether('ادعُ معي', Icons.people_alt_outlined, ready: true),

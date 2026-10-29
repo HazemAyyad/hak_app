@@ -1,0 +1,387 @@
+{
+  "schema_version": 1,
+  "source": "https://www.hisnmuslim.com/api/ar/husn_ar.json",
+  "catalog_sha256": "33cf7f2d972608df4ecfbd77caf39998b76935ea6f847c7c63ac461fbb55c7ba",
+  "policy": "Each unmodified source recording once, no automatic completion events.",
+  "groups": {
+    "morning": [
+      "hisn-api-075",
+      "hisn-api-076",
+      "hisn-api-077",
+      "hisn-api-078",
+      "hisn-api-079",
+      "hisn-api-080",
+      "hisn-api-081",
+      "hisn-api-082",
+      "hisn-api-083",
+      "hisn-api-084",
+      "hisn-api-085",
+      "hisn-api-086",
+      "hisn-api-087",
+      "hisn-api-088",
+      "hisn-api-089",
+      "hisn-api-090",
+      "hisn-api-091",
+      "hisn-api-092",
+      "hisn-api-093",
+      "hisn-api-094",
+      "hisn-api-095",
+      "hisn-api-096",
+      "hisn-api-098"
+    ],
+    "evening": [
+      "hisn-api-075",
+      "hisn-api-076",
+      "hisn-api-077",
+      "hisn-api-078",
+      "hisn-api-079",
+      "hisn-api-080",
+      "hisn-api-081",
+      "hisn-api-082",
+      "hisn-api-083",
+      "hisn-api-084",
+      "hisn-api-085",
+      "hisn-api-086",
+      "hisn-api-087",
+      "hisn-api-088",
+      "hisn-api-089",
+      "hisn-api-090",
+      "hisn-api-091",
+      "hisn-api-092",
+      "hisn-api-096",
+      "hisn-api-097",
+      "hisn-api-098"
+    ],
+    "sleep": [
+      "hisn-api-099",
+      "hisn-api-100",
+      "hisn-api-101",
+      "hisn-api-102",
+      "hisn-api-103",
+      "hisn-api-104",
+      "hisn-api-105",
+      "hisn-api-106",
+      "hisn-api-107",
+      "hisn-api-108",
+      "hisn-api-109",
+      "hisn-api-110",
+      "hisn-api-111",
+      "hisn-api-112",
+      "hisn-api-113"
+    ]
+  },
+  "recordings": {
+    "hisn-api-075": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-075.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/75.mp3",
+      "sha256": "f4013b5035e4108afd8d1a47376a11520cb74a7da0b307e8555a0d744392359b",
+      "duration_seconds": 74.815,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-076": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-076.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/76.mp3",
+      "sha256": "8c5493937b4bb7e8976fe07f1b6fcf1c3ac583be77232aca40b9b3a5b432e55e",
+      "duration_seconds": 90.776,
+      "play_count": 1,
+      "reader_target": 3
+    },
+    "hisn-api-077": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-077.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/77.mp3",
+      "sha256": "3ddb2c1f13058cfe2ede03231d6aa964a1bf973b6fe01aa6f07a8e8ca83d6244",
+      "duration_seconds": 53.864,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-078": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-078.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/78.mp3",
+      "sha256": "b654dcbdc2e76ac893b2b098d767634f8342102fe587c2e082b5b4d5b0f16509",
+      "duration_seconds": 22.962,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-079": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-079.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/79.mp3",
+      "sha256": "a97f8c9b98712bddd5c50c8d33f1128028d92033ee3485728d1c37b9ac995766",
+      "duration_seconds": 26.958,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-080": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-080.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/80.mp3",
+      "sha256": "caecbd39ce40617a6970da63316f57115d8438998ded1426b9a0242df98c1012",
+      "duration_seconds": 24.973,
+      "play_count": 1,
+      "reader_target": 4
+    },
+    "hisn-api-081": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-081.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/81.mp3",
+      "sha256": "36833e94a06a40671b5d74a4e17a366a5d90982a72a8ddf5e59593fb4f05684c",
+      "duration_seconds": 10.998,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-082": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-082.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/82.mp3",
+      "sha256": "a92359c5def750f6801dd3138e6aa8f786b78b213f07c8af865bbdaaa7a3e65c",
+      "duration_seconds": 31.948,
+      "play_count": 1,
+      "reader_target": 3
+    },
+    "hisn-api-083": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-083.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/83.mp3",
+      "sha256": "043e01a9fce0b1a96d0aa5ce34d5de12d2e77191329a208d7f9c08c0533479a1",
+      "duration_seconds": 10.005,
+      "play_count": 1,
+      "reader_target": 7
+    },
+    "hisn-api-084": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-084.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/84.mp3",
+      "sha256": "7349914e738eabfff35ffc2d7c5ebe1df3de5243e3600f9c8d7be192031054c3",
+      "duration_seconds": 35.918,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-085": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-085.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/85.mp3",
+      "sha256": "864f0e5d804ceb874de0e1c9716aa9ce1c81ba26a88297b6bc8d0f0e274501d2",
+      "duration_seconds": 27.951,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-086": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-086.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/86.mp3",
+      "sha256": "ba25e2c40ea87b9e9f767a2f0c5da71c38205bd4a8fecfbb652f8a957810c99c",
+      "duration_seconds": 11.99,
+      "play_count": 1,
+      "reader_target": 3
+    },
+    "hisn-api-087": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-087.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/87.mp3",
+      "sha256": "8991c6c180ecc7f4f969f4909e4464af977668991d5db63546cabb1f4f6b524e",
+      "duration_seconds": 13.009,
+      "play_count": 1,
+      "reader_target": 3
+    },
+    "hisn-api-088": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-088.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/88.mp3",
+      "sha256": "0ab04832456d070e7e3154cbb3a064a4f60371181b1be332824944387f697e7e",
+      "duration_seconds": 14.994,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-089": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-089.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/89.mp3",
+      "sha256": "586b112b608afb04e4fd56e0284d4d24f7b9c49287e1abb3e9a1fcf9e2e8ecc1",
+      "duration_seconds": 20.976,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-090": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-090.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/90.mp3",
+      "sha256": "037ee1f00288d7fc35611461cc2bcc8a52c065c6b7cb75127258b9e56a130f4a",
+      "duration_seconds": 22.962,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-091": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-091.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/91.mp3",
+      "sha256": "1b743aafba753a144f72761044876f8036c485bcf6ccd4a9abf942c28318b444",
+      "duration_seconds": 5.016,
+      "play_count": 1,
+      "reader_target": 100
+    },
+    "hisn-api-092": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-092.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/92.mp3",
+      "sha256": "10e5fad258ee7f39f7c891a38c66df99460620a06289b902a7430c6758c84a59",
+      "duration_seconds": 17.972,
+      "play_count": 1,
+      "reader_target": 10
+    },
+    "hisn-api-093": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-093.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/93.mp3",
+      "sha256": "a0b274af9c3006334f6a09c8632542f6310cab8bbaf2b662287a714eea0e1b39",
+      "duration_seconds": 14.994,
+      "play_count": 1,
+      "reader_target": 100
+    },
+    "hisn-api-094": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-094.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/94.mp3",
+      "sha256": "767b1db4e25319c31ad0e5fc526549c4c3c235b3445938e178428db8035b40c1",
+      "duration_seconds": 15.987,
+      "play_count": 1,
+      "reader_target": 3
+    },
+    "hisn-api-095": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-095.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/95.mp3",
+      "sha256": "b9683e27a735c77d0fdf402e54af2db50c03dd1f26539507612cf016e20419de",
+      "duration_seconds": 11.99,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-096": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-096.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/96.mp3",
+      "sha256": "056b361984d4550623043cca7c3599c9caf4d5008fa75ed1fa568abb69c30db5",
+      "duration_seconds": 8.02,
+      "play_count": 1,
+      "reader_target": 100
+    },
+    "hisn-api-097": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-097.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/97.mp3",
+      "sha256": "73ad9882959eec1fb8925247d9999b4c5aafa396ae4560d76faae0327cbe7e84",
+      "duration_seconds": 10.005,
+      "play_count": 1,
+      "reader_target": 3
+    },
+    "hisn-api-098": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-098.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/98.mp3",
+      "sha256": "8fcd6a491203dff8c2ed635462c23b81e7079227464ea4cca719bf63b5bd20d2",
+      "duration_seconds": 9.744,
+      "play_count": 1,
+      "reader_target": 10
+    },
+    "hisn-api-099": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-099.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/99.mp3",
+      "sha256": "57d9be074d4d46830d1846105da27d6a9cd692e5d439b6ef9c694e5db204fae6",
+      "duration_seconds": 111.7,
+      "play_count": 1,
+      "reader_target": 3
+    },
+    "hisn-api-100": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-100.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/100.mp3",
+      "sha256": "adec2492cf77fe557d1418ffd2a28a9ae968beded43eacd0dc1a32a043f385fa",
+      "duration_seconds": 61.832,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-101": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-101.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/101.mp3",
+      "sha256": "02fd47ec54740f1a2545c788ddd29a1007505dcf139b22b71ee806df212b09b0",
+      "duration_seconds": 86.779,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-102": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-102.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/102.mp3",
+      "sha256": "5dabbcdca3882bdcbe0156f695a1f733167dd96e27a32892518fce8f4bcde463",
+      "duration_seconds": 16.98,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-103": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-103.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/103.mp3",
+      "sha256": "f011017b6c42184b8b1396c723c697247fd75cd30cf7f33d20453fed8cf43a18",
+      "duration_seconds": 20.976,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-104": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-104.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/104.mp3",
+      "sha256": "c0e8aeb82a1d188e4ab3ccc0ceb4432fdbe771e60541c6152c81517066a94715",
+      "duration_seconds": 8.02,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-105": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-105.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/105.mp3",
+      "sha256": "061186700304569d18309673471059625b2a10530b3e8748919ca99c92d315a0",
+      "duration_seconds": 4.023,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-106": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-106.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/106.mp3",
+      "sha256": "83019346e8c65ffcfa2a7464a77f66042f1955420171a0ee817efa0075015ddc",
+      "duration_seconds": 15.987,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-107": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-107.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/107.mp3",
+      "sha256": "619b1a74712342a74d4836c0f869d330c5a544db8589ec8323c64f901b02e61f",
+      "duration_seconds": 48.901,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-108": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-108.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/108.mp3",
+      "sha256": "d585daec3599f9a5b31983d21a5fadfde44eae27c8103953cc3a766cf8148655",
+      "duration_seconds": 13.976,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-109": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-109.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/109.mp3",
+      "sha256": "c1edf76d9f7b8533ba6d8c121ec85c3f9df2e40b6f3b8598960c581ea384e47f",
+      "duration_seconds": 26.958,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-110": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-110.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/110.mp3",
+      "sha256": "9706cfbf21da2e9b373d9ca3704072901373155547b65a9fde9c10e9ca02285f",
+      "duration_seconds": 8.02,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-111": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-111.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/111.mp3",
+      "sha256": "1457074ee78d10666e2ec2f68e8d69f603209ab323541c888838580abbf44ca7",
+      "duration_seconds": 31.06,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-112": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-112.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/112.mp3",
+      "sha256": "6ae89fea117c8814cb7e5c4d81339d2a7e082d8ddf4493509aeb20209a1a05aa",
+      "duration_seconds": 19.368,
+      "play_count": 1,
+      "reader_target": 1
+    },
+    "hisn-api-113": {
+      "asset": "assets/prayer/dhikr_recitations/hisn-api-113.mp3",
+      "source": "https://www.hisnmuslim.com/audio/ar/113.mp3",
+      "sha256": "62636c0ccbc6b15fa5369c0b47290083e5f4b08cccdd8c96b5c2b397e71179b8",
+      "duration_seconds": 22.632,
+      "play_count": 1,
+      "reader_target": 1
+    }
+  }
+}

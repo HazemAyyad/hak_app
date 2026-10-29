@@ -19,6 +19,8 @@ class ReminderDeviceState {
     this.pending = 0,
     this.platform = 'unsupported',
     this.speech = false,
+    this.exact = false,
+    this.fullScreen = false,
   });
   factory ReminderDeviceState.fromMap(Map data) => ReminderDeviceState(
     supported: true,
@@ -28,8 +30,11 @@ class ReminderDeviceState {
     pending: data['pending'] as int? ?? 0,
     platform: data['platform'] as String? ?? 'unsupported',
     speech: data['speech'] == true,
+    exact: data['exact'] == true,
+    fullScreen: data['fullScreen'] == true,
   );
   final bool supported, allowed, overlay, overlayRunning, speech;
+  final bool exact, fullScreen;
   final int pending;
   final String platform;
 }

@@ -39,6 +39,7 @@ class QuranHostState extends State<QuranHost> {
   bool _pendingResume = false;
   Widget? _pendingPage;
   NavigatorObserver? _observer;
+  final _openPages = <String>{};
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -47,6 +48,8 @@ class QuranHostState extends State<QuranHost> {
 
   QuranController get controller => widget.controller;
   Future<void> openReader(QuranVerse verse, {String? highlight}) async {
+    final key = '/quran/read/${verse.key}';
+    if (!_openPages.add(key)) return;
     await navigator.currentState?.push(
       MaterialPageRoute<void>(
         settings: RouteSettings(name: '/quran/read/${verse.key}'),
@@ -60,6 +63,7 @@ class QuranHostState extends State<QuranHost> {
         ),
       ),
     );
+    _openPages.remove(key);
     if (mounted) {
       controller.refreshReading();
       widget.onFullscreenChanged(false);
@@ -126,9 +130,16 @@ class QuranHostState extends State<QuranHost> {
       _pendingPage = page;
       return;
     }
-    navigator.currentState!.push(
-      MaterialPageRoute<void>(builder: (_) => _frame(page)),
-    );
+    final name = '/quran/page/${page.runtimeType}';
+    if (!_openPages.add(name)) return;
+    navigator.currentState!
+        .push(
+          MaterialPageRoute<void>(
+            settings: RouteSettings(name: name),
+            builder: (_) => _frame(page),
+          ),
+        )
+        .whenComplete(() => _openPages.remove(name));
   }
 
   Widget _frame(Widget child) => Builder(

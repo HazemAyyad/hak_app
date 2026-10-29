@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../app_appearance.dart';
+import '../../../app_refresh.dart';
 import '../../../navigation/more_page.dart';
 import '../../account/presentation/account_hub.dart';
 import '../../religious_content/data/religious_controller.dart';
@@ -181,7 +182,7 @@ class _AssistantBodyState extends State<_AssistantBody>
       return Scaffold(
         backgroundColor: p.background,
         body: SafeArea(
-          child: RefreshIndicator(
+          child: AppRefreshRegion(
             onRefresh: c.load,
             child: ListView(
               padding: const EdgeInsets.only(bottom: 32),

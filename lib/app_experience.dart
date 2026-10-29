@@ -22,6 +22,7 @@ class AppExperienceController extends ChangeNotifier {
   bool _minimized = false;
   Future<bool?> Function()? askToContinue;
   VoidCallback? openPlayer;
+  Future<void> Function()? refreshCurrent;
 
   QuranMedia? get media => _media;
   Object get location {

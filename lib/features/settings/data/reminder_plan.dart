@@ -68,12 +68,15 @@ List<ReminderJob> reminderPlan(
   };
   for (final entry in labels.entries) {
     if (!settings.flag(entry.key)) continue;
+    final dhikr = const {'morning', 'evening', 'sleep'}.contains(entry.key);
     jobs.add(
       ReminderJob(
         id: '${settings.scope}:${entry.key}',
         title: entry.value,
         body: 'حان موعدك مع ${entry.value}',
-        route: entry.key == 'dailyWird'
+        route: dhikr
+            ? 'adhkar-${entry.key}'
+            : entry.key == 'dailyWird'
             ? 'quran'
             : entry.key == 'messages'
             ? 'library'
@@ -82,6 +85,10 @@ List<ReminderJob> reminderPlan(
             : 'adhkar',
         minute: settings.time(entry.key),
         weekday: entry.key == 'friday' ? 5 : null,
+        alertMode: dhikr ? 'dhikr' : null,
+        voice: dhikr ? 'dhikr-${entry.key}' : null,
+        volume: dhikr ? (settings.flag('sound') ? 100 : 0) : null,
+        showAdhanScreen: dhikr ? true : null,
       ),
     );
   }

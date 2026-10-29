@@ -15,6 +15,8 @@ import 'package:haq_app/features/religious_content/data/religious_catalog.dart';
 import 'package:haq_app/features/religious_content/data/religious_controller.dart';
 import 'package:haq_app/features/religious_content/presentation/religious_host.dart';
 import 'package:haq_app/main.dart';
+import 'package:haq_app/settings_pages.dart';
+import 'package:haq_app/features/quran/presentation/quran_host.dart';
 import 'package:haq_app/navigation/app_section.dart';
 import 'package:haq_app/navigation/feature_routes.dart';
 import 'package:haq_app/navigation/more_page.dart';
@@ -141,6 +143,61 @@ void main() {
     );
   }
 
+  testWidgets('one bottom bar reselects the Quran root in one tap', (
+    tester,
+  ) async {
+    await pumpApp(tester);
+    await tab(tester, AppSection.quran);
+    final host = tester.state<QuranHostState>(find.byType(QuranHost));
+    host.openIndex();
+    host.openIndex();
+    await tester.pumpAndSettle();
+    expect(find.byType(QuranIndexPage), findsOneWidget);
+    expect(find.byType(QuranIndexPage, skipOffstage: false), findsOneWidget);
+    expect(find.byType(NavigationBar), findsOneWidget);
+    await tab(tester, AppSection.quran);
+    expect(find.byType(QuranIndexPage), findsNothing);
+    expect(find.byKey(const ValueKey('haq-bottom-navigation')), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets(
+    'rapid repeated service taps create one route and need one back',
+    (tester) async {
+      await pumpApp(tester);
+      await tab(tester, AppSection.more);
+      final open = tester.widget<MorePage>(find.byType(MorePage)).onFeature;
+      open(AppFeature.settings);
+      open(AppFeature.settings);
+      await tester.pumpAndSettle();
+      expect(find.byType(SettingsPage, skipOffstage: false), findsOneWidget);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.byType(MorePage), findsOneWidget);
+      expect(find.byType(NavigationBar), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'More uses the same bar and one reselect closes its content section',
+    (tester) async {
+      await pumpApp(tester);
+      await tab(tester, AppSection.more);
+      final open = tester.widget<MorePage>(find.byType(MorePage)).onFeature;
+      open(AppFeature.quranDuas);
+      await tester.pumpAndSettle();
+      expect(find.byType(ReligiousHost), findsOneWidget);
+      expect(find.byType(NavigationBar), findsOneWidget);
+      await tab(tester, AppSection.more);
+      expect(find.byType(MorePage), findsOneWidget);
+      expect(find.byType(ReligiousHost), findsNothing);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
   testWidgets(
     'home reflects the current account and search opens a real surah',
     (tester) async {
@@ -259,7 +316,12 @@ void main() {
     (tester) async {
       await pumpApp(tester);
       await tab(tester, AppSection.more);
-      final library = find.byKey(const ValueKey('feature-religiousLibrary'));
+      final library = find.byKey(const ValueKey('feature-quranDuas'));
+      await tester.enterText(
+        find.byKey(const ValueKey('more-search')),
+        AppFeature.quranDuas.title,
+      );
+      await tester.pumpAndSettle();
       await tester.ensureVisible(library);
       await tester.pumpAndSettle();
       await tester.tap(library);
@@ -278,6 +340,53 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(MorePage), findsOneWidget);
       expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'content sections open directly and back returns to More without a library hub',
+    (tester) async {
+      await pumpApp(tester);
+      await tab(tester, AppSection.more);
+      expect(find.text('الأدعية والمحتوى الديني'), findsNothing);
+      for (final feature in [
+        AppFeature.quranDuas,
+        AppFeature.ruqya,
+        AppFeature.names,
+        AppFeature.propheticDuas,
+        AppFeature.prophets,
+        AppFeature.friday,
+        AppFeature.sunnah,
+        AppFeature.ramadan,
+        AppFeature.nawawi,
+        AppFeature.dailyDuas,
+        AppFeature.savedContent,
+      ]) {
+        await tester.enterText(
+          find.byKey(const ValueKey('more-search')),
+          feature.title,
+        );
+        await tester.pumpAndSettle();
+        final tile = find.byKey(ValueKey('feature-${feature.name}'));
+        await tester.ensureVisible(tile);
+        await tester.pumpAndSettle();
+        await tester.tap(tile);
+        await tester.pumpAndSettle();
+        expect(
+          find.byType(ReligiousHost),
+          findsOneWidget,
+          reason: feature.name,
+        );
+        expect(
+          find.byKey(const PageStorageKey('religious-home')),
+          findsNothing,
+          reason: feature.name,
+        );
+        await tester.binding.handlePopRoute();
+        await tester.pumpAndSettle();
+        expect(find.byType(MorePage), findsOneWidget, reason: feature.name);
+      }
       await tester.pumpWidget(const SizedBox());
     },
   );
@@ -303,6 +412,11 @@ void main() {
         AppFeature.values.length,
       );
       for (final feature in AppFeature.values) {
+        await tester.enterText(
+          find.byKey(const ValueKey('more-search')),
+          feature.title,
+        );
+        await tester.pumpAndSettle();
         final control = find.byKey(ValueKey('feature-${feature.name}'));
         await tester.ensureVisible(control);
         await tester.pumpAndSettle();
@@ -359,15 +473,31 @@ void main() {
       expect(tester.takeException(), isNull);
       await capture(tester, 'more-${mode.name}');
       if (visualAudit) {
-        final secondary = find.byKey(
-          const ValueKey('feature-religiousLibrary'),
+        final secondary = find.byKey(const ValueKey('feature-quranDuas'));
+        await tester.scrollUntilVisible(
+          secondary,
+          300,
+          scrollable: find
+              .descendant(
+                of: find.byKey(const PageStorageKey('more-directory')),
+                matching: find.byType(Scrollable),
+              )
+              .first,
         );
-        await tester.ensureVisible(secondary);
         await tester.pumpAndSettle();
         await capture(tester, 'more-secondary-${mode.name}');
       }
       final planned = find.byKey(const ValueKey('feature-ourApps'));
-      await Scrollable.ensureVisible(tester.element(planned), alignment: .4);
+      await tester.scrollUntilVisible(
+        planned,
+        300,
+        scrollable: find
+            .descendant(
+              of: find.byKey(const PageStorageKey('more-directory')),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
       await tester.pumpAndSettle();
       await tester.tap(planned);
       await tester.pumpAndSettle();

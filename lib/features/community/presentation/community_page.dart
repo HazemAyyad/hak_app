@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../../app_appearance.dart';
+import '../../../app_refresh.dart';
 import '../../../navigation/more_page.dart';
 import '../../account/presentation/account_hub.dart';
 import '../../religious_content/data/religious_controller.dart';
@@ -222,7 +223,7 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
       return Scaffold(
         backgroundColor: palette.background,
         body: SafeArea(
-          child: RefreshIndicator(
+          child: AppRefreshRegion(
             onRefresh: refresh,
             child: ListView(
               padding: const EdgeInsets.only(bottom: 30),

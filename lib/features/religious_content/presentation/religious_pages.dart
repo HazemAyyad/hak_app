@@ -65,7 +65,7 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
       ];
       final query = search.text.trim();
       final results = host.catalog.search(category: scope, query: query);
-      return RefreshIndicator(
+      return AppRefreshRegion(
         onRefresh: host.controller.refresh,
         color: rAccent(context),
         child: ListView(
@@ -73,7 +73,7 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
           padding: EdgeInsets.zero,
           children: [
             ReligiousHeader(
-              title: 'الأدعية والمحتوى الديني',
+              title: 'المزيد',
               subtitle:
                   'مجموعة من الأدعية والكتب والمحتوى الإسلامي\nللاقتراب من الله في كل وقت',
               image: 'home',
@@ -465,89 +465,97 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
           category?.kind == 'categories' && search.text.isEmpty && !onlySaved;
       final names = category?.kind == 'names';
       final verses = category?.kind == 'verses';
-      return ListView(
+      return CustomScrollView(
         key: PageStorageKey(
           'religious-list-${category?.id}-${widget.saved}-${widget.adhkar}',
         ),
-        padding: EdgeInsets.zero,
-        children: [
-          ReligiousHeader(
-            title: title,
-            subtitle: category?.description ?? 'المحتوى الذي حفظته للرجوع إليه',
-            image: category?.header ?? 'ruqya',
-            light: const ['home', 'medina'].contains(category?.header),
-            onBack: host.back,
-            onSaved: () => host.openSaved(),
-            onShare: () => SharePlus.instance.share(ShareParams(text: title)),
+        slivers: [
+          SliverToBoxAdapter(
+            child: ReligiousHeader(
+              title: title,
+              subtitle:
+                  category?.description ?? 'المحتوى الذي حفظته للرجوع إليه',
+              image: category?.header ?? 'ruqya',
+              light: const ['home', 'medina'].contains(category?.header),
+              onBack: host.back,
+              onSaved: () => host.openSaved(),
+              onShare: () => SharePlus.instance.share(ShareParams(text: title)),
+            ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(14, 8, 14, 105),
-            decoration: BoxDecoration(
-              color: ReligiousColors(context).background,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(22),
+          SliverToBoxAdapter(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 10),
+              decoration: BoxDecoration(
+                color: ReligiousColors(context).background,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(22),
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ReligiousSearch(
+                    controller: search,
+                    hint: 'ابحث في $title ...',
+                    onChanged: (_) => setState(() {}),
+                    onFilter: filter,
+                  ),
+                  const SizedBox(height: 10),
+                  if (tags.isNotEmpty && !showChildren)
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          ReligiousPill(
+                            text: 'الكل',
+                            selected: tag == null,
+                            onTap: () => setState(() => tag = null),
+                          ),
+                          for (final label in tags)
+                            ReligiousPill(
+                              text: label,
+                              selected: tag == label,
+                              onTap: () => setState(() => tag = label),
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ReligiousSearch(
-                  controller: search,
-                  hint: 'ابحث في $title ...',
-                  onChanged: (_) => setState(() {}),
-                  onFilter: filter,
-                ),
-                const SizedBox(height: 10),
-                if (tags.isNotEmpty && !showChildren)
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        ReligiousPill(
-                          text: 'الكل',
-                          selected: tag == null,
-                          onTap: () => setState(() => tag = null),
-                        ),
-                        for (final label in tags)
-                          ReligiousPill(
-                            text: label,
-                            selected: tag == label,
-                            onTap: () => setState(() => tag = label),
-                          ),
-                      ],
-                    ),
-                  ),
-                const SizedBox(height: 10),
-                if (showChildren) ...[
-                  for (final child in children)
-                    Padding(
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            sliver: showChildren
+                ? SliverList.builder(
+                    itemCount: children.length,
+                    itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: SizedBox(
                         height: 78 * MediaQuery.textScalerOf(context).scale(1),
                         child: _CategoryTile(
                           host: host,
-                          category: child,
+                          category: children[index],
                           compact: true,
                         ),
                       ),
                     ),
-                ],
-                if (!showChildren && items.isEmpty)
-                  ReligiousEmpty(
-                    text: widget.saved
-                        ? 'لم تحفظ أي محتوى بعد'
-                        : widget.adhkar
-                        ? 'أضف الأدعية إلى أذكارك من صفحة التفاصيل'
-                        : 'لا توجد نتائج مطابقة',
-                    icon: widget.saved
-                        ? Icons.bookmark_border
-                        : Icons.search_off,
-                  ),
-                if (names)
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: EdgeInsets.zero,
+                  )
+                : items.isEmpty
+                ? SliverToBoxAdapter(
+                    child: ReligiousEmpty(
+                      text: widget.saved
+                          ? 'لم تحفظ أي محتوى بعد'
+                          : widget.adhkar
+                          ? 'أضف الأدعية إلى أذكارك من صفحة التفاصيل'
+                          : 'لا توجد نتائج مطابقة',
+                      icon: widget.saved
+                          ? Icons.bookmark_border
+                          : Icons.search_off,
+                    ),
+                  )
+                : names
+                ? SliverGrid.builder(
                     itemCount: items.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
@@ -556,19 +564,20 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                       mainAxisExtent:
                           96 * MediaQuery.textScalerOf(context).scale(1),
                     ),
-                    itemBuilder: (context, i) => _nameCard(context, items[i]),
-                  ),
-                if (!showChildren && !names)
-                  for (final (index, item) in items.indexed)
-                    _ItemTile(
+                    itemBuilder: (context, index) =>
+                        _nameCard(context, items[index]),
+                  )
+                : SliverList.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, index) => _ItemTile(
                       host: host,
-                      item: item,
+                      item: items[index],
                       index: index,
                       verse: verses,
                     ),
-              ],
-            ),
+                  ),
           ),
+          const SliverToBoxAdapter(child: SizedBox(height: 105)),
         ],
       );
     },

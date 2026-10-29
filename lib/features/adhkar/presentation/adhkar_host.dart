@@ -85,6 +85,16 @@ class AdhkarSectionPageState extends State<AdhkarSectionPage> {
   void didUpdateWidget(covariant AdhkarSectionPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     visible.value = widget.active;
+    if (oldWidget.active && !widget.active) {
+      _preparation++;
+      _working = false;
+    }
+  }
+
+  void showRoot() {
+    _preparation++;
+    if (_working) setState(() => _working = false);
+    navigator.currentState?.popUntil((route) => route.isFirst);
   }
 
   @override
@@ -113,7 +123,7 @@ class AdhkarSectionPageState extends State<AdhkarSectionPage> {
     try {
       final repository = await source;
       final activity = await widget.controller.activity;
-      if (!mounted) return;
+      if (!mounted || !widget.active || preparation != _preparation) return;
       _bindActivity(activity);
       await action(repository, activity);
     } catch (_) {
@@ -126,9 +136,10 @@ class AdhkarSectionPageState extends State<AdhkarSectionPage> {
   }
 
   Future<void> openGroup(String id) => _prepare((repository, activity) async {
+    if (_sessions.any((session) => session.group.id == id)) return;
     final scope = activity.scope;
     final library = await repository.library(activity.store, scope);
-    if (!mounted || activity.scope != scope) return;
+    if (!mounted || !widget.active || activity.scope != scope) return;
     final group = library.groups.where((g) => g.id == id).firstOrNull;
     if (group == null) {
       _message('هذه المجموعة غير متاحة حاليًا');
@@ -156,7 +167,7 @@ class AdhkarSectionPageState extends State<AdhkarSectionPage> {
       library: library,
       catalogVersion: repository.version,
     );
-    if (!mounted || activity.scope != scope) {
+    if (!mounted || !widget.active || activity.scope != scope) {
       session.dispose();
       return;
     }

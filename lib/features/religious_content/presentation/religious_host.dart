@@ -8,6 +8,7 @@ import '../../../navigation/more_page.dart';
 import '../../adhkar/data/adhkar_repository.dart';
 import '../../adhkar/data/adhkar_session_controller.dart';
 import '../../../app_experience.dart';
+import '../../../app_refresh.dart';
 import '../../../app_loading.dart';
 import '../../quran/presentation/quran_reader.dart';
 import '../../quran/presentation/quran_audio_widgets.dart'
@@ -71,6 +72,10 @@ class ReligiousHostState extends State<ReligiousHost> {
       _push(_ReligiousTopicsPage(host: this), '/religious/feelings');
       return;
     }
+    if (id == 'favorites') {
+      openSaved();
+      return;
+    }
     if (id == 'personal-adhkar') {
       openSaved(adhkar: true);
       return;
@@ -93,12 +98,20 @@ class ReligiousHostState extends State<ReligiousHost> {
     _ReligiousCategoryPage(host: this, saved: !adhkar, adhkar: adhkar),
     adhkar ? '/religious/adhkar' : '/religious/favorites',
   );
-  void _push(Widget page, String name) => navigator.currentState?.push(
-    MaterialPageRoute<void>(
-      settings: RouteSettings(name: name),
-      builder: (_) => page,
-    ),
-  );
+  final _openPages = <String>{};
+  void _push(Widget page, String name) {
+    final state = navigator.currentState;
+    if (state == null || !_openPages.add(name)) return;
+    state
+        .push(
+          MaterialPageRoute<void>(
+            settings: RouteSettings(name: name),
+            builder: (_) => page,
+          ),
+        )
+        .whenComplete(() => _openPages.remove(name));
+  }
+
   void back() {
     if (navigator.currentState?.canPop() == true) {
       navigator.currentState!.pop();
@@ -203,7 +216,9 @@ class ReligiousHostState extends State<ReligiousHost> {
               if (!widget.initialCategoryAsRoot ||
                   (catalog.byCategory[widget.initialCategory] == null &&
                       widget.initialCategory != 'feelings' &&
-                      widget.initialCategory != 'personal-adhkar'))
+                      widget.initialCategory != 'personal-adhkar' &&
+                      widget.initialCategory != 'favorites' &&
+                      widget.initialCategory != 'ramadan-duas'))
                 MaterialPageRoute<void>(
                   builder: (_) => _ReligiousHomePage(host: this),
                 ),
@@ -245,6 +260,11 @@ class ReligiousHostState extends State<ReligiousHost> {
               if (widget.initialCategory == 'ramadan-duas')
                 MaterialPageRoute<void>(
                   builder: (_) => _RamadanDaysPage(host: this),
+                ),
+              if (widget.initialCategory == 'favorites')
+                MaterialPageRoute<void>(
+                  builder: (_) =>
+                      _ReligiousCategoryPage(host: this, saved: true),
                 ),
               if (widget.initialCategory == 'personal-adhkar')
                 MaterialPageRoute<void>(

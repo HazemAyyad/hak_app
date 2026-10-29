@@ -16,6 +16,7 @@ import 'package:haq_app/features/religious_content/data/religious_catalog.dart';
 import 'package:haq_app/features/religious_content/data/religious_controller.dart';
 import 'package:haq_app/features/religious_content/presentation/religious_host.dart';
 import 'package:haq_app/main.dart';
+import 'package:haq_app/navigation/more_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'support/visual_audit.dart';
@@ -496,7 +497,7 @@ void main() {
     });
   }
   testWidgets(
-    'actual home prayer shortcut opens section and system back returns to More',
+    'home prayer shortcut opens More and categories return there directly',
     (tester) async {
       tester.view.physicalSize = visualSize(const Size(426, 922));
       tester.view.devicePixelRatio = 1;
@@ -514,10 +515,23 @@ void main() {
       await tester.ensureVisible(find.text('الأدعية'));
       await tester.tap(find.text('الأدعية'));
       await tester.pumpAndSettle();
+      expect(find.byType(MorePage), findsOneWidget);
+      expect(find.text('الأدعية والمحتوى الديني'), findsNothing);
+      await tester.enterText(
+        find.byKey(const ValueKey('more-search')),
+        'أدعية قرآنية',
+      );
+      await tester.pumpAndSettle();
+      final category = find.byKey(const ValueKey('feature-quranDuas'));
+      await tester.ensureVisible(category);
+      await tester.pumpAndSettle();
+      await tester.tap(category);
+      await tester.pumpAndSettle();
       expect(find.byType(ReligiousHost), findsOneWidget);
-      expect(find.text('الأدعية والمحتوى الديني'), findsOneWidget);
+      expect(find.byKey(const PageStorageKey('religious-home')), findsNothing);
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
+      expect(find.byType(MorePage), findsOneWidget);
       expect(find.byType(ReligiousHost), findsNothing);
       await tester.pumpWidget(const SizedBox());
     },

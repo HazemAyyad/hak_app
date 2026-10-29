@@ -10,6 +10,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/main.dart';
+import 'package:haq_app/settings_pages.dart';
+import 'package:haq_app/navigation/more_page.dart';
+import 'package:haq_app/navigation/feature_routes.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_repository.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_session_controller.dart';
 import 'package:haq_app/features/adhkar/data/personal_adhkar.dart';
@@ -350,6 +353,114 @@ void main() {
         await tester.pumpWidget(const SizedBox());
       },
     );
+  }
+
+  testWidgets(
+    'a reminder surfaces its reader above an existing settings route',
+    (tester) async {
+      const reminders = MethodChannel('com.haqfoundation.haq_app/reminders');
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(reminders, (call) async {
+            if (call.method == 'status') {
+              return {
+                'platform': 'android',
+                'allowed': true,
+                'exact': true,
+                'fullScreen': true,
+                'pending': 0,
+              };
+            }
+            return null;
+          });
+      addTearDown(
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(reminders, null),
+      );
+      await pump(tester, fullApp: true);
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 100)),
+      );
+      await tester.tap(
+        find.descendant(
+          of: find.byType(NavigationBar),
+          matching: find.text('المزيد'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      tester
+          .widget<MorePage>(find.byType(MorePage))
+          .onFeature(AppFeature.settings);
+      await tester.pumpAndSettle();
+      expect(find.byType(SettingsPage), findsOneWidget);
+      tester.binding.channelBuffers.push(
+        reminders.name,
+        const StandardMethodCodec().encodeMethodCall(
+          const MethodCall('open', 'adhkar-morning'),
+        ),
+        (_) {},
+      );
+      await until(
+        tester,
+        () => find.byTooltip('العودة للأذكار').evaluate().isNotEmpty,
+      );
+      expect(find.byType(SettingsPage), findsNothing);
+      expect(find.text('أذكار الصباح'), findsWidgets);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+    },
+  );
+
+  for (final kind in ['morning', 'evening', 'sleep']) {
+    testWidgets('cold reminder opens the $kind reader directly', (
+      tester,
+    ) async {
+      const reminders = MethodChannel('com.haqfoundation.haq_app/reminders');
+      var delivered = false;
+      final seen = <String>[];
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(reminders, (call) async {
+            seen.add(call.method);
+            if (call.method == 'status') {
+              return {
+                'platform': 'android',
+                'allowed': true,
+                'exact': true,
+                'fullScreen': true,
+                'pending': 0,
+              };
+            }
+            if (call.method == 'pendingOpen' && !delivered) {
+              delivered = true;
+              return 'adhkar-$kind';
+            }
+            return null;
+          });
+      addTearDown(
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(reminders, null),
+      );
+      await pump(tester, fullApp: true);
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 100)),
+      );
+      await tester.pumpAndSettle();
+      expect(delivered, true, reason: 'Native calls: $seen');
+      await until(
+        tester,
+        () => find.byTooltip('العودة للأذكار').evaluate().isNotEmpty,
+      );
+      expect(delivered, true);
+      expect(
+        find.text(
+          source.groups.singleWhere((g) => g.id == 'daily:$kind').title,
+        ),
+        findsWidgets,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+    });
   }
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {

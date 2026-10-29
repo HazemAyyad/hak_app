@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_appearance.dart';
 import 'app_experience.dart';
+import 'app_refresh.dart';
 import 'settings_pages.dart';
 import 'features/quran/data/quran_controller.dart';
 import 'features/quran/data/quran_repository.dart';
@@ -129,7 +130,14 @@ class _HaqAppState extends State<HaqApp> {
                     appearance.fontScale,
               ),
             ),
-            child: AppExperienceOverlay(controller: _experience, child: child!),
+            child: AppRefreshHost(
+              onRefresh: () =>
+                  _experience.refreshCurrent?.call() ?? Future<void>.value(),
+              child: AppExperienceOverlay(
+                controller: _experience,
+                child: child!,
+              ),
+            ),
           ),
           home: widget.showStartup
               ? StartupFlow(
@@ -231,6 +239,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   AppSection _section = AppSection.home;
   final _visited = <AppSection>{AppSection.home, AppSection.quran};
+  final _openFeatureRoutes = <String>{};
   bool _quranFullscreen = false;
   late final QuranController _quran;
   final _quranKey = GlobalKey<QuranHostState>();
@@ -252,9 +261,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _prayer?.setAppLanguage(Localizations.localeOf(context).languageCode);
     final next = AppExperienceScope.maybeOf(context);
     if (next != _experience) {
+      if (_experience?.refreshCurrent == _refreshCurrent) {
+        _experience?.refreshCurrent = null;
+      }
       _experience?.unregister(_quran.audio);
       _experience?.unregister(_religious.media);
       _experience = next;
+      next?.refreshCurrent = _refreshCurrent;
       next?.register(_quran.audio);
       next?.register(_religious.media);
     }
@@ -276,10 +289,14 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       });
     } else if (_religious.catalog == null) {
       _religious.load();
-      unawaited(_prepareReminders());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_prepareReminders());
+      });
       _preparePublicPush();
     } else {
-      unawaited(_prepareReminders());
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(_prepareReminders());
+      });
       _preparePublicPush();
     }
   }
@@ -331,6 +348,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   void _openReminder(String route) {
     if (!mounted) return;
+    if (route.startsWith('adhkar-')) {
+      Navigator.of(context).popUntil((page) => page.isFirst);
+    }
     switch (route) {
       case 'messages':
         _openFeature(AppFeature.messages);
@@ -338,6 +358,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _openPrayer();
       case 'prayer-settings':
         _openPrayer(settings: true);
+      case 'adhkar-morning':
+      case 'adhkar-evening':
+      case 'adhkar-sleep':
       case 'adhkar-after-prayer':
         _selectSection(AppSection.adhkar);
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -345,7 +368,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             _adhkarKey.currentState?.navigator.currentState?.popUntil(
               (route) => route.isFirst,
             );
-            _adhkarKey.currentState?.openGroup('daily:after-prayer');
+            _adhkarKey.currentState?.openGroup(
+              'daily:${route.substring('adhkar-'.length)}',
+            );
           }
         });
       case 'qibla':
@@ -355,7 +380,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       case 'khatma':
         _openFeature(AppFeature.khatma);
       case 'library':
-        _openFeature(AppFeature.religiousLibrary);
+        _selectSection(AppSection.more);
       case 'friday':
         _openFeature(AppFeature.friday);
       case 'settings':
@@ -382,6 +407,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _publicPush?.dispose();
     _reminders?.dispose();
     _prayer?.dispose();
+    if (_experience?.refreshCurrent == _refreshCurrent) {
+      _experience?.refreshCurrent = null;
+    }
     _experience?.unregister(_quran.audio);
     _experience?.unregister(_religious.media);
     if (widget.religiousController == null) _religious.dispose();
@@ -407,6 +435,51 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       _section = section;
       _visited.add(section);
     });
+  }
+
+  void _selectBottomDestination(int index) {
+    final section = AppSection.values[index];
+    if (section == _section) {
+      if (section == AppSection.quran) {
+        _quranKey.currentState?.navigator.currentState?.popUntil(
+          (route) => route.isFirst,
+        );
+      } else if (section == AppSection.adhkar) {
+        _adhkarKey.currentState?.showRoot();
+      } else if (section == AppSection.more && _religiousOpen) {
+        _religiousOpen = false;
+      }
+    }
+    _selectSection(section);
+  }
+
+  Future<void> _refreshCurrent() async {
+    await _quran.flushReading();
+    await _religious.settle();
+    await _reminders?.flush();
+    await _quran.preferences?.reload();
+    if (!mounted) return;
+    _quran.refreshReading();
+    _prayer?.reloadBackup();
+    AppearanceScope.of(context).refreshTime();
+    await _reminders?.reconcile();
+    final activity = await _religious.activity;
+    await activity.sync();
+    if (_section == AppSection.more && _religiousOpen) {
+      await _religious.refresh();
+    }
+  }
+
+  void _pushFeature(AppFeature feature, WidgetBuilder builder) {
+    if (!_openFeatureRoutes.add(feature.routeName)) return;
+    Navigator.of(context)
+        .push<void>(
+          MaterialPageRoute<void>(
+            settings: RouteSettings(name: feature.routeName),
+            builder: builder,
+          ),
+        )
+        .whenComplete(() => _openFeatureRoutes.remove(feature.routeName));
   }
 
   void _preparePrayer() {
@@ -456,7 +529,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         if (mounted) _quranKey.currentState?.openReader(result);
       });
     } else if (result is ReligiousItem) {
-      _openReligious();
+      _openReligious(
+        result.categories
+                .where((id) => _religious.catalog!.byCategory.containsKey(id))
+                .firstOrNull ??
+            'prophetic-duas',
+      );
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) _religiousKey.currentState?.openItem(result);
       });
@@ -554,11 +632,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
   }
 
-  void _openReligious([String? category]) {
+  void _openReligious(String category) {
     _experience?.changeSurface('religious');
-    if (_religiousOpen &&
-        _religiousKey.currentState != null &&
-        category != null) {
+    if (_religiousOpen && _religiousKey.currentState != null) {
       _religiousKey.currentState!.openCategory(category);
     }
     setState(() {
@@ -605,65 +681,49 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     switch (feature) {
       case AppFeature.assistant:
       case AppFeature.subscription:
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            settings: RouteSettings(name: feature.routeName),
-            builder: (_) => AssistantPage(
-              religious: _religious,
-              controller: _assistant,
-              subscription: feature == AppFeature.subscription,
-            ),
+        _pushFeature(
+          feature,
+          (_) => AssistantPage(
+            religious: _religious,
+            controller: _assistant,
+            subscription: feature == AppFeature.subscription,
           ),
         );
       case AppFeature.circles:
       case AppFeature.duaTogether:
       case AppFeature.messages:
       case AppFeature.stories:
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            settings: RouteSettings(name: feature.routeName),
-            builder: (_) => CommunityPage(
-              religious: _religious,
-              push: _publicPush,
-              section: switch (feature) {
-                AppFeature.circles => CommunitySection.circles,
-                AppFeature.duaTogether => CommunitySection.prayers,
-                AppFeature.messages => CommunitySection.messages,
-                _ => CommunitySection.stories,
-              },
-            ),
+        _pushFeature(
+          feature,
+          (_) => CommunityPage(
+            religious: _religious,
+            push: _publicPush,
+            section: switch (feature) {
+              AppFeature.circles => CommunitySection.circles,
+              AppFeature.duaTogether => CommunitySection.prayers,
+              AppFeature.messages => CommunitySection.messages,
+              _ => CommunitySection.stories,
+            },
           ),
         );
       case AppFeature.sakinah:
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            settings: RouteSettings(name: feature.routeName),
-            builder: (_) => SakinahPage(controller: _religious),
-          ),
-        );
+        _pushFeature(feature, (_) => SakinahPage(controller: _religious));
       case AppFeature.khatma:
       case AppFeature.habits:
       case AppFeature.statistics:
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            settings: RouteSettings(name: feature.routeName),
-            builder: (_) => ProgressPage(
-              controller: _religious,
-              section: switch (feature) {
-                AppFeature.khatma => ProgressSection.khatma,
-                AppFeature.habits => ProgressSection.habits,
-                _ => ProgressSection.statistics,
-              },
-            ),
+        _pushFeature(
+          feature,
+          (_) => ProgressPage(
+            controller: _religious,
+            section: switch (feature) {
+              AppFeature.khatma => ProgressSection.khatma,
+              AppFeature.habits => ProgressSection.habits,
+              _ => ProgressSection.statistics,
+            },
           ),
         );
       case AppFeature.tasbih:
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            settings: RouteSettings(name: feature.routeName),
-            builder: (_) => TasbihPage(controller: _religious),
-          ),
-        );
+        _pushFeature(feature, (_) => TasbihPage(controller: _religious));
       case AppFeature.quran:
         _openQuran();
       case AppFeature.adhkar:
@@ -678,74 +738,61 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
       case AppFeature.mosques:
         _preparePrayer();
         if (_prayer != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (_) => MosquesPage(controller: _prayer!),
-            ),
-          );
+          _pushFeature(feature, (_) => MosquesPage(controller: _prayer!));
         }
       case AppFeature.settings:
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => SettingsPage(
-              reminders: _reminders,
-              loadReminders: _prepareReminders,
-              onPrayerSettings: () {
-                Navigator.of(context).pop();
-                _openPrayer(settings: true);
-              },
-              onQuranSettings: () {
-                Navigator.of(context).pop();
-                _openQuranSettings();
-              },
-              onQuranAccount: () {
-                Navigator.of(context).pop();
-                _openQuranAccount();
-              },
-              onQuranDownloads: () {
-                Navigator.of(context).pop();
-                _openQuranDownloads();
-              },
-            ),
+        _pushFeature(
+          feature,
+          (_) => SettingsPage(
+            reminders: _reminders,
+            loadReminders: _prepareReminders,
+            onPrayerSettings: () {
+              Navigator.of(context).pop();
+              _openPrayer(settings: true);
+            },
+            onQuranSettings: () {
+              Navigator.of(context).pop();
+              _openQuranSettings();
+            },
+            onQuranAccount: () {
+              Navigator.of(context).pop();
+              _openQuranAccount();
+            },
+            onQuranDownloads: () {
+              Navigator.of(context).pop();
+              _openQuranDownloads();
+            },
           ),
         );
       case AppFeature.appearance:
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) =>
-                const SettingsDetailPage(kind: SettingKind.appearance),
-          ),
+        _pushFeature(
+          feature,
+          (_) => const SettingsDetailPage(kind: SettingKind.appearance),
         );
       default:
-        if (feature.category != null ||
-            feature == AppFeature.religiousLibrary) {
+        if (feature.category != null) {
           if (_section == AppSection.adhkar) {
-            Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                settings: RouteSettings(name: feature.routeName),
-                builder: (routeContext) => Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: Scaffold(
-                    body: ReligiousHost(
-                      controller: _religious,
-                      initialCategory: feature.category,
-                      initialCategoryAsRoot: true,
-                      onClose: () => Navigator.of(routeContext).pop(),
-                    ),
+            _pushFeature(
+              feature,
+              (routeContext) => Directionality(
+                textDirection: TextDirection.rtl,
+                child: Scaffold(
+                  body: ReligiousHost(
+                    controller: _religious,
+                    initialCategory: feature.category,
+                    initialCategoryAsRoot: true,
+                    onClose: () => Navigator.of(routeContext).pop(),
                   ),
                 ),
               ),
             );
           } else {
-            _openReligious(feature.category);
+            _openReligious(feature.category!);
           }
         } else {
-          Navigator.of(context).push(
-            MaterialPageRoute<void>(
-              settings: RouteSettings(name: feature.routeName),
-              builder: (_) => FeaturePreparationPage(feature: feature),
-            ),
+          _pushFeature(
+            feature,
+            (_) => FeaturePreparationPage(feature: feature),
           );
         }
     }
@@ -782,7 +829,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             ),
             SizedBox(height: 14),
             QuickServices(
-              onDuasTap: () => _openReligious(),
+              onDuasTap: () => _selectSection(AppSection.more),
               onAdhkarTap: () => _selectSection(AppSection.adhkar),
               onKhatmaTap: () => _openFeature(AppFeature.khatma),
               onTasbihTap: () => _openFeature(AppFeature.tasbih),
@@ -814,7 +861,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             SectionHeader(
               title: 'مقالات ومعلومات',
               action: 'عرض الكل',
-              onTap: () => _openReligious(),
+              onTap: () => _selectSection(AppSection.more),
             ),
             SizedBox(height: 10),
             ArticlesRow(
@@ -902,6 +949,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       controller: _religious,
                       active: _section == AppSection.more,
                       initialCategory: _religiousInitialCategory,
+                      initialCategoryAsRoot: true,
                       onClose: () {
                         _experience?.changeSurface('more');
                         setState(() => _religiousOpen = false);
@@ -913,26 +961,19 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           extendBody: true,
           bottomNavigationBar: _quranFullscreen && _section == AppSection.quran
               ? null
-              : religiousHandlesBack
-              ? ReligiousNavigationBar(
-                  onSelected: (index) {
-                    if (index == AppSection.more.index) _religiousOpen = false;
-                    _selectSection(AppSection.values[index]);
-                  },
-                )
               : ClipRRect(
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(30),
                   ),
                   child: NavigationBar(
+                    key: const ValueKey('haq-bottom-navigation'),
                     selectedIndex: _section.index,
                     height: 72,
                     backgroundColor: dark
                         ? const Color(0xF2132331)
                         : const Color(0xF9FFFFFF),
                     indicatorColor: Colors.transparent,
-                    onDestinationSelected: (index) =>
-                        _selectSection(AppSection.values[index]),
+                    onDestinationSelected: _selectBottomDestination,
                     destinations: [
                       for (final section in AppSection.values)
                         NavigationDestination(
