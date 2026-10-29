@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../app_appearance.dart';
 import 'feature_routes.dart';
+import 'more_service_grid.dart';
+import 'more_service_list.dart';
 
 class MorePage extends StatefulWidget {
   const MorePage({super.key, required this.onFeature});
@@ -13,6 +15,7 @@ class MorePage extends StatefulWidget {
 
 class _MorePageState extends State<MorePage> {
   final _search = TextEditingController();
+  final _scroll = ScrollController();
   String _query = '';
 
   String _normalized(String value) => value
@@ -28,149 +31,223 @@ class _MorePageState extends State<MorePage> {
   @override
   void dispose() {
     _search.dispose();
+    _scroll.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
-    final secondary = AppFeature.values
-        .where(
-          (feature) =>
-              !AppFeature.featured.contains(feature) &&
-              feature != AppFeature.settings &&
-              feature != AppFeature.appearance &&
-              _matches(feature),
-        )
-        .toList();
+    final appearance = AppearanceScope.of(context);
+    final layout = appearance.moreDirectoryLayout;
+    final results = AppFeature.values.where(_matches).toList();
+    final groups = _query.isEmpty
+        ? moreServiceGroups
+        : <(String, List<AppFeature>)>[('نتائج البحث', results)];
     return ColoredBox(
       color: palette.background,
-      child: CustomScrollView(
-        key: const PageStorageKey('more-directory'),
-        slivers: [
-          SliverToBoxAdapter(
-            child: DirectoryHeader(
-              title: 'المزيد',
-              subtitle: 'خدمات ومحتوى إيماني\nيصل بك إلى الله في كل وقت',
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Transform.translate(
-              offset: const Offset(0, -16),
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(14, 12, 14, 0),
-                decoration: BoxDecoration(
-                  color: palette.background,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(24),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextField(
-                      key: const ValueKey('more-search'),
-                      controller: _search,
-                      onChanged: (value) =>
-                          setState(() => _query = _normalized(value)),
-                      decoration: InputDecoration(
-                        hintText: 'ابحث عن خدمة…',
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: _query.isEmpty
-                            ? null
-                            : IconButton(
-                                tooltip: 'مسح البحث',
-                                onPressed: () {
-                                  _search.clear();
-                                  setState(() => _query = '');
-                                },
-                                icon: const Icon(Icons.close),
-                              ),
-                        filled: true,
-                        fillColor: palette.surface,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide(color: palette.border),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide(color: palette.border),
-                        ),
+      child: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'المزيد',
+                      style: TextStyle(
+                        color: palette.heading,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    Wrap(
-                      alignment: WrapAlignment.end,
-                      spacing: 8,
-                      children: [
-                        for (final feature in [
-                          AppFeature.settings,
-                          AppFeature.appearance,
-                        ].where(_matches))
-                          ActionChip(
-                            key: ValueKey('feature-${feature.name}'),
-                            avatar: Icon(
-                              feature.icon,
-                              size: 17,
-                              color: palette.tealHeading,
+                  ),
+                  Material(
+                    color: palette.paleTeal,
+                    shape: const CircleBorder(),
+                    child: PopupMenuButton<MoreDirectoryLayout>(
+                      key: const ValueKey('more-layout'),
+                      tooltip: 'طريقة العرض',
+                      icon: Icon(
+                        layout == MoreDirectoryLayout.grid
+                            ? Icons.grid_view_outlined
+                            : Icons.view_agenda_outlined,
+                        color: palette.tealHeading,
+                      ),
+                      color: palette.surface,
+                      elevation: 0,
+                      position: PopupMenuPosition.under,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: BorderSide(color: palette.border),
+                      ),
+                      onSelected: (value) {
+                        if (value == layout) return;
+                        if (_scroll.hasClients) _scroll.jumpTo(0);
+                        appearance.setMoreDirectoryLayout(value);
+                      },
+                      itemBuilder: (context) => [
+                        for (final (value, label, icon) in [
+                          (
+                            MoreDirectoryLayout.grid,
+                            'شبكة',
+                            Icons.grid_view_outlined,
+                          ),
+                          (
+                            MoreDirectoryLayout.list,
+                            'قائمة مصوّرة',
+                            Icons.view_agenda_outlined,
+                          ),
+                        ])
+                          PopupMenuItem(
+                            value: value,
+                            child: Directionality(
+                              textDirection: Directionality.of(context),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    icon,
+                                    color: palette.tealHeading,
+                                    size: 22,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(
+                                      label,
+                                      style: TextStyle(color: palette.heading),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  if (value == layout)
+                                    Icon(
+                                      Icons.check,
+                                      color: palette.tealHeading,
+                                      size: 20,
+                                    ),
+                                ],
+                              ),
                             ),
-                            label: Text(feature.title),
-                            onPressed: () => widget.onFeature(feature),
-                            backgroundColor: palette.surface,
-                            side: BorderSide(color: palette.border),
                           ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    for (final feature in AppFeature.featured.where(_matches))
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: _FeaturedService(
-                          feature: feature,
-                          onTap: () => widget.onFeature(feature),
-                        ),
-                      ),
-                    const SizedBox(height: 12),
-                    Text(
-                      _query.isEmpty ? 'اكتشف المزيد' : 'نتائج البحث',
-                      style: TextStyle(
-                        color: palette.heading,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
+                  ),
+                  const SizedBox(width: 8),
+                  Material(
+                    color: palette.paleTeal,
+                    shape: const CircleBorder(),
+                    child: IconButton(
+                      key: const ValueKey('more-settings'),
+                      tooltip: 'الإعدادات',
+                      onPressed: () => widget.onFeature(AppFeature.settings),
+                      icon: Icon(
+                        Icons.settings_outlined,
+                        color: palette.tealHeading,
                       ),
                     ),
-                    const SizedBox(height: 12),
-                    if (!AppFeature.values.any(_matches))
-                      Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Text(
-                          'لا توجد خدمات تطابق بحثك',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: palette.muted),
-                        ),
-                      ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(14, 0, 14, 110),
-            sliver: SliverList.builder(
-              itemCount: secondary.length,
-              itemBuilder: (context, index) {
-                final feature = secondary[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: _FeaturedService(
-                    feature: feature,
-                    onTap: () => widget.onFeature(feature),
-                  ),
-                );
-              },
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final tileHeight = layout == MoreDirectoryLayout.grid
+                      ? moreServiceTileHeight(context, constraints.maxWidth)
+                      : 0.0;
+                  return CustomScrollView(
+                    key: const PageStorageKey('more-directory'),
+                    controller: _scroll,
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    slivers: [
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 6),
+                        sliver: SliverToBoxAdapter(
+                          child: TextField(
+                            key: const ValueKey('more-search'),
+                            controller: _search,
+                            onChanged: (value) =>
+                                setState(() => _query = _normalized(value)),
+                            decoration: InputDecoration(
+                              hintText: 'ابحث عن خدمة…',
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: palette.muted,
+                              ),
+                              suffixIcon: _query.isEmpty
+                                  ? null
+                                  : IconButton(
+                                      tooltip: 'مسح البحث',
+                                      onPressed: () {
+                                        _search.clear();
+                                        setState(() => _query = '');
+                                      },
+                                      icon: const Icon(Icons.close),
+                                    ),
+                              filled: true,
+                              fillColor: palette.surface,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(color: palette.border),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: BorderSide(color: palette.border),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      for (final (title, features) in groups) ...[
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
+                          sliver: SliverToBoxAdapter(
+                            child: Semantics(
+                              header: true,
+                              child: Text(
+                                title,
+                                style: TextStyle(
+                                  color: palette.heading,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (layout == MoreDirectoryLayout.grid)
+                          MoreServiceGrid(
+                            features: features,
+                            tileHeight: tileHeight,
+                            onFeature: widget.onFeature,
+                          )
+                        else
+                          MoreServiceList(
+                            features: features,
+                            onFeature: widget.onFeature,
+                          ),
+                      ],
+                      if (_query.isNotEmpty && results.isEmpty)
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Text(
+                              'لا توجد خدمات تطابق بحثك',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: palette.muted),
+                            ),
+                          ),
+                        ),
+                      const SliverToBoxAdapter(child: SizedBox(height: 110)),
+                    ],
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -290,165 +367,3 @@ class DirectoryHeader extends StatelessWidget {
     );
   }
 }
-
-class _FeaturedService extends StatelessWidget {
-  const _FeaturedService({required this.feature, required this.onTap});
-  final AppFeature feature;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final palette = AppPalette.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: palette.border.withValues(alpha: .7)),
-        boxShadow: palette.dark
-            ? []
-            : const [
-                BoxShadow(
-                  color: Color(0x08664D24),
-                  blurRadius: 12,
-                  offset: Offset(0, 4),
-                ),
-              ],
-      ),
-      child: Material(
-        color: palette.surface,
-        borderRadius: BorderRadius.circular(18),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          key: ValueKey('feature-${feature.name}'),
-          onTap: onTap,
-          child: Stack(
-            children: [
-              if (feature.imageAsset != null)
-                Positioned(
-                  top: 0,
-                  bottom: 0,
-                  right: 0,
-                  width: 143,
-                  child: ClipRect(
-                    child: Transform.scale(
-                      scale: feature == AppFeature.sakinah ? 2.2 : 1,
-                      alignment: Alignment.bottomLeft,
-                      child: Image.asset(
-                        feature.imageAsset!,
-                        fit: BoxFit.cover,
-                        alignment: feature == AppFeature.sakinah
-                            ? Alignment.bottomLeft
-                            : Alignment.center,
-                      ),
-                    ),
-                  ),
-                ),
-              Positioned(
-                top: 0,
-                bottom: 0,
-                right: 0,
-                width: 165,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerRight,
-                      end: Alignment.centerLeft,
-                      colors: [
-                        palette.surface.withValues(alpha: 0),
-                        palette.surface,
-                      ],
-                      stops: const [.1, .92],
-                    ),
-                  ),
-                ),
-              ),
-              ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 78),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    8,
-                    12,
-                    feature.imageAsset == null ? 16 : 85,
-                    12,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              feature == AppFeature.adhkar
-                                  ? 'الأذكار'
-                                  : feature == AppFeature.tasbih
-                                  ? 'المسبحة'
-                                  : feature.title,
-                              style: TextStyle(
-                                color: palette.heading,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              feature.subtitle ?? _description(feature),
-                              style: TextStyle(
-                                color: palette.muted,
-                                fontSize: 11,
-                                height: 1.55,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Icon(
-                        feature.icon,
-                        color:
-                            feature == AppFeature.quran ||
-                                feature == AppFeature.khatma
-                            ? palette.gold
-                            : palette.tealHeading,
-                        size: 29,
-                      ),
-                      const SizedBox(width: 9),
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundColor: palette.neutral,
-                        child: Icon(
-                          Icons.chevron_left,
-                          textDirection: TextDirection.ltr,
-                          color: palette.heading,
-                          size: 22,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-String _description(AppFeature feature) => switch (feature) {
-  AppFeature.dailyDuas => 'أدعية وآداب لمواقف يومك',
-  AppFeature.savedContent => 'الأدعية والمحتوى الذي حفظته',
-  AppFeature.duaTogether => 'شارك الدعاء وتفاعل مع المجتمع',
-  AppFeature.circles => 'ذكر مشترك ومتابعة المساهمات',
-  AppFeature.statistics => 'تابع نشاطك وإنجازاتك المسجلة',
-  AppFeature.personalAdhkar => 'أذكارك ومجموعاتك الخاصة',
-  AppFeature.names => 'أسماء الله الحسنى ومعانيها',
-  AppFeature.ramadan => 'ورد وأدعية وأعمال رمضان',
-  AppFeature.sunnah || AppFeature.friday => 'سنن وآداب من الهدي النبوي',
-  AppFeature.hadith || AppFeature.nawawi => 'أحاديث نبوية مع الشرح والمصدر',
-  AppFeature.mosques => 'ابحث عن المساجد القريبة منك',
-  AppFeature.messages || AppFeature.stories => 'رسائل ومحتوى إيماني من حق',
-  AppFeature.assistant => 'افتح المساعد وسجل محادثاتك',
-  AppFeature.subscription => 'تفاصيل الباكج وإدارة الاشتراك',
-  AppFeature.ourApps => 'تعرف على تطبيقات حق',
-  _ => 'افتح القسم واستكشف محتواه',
-};

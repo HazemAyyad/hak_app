@@ -13,6 +13,8 @@ enum AppFont {
   final String? family;
 }
 
+enum MoreDirectoryLayout { grid, list }
+
 enum AppColor {
   haq('حق الأصلي', Color(0xFF2A8C82)),
   emerald('زمردي', Color(0xFF26734D)),
@@ -86,6 +88,10 @@ class AppAppearance extends ChangeNotifier {
       (value) => value.name == preferences.getString('appearance.color'),
       orElse: () => AppColor.haq,
     );
+    moreDirectoryLayout = MoreDirectoryLayout.values.firstWhere(
+      (value) => value.name == preferences.getString('appearance.moreLayout'),
+      orElse: () => MoreDirectoryLayout.grid,
+    );
     timed = preferences.getBool('appearance.timed') ?? false;
     dayStart = (preferences.getInt('appearance.dayStart') ?? 360).clamp(
       0,
@@ -107,6 +113,7 @@ class AppAppearance extends ChangeNotifier {
   late double fontScale;
   late AppFont font;
   late AppColor color;
+  late MoreDirectoryLayout moreDirectoryLayout;
   final DateTime Function() clock;
   late bool timed;
   late int dayStart, nightStart;
@@ -161,6 +168,13 @@ class AppAppearance extends ChangeNotifier {
     color = value;
     notifyListeners();
     await preferences.setString('appearance.color', value.name);
+  }
+
+  Future<void> setMoreDirectoryLayout(MoreDirectoryLayout value) async {
+    if (moreDirectoryLayout == value) return;
+    moreDirectoryLayout = value;
+    notifyListeners();
+    await preferences.setString('appearance.moreLayout', value.name);
   }
 
   Future<void> setTimed(bool value) async {

@@ -20,6 +20,7 @@ import 'package:haq_app/features/quran/presentation/quran_host.dart';
 import 'package:haq_app/navigation/app_section.dart';
 import 'package:haq_app/navigation/feature_routes.dart';
 import 'package:haq_app/navigation/more_page.dart';
+import 'package:haq_app/navigation/more_service_grid.dart';
 import 'package:haq_app/navigation/section_entry_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'support/visual_audit.dart';
@@ -114,6 +115,18 @@ void main() {
         of: find.byType(NavigationBar),
         matching: find.text(section.label),
       ),
+    );
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> chooseLayout(
+    WidgetTester tester,
+    MoreDirectoryLayout layout,
+  ) async {
+    await tester.tap(find.byTooltip('طريقة العرض'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.text(layout == MoreDirectoryLayout.grid ? 'شبكة' : 'قائمة مصوّرة'),
     );
     await tester.pumpAndSettle();
   }
@@ -411,24 +424,97 @@ void main() {
         AppFeature.values.map((feature) => feature.routeName).toSet().length,
         AppFeature.values.length,
       );
-      for (final feature in AppFeature.values) {
-        await tester.enterText(
-          find.byKey(const ValueKey('more-search')),
-          feature.title,
-        );
-        await tester.pumpAndSettle();
-        final control = find.byKey(ValueKey('feature-${feature.name}'));
-        await tester.ensureVisible(control);
-        await tester.pumpAndSettle();
-        await tester.tap(control);
-        await tester.pumpAndSettle();
-        expect(selected.last, feature);
+      final grouped = moreServiceGroups.expand((group) => group.$2).toList();
+      final services = AppFeature.values.where(
+        (feature) =>
+            feature != AppFeature.settings && feature != AppFeature.appearance,
+      );
+      expect(grouped, unorderedEquals(services));
+      final first = tester.getRect(
+        find.byKey(const ValueKey('feature-adhkar')),
+      );
+      final second = tester.getRect(
+        find.byKey(const ValueKey('feature-tasbih')),
+      );
+      expect(first.top, second.top);
+      expect(first.width, second.width);
+      expect(first.left, greaterThan(second.left));
+      expect(find.byType(DirectoryHeader), findsNothing);
+      expect(find.byType(Image), findsNothing);
+      expect(find.byType(ActionChip), findsNothing);
+      expect(find.byKey(const ValueKey('feature-appearance')), findsNothing);
+      await tester.tap(find.byTooltip('الإعدادات'));
+      expect(selected.removeLast(), AppFeature.settings);
+      for (final layout in MoreDirectoryLayout.values) {
+        await chooseLayout(tester, layout);
+        for (final feature in AppFeature.values) {
+          await tester.enterText(
+            find.byKey(const ValueKey('more-search')),
+            feature.title,
+          );
+          await tester.pumpAndSettle();
+          final control = find.byKey(ValueKey('feature-${feature.name}'));
+          await tester.ensureVisible(control);
+          await tester.pumpAndSettle();
+          expect(
+            find.descendant(of: control, matching: find.byType(Image)),
+            layout == MoreDirectoryLayout.list ? findsOneWidget : findsNothing,
+            reason: feature.name,
+          );
+          await tester.tap(control);
+          await tester.pumpAndSettle();
+          expect(selected.last, feature);
+          expect(tester.takeException(), isNull, reason: feature.name);
+        }
       }
-      expect(selected.length, AppFeature.values.length);
+      expect(
+        selected.length,
+        AppFeature.values.length * MoreDirectoryLayout.values.length,
+      );
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     },
   );
+
+  testWidgets('layout choice preserves search and persists after reopening', (
+    tester,
+  ) async {
+    await pumpApp(tester, width: 320);
+    await tab(tester, AppSection.more);
+    final search = find.byKey(const ValueKey('more-search'));
+    await tester.enterText(search, 'قُرْآن');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('طريقة العرض'));
+    await tester.pumpAndSettle();
+    await capture(tester, 'more-layout-menu');
+    await tester.tap(find.text('قائمة مصوّرة'));
+    await tester.pumpAndSettle();
+    expect(tester.widget<TextField>(search).controller!.text, 'قُرْآن');
+    expect(find.byKey(const ValueKey('feature-quran')), findsOneWidget);
+    expect(find.byKey(const ValueKey('feature-tasbih')), findsNothing);
+    expect(appearance.preferences.getString('appearance.moreLayout'), 'list');
+
+    await tester.pumpWidget(const SizedBox());
+    final preferences = appearance.preferences;
+    appearance.dispose();
+    appearance = AppAppearance(preferences);
+    expect(appearance.moreDirectoryLayout, MoreDirectoryLayout.list);
+    await pumpApp(tester, width: 320);
+    await tab(tester, AppSection.more);
+    expect(find.byType(SliverGrid), findsNothing);
+    expect(find.byType(Image), findsWidgets);
+    await chooseLayout(tester, MoreDirectoryLayout.grid);
+    expect(appearance.preferences.getString('appearance.moreLayout'), 'grid');
+    final restored = AppAppearance(preferences);
+    expect(restored.moreDirectoryLayout, MoreDirectoryLayout.grid);
+    restored.dispose();
+    await preferences.setString('appearance.moreLayout', 'unknown');
+    final fallback = AppAppearance(preferences);
+    expect(fallback.moreDirectoryLayout, MoreDirectoryLayout.grid);
+    fallback.dispose();
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
 
   testWidgets(
     'directory search normalizes Arabic and clear restores destinations',
@@ -455,23 +541,22 @@ void main() {
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('More reference preview ${mode.name}', (tester) async {
       await appearance.setMode(mode);
-      await pumpApp(tester);
+      await pumpApp(tester, width: 390);
       await tab(tester, AppSection.more);
-      await tester.runAsync(() async {
-        for (final asset in [
-          'assets/navigation/more_header.png',
-          'assets/navigation/sakinah.png',
-          'assets/religious/quran.png',
-          'assets/religious/beads.png',
-          'assets/religious/kaaba.png',
-          'assets/religious/hands.png',
-        ]) {
-          await precacheImage(AssetImage(asset), previewKey.currentContext!);
-        }
-      });
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       await capture(tester, 'more-${mode.name}');
+      await chooseLayout(tester, MoreDirectoryLayout.list);
+      await tester.runAsync(() async {
+        for (final image in find.byType(Image).evaluate()) {
+          await precacheImage(
+            (image.widget as Image).image,
+            previewKey.currentContext!,
+          );
+        }
+      });
+      await tester.pumpAndSettle();
+      await capture(tester, 'more-list-${mode.name}');
       if (visualAudit) {
         final secondary = find.byKey(const ValueKey('feature-quranDuas'));
         await tester.scrollUntilVisible(
@@ -517,12 +602,16 @@ void main() {
         await appearance.setFontScale(1.2);
         await pumpApp(tester, width: 320);
         await tab(tester, AppSection.more);
+        await capture(tester, 'more-narrow-${mode.name}');
+        await chooseLayout(tester, MoreDirectoryLayout.list);
+        await capture(tester, 'more-list-narrow-${mode.name}');
         final view = find.byKey(const PageStorageKey('more-directory'));
         for (var index = 0; index < 18; index++) {
           expect(tester.takeException(), isNull);
           await tester.drag(view, const Offset(0, -400));
           await tester.pumpAndSettle();
         }
+        expect(find.byTooltip('الإعدادات').hitTestable(), findsOneWidget);
         await tab(tester, AppSection.adhkar);
         expect(tester.takeException(), isNull);
         await tab(tester, AppSection.qibla);

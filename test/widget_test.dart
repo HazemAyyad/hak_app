@@ -43,7 +43,7 @@ void main() {
     );
     await tester.tap(find.byIcon(Icons.more_horiz).last);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('الإعدادات'));
+    await tester.tap(find.byTooltip('الإعدادات'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('المظهر وإعدادات العرض'));
     await tester.pumpAndSettle();
@@ -87,7 +87,9 @@ void main() {
     );
     await tester.tap(find.byIcon(Icons.more_horiz).last);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('مظهر التطبيق'));
+    await tester.tap(find.byTooltip('الإعدادات'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('المظهر وإعدادات العرض'));
     await tester.pumpAndSettle();
     final choice = find.byKey(const ValueKey('app-color-blue'));
     await tester.ensureVisible(choice);
@@ -102,6 +104,8 @@ void main() {
     final reopened = AppAppearance(appearance.preferences);
     expect(reopened.color, AppColor.blue);
     reopened.dispose();
+    tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+    await tester.pumpAndSettle();
     tester.state<NavigatorState>(find.byType(Navigator).first).pop();
     await tester.pumpAndSettle();
     await tester.tap(find.text('الرئيسية'));
@@ -183,9 +187,9 @@ void main() {
 
     await tester.tap(find.byIcon(Icons.more_horiz).last);
     await tester.pumpAndSettle();
-    expect(find.textContaining('خدمات ومحتوى إيماني'), findsOneWidget);
+    expect(find.text('العبادات والأذكار'), findsOneWidget);
 
-    await tester.tap(find.text('الإعدادات'));
+    await tester.tap(find.byTooltip('الإعدادات'));
     await tester.pumpAndSettle();
     expect(find.text('إعدادات التطبيق'), findsOneWidget);
     expect(find.text('الحساب والمزامنة'), findsOneWidget);
@@ -207,7 +211,7 @@ void main() {
     );
     await tester.tap(find.byIcon(Icons.more_horiz).last);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('الإعدادات'));
+    await tester.tap(find.byTooltip('الإعدادات'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('المظهر وإعدادات العرض'));
     await tester.pumpAndSettle();
@@ -232,18 +236,16 @@ void main() {
     expect(restored.fontScale, 1.15);
     restored.dispose();
 
-    await tester.tap(find.byIcon(Icons.arrow_back_ios_new).last);
+    tester.state<NavigatorState>(find.byType(Navigator).first).pop();
     await tester.pumpAndSettle();
     expect(
       Theme.of(tester.element(find.text('إعدادات التطبيق'))).brightness,
       Brightness.dark,
     );
-    await tester.tap(find.byIcon(Icons.arrow_back_ios_new).last);
+    tester.state<NavigatorState>(find.byType(Navigator).first).pop();
     await tester.pumpAndSettle();
     expect(
-      Theme.of(
-        tester.element(find.textContaining('خدمات ومحتوى إيماني')),
-      ).brightness,
+      Theme.of(tester.element(find.text('العبادات والأذكار'))).brightness,
       Brightness.dark,
     );
     await tester.tap(find.text('الرئيسية'));

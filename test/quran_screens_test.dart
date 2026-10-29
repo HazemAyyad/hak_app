@@ -430,7 +430,7 @@ void main() {
       await showApp(tester);
       await tester.tap(find.text('المزيد').last);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('الإعدادات'));
+      await tester.tap(find.byTooltip('الإعدادات'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('الحساب والمزامنة'));
       await tester.pumpAndSettle();
