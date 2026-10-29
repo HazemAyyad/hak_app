@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:share_plus/share_plus.dart';
+import '../../sharing/share_card.dart';
 
 import '../../../app_appearance.dart';
 import '../../../app_loading.dart';
@@ -296,17 +296,10 @@ class _QuranExplanationState extends State<QuranExplanation> {
               Align(
                 alignment: AlignmentDirectional.centerEnd,
                 child: TextButton.icon(
-                  onPressed: () => SharePlus.instance.share(
-                    ShareParams(
-                      text:
-                          '${verse.text}\n[سورة ${repo.surah(verse.surah).name}: ${verse.ayah}]',
-                      sharePositionOrigin: Rect.fromLTWH(
-                        0,
-                        0,
-                        MediaQuery.sizeOf(context).width,
-                        100,
-                      ),
-                    ),
+                  onPressed: () => chooseContentShare(
+                    context,
+                    ShareCardContent.quran(repo, [verse.key]),
+                    repository: repo,
                   ),
                   icon: const Icon(Icons.share_outlined, size: 16),
                   label: Text(

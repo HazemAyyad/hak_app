@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:share_plus/share_plus.dart';
 import '../../sharing/share_card.dart';
 import '../../../app_appearance.dart';
 import '../../../navigation/more_page.dart';
@@ -139,7 +138,7 @@ class ReligiousHostState extends State<ReligiousHost> {
             ? ShareCardContent.adhkar(item.text)
             : item.verseKeys.isEmpty
             ? ShareCardContent(
-                text: item.text,
+                text: item.copyText,
                 source: item.source,
                 attribution: item.sourceUrl,
               )

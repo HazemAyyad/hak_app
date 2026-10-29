@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:share_plus/share_plus.dart';
+import '../../sharing/share_card.dart';
 import '../../../app_appearance.dart';
 import '../../../navigation/more_page.dart';
 import '../../quran/data/quran_sync.dart' show operationId;
@@ -1169,23 +1169,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
 }
 
 Future<void> _shareTasbih(BuildContext context, String text) async {
-  final box = context.findRenderObject() as RenderBox?;
-  try {
-    await SharePlus.instance.share(
-      ShareParams(
-        text: text,
-        sharePositionOrigin: box == null
-            ? null
-            : box.localToGlobal(Offset.zero) & box.size,
-      ),
-    );
-  } catch (_) {
-    if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تعذّرت المشاركة؛ يمكنك نسخ الذكر')),
-      );
-    }
-  }
+  await chooseContentShare(context, ShareCardContent.adhkar(text));
 }
 
 Widget _card(BuildContext context, Widget child) {

@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
+import 'features/sharing/share_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_appearance.dart';
@@ -993,6 +993,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 class SocialMediaSection extends StatelessWidget {
   const SocialMediaSection({super.key});
 
+  static Future<void> shareApp(BuildContext context) => chooseContentShare(
+    context,
+    ShareCardContent.message('شارك الخير مع من تحب عبر تطبيق حق'),
+  );
+
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
@@ -1038,6 +1043,7 @@ class SocialMediaSection extends StatelessWidget {
               ),
               _SocialButton(
                 label: 'مشاركة',
+                onTap: () => shareApp(context),
                 child: Icon(Icons.share_outlined, size: 28),
               ),
             ],
@@ -1048,7 +1054,7 @@ class SocialMediaSection extends StatelessWidget {
           color: appAccent(context, AppColors.teal),
           borderRadius: BorderRadius.circular(20),
           child: InkWell(
-            onTap: null,
+            onTap: () => shareApp(context),
             borderRadius: BorderRadius.circular(20),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 18, vertical: 17),
@@ -1108,16 +1114,17 @@ class SocialMediaSection extends StatelessWidget {
 }
 
 class _SocialButton extends StatelessWidget {
-  const _SocialButton({required this.label, required this.child});
+  const _SocialButton({required this.label, required this.child, this.onTap});
   final String label;
   final Widget child;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) => Semantics(
     button: true,
     label: label,
     child: InkWell(
-      onTap: () {},
+      onTap: onTap ?? () {},
       borderRadius: BorderRadius.circular(18),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),

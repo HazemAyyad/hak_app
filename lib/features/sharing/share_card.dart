@@ -19,8 +19,16 @@ class ShareCardContent {
     required this.source,
     required this.attribution,
     this.verseKeys = const [],
-    this.haqBranding = false,
+    this.haqBranding = true,
   });
+  static const signature = 'تطبيق حق\nخير أقرب إليك';
+
+  factory ShareCardContent.message(
+    String text, {
+    String source = 'تطبيق حق',
+    String attribution = 'خير أقرب إليك',
+  }) => ShareCardContent(text: text, source: source, attribution: attribution);
+
   factory ShareCardContent.adhkar(String text) => ShareCardContent(
     text: text,
     source: 'تطبيق حق',
@@ -54,6 +62,8 @@ class ShareCardContent {
   final String text, source, attribution;
   final bool haqBranding;
   final List<String> verseKeys;
+
+  String get shareText => '$text\n\n$signature';
 }
 
 class ShareCardStyle {
@@ -99,7 +109,6 @@ class ShareCardRenderer {
     ShareCardStyle style,
   ) async {
     if (content.text.trim().isEmpty ||
-        content.source.trim().isEmpty ||
         content.text.length > 100000 ||
         !['AmiriQuran', 'QuranUI', 'Tajawal'].contains(style.font) ||
         style.fontSize < 24 ||
@@ -144,7 +153,7 @@ class ShareCardRenderer {
       textDirection: TextDirection.rtl,
     );
     final heading = painter(
-      'حق • دعاء وذكر',
+      'حق • خير أقرب إليك',
       const TextStyle(
         fontFamily: 'QuranUI',
         fontSize: 26,
@@ -188,11 +197,11 @@ class ShareCardRenderer {
       Offset((1080 - heading.width) / 2, content.haqBranding ? 186 : 85),
     );
     final footer = painter(
-      content.source,
+      'تطبيق حق',
       TextStyle(fontFamily: 'QuranUI', fontSize: 28, color: ink),
     )..layout(maxWidth: 880);
     final attribution = painter(
-      content.attribution,
+      'خير أقرب إليك',
       TextStyle(
         fontFamily: 'QuranUI',
         fontSize: 16,
@@ -324,7 +333,7 @@ Future<void> chooseContentShare(
     try {
       await SharePlus.instance.share(
         ShareParams(
-          text: '${content.text}\n\n${content.source}\n${content.attribution}',
+          text: content.shareText,
           sharePositionOrigin: box == null
               ? null
               : box.localToGlobal(Offset.zero) & box.size,
@@ -430,7 +439,7 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
         await SharePlus.instance.share(
           ShareParams(
             files: [XFile(file.path, mimeType: 'image/png')],
-            text: image.content.source,
+            text: image.content.shareText,
             sharePositionOrigin: box == null
                 ? null
                 : box.localToGlobal(Offset.zero) & box.size,
@@ -602,8 +611,8 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
                 children: [
                   Semantics(
                     label: content.haqBranding
-                        ? 'معاينة صورة الذكر بشعار حق'
-                        : 'معاينة الصورة بالنص والمصدر',
+                        ? 'معاينة صورة المحتوى بشعار حق'
+                        : 'معاينة صورة المحتوى',
                     image: true,
                     child: Image.memory(
                       _image!.bytes,
@@ -644,8 +653,8 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
             const SizedBox(height: 16),
             Text(
               content.haqBranding
-                  ? 'نص الذكر محفوظ كما هو، وبطاقة المشاركة تحمل شعار حق.'
-                  : 'النص والمصدر محفوظان كما هما؛ لا يمكن تعديل نص الآية داخل المصمم.',
+                  ? 'بطاقة المشاركة تحمل شعار حق، ويُحفظ النص كما هو دون إظهار المصدر.'
+                  : 'يُحفظ النص كما هو دون إظهار المصدر؛ لا يمكن تعديل نص الآية داخل المصمم.',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 12, color: p.muted),
             ),

@@ -55,6 +55,52 @@ void main() {
     },
   );
   test(
+    'all content types share the unchanged text and Haq identity without source metadata',
+    () {
+      final verse = ShareCardContent.quran(repository, ['1:2']);
+      final message = ShareCardContent.message('رسالة من حق');
+      final religious = ShareCardContent(
+        text: 'نص المحتوى',
+        source: 'المصدر الأصلي',
+        attribution: 'https://example.com/source',
+      );
+      final dhikr = ShareCardContent.adhkar('سبحان الله');
+      for (final content in [verse, message, religious, dhikr]) {
+        expect(content.haqBranding, isTrue);
+        expect(content.shareText, startsWith(content.text));
+        expect(content.shareText, endsWith(ShareCardContent.signature));
+        expect('تطبيق حق'.allMatches(content.shareText).length, 1);
+      }
+      expect(verse.shareText, isNot(contains(verse.source)));
+      expect(verse.shareText, isNot(contains(verse.attribution)));
+      expect(religious.shareText, isNot(contains(religious.source)));
+      expect(religious.shareText, isNot(contains(religious.attribution)));
+      expect(dhikr.shareText, 'سبحان الله\n\n${ShareCardContent.signature}');
+    },
+  );
+  test(
+    'image export omits source names and URLs from the rendered pixels',
+    () async {
+      final original = await ShareCardRenderer.render(
+        const ShareCardContent(
+          text: 'نص المشاركة',
+          source: 'مصدر خاص',
+          attribution: 'https://example.com/source',
+        ),
+        const ShareCardStyle(),
+      );
+      final withoutSource = await ShareCardRenderer.render(
+        const ShareCardContent(
+          text: 'نص المشاركة',
+          source: '',
+          attribution: '',
+        ),
+        const ShareCardStyle(),
+      );
+      expect(original.bytes, orderedEquals(withoutSource.bytes));
+    },
+  );
+  test(
     'canonical verse selection rejects reordered, repeated and cross-surah inputs without normalizing text',
     () {
       final content = ShareCardContent.quran(repository, ['1:1', '1:2']);
@@ -80,7 +126,7 @@ void main() {
     },
   );
   test(
-    'square/story PNGs render complete canonical text and source with adaptive fitting',
+    'square/story PNGs render complete canonical text with adaptive fitting',
     () async {
       final content = ShareCardContent.quran(repository, ['2:282']);
       for (final format in ShareCardFormat.values) {

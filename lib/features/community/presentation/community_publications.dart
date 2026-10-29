@@ -18,6 +18,11 @@ String publicationText(Map row) {
       : '${content['text']}\n\n${content['source']}';
 }
 
+String publicationShareText(Map row) =>
+    (row['content'] as Map?)?['text'] as String? ??
+    row['body'] as String? ??
+    '';
+
 Future<void> _messageOptions(
   BuildContext context,
   CommunityController c,
@@ -131,9 +136,10 @@ class _PublicationCard extends StatelessWidget {
                         ClipboardData(text: publicationText(row)),
                       );
                     }
-                    if (value == 'share') {
-                      await SharePlus.instance.share(
-                        ShareParams(text: publicationText(row)),
+                    if (value == 'share' && context.mounted) {
+                      await chooseContentShare(
+                        context,
+                        ShareCardContent.message(publicationShareText(row)),
                       );
                     }
                     if (value == 'save') await c.toggleSave(row['id'] as int);
@@ -420,8 +426,9 @@ class _CommunityStoryPageState extends State<CommunityStoryPage>
                   onPressed: () async {
                     progress.stop();
                     setState(() => paused = true);
-                    await SharePlus.instance.share(
-                      ShareParams(text: publicationText(row)),
+                    await chooseContentShare(
+                      context,
+                      ShareCardContent.message(publicationShareText(row)),
                     );
                   },
                   icon: const Icon(Icons.share_outlined),

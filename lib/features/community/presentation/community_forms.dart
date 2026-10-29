@@ -144,7 +144,10 @@ Future<void> _entryAction(
     return;
   }
   if (action == 'share') {
-    await SharePlus.instance.share(ShareParams(text: row['body'] as String));
+    await chooseContentShare(
+      context,
+      ShareCardContent.message(row['body'] as String),
+    );
     return;
   }
   if (action == 'delete') {

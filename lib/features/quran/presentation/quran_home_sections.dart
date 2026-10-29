@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
+import '../../sharing/share_card.dart';
 
 import '../../../app_appearance.dart';
 import '../data/quran_repository.dart';
@@ -150,17 +150,11 @@ class QuranDailyVerse extends StatelessWidget {
               ),
               Expanded(
                 child: TextButton.icon(
-                  onPressed: () {
-                    final box = context.findRenderObject() as RenderBox?;
-                    SharePlus.instance.share(
-                      ShareParams(
-                        text: '${verse.text}\n[سورة $name: ${verse.ayah}]',
-                        sharePositionOrigin: box == null
-                            ? null
-                            : box.localToGlobal(Offset.zero) & box.size,
-                      ),
-                    );
-                  },
+                  onPressed: () => chooseContentShare(
+                    context,
+                    ShareCardContent.quran(repository, [verse.key]),
+                    repository: repository,
+                  ),
                   icon: const Icon(Icons.share_outlined, size: 17),
                   label: Text(
                     'مشاركة الآية',

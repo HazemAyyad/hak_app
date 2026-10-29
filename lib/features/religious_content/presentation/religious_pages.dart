@@ -479,7 +479,8 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
               light: const ['home', 'medina'].contains(category?.header),
               onBack: host.back,
               onSaved: () => host.openSaved(),
-              onShare: () => SharePlus.instance.share(ShareParams(text: title)),
+              onShare: () =>
+                  chooseContentShare(context, ShareCardContent.message(title)),
             ),
           ),
           SliverToBoxAdapter(
@@ -654,8 +655,10 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
           image: 'ruqya',
           onBack: host.back,
           onSaved: () => host.openSaved(),
-          onShare: () =>
-              SharePlus.instance.share(ShareParams(text: category.title)),
+          onShare: () => chooseContentShare(
+            context,
+            ShareCardContent.message(category.title),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(14, 8, 14, 105),

@@ -786,7 +786,7 @@ class DailyVerseCard extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 6),
-                    child: _ShareButton(text: '$verse\nسورة الطلاق — الآية 4'),
+                    child: _ShareButton(text: verse),
                   ),
                 ),
               ],
@@ -1197,7 +1197,8 @@ class _ShareButton extends StatelessWidget {
         size: 17,
         color: appAccentFill(context, AppColors.navy),
       ),
-      onPressed: () => SharePlus.instance.share(ShareParams(text: text)),
+      onPressed: () =>
+          chooseContentShare(context, ShareCardContent.message(text)),
     ),
   );
 }

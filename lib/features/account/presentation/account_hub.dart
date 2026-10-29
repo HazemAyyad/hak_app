@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../sharing/share_card.dart';
 import '../../quran/presentation/quran_account.dart';
 import '../../quran/presentation/quran_widgets.dart';
 import '../../quran/data/quran_sync.dart';
@@ -142,6 +143,7 @@ class _AccountToolsState extends State<_AccountTools> {
     final result = await SharePlus.instance.share(
       ShareParams(
         title: 'نسخة حق الاحتياطية',
+        text: ShareCardContent.signature,
         files: [
           XFile.fromData(
             Uint8List.fromList(utf8.encode(archive.encode())),

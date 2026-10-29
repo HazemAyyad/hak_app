@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:share_plus/share_plus.dart';
+import '../../sharing/share_card.dart';
 import '../../../app_appearance.dart';
 import '../../../app_refresh.dart';
 import '../../../navigation/more_page.dart';
@@ -948,8 +948,9 @@ class _PrayerCard extends StatelessWidget {
                 label: Text('${row['comments']}'),
               ),
               IconButton(
-                onPressed: () => SharePlus.instance.share(
-                  ShareParams(text: row['body'] as String),
+                onPressed: () => chooseContentShare(
+                  context,
+                  ShareCardContent.message(row['body'] as String),
                 ),
                 tooltip: 'مشاركة',
                 icon: const Icon(Icons.share_outlined),

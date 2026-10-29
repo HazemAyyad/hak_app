@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
+import '../../sharing/share_card.dart';
 
 import '../../../app_appearance.dart';
 import '../../../app_experience.dart';
@@ -758,19 +758,10 @@ Future<void> chooseAudioTimer(BuildContext context, QuranMedia media) =>
     );
 
 Future<void> shareAudio(BuildContext context, QuranAudioTrack track) async {
-  final box = context.findRenderObject() as RenderBox?;
-  try {
-    await SharePlus.instance.share(
-      ShareParams(
-        text: '${track.title}\n${track.reciter}\n${track.url}',
-        sharePositionOrigin: box == null
-            ? null
-            : box.localToGlobal(Offset.zero) & box.size,
-      ),
-    );
-  } catch (_) {
-    if (context.mounted) qNotice(context, 'تعذّرت المشاركة');
-  }
+  await chooseContentShare(
+    context,
+    ShareCardContent.message('${track.title}\n${track.url}'),
+  );
 }
 
 Future<void> chooseVerseRange(
