@@ -33,6 +33,7 @@ import 'features/assistant/presentation/assistant_page.dart';
 import 'startup/startup_flow.dart';
 
 import 'navigation/app_section.dart';
+import 'navigation/app_bottom_navigation.dart';
 import 'navigation/feature_routes.dart';
 import 'navigation/more_page.dart';
 import 'navigation/section_entry_page.dart';
@@ -453,6 +454,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     _selectSection(section);
   }
 
+  void _selectDestinationFromSettings(int index) {
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    _selectBottomDestination(index);
+  }
+
   Future<void> _refreshCurrent() async {
     await _quran.flushReading();
     await _religious.settle();
@@ -470,12 +476,18 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 
-  void _pushFeature(AppFeature feature, WidgetBuilder builder) {
+  void _pushFeature(
+    AppFeature feature,
+    WidgetBuilder builder, {
+    bool withBottomNavigation = false,
+  }) {
     if (!_openFeatureRoutes.add(feature.routeName)) return;
     Navigator.of(context)
         .push<void>(
           MaterialPageRoute<void>(
-            settings: RouteSettings(name: feature.routeName),
+            settings: withBottomNavigation
+                ? BottomNavigationRouteSettings(name: feature.routeName)
+                : RouteSettings(name: feature.routeName),
             builder: builder,
           ),
         )
@@ -744,6 +756,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _pushFeature(
           feature,
           (_) => SettingsPage(
+            section: _section,
+            onDestinationSelected: _selectDestinationFromSettings,
             reminders: _reminders,
             loadReminders: _prepareReminders,
             onPrayerSettings: () {
@@ -763,11 +777,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               _openQuranDownloads();
             },
           ),
+          withBottomNavigation: true,
         );
       case AppFeature.appearance:
         _pushFeature(
           feature,
-          (_) => const SettingsDetailPage(kind: SettingKind.appearance),
+          (_) => SettingsDetailPage(
+            kind: SettingKind.appearance,
+            section: _section,
+            onDestinationSelected: _selectDestinationFromSettings,
+          ),
+          withBottomNavigation: true,
         );
       default:
         if (feature.category != null) {
@@ -878,7 +898,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final dark = Theme.of(context).brightness == Brightness.dark;
     final religiousHandlesBack = _section == AppSection.more && _religiousOpen;
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -961,28 +980,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           extendBody: true,
           bottomNavigationBar: _quranFullscreen && _section == AppSection.quran
               ? null
-              : ClipRRect(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(30),
-                  ),
-                  child: NavigationBar(
-                    key: const ValueKey('haq-bottom-navigation'),
-                    selectedIndex: _section.index,
-                    height: 72,
-                    backgroundColor: dark
-                        ? const Color(0xF2132331)
-                        : const Color(0xF9FFFFFF),
-                    indicatorColor: Colors.transparent,
-                    onDestinationSelected: _selectBottomDestination,
-                    destinations: [
-                      for (final section in AppSection.values)
-                        NavigationDestination(
-                          icon: Icon(section.icon),
-                          selectedIcon: Icon(section.selectedIcon),
-                          label: section.label,
-                        ),
-                    ],
-                  ),
+              : AppBottomNavigation(
+                  section: _section,
+                  onSelected: _selectBottomDestination,
                 ),
         ),
       ),

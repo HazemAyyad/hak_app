@@ -1,9 +1,16 @@
 part of 'settings_pages.dart';
 
 class _LoadReminderSettings extends StatefulWidget {
-  const _LoadReminderSettings({required this.kind, required this.load});
+  const _LoadReminderSettings({
+    required this.kind,
+    required this.load,
+    required this.section,
+    this.onDestinationSelected,
+  });
   final SettingKind kind;
   final Future<ReminderController?> Function() load;
+  final AppSection section;
+  final ValueChanged<int>? onDestinationSelected;
   @override
   State<_LoadReminderSettings> createState() => _LoadReminderSettingsState();
 }
@@ -15,12 +22,19 @@ class _LoadReminderSettingsState extends State<_LoadReminderSettings> {
     future: _load,
     builder: (context, snapshot) {
       if (snapshot.data case final controller?) {
-        return SettingsDetailPage(kind: widget.kind, reminders: controller);
+        return SettingsDetailPage(
+          kind: widget.kind,
+          reminders: controller,
+          section: widget.section,
+          onDestinationSelected: widget.onDestinationSelected,
+        );
       }
       return _SettingsShell(
         title: widget.kind.title,
         subtitle: widget.kind.subtitle,
         icon: widget.kind.icon,
+        section: widget.section,
+        onDestinationSelected: widget.onDestinationSelected,
         child: snapshot.connectionState != ConnectionState.done
             ? const Center(child: CircularProgressIndicator())
             : Column(

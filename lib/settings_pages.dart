@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_appearance.dart';
+import 'navigation/app_bottom_navigation.dart';
+import 'navigation/app_section.dart';
 import 'features/settings/data/app_settings.dart';
 import 'features/settings/data/reminder_controller.dart';
 import 'features/prayer/data/prayer_models.dart';
@@ -26,18 +28,24 @@ class SettingsPage extends StatelessWidget {
     this.onQuranDownloads,
     this.reminders,
     this.loadReminders,
+    this.section = AppSection.more,
+    this.onDestinationSelected,
   });
   final VoidCallback? onQuranSettings;
   final VoidCallback? onPrayerSettings;
   final VoidCallback? onQuranAccount, onQuranDownloads;
   final ReminderController? reminders;
   final Future<ReminderController?> Function()? loadReminders;
+  final AppSection section;
+  final ValueChanged<int>? onDestinationSelected;
 
   @override
   Widget build(BuildContext context) => _SettingsShell(
     title: 'إعدادات التطبيق',
     subtitle: 'خصص تجربتك بما يناسبك',
     icon: Icons.settings_outlined,
+    section: section,
+    onDestinationSelected: onDestinationSelected,
     child: Column(
       children: [
         _section('الحساب والبيانات'),
@@ -74,6 +82,11 @@ class SettingsPage extends StatelessWidget {
         ? onQuranSettings
         : () => Navigator.of(context).push(
             MaterialPageRoute<void>(
+              settings: onDestinationSelected == null
+                  ? null
+                  : BottomNavigationRouteSettings(
+                      name: '/settings/${kind.name}',
+                    ),
               builder: (_) =>
                   reminders == null &&
                       loadReminders != null &&
@@ -83,8 +96,18 @@ class SettingsPage extends StatelessWidget {
                         SettingKind.privacy,
                         SettingKind.hijri,
                       ].contains(kind)
-                  ? _LoadReminderSettings(kind: kind, load: loadReminders!)
-                  : SettingsDetailPage(kind: kind, reminders: reminders),
+                  ? _LoadReminderSettings(
+                      kind: kind,
+                      load: loadReminders!,
+                      section: section,
+                      onDestinationSelected: onDestinationSelected,
+                    )
+                  : SettingsDetailPage(
+                      kind: kind,
+                      reminders: reminders,
+                      section: section,
+                      onDestinationSelected: onDestinationSelected,
+                    ),
             ),
           ),
   );
@@ -137,9 +160,17 @@ enum SettingKind {
 }
 
 class SettingsDetailPage extends StatefulWidget {
-  const SettingsDetailPage({required this.kind, this.reminders, super.key});
+  const SettingsDetailPage({
+    required this.kind,
+    this.reminders,
+    this.section = AppSection.more,
+    this.onDestinationSelected,
+    super.key,
+  });
   final SettingKind kind;
   final ReminderController? reminders;
+  final AppSection section;
+  final ValueChanged<int>? onDestinationSelected;
 
   @override
   State<SettingsDetailPage> createState() => _SettingsDetailPageState();
@@ -195,6 +226,8 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
       title: widget.kind.title,
       subtitle: widget.kind.subtitle,
       icon: widget.kind.icon,
+      section: widget.section,
+      onDestinationSelected: widget.onDestinationSelected,
       child: Column(
         children: [
           if (_settings?.error case final error?)
@@ -791,44 +824,46 @@ class _SettingsShell extends StatelessWidget {
     required this.subtitle,
     required this.icon,
     required this.child,
+    this.section = AppSection.more,
+    this.onDestinationSelected,
   });
   final String title;
   final String subtitle;
   final IconData icon;
   final Widget child;
+  final AppSection section;
+  final ValueChanged<int>? onDestinationSelected;
 
   @override
   Widget build(BuildContext context) => Directionality(
     textDirection: TextDirection.rtl,
     child: Scaffold(
       backgroundColor: AppPalette.of(context).background,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: _Header(title: title, subtitle: subtitle, icon: icon),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    transform: Matrix4.translationValues(0, -22, 0),
-                    padding: EdgeInsets.fromLTRB(18, 28, 18, 125),
-                    decoration: BoxDecoration(
-                      color: AppPalette.of(context).background,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(30),
-                      ),
-                    ),
-                    child: child,
-                  ),
-                ),
-              ],
+      extendBody: true,
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: _Header(title: title, subtitle: subtitle, icon: icon),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              transform: Matrix4.translationValues(0, -22, 0),
+              padding: EdgeInsets.fromLTRB(18, 28, 18, 125),
+              decoration: BoxDecoration(
+                color: AppPalette.of(context).background,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              ),
+              child: child,
             ),
           ),
-          Positioned(left: 0, right: 0, bottom: 0, child: _SettingsBottomBar()),
         ],
       ),
+      bottomNavigationBar: onDestinationSelected == null
+          ? null
+          : AppBottomNavigation(
+              section: section,
+              onSelected: onDestinationSelected!,
+            ),
     ),
   );
 }
@@ -1347,79 +1382,6 @@ class _CircleAction extends StatelessWidget {
     style: IconButton.styleFrom(
       backgroundColor: AppPalette.of(context).paleTeal,
       fixedSize: Size(58, 58),
-    ),
-  );
-}
-
-class _SettingsBottomBar extends StatelessWidget {
-  const _SettingsBottomBar();
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.fromLTRB(
-      12,
-      8,
-      12,
-      12 + MediaQuery.paddingOf(context).bottom,
-    ),
-    decoration: BoxDecoration(
-      color: AppPalette.of(context).surface.withValues(alpha: .97),
-      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-      boxShadow: [
-        BoxShadow(
-          color: AppPalette.of(context).heading.withValues(alpha: .09),
-          blurRadius: 18,
-        ),
-      ],
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Expanded(child: _BottomItem(Icons.home_outlined, 'الرئيسية')),
-        Expanded(child: _BottomItem(Icons.menu_book_outlined, 'القرآن')),
-        Expanded(child: _BottomItem(Icons.eco_outlined, 'الأذكار')),
-        Expanded(child: _BottomItem(Icons.explore_outlined, 'القبلة')),
-        Expanded(
-          child: _BottomItem(Icons.more_horiz, 'المزيد', selected: true),
-        ),
-      ],
-    ),
-  );
-}
-
-class _BottomItem extends StatelessWidget {
-  const _BottomItem(this.icon, this.label, {this.selected = false});
-  final IconData icon;
-  final String label;
-  final bool selected;
-  @override
-  Widget build(BuildContext context) => Container(
-    padding: EdgeInsets.symmetric(vertical: 6),
-    decoration: BoxDecoration(
-      color: selected ? AppPalette.of(context).notice : Colors.transparent,
-      borderRadius: BorderRadius.circular(16),
-    ),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          color: selected
-              ? appAccent(context, _teal)
-              : AppPalette.of(context).heading,
-          size: 27,
-        ),
-        SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            color: selected
-                ? appAccent(context, _teal)
-                : AppPalette.of(context).heading,
-            fontSize: 11,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ],
     ),
   );
 }

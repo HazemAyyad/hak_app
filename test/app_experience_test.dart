@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_experience.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/navigation/app_bottom_navigation.dart';
+import 'package:haq_app/settings_pages.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haq_app/features/quran/data/quran_audio.dart';
 import 'package:haq_app/features/quran/data/quran_audio_models.dart';
@@ -215,6 +217,55 @@ void main() {
     );
     await tester.pumpAndSettle();
   }
+
+  testWidgets(
+    'settings bars stay above the player and remain tappable on nested routes',
+    (tester) async {
+      await pump(tester);
+      audio.begin();
+      controller.minimize(audio);
+      await tester.pumpAndSettle();
+      final root = controller.navigatorKey.currentState!;
+      root.push<void>(
+        MaterialPageRoute<void>(
+          settings: const BottomNavigationRouteSettings(
+            name: '/services/settings',
+          ),
+          builder: (_) => SettingsPage(
+            onDestinationSelected: (_) =>
+                root.popUntil((route) => route.isFirst),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      for (final detail in [false, true]) {
+        if (detail) {
+          await tester.tap(find.text('المظهر وإعدادات العرض'));
+          await tester.pumpAndSettle();
+        }
+        expect(controller.hasBottomBar, isTrue);
+        expect(find.byType(NavigationBar), findsOneWidget);
+        expect(
+          tester.getRect(find.byType(AppPlaybackDock)).bottom,
+          lessThanOrEqualTo(tester.getRect(find.byType(NavigationBar)).top),
+        );
+      }
+      await tester.tap(
+        find.descendant(
+          of: find.byType(NavigationBar),
+          matching: find.text('الرئيسية'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(SettingsPage, skipOffstage: false), findsNothing);
+      expect(
+        find.byType(SettingsDetailPage, skipOffstage: false),
+        findsNothing,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   testWidgets('nested routes and root settings both show navigation feedback', (
     tester,

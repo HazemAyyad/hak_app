@@ -211,6 +211,92 @@ void main() {
     },
   );
 
+  for (final detail in [false, true]) {
+    testWidgets(
+      'settings ${detail ? 'detail' : 'root'} bottom bar opens every destination and clears settings routes',
+      (tester) async {
+        await pumpApp(tester);
+        for (final section in AppSection.values) {
+          await tab(tester, AppSection.more);
+          await tester.tap(find.byTooltip('الإعدادات'));
+          await tester.pumpAndSettle();
+          if (detail) {
+            await tester.tap(find.text('المظهر وإعدادات العرض'));
+            await tester.pumpAndSettle();
+            expect(find.byType(SettingsDetailPage), findsOneWidget);
+          }
+          expect(find.byType(NavigationBar), findsOneWidget);
+          expect(
+            tester
+                .widget<NavigationBar>(find.byType(NavigationBar))
+                .selectedIndex,
+            AppSection.more.index,
+          );
+          if (section == AppSection.home) {
+            await capture(
+              tester,
+              'settings-bottom-${detail ? 'detail' : 'root'}',
+            );
+          }
+          await tab(tester, section);
+          expect(
+            find.byType(SettingsPage, skipOffstage: false),
+            findsNothing,
+            reason: section.name,
+          );
+          expect(
+            find.byType(SettingsDetailPage, skipOffstage: false),
+            findsNothing,
+            reason: section.name,
+          );
+          expect(find.byType(NavigationBar), findsOneWidget);
+          expect(
+            tester
+                .widget<NavigationBar>(find.byType(NavigationBar))
+                .selectedIndex,
+            section.index,
+          );
+          expect(tester.takeException(), isNull, reason: section.name);
+        }
+        await tester.pumpWidget(const SizedBox());
+      },
+    );
+  }
+
+  testWidgets(
+    'settings detail system back keeps settings and the bar responsive',
+    (tester) async {
+      await pumpApp(tester);
+      await tab(tester, AppSection.more);
+      await tester.tap(find.byTooltip('الإعدادات'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('المظهر وإعدادات العرض'));
+      await tester.pumpAndSettle();
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.byType(SettingsPage), findsOneWidget);
+      expect(
+        find.byType(SettingsDetailPage, skipOffstage: false),
+        findsNothing,
+      );
+      final select = tester
+          .widget<NavigationBar>(find.byType(NavigationBar))
+          .onDestinationSelected!;
+      select(AppSection.more.index);
+      select(AppSection.more.index);
+      await tester.pumpAndSettle();
+      expect(find.byType(MorePage), findsOneWidget);
+      expect(find.byType(SettingsPage, skipOffstage: false), findsNothing);
+      await tester.tap(find.byTooltip('الإعدادات'));
+      await tester.pumpAndSettle();
+      expect(find.byType(SettingsPage), findsOneWidget);
+      await tab(tester, AppSection.home);
+      expect(find.text('الصلاة القادمة'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
   testWidgets(
     'home reflects the current account and search opens a real surah',
     (tester) async {

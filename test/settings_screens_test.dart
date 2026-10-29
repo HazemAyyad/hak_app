@@ -17,6 +17,7 @@ import 'package:haq_app/features/religious_activity/data/activity_models.dart';
 import 'package:haq_app/features/religious_activity/data/activity_store.dart';
 import 'package:haq_app/features/settings/data/reminder_controller.dart';
 import 'package:haq_app/settings_pages.dart';
+import 'package:haq_app/navigation/app_section.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'support/visual_audit.dart';
@@ -192,6 +193,56 @@ void main() {
       tester,
       preview,
       visualPath('build/p08-previews/$name.png'),
+    );
+  }
+
+  for (final loaded in [false, true]) {
+    testWidgets(
+      'settings bar works while loading and after ${loaded ? 'success' : 'failure'}',
+      (tester) async {
+        final selected = <int>[];
+        final loading = Completer<ReminderController?>();
+        await tester.pumpWidget(
+          AppearanceScope(
+            controller: appearance,
+            child: MaterialApp(
+              home: SettingsPage(
+                loadReminders: () => loading.future,
+                onDestinationSelected: selected.add,
+              ),
+            ),
+          ),
+        );
+        await tester.ensureVisible(find.text('الصلاحيات والخصوصية'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('الصلاحيات والخصوصية'));
+        await settle(tester);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(find.byType(NavigationBar), findsOneWidget);
+        await tester.tap(
+          find.descendant(
+            of: find.byType(NavigationBar),
+            matching: find.text('القرآن'),
+          ),
+        );
+        expect(selected.last, AppSection.quran.index);
+        loading.complete(loaded ? c : null);
+        await settle(tester);
+        if (loaded) {
+          expect(find.byType(SettingsDetailPage), findsOneWidget);
+        } else {
+          expect(find.text('تعذّر تجهيز الإعدادات'), findsOneWidget);
+        }
+        await tester.tap(
+          find.descendant(
+            of: find.byType(NavigationBar),
+            matching: find.text('الرئيسية'),
+          ),
+        );
+        expect(selected.last, AppSection.home.index);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+      },
     );
   }
 

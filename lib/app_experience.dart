@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'navigation/app_bottom_navigation.dart';
 
 import 'features/quran/data/quran_audio.dart';
 import 'features/quran/presentation/quran_audio_widgets.dart';
@@ -32,8 +33,16 @@ class AppExperienceController extends ChangeNotifier {
     return nested != null && nested.isNotEmpty ? nested.last : surface;
   }
 
-  bool get hasBottomBar =>
-      bottomBarVisible && (_routes['root']?.length ?? 0) <= 1;
+  bool get hasBottomBar {
+    final root = _routes['root'];
+    if (root != null &&
+        root.isNotEmpty &&
+        root.last.settings is BottomNavigationRouteSettings) {
+      return true;
+    }
+    return bottomBarVisible && (root?.length ?? 0) <= 1;
+  }
+
   bool get needsDecision =>
       _media != null &&
       (_media!.playing || _media!.buffering) &&
