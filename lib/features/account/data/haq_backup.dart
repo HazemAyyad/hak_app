@@ -348,6 +348,8 @@ class HaqBackup {
             'prayers',
             'alerts',
             'defaultAlert',
+            'reminderLanguage',
+            'reminderDialect',
             'adhanVolume',
             'showAdhanScreen',
             'iqamaMinutes',

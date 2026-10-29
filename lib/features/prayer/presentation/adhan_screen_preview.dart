@@ -1,7 +1,6 @@
 part of 'prayer_page.dart';
 
-/// In-app visual preview. Android's closed-app alarm uses HaqAdhanActivity.
-/// This surface never schedules a prayer or starts audio.
+/// Silent, viewport-sized preview of the native Android alarm surface.
 class AdhanScreenPreview extends StatefulWidget {
   const AdhanScreenPreview({super.key, required this.controller});
   final PrayerController controller;
@@ -9,17 +8,23 @@ class AdhanScreenPreview extends StatefulWidget {
   State<AdhanScreenPreview> createState() => _AdhanScreenPreviewState();
 }
 
-class _AdhanScreenPreviewState extends State<AdhanScreenPreview> {
-  int scene = 0;
-  Timer? timer;
+class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
+    with SingleTickerProviderStateMixin {
   static const photos = [
     'assets/home/dawn.png',
     'assets/religious/hands.png',
     'assets/religious/madina.png',
   ];
+  int scene = 0;
+  Timer? timer;
+  late final AnimationController pulse;
   @override
   void initState() {
     super.initState();
+    pulse = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2200),
+    );
     timer = Timer.periodic(const Duration(seconds: 5), (_) {
       if (mounted && !MediaQuery.disableAnimationsOf(context)) {
         setState(() => scene = (scene + 1) % photos.length);
@@ -28,186 +33,281 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview> {
   }
 
   @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      pulse.stop();
+      pulse.value = 1;
+    } else {
+      pulse.repeat(reverse: true);
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
-    final c = widget.controller;
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: const Color(0xFF102A43),
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 850),
-              child: Image.asset(
-                photos[scene],
-                key: ValueKey(scene),
-                width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,
+  void dispose() {
+    timer?.cancel();
+    pulse.dispose();
+    super.dispose();
+  }
+
+  void open(String route) => Navigator.pop(context, route);
+  @override
+  Widget build(BuildContext context) => Directionality(
+    textDirection: TextDirection.rtl,
+    child: Scaffold(
+      backgroundColor: const Color(0xFF0B1722),
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 900),
+            child: Image.asset(
+              photos[scene],
+              key: ValueKey(scene),
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+          ),
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0x99102A43),
+                  Color(0x55102A43),
+                  Color(0xF50B1722),
+                ],
               ),
             ),
-            const DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0x80102A43),
-                    Color(0x20102A43),
-                    Color(0xEE0B1722),
-                  ],
-                ),
-              ),
-            ),
-            SafeArea(
-              child: LayoutBuilder(
-                builder: (context, constraints) => SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: IntrinsicHeight(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
+          ),
+          SafeArea(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final compact =
+                    constraints.maxHeight < 680 ||
+                    MediaQuery.textScalerOf(context).scale(1) > 1.2;
+                return Padding(
+                  padding: EdgeInsets.all(compact ? 12 : 18),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 48,
+                        child: Row(
                           children: [
-                            Row(
-                              children: [
-                                IconButton(
-                                  tooltip: 'إغلاق المعاينة',
-                                  onPressed: () => Navigator.pop(context),
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const Expanded(
-                                  child: Text(
-                                    'حق · معاينة شاشة الأذان',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                const Icon(Icons.tune, color: Colors.white),
-                              ],
-                            ),
-                            Text(
-                              'حان وقت ${c.upcoming?.name.label ?? 'الصلاة'}',
-                              style: const TextStyle(
-                                color: Color(0xFFC7A45A),
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Container(
-                              width: 84,
-                              height: 84,
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF7F4ED),
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: const Color(0xFFC7A45A),
-                                ),
-                              ),
-                              child: Image.asset(
-                                'assets/branding/haq_logo_transparent.png',
-                              ),
-                            ),
-                            const Text(
-                              'الله أكبر',
-                              style: TextStyle(
+                            IconButton(
+                              tooltip: 'إغلاق المعاينة',
+                              onPressed: () => Navigator.pop(context),
+                              icon: const Icon(
+                                Icons.close,
                                 color: Colors.white,
-                                fontSize: 44,
-                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const Spacer(),
-                            if (c.config.iqamaMinutes > 0)
-                              Container(
-                                width: 164,
-                                height: 164,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xCC0C4B4C),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: const Color(0xFFC7A45A),
-                                    width: 2,
-                                  ),
-                                ),
+                            const Expanded(
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
                                 child: Text(
-                                  'الإقامة بعد\n${c.config.iqamaMinutes.toString().padLeft(2, '0')}:00',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 24,
+                                  'حق · معاينة شاشة الأذان',
+                                  style: TextStyle(
                                     color: Colors.white,
+                                    fontSize: 16,
                                   ),
                                 ),
                               ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'مدة الإقامة حسب إعدادك · المعاينة بدون صوت',
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.white70,
-                              ),
                             ),
-                            const SizedBox(height: 18),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 54,
-                              child: FilledButton(
-                                onPressed: () => Navigator.pop(context),
-                                style: FilledButton.styleFrom(
-                                  backgroundColor: const Color(0xFF2A8C82),
-                                  foregroundColor: Colors.white,
-                                ),
-                                child: const Text('أذكار الصلاة'),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                for (final label in ['القرآن', 'القبلة'])
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 3,
-                                      ),
-                                      child: OutlinedButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        style: OutlinedButton.styleFrom(
-                                          foregroundColor: Colors.white,
-                                          side: const BorderSide(
-                                            color: Color(0xFFC7A45A),
-                                          ),
-                                          minimumSize: const Size(0, 50),
-                                        ),
-                                        child: Text(label),
-                                      ),
-                                    ),
-                                  ),
-                              ],
+                            IconButton(
+                              tooltip: 'إعدادات الأذان',
+                              onPressed: () => open('prayer-settings'),
+                              icon: const Icon(Icons.tune, color: Colors.white),
                             ),
                           ],
                         ),
                       ),
-                    ),
+                      SizedBox(
+                        height: compact ? 40 : 52,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            'حان وقت ${widget.controller.upcoming?.name.label ?? 'الصلاة'}',
+                            style: const TextStyle(
+                              color: Color(0xFFC7A45A),
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: compact ? 48 : 68,
+                        height: compact ? 48 : 68,
+                        padding: const EdgeInsets.all(9),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF7F4ED),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: const Color(0xFFC7A45A)),
+                        ),
+                        child: Image.asset(
+                          'assets/branding/haq_logo_transparent.png',
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: SizedBox(
+                              width: constraints.maxWidth - 36,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    height: compact ? 80 : 110,
+                                    child: AnimatedBuilder(
+                                      animation: pulse,
+                                      child: const FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          'الله أكبر',
+                                          key: ValueKey('adhan-animated-title'),
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 56,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      builder: (context, child) => Opacity(
+                                        opacity: .75 + .25 * pulse.value,
+                                        child: Transform.scale(
+                                          scale: .96 + .04 * pulse.value,
+                                          child: child,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  if (widget.controller.config.iqamaMinutes >
+                                      0) ...[
+                                    const SizedBox(height: 8),
+                                    Container(
+                                      width: compact ? 76 : 106,
+                                      height: compact ? 76 : 106,
+                                      padding: const EdgeInsets.all(8),
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xCC0C4B4C),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: const Color(0xFFC7A45A),
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          'الإقامة بعد\n${widget.controller.config.iqamaMinutes.toString().padLeft(2, '0')}:00',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    const Text(
+                                      'مدة الإقامة حسب إعدادك',
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 48,
+                        child: FilledButton(
+                          onPressed: () => open('adhkar-after-prayer'),
+                          style: FilledButton.styleFrom(
+                            backgroundColor: const Color(0xFF2A8C82),
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text('أذكار بعد الصلاة'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          for (final item in [
+                            ('القرآن', 'quran'),
+                            ('القبلة', 'qibla'),
+                          ])
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 3,
+                                ),
+                                child: SizedBox(
+                                  height: 48,
+                                  child: OutlinedButton(
+                                    onPressed: () => open(item.$2),
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      side: const BorderSide(
+                                        color: Color(0xFFC7A45A),
+                                      ),
+                                    ),
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(item.$1),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 44,
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            side: const BorderSide(color: Color(0xFFC7A45A)),
+                          ),
+                          child: const FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text('إغلاق المعاينة'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      const FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'المعاينة بدون صوت',
+                          style: TextStyle(color: Colors.white70, fontSize: 11),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
 }

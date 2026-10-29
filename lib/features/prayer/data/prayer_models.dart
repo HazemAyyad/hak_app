@@ -7,9 +7,24 @@ import 'package:timezone/data/latest_all.dart' as data;
 import 'package:timezone/timezone.dart' as tz;
 import 'prayer_alert.dart';
 
-/// Stable local clip ID. A signed-in account never uses another account's clip.
-String prayerReminderVoiceId(String scope, PrayerName prayer) =>
-    'reminder-${sha256.convert(utf8.encode(scope)).toString().substring(0, 16)}-${prayer.name}';
+enum PrayerReminderDialect {
+  palestinian('فلسطينية', 'ar-ps'),
+  egyptian('مصرية', 'ar-eg'),
+  gulf('خليجية', 'ar-gulf');
+
+  const PrayerReminderDialect(this.label, this.assetKey);
+  final String label, assetKey;
+}
+
+/// Existing Palestinian-slot imports keep their ID; other languages cannot reuse them.
+String prayerReminderVoiceId(
+  String scope,
+  PrayerName prayer, {
+  String variant = 'ar-ps',
+}) {
+  final hash = sha256.convert(utf8.encode(scope)).toString().substring(0, 16);
+  return 'reminder-$hash-${variant == 'ar-ps' ? '' : '$variant-'}${prayer.name}';
+}
 
 bool _zonesReady = false;
 void initializePrayerZones() {
@@ -128,6 +143,8 @@ class PrayerConfig {
     this.showAdhanScreen = true,
     this.iqamaMinutes = 15,
     this.defaultAlert = const PrayerAlert(),
+    this.reminderLanguage = 'auto',
+    this.reminderDialect = PrayerReminderDialect.palestinian,
     Map<String, PrayerAlert> alerts = const {},
     List<String> enabledPrayers = const [
       'fajr',
@@ -139,7 +156,8 @@ class PrayerConfig {
   }) : alerts = Map.unmodifiable(alerts),
        adjustments = Map.unmodifiable(adjustments),
        enabledPrayers = List.unmodifiable(enabledPrayers) {
-    if (iqamaMinutes < 0 ||
+    if (!['auto', 'ar', 'en'].contains(reminderLanguage) ||
+        iqamaMinutes < 0 ||
         iqamaMinutes > 60 ||
         adhanVolume < 0 ||
         adhanVolume > 100 ||
@@ -169,6 +187,8 @@ class PrayerConfig {
   final int beforeMinutes, afterMinutes, adhanVolume, iqamaMinutes;
   final bool showAdhanScreen;
   final PrayerAlert defaultAlert;
+  final String reminderLanguage;
+  final PrayerReminderDialect reminderDialect;
   final List<String> enabledPrayers;
   final Map<String, PrayerAlert> alerts;
   PrayerAlert alert(PrayerName name) =>
@@ -188,6 +208,8 @@ class PrayerConfig {
     int? iqamaMinutes,
     bool? showAdhanScreen,
     PrayerAlert? defaultAlert,
+    String? reminderLanguage,
+    PrayerReminderDialect? reminderDialect,
     List<String>? enabledPrayers,
     Map<String, PrayerAlert>? alerts,
   }) => PrayerConfig(
@@ -203,6 +225,8 @@ class PrayerConfig {
     iqamaMinutes: iqamaMinutes ?? this.iqamaMinutes,
     showAdhanScreen: showAdhanScreen ?? this.showAdhanScreen,
     defaultAlert: defaultAlert ?? this.defaultAlert,
+    reminderLanguage: reminderLanguage ?? this.reminderLanguage,
+    reminderDialect: reminderDialect ?? this.reminderDialect,
     enabledPrayers: enabledPrayers ?? this.enabledPrayers,
     alerts: alerts ?? this.alerts,
   );
@@ -219,6 +243,8 @@ class PrayerConfig {
     'iqamaMinutes': iqamaMinutes,
     'showAdhanScreen': showAdhanScreen,
     'defaultAlert': defaultAlert.toJson(),
+    'reminderLanguage': reminderLanguage,
+    'reminderDialect': reminderDialect.name,
     'prayers': enabledPrayers,
     'alerts': alerts.map((key, value) => MapEntry(key, value.toJson())),
   };
@@ -233,6 +259,10 @@ class PrayerConfig {
     notifications: data['notifications'] as bool,
     beforeMinutes: data['before'] as int,
     afterMinutes: data['after'] as int,
+    reminderLanguage: data['reminderLanguage'] as String? ?? 'auto',
+    reminderDialect: PrayerReminderDialect.values.byName(
+      data['reminderDialect'] as String? ?? 'palestinian',
+    ),
     adhanVolume: data['adhanVolume'] as int? ?? 100,
     iqamaMinutes: data['iqamaMinutes'] as int? ?? 15,
     showAdhanScreen: data['showAdhanScreen'] as bool? ?? true,

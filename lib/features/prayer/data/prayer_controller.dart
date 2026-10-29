@@ -53,6 +53,24 @@ class PrayerController extends ChangeNotifier {
   Timer? _timer;
   Future<void> _writes = Future.value();
   String? _day;
+  String _appLanguage = 'ar';
+  String get reminderVariant =>
+      (config.reminderLanguage == 'auto'
+              ? _appLanguage
+              : config.reminderLanguage) ==
+          'en'
+      ? 'en'
+      : config.reminderDialect.assetKey;
+  void setAppLanguage(String language) {
+    final next = language.toLowerCase().split(RegExp('[-_]')).first == 'en'
+        ? 'en'
+        : 'ar';
+    if (_appLanguage == next || _disposed) return;
+    _appLanguage = next;
+    notifyListeners();
+    scheduleChanged.notifyListeners();
+  }
+
   DateTime get now => clock();
   void _restore() {
     error = null;
@@ -390,6 +408,8 @@ class PrayerController extends ChangeNotifier {
             if (config.beforeMinutes > 0)
               -config.beforeMinutes: m.name == PrayerName.sunrise
                   ? 'اقترب وقت الشروق'
+                  : reminderVariant == 'en'
+                  ? 'It is almost time for ${m.name.name[0].toUpperCase()}${m.name.name.substring(1)} prayer'
                   : 'اقترب أذان ${m.name.label}',
             if (config.afterMinutes > 0)
               config.afterMinutes: 'أذكار بعد صلاة ${m.name.label}',
@@ -407,6 +427,7 @@ class PrayerController extends ChangeNotifier {
                 minute: 0,
                 at: at.toUtc().millisecondsSinceEpoch,
                 volume: entry.key == 0 ? config.adhanVolume : null,
+                reminderVariant: entry.key < 0 ? reminderVariant : null,
                 showAdhanScreen: entry.key == 0 ? config.showAdhanScreen : null,
                 iqamaMinutes: entry.key == 0 ? config.iqamaMinutes : null,
                 alertMode: entry.key == 0
@@ -420,7 +441,11 @@ class PrayerController extends ChangeNotifier {
                         m.name != PrayerName.sunrise
                     ? config.alert(m.name).voice
                     : entry.key < 0 && m.name != PrayerName.sunrise
-                    ? prayerReminderVoiceId(scope, m.name)
+                    ? prayerReminderVoiceId(
+                        scope,
+                        m.name,
+                        variant: reminderVariant,
+                      )
                     : null,
                 fullAdhan:
                     entry.key == 0 &&

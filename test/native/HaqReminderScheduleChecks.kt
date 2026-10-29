@@ -49,5 +49,10 @@ fun main() {
     check(HaqAdhanRules.targetVolume(15,100)==15)
     check(HaqAdhanRules.targetVolume(15,50)==8)
     check(HaqAdhanRules.targetVolume(15,0)==0)
-    println("47 native checks passed (scheduling, prayer lateness and face-down detection). No app built or run.")
+    check(HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-en-fajr"))
+    check(HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-ar-eg-dhuhr"))
+    check(HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-ar-gulf-isha"))
+    check(!HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-fr-fajr"))
+    check(!HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-en-../fajr"))
+    println("52 native checks passed (scheduling, prayer lateness and face-down detection). No app built or run.")
 }

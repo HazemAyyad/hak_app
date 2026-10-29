@@ -15,6 +15,26 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		A23B00000000000000000000 /* haq-reminder-ar-ps-fajr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000000 /* haq-reminder-ar-ps-fajr.caf */; };
+		A23B00000000000000000001 /* haq-reminder-ar-ps-dhuhr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000001 /* haq-reminder-ar-ps-dhuhr.caf */; };
+		A23B00000000000000000002 /* haq-reminder-ar-ps-asr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000002 /* haq-reminder-ar-ps-asr.caf */; };
+		A23B00000000000000000003 /* haq-reminder-ar-ps-maghrib.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000003 /* haq-reminder-ar-ps-maghrib.caf */; };
+		A23B00000000000000000004 /* haq-reminder-ar-ps-isha.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000004 /* haq-reminder-ar-ps-isha.caf */; };
+		A23B00000000000000000005 /* haq-reminder-ar-eg-fajr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000005 /* haq-reminder-ar-eg-fajr.caf */; };
+		A23B00000000000000000006 /* haq-reminder-ar-eg-dhuhr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000006 /* haq-reminder-ar-eg-dhuhr.caf */; };
+		A23B00000000000000000007 /* haq-reminder-ar-eg-asr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000007 /* haq-reminder-ar-eg-asr.caf */; };
+		A23B00000000000000000008 /* haq-reminder-ar-eg-maghrib.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000008 /* haq-reminder-ar-eg-maghrib.caf */; };
+		A23B00000000000000000009 /* haq-reminder-ar-eg-isha.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000009 /* haq-reminder-ar-eg-isha.caf */; };
+		A23B0000000000000000000A /* haq-reminder-ar-gulf-fajr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D0000000000000000000A /* haq-reminder-ar-gulf-fajr.caf */; };
+		A23B0000000000000000000B /* haq-reminder-ar-gulf-dhuhr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D0000000000000000000B /* haq-reminder-ar-gulf-dhuhr.caf */; };
+		A23B0000000000000000000C /* haq-reminder-ar-gulf-asr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D0000000000000000000C /* haq-reminder-ar-gulf-asr.caf */; };
+		A23B0000000000000000000D /* haq-reminder-ar-gulf-maghrib.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D0000000000000000000D /* haq-reminder-ar-gulf-maghrib.caf */; };
+		A23B0000000000000000000E /* haq-reminder-ar-gulf-isha.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D0000000000000000000E /* haq-reminder-ar-gulf-isha.caf */; };
+		A23B0000000000000000000F /* haq-reminder-en-fajr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D0000000000000000000F /* haq-reminder-en-fajr.caf */; };
+		A23B00000000000000000010 /* haq-reminder-en-dhuhr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000010 /* haq-reminder-en-dhuhr.caf */; };
+		A23B00000000000000000011 /* haq-reminder-en-asr.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000011 /* haq-reminder-en-asr.caf */; };
+		A23B00000000000000000012 /* haq-reminder-en-maghrib.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000012 /* haq-reminder-en-maghrib.caf */; };
+		A23B00000000000000000013 /* haq-reminder-en-isha.caf in Resources */ = {isa = PBXBuildFile; fileRef = A23D00000000000000000013 /* haq-reminder-en-isha.caf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +77,26 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A23D00000000000000000000 /* haq-reminder-ar-ps-fajr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-ps-fajr.caf"; path = "PrayerReminders/haq-reminder-ar-ps-fajr.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000001 /* haq-reminder-ar-ps-dhuhr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-ps-dhuhr.caf"; path = "PrayerReminders/haq-reminder-ar-ps-dhuhr.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000002 /* haq-reminder-ar-ps-asr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-ps-asr.caf"; path = "PrayerReminders/haq-reminder-ar-ps-asr.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000003 /* haq-reminder-ar-ps-maghrib.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-ps-maghrib.caf"; path = "PrayerReminders/haq-reminder-ar-ps-maghrib.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000004 /* haq-reminder-ar-ps-isha.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-ps-isha.caf"; path = "PrayerReminders/haq-reminder-ar-ps-isha.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000005 /* haq-reminder-ar-eg-fajr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-eg-fajr.caf"; path = "PrayerReminders/haq-reminder-ar-eg-fajr.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000006 /* haq-reminder-ar-eg-dhuhr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-eg-dhuhr.caf"; path = "PrayerReminders/haq-reminder-ar-eg-dhuhr.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000007 /* haq-reminder-ar-eg-asr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-eg-asr.caf"; path = "PrayerReminders/haq-reminder-ar-eg-asr.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000008 /* haq-reminder-ar-eg-maghrib.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-eg-maghrib.caf"; path = "PrayerReminders/haq-reminder-ar-eg-maghrib.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000009 /* haq-reminder-ar-eg-isha.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-eg-isha.caf"; path = "PrayerReminders/haq-reminder-ar-eg-isha.caf"; sourceTree = "<group>"; };
+		A23D0000000000000000000A /* haq-reminder-ar-gulf-fajr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-gulf-fajr.caf"; path = "PrayerReminders/haq-reminder-ar-gulf-fajr.caf"; sourceTree = "<group>"; };
+		A23D0000000000000000000B /* haq-reminder-ar-gulf-dhuhr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-gulf-dhuhr.caf"; path = "PrayerReminders/haq-reminder-ar-gulf-dhuhr.caf"; sourceTree = "<group>"; };
+		A23D0000000000000000000C /* haq-reminder-ar-gulf-asr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-gulf-asr.caf"; path = "PrayerReminders/haq-reminder-ar-gulf-asr.caf"; sourceTree = "<group>"; };
+		A23D0000000000000000000D /* haq-reminder-ar-gulf-maghrib.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-gulf-maghrib.caf"; path = "PrayerReminders/haq-reminder-ar-gulf-maghrib.caf"; sourceTree = "<group>"; };
+		A23D0000000000000000000E /* haq-reminder-ar-gulf-isha.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-ar-gulf-isha.caf"; path = "PrayerReminders/haq-reminder-ar-gulf-isha.caf"; sourceTree = "<group>"; };
+		A23D0000000000000000000F /* haq-reminder-en-fajr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-en-fajr.caf"; path = "PrayerReminders/haq-reminder-en-fajr.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000010 /* haq-reminder-en-dhuhr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-en-dhuhr.caf"; path = "PrayerReminders/haq-reminder-en-dhuhr.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000011 /* haq-reminder-en-asr.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-en-asr.caf"; path = "PrayerReminders/haq-reminder-en-asr.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000012 /* haq-reminder-en-maghrib.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-en-maghrib.caf"; path = "PrayerReminders/haq-reminder-en-maghrib.caf"; sourceTree = "<group>"; };
+		A23D00000000000000000013 /* haq-reminder-en-isha.caf */ = {isa = PBXFileReference; lastKnownFileType = audio.caf; name = "haq-reminder-en-isha.caf"; path = "PrayerReminders/haq-reminder-en-isha.caf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +151,26 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				A23D00000000000000000013 /* haq-reminder-en-isha.caf */,
+				A23D00000000000000000012 /* haq-reminder-en-maghrib.caf */,
+				A23D00000000000000000011 /* haq-reminder-en-asr.caf */,
+				A23D00000000000000000010 /* haq-reminder-en-dhuhr.caf */,
+				A23D0000000000000000000F /* haq-reminder-en-fajr.caf */,
+				A23D0000000000000000000E /* haq-reminder-ar-gulf-isha.caf */,
+				A23D0000000000000000000D /* haq-reminder-ar-gulf-maghrib.caf */,
+				A23D0000000000000000000C /* haq-reminder-ar-gulf-asr.caf */,
+				A23D0000000000000000000B /* haq-reminder-ar-gulf-dhuhr.caf */,
+				A23D0000000000000000000A /* haq-reminder-ar-gulf-fajr.caf */,
+				A23D00000000000000000009 /* haq-reminder-ar-eg-isha.caf */,
+				A23D00000000000000000008 /* haq-reminder-ar-eg-maghrib.caf */,
+				A23D00000000000000000007 /* haq-reminder-ar-eg-asr.caf */,
+				A23D00000000000000000006 /* haq-reminder-ar-eg-dhuhr.caf */,
+				A23D00000000000000000005 /* haq-reminder-ar-eg-fajr.caf */,
+				A23D00000000000000000004 /* haq-reminder-ar-ps-isha.caf */,
+				A23D00000000000000000003 /* haq-reminder-ar-ps-maghrib.caf */,
+				A23D00000000000000000002 /* haq-reminder-ar-ps-asr.caf */,
+				A23D00000000000000000001 /* haq-reminder-ar-ps-dhuhr.caf */,
+				A23D00000000000000000000 /* haq-reminder-ar-ps-fajr.caf */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
@@ -215,6 +275,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A23B00000000000000000013 /* haq-reminder-en-isha.caf in Resources */,
+				A23B00000000000000000012 /* haq-reminder-en-maghrib.caf in Resources */,
+				A23B00000000000000000011 /* haq-reminder-en-asr.caf in Resources */,
+				A23B00000000000000000010 /* haq-reminder-en-dhuhr.caf in Resources */,
+				A23B0000000000000000000F /* haq-reminder-en-fajr.caf in Resources */,
+				A23B0000000000000000000E /* haq-reminder-ar-gulf-isha.caf in Resources */,
+				A23B0000000000000000000D /* haq-reminder-ar-gulf-maghrib.caf in Resources */,
+				A23B0000000000000000000C /* haq-reminder-ar-gulf-asr.caf in Resources */,
+				A23B0000000000000000000B /* haq-reminder-ar-gulf-dhuhr.caf in Resources */,
+				A23B0000000000000000000A /* haq-reminder-ar-gulf-fajr.caf in Resources */,
+				A23B00000000000000000009 /* haq-reminder-ar-eg-isha.caf in Resources */,
+				A23B00000000000000000008 /* haq-reminder-ar-eg-maghrib.caf in Resources */,
+				A23B00000000000000000007 /* haq-reminder-ar-eg-asr.caf in Resources */,
+				A23B00000000000000000006 /* haq-reminder-ar-eg-dhuhr.caf in Resources */,
+				A23B00000000000000000005 /* haq-reminder-ar-eg-fajr.caf in Resources */,
+				A23B00000000000000000004 /* haq-reminder-ar-ps-isha.caf in Resources */,
+				A23B00000000000000000003 /* haq-reminder-ar-ps-maghrib.caf in Resources */,
+				A23B00000000000000000002 /* haq-reminder-ar-ps-asr.caf in Resources */,
+				A23B00000000000000000001 /* haq-reminder-ar-ps-dhuhr.caf in Resources */,
+				A23B00000000000000000000 /* haq-reminder-ar-ps-fajr.caf in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,

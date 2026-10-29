@@ -7,7 +7,9 @@ class PrayerAdhanSettingsPage extends StatefulWidget {
     required this.controller,
     this.beforeAudio,
     this.enableReminders,
+    this.onOpenRoute,
   });
+  final ValueChanged<String>? onOpenRoute;
   final PrayerController controller;
   final Future<void> Function()? beforeAudio;
   final Future<bool> Function()? enableReminders;
@@ -72,6 +74,55 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
       }
       if (c.scope == owner) await c.save(next);
     } finally {
+      if (mounted) setState(() => busy = false);
+    }
+  }
+
+  Future<void> _testPrayer(String kind) async {
+    if (busy || !kDebugMode) return;
+    final owner = c.scope;
+    setState(() => busy = true);
+    AdhanLibrary? library;
+    try {
+      await widget.beforeAudio?.call();
+      final voice = c.config.alert(PrayerName.dhuhr).voice;
+      if (kind == 'adhan' &&
+          !(device['preparedVoices'] as List? ?? []).contains(voice)) {
+        library = AdhanLibrary();
+        await library.initialize();
+        final choice = adhanVoices.firstWhere((v) => v.id == voice);
+        final ready = library.downloaded.contains(voice)
+            ? await library.prepareVoice(voice)
+            : await library.download(choice);
+        if (!ready) throw StateError('audio');
+      }
+      if (!mounted || owner != c.scope) return;
+      await AdhanLibrary.bridge.invokeMethod<Object>('schedulePrayerTest', {
+        'kind': kind,
+        'voice': voice,
+        'variant': c.reminderVariant,
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'سيبدأ اختبار الظهر بعد 10 ثوانٍ؛ يمكنك تصغير التطبيق أو قفل الشاشة',
+            ),
+          ),
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'تعذّر تجهيز الاختبار؛ تحقق من أذونات الإشعار والتنبيه الدقيق والصوت المحفوظ',
+            ),
+          ),
+        );
+      }
+    } finally {
+      library?.dispose();
       if (mounted) setState(() => busy = false);
     }
   }
@@ -155,6 +206,27 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                                 await _status();
                               },
                             ),
+                          if (kDebugMode && device['platform'] == 'android')
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 4,
+                              children: [
+                                OutlinedButton(
+                                  key: const ValueKey('test-dhuhr-reminder'),
+                                  onPressed: busy
+                                      ? null
+                                      : () => _testPrayer('reminderVoice'),
+                                  child: const Text('اختبار تذكير الظهر (10ث)'),
+                                ),
+                                OutlinedButton(
+                                  key: const ValueKey('test-dhuhr-adhan'),
+                                  onPressed: busy
+                                      ? null
+                                      : () => _testPrayer('adhan'),
+                                  child: const Text('اختبار أذان الظهر (10ث)'),
+                                ),
+                              ],
+                            ),
                           ListTile(
                             title: const Text('المؤذّن ونمط الأذان العام'),
                             subtitle: Text(
@@ -232,6 +304,25 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                                   .invokeMethod<void>('fullScreenPermission'),
                               child: const Text('السماح بالشاشة الكاملة'),
                             ),
+                          if ([
+                            'xiaomi',
+                            'redmi',
+                            'poco',
+                          ].contains(device['vendor']))
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: const Icon(
+                                Icons.phonelink_lock_outlined,
+                              ),
+                              title: const Text(
+                                'إدارة أذونات شاشة القفل على Xiaomi',
+                              ),
+                              subtitle: const Text(
+                                'فعّل Show on Lock screen وفتح النوافذ أثناء العمل بالخلفية لظهور شاشة الأذان',
+                              ),
+                              onTap: () => AdhanLibrary.bridge
+                                  .invokeMethod<void>('vendorAlarmPermissions'),
+                            ),
                           if (device['platform'] == 'android' &&
                               device['exact'] != true)
                             TextButton(
@@ -240,13 +331,24 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                               child: const Text('السماح بالتنبيه الدقيق'),
                             ),
                           OutlinedButton.icon(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (_) =>
-                                    AdhanScreenPreview(controller: c),
-                              ),
-                            ),
+                            onPressed: () async {
+                              final route = await Navigator.push<String>(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      AdhanScreenPreview(controller: c),
+                                ),
+                              );
+                              if (!context.mounted ||
+                                  route == null ||
+                                  route == 'prayer-settings') {
+                                return;
+                              }
+                              if (widget.onOpenRoute != null) {
+                                Navigator.pop(context);
+                                widget.onOpenRoute!(route);
+                              }
+                            },
                             icon: const Icon(Icons.preview_outlined),
                             label: const Text('معاينة شاشة الأذان'),
                           ),
@@ -373,22 +475,24 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                           ),
                           const SizedBox(height: 12),
                           const Text(
-                            'التذكير البشري: «اقتربت صلاة الفجر/الظهر/العصر/المغرب/العشاء».',
+                            'التذكير الصوتي: «اقتربت صلاة الفجر/الظهر/العصر/المغرب/العشاء».',
                           ),
                           const Text(
-                            'يُفعّل التسجيل لكل صلاة عند إضافة ملفه الصوتي.',
+                            'ثلاث لهجات عربية وصوت إنجليزي مضمّنة، ويمكن إضافة تسجيلك.',
                             style: TextStyle(fontSize: 12),
                           ),
                           OutlinedButton.icon(
                             onPressed: () => Navigator.push(
                               context,
                               MaterialPageRoute<void>(
-                                builder: (_) =>
-                                    PrayerReminderRecordingsPage(controller: c),
+                                builder: (_) => PrayerReminderRecordingsPage(
+                                  controller: c,
+                                  beforeAudio: widget.beforeAudio,
+                                ),
                               ),
                             ),
                             icon: const Icon(Icons.record_voice_over),
-                            label: const Text('التسجيلات البشرية للتذكير'),
+                            label: const Text('أصوات التذكير قبل الصلاة'),
                           ),
                           const SizedBox(height: 12),
                           DropdownButtonFormField<int>(

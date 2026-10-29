@@ -68,6 +68,41 @@ object HaqReminders {
             "pending" to jobs(plan(c)).size, "speech" to true,
             "failed" to prefs(c).getBoolean("scheduleError", false))
     }
+    /** Explicit debug-only test through the real persisted AlarmManager path. */
+    fun schedulePrayerTest(c:Context,kind:String,voice:String,variant:String):Long {
+        require(c.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0)
+        require(kind in listOf("adhan","reminderVoice") && HaqAdhanRules.voiceId(voice))
+        require(variant in listOf("ar-ps","ar-eg","ar-gulf","en"))
+        check(allowed(c) && (Build.VERSION.SDK_INT < 31 || c.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()))
+        val p=plan(c); val scope=p.optString("scope","guest"); val at=System.currentTimeMillis()+10000
+        if (!p.has("revision")) p.put("revision",UUID.randomUUID().toString())
+        p.put("scope",scope)
+        val kept=JSONArray()
+        for(job in jobs(p)) {
+            if(job.optBoolean("test")) c.getSystemService(AlarmManager::class.java).cancel(pending(c,job.getString("id")))
+            else kept.put(job)
+        }
+        val clip=if(kind=="adhan")voice else {
+            val hash=java.security.MessageDigest.getInstance("SHA-256").digest(scope.toByteArray()).joinToString(""){"%02x".format(it)}.take(16)
+            "reminder-$hash-${if(variant=="ar-ps")"" else "$variant-"}dhuhr"
+        }
+        val job=JSONObject().put("id","$scope:prayer:dhuhr:test-$at").put("test",true)
+            .put("title",if(kind=="adhan")"اختبار • حان وقت صلاة الظهر" else "اختبار • اقتربت صلاة الظهر")
+            .put("body","اختبار حق على الجهاز — ليس موعد صلاة فعليًا").put("route","prayer")
+            .put("at",at).put("minute",0).put("alertMode",kind).put("voice",clip).put("reminderVariant",variant)
+            .put("fullAdhan",true).put("showAdhanScreen",true).put("volume",100).put("iqamaMinutes",15)
+        kept.put(job);p.put("jobs",kept)
+        check(prefs(c).edit().putString("plan",p.toString()).commit())
+        schedule(c,job,at)
+        android.util.Log.i("HaqPrayerTest","Scheduled $kind after 10 seconds")
+        return at
+    }
+    fun finishPrayerTest(c:Context,id:String?) {
+        if(id==null)return
+        val p=plan(c);val kept=JSONArray()
+        for(job in jobs(p))if(job.optString("id")!=id || !job.optBoolean("test"))kept.put(job)
+        p.put("jobs",kept);prefs(c).edit().putString("plan",p.toString()).apply()
+    }
     private fun intent(c: Context, id: String, action: String = "fire") = Intent(c, HaqReminderReceiver::class.java).apply {
         this.action = action; data = Uri.parse("$ROOT://job/${Uri.encode(id)}"); putExtra("id", id)
         putExtra("revision", plan(c).optString("revision"))
@@ -240,7 +275,7 @@ object HaqReminders {
  * A persisted current plan is revalidated before the downloaded audio starts. */
 object HaqAdhanRules {
     fun voiceId(id: String) = id in listOf("alafasy", "nafees", "mustafa", "zahrani") || Regex("archive-[0-9a-f]{16}").matches(id)
-    fun reminderId(id: String) = Regex("reminder-[0-9a-f]{16}-(fajr|dhuhr|asr|maghrib|isha)").matches(id)
+    fun reminderId(id: String) = Regex("reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha)").matches(id)
     fun playbackId(id: String) = voiceId(id) || reminderId(id)
     fun targetVolume(maximum: Int, percent: Int) = kotlin.math.ceil(maximum * percent.coerceIn(0, 100) / 100.0).toInt()
     fun timely(at: Long, now: Long) = now >= at && now - at <= 120000
@@ -255,6 +290,11 @@ class HaqAdhanService : Service(), SensorEventListener {
     }
     private val handler = Handler(Looper.getMainLooper())
     private var player: MediaPlayer? = null
+    private var prepared = false
+    private var testPlayback = false
+    fun playback(): Pair<Int, Int>? = if (!prepared) null else try {
+        player?.let { it.currentPosition to it.duration }
+    } catch (_: IllegalStateException) { null }
     private var focus: AudioFocusRequest? = null
     private var sensor: SensorManager? = null
     private var volume: ContentObserver? = null
@@ -281,18 +321,34 @@ class HaqAdhanService : Service(), SensorEventListener {
         if (!valid) { stopSelf(); return START_NOT_STICKY }
         val voice = job!!.optString("voice")
         if (!HaqAdhanRules.playbackId(voice)) { stopSelf(); return START_NOT_STICKY }
-        val audio = File(filesDir, "adhan/$voice.mp3")
+        var audio = File(filesDir, "adhan/$voice.mp3")
+        if (!audio.isFile && job.optString("alertMode") == "reminderVoice" && HaqAdhanRules.reminderId(voice)) {
+            val prayer = voice.substringAfterLast('-')
+            val variant=job.optString("reminderVariant","ar-ps").takeIf { it in listOf("ar-ps","ar-eg","ar-gulf","en") } ?: "ar-ps"
+            val bundled = File(filesDir, "adhan/bundled-v2-$variant-$prayer.mp3")
+            try {
+                if (!bundled.isFile) {
+                    bundled.parentFile!!.mkdirs()
+                    val temp = File(bundled.parentFile, "bundled-v2-$variant-$prayer.part")
+                    assets.open("flutter_assets/assets/prayer/reminders/$variant/$prayer.mp3").use { input -> temp.outputStream().use { input.copyTo(it) } }
+                    check(temp.renameTo(bundled))
+                }
+                audio = bundled
+            } catch (_: Exception) { }
+        }
         if (!audio.isFile) { HaqReminders.show(this, job); stopSelf(); return START_NOT_STICKY }
         val receipt = job.getString("id") + ":" + p.optString("revision")
         if (HaqReminders.prefs(this).getString("lastAdhan", null) == receipt) { stopSelf(); return START_NOT_STICKY }
         if (!HaqReminders.prefs(this).edit().putString("lastAdhan", receipt).commit()) { stopSelf(); return START_NOT_STICKY }
         activeId = job.getString("id")
+        testPlayback = job.optBoolean("test")
         current = this
         HaqReminders.channels(this)
         val humanReminder = job.optString("alertMode") == "reminderVoice"
         val launch = Intent(this, HaqAdhanActivity::class.java).putExtra("title", job.optString("title"))
             .putExtra("at", job.optLong("at")).putExtra("iqamaMinutes", job.optInt("iqamaMinutes", 15))
             .putExtra("scope", p.optString("scope"))
+            .putExtra("fajr", job.optString("id").contains(":prayer:fajr:"))
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
         val screen = PendingIntent.getActivity(this, ID, launch, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val stop = PendingIntent.getService(this, ID, Intent(this, HaqAdhanService::class.java).setAction("stop"),
@@ -302,13 +358,15 @@ class HaqAdhanService : Service(), SensorEventListener {
             .setContentText("المس للإيقاف، أو اقلب الهاتف على وجهه")
             .setCategory(Notification.CATEGORY_ALARM).setVisibility(Notification.VISIBILITY_PUBLIC)
             .setOngoing(true).setContentIntent(if (humanReminder) HaqReminders.open(this, "prayer", p.optString("scope")) else screen).setDeleteIntent(stop)
-            .addAction(Notification.Action.Builder(null, "إيقاف الأذان", stop).build())
+            .addAction(Notification.Action.Builder(null, if(humanReminder)"إيقاف الصوت" else "إيقاف الأذان", stop).build())
         if (Build.VERSION.SDK_INT < 26) builder.setPriority(Notification.PRIORITY_HIGH)
         if (!humanReminder && job.optBoolean("showAdhanScreen", true) && (Build.VERSION.SDK_INT < 34 || getSystemService(NotificationManager::class.java).canUseFullScreenIntent())) {
             builder.setFullScreenIntent(screen, true)
         }
         try {
             startForeground(ID, builder.build())
+            if(humanReminder) HaqReminders.show(this,JSONObject(job.toString()).put("alertMode","silent"))
+            if(testPlayback) android.util.Log.i("HaqPrayerTest","Started ${job.optString("alertMode")} voice=$voice")
             player?.release()
             val audioManager = getSystemService(AudioManager::class.java)
             val attrs = AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_MUSIC).build()
@@ -349,7 +407,7 @@ class HaqAdhanService : Service(), SensorEventListener {
                 setDataSource(audio.path)
                 setOnCompletionListener { stopSelf() }
                 setOnErrorListener { _, _, _ -> stopSelf(); true }
-                setOnPreparedListener { it.start() }
+                setOnPreparedListener { prepared = true; it.start() }
                 prepareAsync()
             }
             handler.postDelayed({ stopSelf() }, if (humanReminder) 30000 else if (job.optBoolean("fullAdhan")) 360000 else 25000)
@@ -374,11 +432,15 @@ class HaqAdhanService : Service(), SensorEventListener {
             try { audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0) } catch (_: SecurityException) { }
         }
         if (registered) unregisterReceiver(screenOff)
-        player?.release(); player = null
+        prepared = false; player?.release(); player = null
         if (Build.VERSION.SDK_INT >= 26) focus?.let { getSystemService(AudioManager::class.java).abandonAudioFocusRequest(it) }
         else legacyFocus?.let { getSystemService(AudioManager::class.java).abandonAudioFocus(it) }
         if (wake?.isHeld == true) wake?.release()
         current = null
+        if(testPlayback) {
+            android.util.Log.i("HaqPrayerTest","Stopped playback; alarm volume restored if still owned")
+            HaqReminders.finishPrayerTest(this,activeId)
+        }
         stopForeground(STOP_FOREGROUND_REMOVE)
         super.onDestroy()
     }
@@ -387,109 +449,126 @@ class HaqAdhanService : Service(), SensorEventListener {
 /** System-owned full-screen alarm surface: never overlays other apps through
  * SYSTEM_ALERT_WINDOW and never dismisses the user's keyguard. */
 class HaqAdhanActivity : Activity() {
-    private val handler = Handler(Looper.getMainLooper())
-    private var shown = false
-    private var touched = false
-    private var frame = 0
-    private lateinit var photo: ImageView
-    private lateinit var countdown: TextView
-    private lateinit var brandFont: Typeface
-    private val scenes = listOf("assets/home/dawn.png", "assets/religious/hands.png", "assets/religious/madina.png")
-    private var deadline = 0L
-    private val clock = object : Runnable {
+    private val handler=Handler(Looper.getMainLooper())
+    private var frame=0
+    private lateinit var photo:ImageView
+    private lateinit var countdown:TextView
+    private var pulse:android.animation.ValueAnimator?=null
+    private var deadline=0L
+    private val scenes=listOf("assets/home/dawn.png","assets/religious/hands.png","assets/religious/madina.png")
+    private val clock=object:Runnable {
         override fun run() {
-            if (HaqAdhanService.current == null && !touched) { finish(); return }
-            val remaining = ((deadline - System.currentTimeMillis()) / 1000).coerceAtLeast(0)
-            countdown.text = if (remaining > 0) "الإقامة بعد\n%02d:%02d".format(remaining / 60, remaining % 60) else "حان وقت الصلاة"
-            handler.postDelayed(this, 1000)
+            if(HaqAdhanService.current==null) { finish();return }
+            val remaining=((deadline-System.currentTimeMillis())/1000).coerceAtLeast(0)
+            countdown.text=if(remaining>0)"الإقامة بعد\n%02d:%02d".format(remaining/60,remaining%60) else "حان وقت الصلاة"
+            handler.postDelayed(this,1000)
         }
     }
-    private val backgrounds = object : Runnable {
+    private val backgrounds=object:Runnable {
         override fun run() {
             frame++
-            photo.animate().alpha(.35f).setDuration(500).withEndAction {
-                loadScene()
-                photo.animate().alpha(1f).setDuration(850).start()
+            photo.animate().alpha(.4f).setDuration(500).withEndAction {
+                loadScene();photo.animate().alpha(1f).setDuration(850).start()
             }.start()
-            handler.postDelayed(this, 5000)
+            handler.postDelayed(this,5000)
         }
     }
-    private fun dp(n: Int) = (n * resources.displayMetrics.density).toInt()
+    private fun dp(n:Int)=(n*resources.displayMetrics.density).toInt()
     private fun loadScene() {
-        try { assets.open("flutter_assets/" + scenes[frame % scenes.size]).use { photo.setImageDrawable(android.graphics.drawable.Drawable.createFromStream(it, null)) } }
-        catch (_: Exception) { photo.setBackgroundColor(Color.rgb(16,42,67)) }
+        try { assets.open("flutter_assets/"+scenes[frame%scenes.size]).use {
+            photo.setImageDrawable(android.graphics.drawable.Drawable.createFromStream(it,null))
+        } } catch(_:Exception) { photo.setBackgroundColor(Color.rgb(16,42,67)) }
     }
-    override fun onCreate(state: Bundle?) {
+    override fun onCreate(state:Bundle?) {
         super.onCreate(state)
-        if (HaqAdhanService.current == null) { finish(); return }
+        actionBar?.hide()
+        if(HaqAdhanService.current==null) { finish();return }
         window.addFlags(LayoutParams.FLAG_SHOW_WHEN_LOCKED or LayoutParams.FLAG_TURN_SCREEN_ON or LayoutParams.FLAG_KEEP_SCREEN_ON)
-        if (Build.VERSION.SDK_INT >= 27) { setShowWhenLocked(true); setTurnScreenOn(true) }
-        val navy = Color.rgb(16,42,67); val teal = Color.rgb(42,140,130); val gold = Color.rgb(199,164,90)
-        brandFont = try { Typeface.createFromAsset(assets, "flutter_assets/assets/fonts/Cairo.ttf") } catch (_: Exception) { Typeface.DEFAULT }
-        deadline = intent.getLongExtra("at", System.currentTimeMillis()) + intent.getIntExtra("iqamaMinutes",15).coerceIn(0,60) * 60000L
-        val root = FrameLayout(this).apply { setBackgroundColor(navy); layoutDirection = View.LAYOUT_DIRECTION_RTL }
-        photo = ImageView(this).apply { scaleType = ImageView.ScaleType.CENTER_CROP }
-        root.addView(photo, FrameLayout.LayoutParams(-1,-1)); loadScene()
-        root.addView(View(this).apply { background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(Color.argb(130,11,23,34),Color.argb(20,11,23,34),Color.argb(235,11,23,34))) }, FrameLayout.LayoutParams(-1,-1))
-        fun text(value:String,size:Float,color:Int=Color.WHITE) = TextView(this).apply {
-            this.text=value; textSize=size; typeface=brandFont; setTextColor(color); gravity=Gravity.CENTER; setPadding(dp(8),dp(8),dp(8),dp(8))
+        if(Build.VERSION.SDK_INT>=27) { setShowWhenLocked(true);setTurnScreenOn(true) }
+        val navy=Color.rgb(16,42,67);val teal=Color.rgb(42,140,130);val gold=Color.rgb(199,164,90)
+        val compact=resources.configuration.screenHeightDp<700 || resources.configuration.fontScale>1.3f
+        val brand=try { Typeface.createFromAsset(assets,"flutter_assets/assets/fonts/Cairo.ttf") } catch(_:Exception) { Typeface.DEFAULT }
+        deadline=intent.getLongExtra("at",System.currentTimeMillis())+intent.getIntExtra("iqamaMinutes",15).coerceIn(0,60)*60000L
+        val root=FrameLayout(this).apply { setBackgroundColor(navy);layoutDirection=View.LAYOUT_DIRECTION_RTL }
+        photo=ImageView(this).apply { scaleType=ImageView.ScaleType.CENTER_CROP }
+        root.addView(photo,FrameLayout.LayoutParams(-1,-1));loadScene()
+        root.addView(View(this).apply { background=GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+            intArrayOf(Color.argb(150,11,23,34),Color.argb(70,11,23,34),Color.argb(245,11,23,34))) },FrameLayout.LayoutParams(-1,-1))
+        fun text(value:String,size:Float,color:Int=Color.WHITE)=TextView(this).apply {
+            this.text=value;textSize=size;typeface=brand;setTextColor(color);gravity=Gravity.CENTER
+            setPadding(dp(4),0,dp(4),0)
         }
-        val content = LinearLayout(this).apply { orientation=LinearLayout.VERTICAL; gravity=Gravity.CENTER_HORIZONTAL; setPadding(dp(20),dp(24),dp(20),dp(24)) }
+        fun autosize(view:TextView,min:Int,max:Int) {
+            if(Build.VERSION.SDK_INT>=26)view.setAutoSizeTextTypeUniformWithConfiguration(min,max,1,android.util.TypedValue.COMPLEX_UNIT_SP)
+        }
+        val content=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL;gravity=Gravity.CENTER_HORIZONTAL;setPadding(dp(18),dp(12),dp(18),dp(12)) }
         val header=LinearLayout(this).apply { gravity=Gravity.CENTER_VERTICAL }
-        val close=Button(this).apply { text="×"; contentDescription="إيقاف الأذان"; setTextColor(Color.WHITE); setBackgroundColor(Color.TRANSPARENT); setOnClickListener { stop() } }
-        header.addView(close,LinearLayout.LayoutParams(dp(48),dp(48)))
-        header.addView(text("حق · نداء الصلاة",18f),LinearLayout.LayoutParams(0,dp(52),1f))
-        header.addView(Button(this).apply { text="⚙"; contentDescription="إعدادات الأذان"; setTextColor(Color.WHITE); setBackgroundColor(Color.TRANSPARENT); setOnClickListener { open("prayer-settings") } },LinearLayout.LayoutParams(dp(48),dp(48)))
-        content.addView(header,LinearLayout.LayoutParams(-1,dp(52)))
-        content.addView(text(intent.getStringExtra("title") ?: "حان وقت الصلاة",25f,gold))
-        val logo = ImageView(this).apply {
-            scaleType=ImageView.ScaleType.FIT_CENTER; contentDescription="شعار حق"; setPadding(dp(12),dp(12),dp(12),dp(12))
-            background=GradientDrawable().apply { shape=GradientDrawable.OVAL; setColor(Color.rgb(247,244,237)); setStroke(dp(1),gold) }
+        fun icon(value:String,label:String,action:()->Unit)=Button(this).apply {
+            text=value;contentDescription=label;setTextColor(Color.WHITE);setBackgroundColor(Color.TRANSPARENT);setOnClickListener { action() }
         }
-        try { assets.open("flutter_assets/assets/branding/haq_logo_transparent.png").use { logo.setImageDrawable(android.graphics.drawable.Drawable.createFromStream(it,null)) } } catch (_:Exception) { }
-        content.addView(logo,LinearLayout.LayoutParams(dp(84),dp(84)))
-        content.addView(text("الله أكبر",44f))
-        content.addView(Space(this),LinearLayout.LayoutParams(1,0,1f))
-        countdown=text("",24f).apply {
-            gravity=Gravity.CENTER
-            background=GradientDrawable().apply { shape=GradientDrawable.OVAL; setColor(Color.argb(205,12,75,76)); setStroke(dp(2),gold) }
+        header.addView(icon("×","إيقاف الأذان",::stop),LinearLayout.LayoutParams(dp(48),dp(48)))
+        header.addView(text("حق · نداء الصلاة",16f).apply { maxLines=1;autosize(this,12,16) },LinearLayout.LayoutParams(0,dp(48),1f))
+        header.addView(icon("⚙","إعدادات الأذان") { open("prayer-settings") },LinearLayout.LayoutParams(dp(48),dp(48)))
+        content.addView(header,LinearLayout.LayoutParams(-1,dp(48)))
+        content.addView(text(intent.getStringExtra("title") ?: "حان وقت الصلاة",24f,gold).apply { maxLines=2;autosize(this,15,24) },
+            LinearLayout.LayoutParams(-1,dp(if(compact)44 else 56)))
+        val logo=ImageView(this).apply {
+            scaleType=ImageView.ScaleType.FIT_CENTER;contentDescription="شعار حق";setPadding(dp(9),dp(9),dp(9),dp(9))
+            background=GradientDrawable().apply { shape=GradientDrawable.OVAL;setColor(Color.rgb(247,244,237));setStroke(dp(1),gold) }
+        }
+        try { assets.open("flutter_assets/assets/branding/haq_logo_transparent.png").use { logo.setImageDrawable(android.graphics.drawable.Drawable.createFromStream(it,null)) } } catch(_:Exception) { }
+        val logoSize=dp(if(compact)48 else 68)
+        content.addView(logo,LinearLayout.LayoutParams(logoSize,logoSize))
+        val middle=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL;gravity=Gravity.CENTER }
+        val words=text("الله أكبر",56f).apply { maxLines=1;autosize(this,28,56) }
+        middle.addView(words,LinearLayout.LayoutParams(-1,dp(if(compact)76 else 110)))
+        if(Build.VERSION.SDK_INT<26 || android.animation.ValueAnimator.areAnimatorsEnabled()) {
+            pulse=android.animation.ValueAnimator.ofFloat(0f,1f).apply {
+                duration=2200;repeatCount=android.animation.ValueAnimator.INFINITE;repeatMode=android.animation.ValueAnimator.REVERSE
+                addUpdateListener { val v=it.animatedValue as Float;words.alpha=.75f+.25f*v;words.scaleX=.96f+.04f*v;words.scaleY=.96f+.04f*v }
+                start()
+            }
+        }
+        countdown=text("",if(compact)14f else 18f).apply {
+            gravity=Gravity.CENTER;maxLines=3;autosize(this,12,if(compact)14 else 18)
+            background=GradientDrawable().apply { shape=GradientDrawable.OVAL;setColor(Color.argb(205,12,75,76));setStroke(dp(2),gold) }
         }
         if(intent.getIntExtra("iqamaMinutes",15)>0) {
-            content.addView(countdown,LinearLayout.LayoutParams(dp(164),dp(164)).apply { bottomMargin=dp(18) })
-            content.addView(text("مدة الإقامة حسب إعدادك",11f,Color.LTGRAY))
+            val circle=dp(if(compact)76 else 106)
+            middle.addView(countdown,LinearLayout.LayoutParams(circle,circle).apply { topMargin=dp(8) })
+            middle.addView(text("مدة الإقامة حسب إعدادك",11f,Color.LTGRAY),LinearLayout.LayoutParams(-1,dp(24)))
         }
-        fun button(title:String, route:String?, filled:Boolean):Button = Button(this).apply {
-            text=title; typeface=brandFont; textSize=16f; isAllCaps=false; setTextColor(Color.WHITE)
-            background=GradientDrawable().apply { cornerRadius=dp(18).toFloat(); setColor(if(filled)teal else Color.argb(60,16,42,67)); setStroke(dp(1),if(filled)teal else gold) }
+        content.addView(middle,LinearLayout.LayoutParams(-1,0,1f))
+        fun button(title:String,route:String?,filled:Boolean)=Button(this).apply {
+            text=title;typeface=brand;textSize=15f;isAllCaps=false;setTextColor(Color.WHITE);maxLines=1;autosize(this,12,15)
+            background=GradientDrawable().apply { cornerRadius=dp(18).toFloat();setColor(if(filled)teal else Color.argb(80,16,42,67));setStroke(dp(1),if(filled)teal else gold) }
             setOnClickListener { if(route==null)stop() else open(route) }
         }
-        content.addView(button("أذكار الصلاة","adhkar",true),LinearLayout.LayoutParams(-1,dp(54)).apply{ bottomMargin=dp(10) })
+        content.addView(button("أذكار بعد الصلاة","adhkar-after-prayer",true),LinearLayout.LayoutParams(-1,dp(48)).apply { bottomMargin=dp(8) })
         val shortcuts=LinearLayout(this)
-        shortcuts.addView(button("القرآن","quran",false),LinearLayout.LayoutParams(0,dp(50),1f).apply{ marginEnd=dp(6) })
-        shortcuts.addView(button("القبلة","qibla",false),LinearLayout.LayoutParams(0,dp(50),1f).apply{ marginStart=dp(6) })
-        content.addView(shortcuts,LinearLayout.LayoutParams(-1,dp(50)))
-        content.addView(text("المس الشاشة أو اقلب الهاتف لإيقاف الأذان",11f,Color.LTGRAY))
-        val scroll = ScrollView(this).apply { isFillViewport=true; clipToPadding=false; setPadding(0,dp(8),0,dp(16)) }
-        scroll.addView(content,FrameLayout.LayoutParams(-1,-2))
-        root.addView(scroll,FrameLayout.LayoutParams(-1,-1)); setContentView(root)
-        shown=true; handler.post(clock); handler.postDelayed(backgrounds,5000)
+        shortcuts.addView(button("القرآن","quran",false),LinearLayout.LayoutParams(0,dp(48),1f).apply { marginEnd=dp(4) })
+        shortcuts.addView(button("القبلة","qibla",false),LinearLayout.LayoutParams(0,dp(48),1f).apply { marginStart=dp(4) })
+        content.addView(shortcuts,LinearLayout.LayoutParams(-1,dp(48)))
+        content.addView(button("إيقاف الأذان",null,false),LinearLayout.LayoutParams(-1,dp(44)).apply { topMargin=dp(8) })
+        content.addView(text("زر الجهاز أو قلب الهاتف يوقف الصوت",11f,Color.LTGRAY).apply { maxLines=1;autosize(this,9,11) },LinearLayout.LayoutParams(-1,dp(24)))
+        root.addView(content,FrameLayout.LayoutParams(-1,-1))
+        root.setOnApplyWindowInsetsListener { _, insets ->
+            content.setPadding(dp(18)+insets.systemWindowInsetLeft,dp(8)+insets.systemWindowInsetTop,
+                dp(18)+insets.systemWindowInsetRight,dp(8)+insets.systemWindowInsetBottom)
+            insets
+        }
+        setContentView(root);root.requestApplyInsets();handler.post(clock);handler.postDelayed(backgrounds,5000)
     }
     private fun open(route:String) {
         HaqAdhanService.stop(this)
-        try { HaqReminders.open(this,route,intent.getStringExtra("scope") ?: "guest").send() } catch(_:Exception) {}
+        try { HaqReminders.open(this,route,intent.getStringExtra("scope") ?: "guest").send() } catch(_:Exception) { }
         finish()
     }
-    private fun stop() { HaqAdhanService.stop(this); finish() }
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if(shown && event.action==MotionEvent.ACTION_DOWN) { touched=true; HaqAdhanService.stop(this) }
-        val consumed=super.dispatchTouchEvent(event)
-        if(shown && event.action in listOf(MotionEvent.ACTION_UP,MotionEvent.ACTION_CANCEL)) handler.postDelayed({if(!isFinishing)finish()},120)
-        return consumed
-    }
-    override fun dispatchKeyEvent(event: KeyEvent): Boolean { if(event.action==KeyEvent.ACTION_DOWN)stop();return true }
+    private fun stop() { HaqAdhanService.stop(this);finish() }
+    override fun dispatchKeyEvent(event:KeyEvent):Boolean { if(event.action==KeyEvent.ACTION_DOWN)stop();return true }
     @Deprecated("Deprecated in Android") override fun onBackPressed() { stop() }
     override fun onUserLeaveHint() { super.onUserLeaveHint();stop() }
-    override fun onDestroy() { handler.removeCallbacksAndMessages(null);if(::photo.isInitialized)photo.animate().cancel();super.onDestroy() }
+    override fun onDestroy() { handler.removeCallbacksAndMessages(null);pulse?.cancel();if(::photo.isInitialized)photo.animate().cancel();super.onDestroy() }
 }
 
 class HaqReminderReceiver : BroadcastReceiver() {
@@ -638,11 +717,21 @@ class HaqRemindersBridge(private val activity: MainActivity, private val channel
                     "scope" -> { HaqReminders.changeScope(activity, call.arguments as String); result.success(null) }
                     "replace" -> { HaqReminders.replace(activity, JSONObject(call.arguments as Map<*, *>)); result.success(null) }
                     "status" -> result.success(HaqReminders.status(activity))
+                    "schedulePrayerTest" -> result.success(HaqReminders.schedulePrayerTest(activity,
+                        call.argument<String>("kind") ?: "reminderVoice",call.argument<String>("voice") ?: "alafasy",
+                        call.argument<String>("variant") ?: "ar-ps"))
                     "preparePublicPush" -> { HaqReminders.channels(activity); result.success(null) }
-                    "adhanStatus" -> result.success(mapOf("platform" to "android",
+                    "adhanStatus" -> result.success(mapOf("platform" to "android", "vendor" to Build.MANUFACTURER.lowercase(Locale.ROOT),
                         "exact" to (Build.VERSION.SDK_INT < 31 || activity.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()),
                         "fullScreen" to (Build.VERSION.SDK_INT < 34 || activity.getSystemService(NotificationManager::class.java).canUseFullScreenIntent()),
+                        "preparedVoices" to (File(activity.filesDir,"adhan").listFiles()?.filter { it.isFile && it.extension=="mp3" && HaqAdhanRules.voiceId(it.nameWithoutExtension) }?.map { it.nameWithoutExtension } ?: emptyList<String>()),
                         "reminderRecordings" to (File(activity.filesDir, "adhan").listFiles()?.filter { it.isFile && it.extension == "mp3" && HaqAdhanRules.reminderId(it.nameWithoutExtension) }?.map { it.nameWithoutExtension } ?: emptyList<String>())))
+                    "removePrayerReminder" -> {
+                        val id=call.argument<String>("id") ?: error("voice")
+                        require(HaqAdhanRules.reminderId(id))
+                        val file=File(activity.filesDir,"adhan/$id.mp3")
+                        result.success(!file.exists() || file.delete())
+                    }
                     "prepareAdhan", "preparePrayerReminder" -> {
                         val id = call.argument<String>("id") ?: error("voice")
                         require(if (call.method == "preparePrayerReminder") HaqAdhanRules.reminderId(id) else HaqAdhanRules.voiceId(id))
@@ -667,6 +756,14 @@ class HaqRemindersBridge(private val activity: MainActivity, private val channel
                     }
                     "fullScreenPermission" -> {
                         if (Build.VERSION.SDK_INT >= 34) activity.startActivity(Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, Uri.parse("package:${activity.packageName}")))
+                        result.success(null)
+                    }
+                    "vendorAlarmPermissions" -> {
+                        try {
+                            activity.startActivity(Intent("miui.intent.action.APP_PERM_EDITOR").putExtra("extra_pkgname",activity.packageName))
+                        } catch (_:Exception) {
+                            activity.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,Uri.parse("package:${activity.packageName}")))
+                        }
                         result.success(null)
                     }
                     "communityMessage" -> {

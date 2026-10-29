@@ -242,6 +242,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _prayer?.setAppLanguage(Localizations.localeOf(context).languageCode);
     final next = AppExperienceScope.maybeOf(context);
     if (next != _experience) {
       _experience?.unregister(_quran.audio);
@@ -330,6 +331,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _openPrayer();
       case 'prayer-settings':
         _openPrayer(settings: true);
+      case 'adhkar-after-prayer':
+        _selectSection(AppSection.adhkar);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _adhkarKey.currentState?.navigator.currentState?.popUntil(
+              (route) => route.isFirst,
+            );
+            _adhkarKey.currentState?.openGroup('daily:after-prayer');
+          }
+        });
       case 'qibla':
         _selectSection(AppSection.qibla);
       case 'quran':
@@ -399,6 +410,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           : 'account.${_quran.account.profile!['id']}',
       account: _quran.account,
     );
+    _prayer!.setAppLanguage(Localizations.localeOf(context).languageCode);
     if (mounted) setState(() {});
   }
 
@@ -500,11 +512,13 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         builder: (_) => settings
             ? PrayerAdhanSettingsPage(
                 controller: c,
+                onOpenRoute: _openReminder,
                 beforeAudio: _beforePrayerAudio,
                 enableReminders: _enablePrayerReminders,
               )
             : PrayerPage(
                 controller: c,
+                onOpenRoute: _openReminder,
                 beforeAudio: _beforePrayerAudio,
                 enableReminders: _enablePrayerReminders,
               ),
@@ -851,6 +865,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ? _prayer != null
                         ? QiblaPage(
                             controller: _prayer!,
+                            onOpenRoute: _openReminder,
                             active: _section == AppSection.qibla,
                             beforeAudio: _beforePrayerAudio,
                             enableReminders: _enablePrayerReminders,

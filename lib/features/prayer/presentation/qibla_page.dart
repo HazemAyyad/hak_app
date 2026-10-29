@@ -8,7 +8,9 @@ class QiblaPage extends StatefulWidget {
     this.heading,
     this.beforeAudio,
     this.enableReminders,
+    this.onOpenRoute,
   });
+  final ValueChanged<String>? onOpenRoute;
   final PrayerController controller;
   final bool active;
   final HeadingController? heading;
@@ -119,6 +121,18 @@ class _QiblaPageState extends State<QiblaPage>
     super.dispose();
   }
 
+  void _openAdhanSettings() => Navigator.push(
+    context,
+    MaterialPageRoute<void>(
+      builder: (_) => PrayerAdhanSettingsPage(
+        controller: widget.controller,
+        onOpenRoute: widget.onOpenRoute,
+        beforeAudio: widget.beforeAudio,
+        enableReminders: widget.enableReminders,
+      ),
+    ),
+  );
+
   @override
   Widget build(BuildContext context) => Directionality(
     textDirection: TextDirection.rtl,
@@ -149,10 +163,28 @@ class _QiblaPageState extends State<QiblaPage>
           return CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
-                child: DirectoryHeader(
-                  title: 'بوصلة القبلة',
-                  subtitle: 'حيث يتّجه قلبك',
-                  onBack: () => Navigator.maybePop(context),
+                child: Stack(
+                  children: [
+                    DirectoryHeader(
+                      title: 'بوصلة القبلة',
+                      subtitle: 'حيث يتّجه قلبك',
+                      onBack: () => Navigator.maybePop(context),
+                    ),
+                    Positioned(
+                      right: 16,
+                      top: MediaQuery.paddingOf(context).top + 18,
+                      child: Material(
+                        color: p.surface,
+                        shape: const CircleBorder(),
+                        child: IconButton(
+                          key: const ValueKey('qibla-adhan-settings'),
+                          tooltip: 'إعدادات الأذان',
+                          onPressed: _openAdhanSettings,
+                          icon: Icon(Icons.tune_rounded, color: p.tealHeading),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SliverPadding(
@@ -370,16 +402,7 @@ class _QiblaPageState extends State<QiblaPage>
                     ),
                     const SizedBox(height: 10),
                     OutlinedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => PrayerAdhanSettingsPage(
-                            controller: c,
-                            beforeAudio: widget.beforeAudio,
-                            enableReminders: widget.enableReminders,
-                          ),
-                        ),
-                      ),
+                      onPressed: _openAdhanSettings,
                       child: const Text('إعدادات الأذان'),
                     ),
                     if (place != null)

@@ -143,12 +143,20 @@ private final class HaqReminderCenter {
         let recordings = ((try? FileManager.default.contentsOfDirectory(atPath: NSHomeDirectory() + "/Library/Sounds")) ?? []).compactMap { name -> String? in
           guard name.hasPrefix("haq-adhan-"), name.hasSuffix(".caf") else { return nil }
           let id = String(name.dropFirst(10).dropLast(4))
-          return id.range(of: "^reminder-[0-9a-f]{16}-(fajr|dhuhr|asr|maghrib|isha)$", options: .regularExpression) != nil ? id : nil
+          return id.range(of: "^reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha)$", options: .regularExpression) != nil ? id : nil
         }
         result(["platform": "ios", "exact": false, "fullScreen": false, "reminderRecordings": recordings])
+      case "removePrayerReminder":
+        guard let args = call.arguments as? [String: Any], let id = args["id"] as? String,
+              id.range(of: "^reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha)$", options: .regularExpression) != nil else { result(false); return }
+        do {
+          let url = URL(fileURLWithPath: NSHomeDirectory() + "/Library/Sounds/haq-adhan-\(id).caf")
+          if FileManager.default.fileExists(atPath: url.path) { try FileManager.default.removeItem(at: url) }
+          result(true)
+        } catch { result(false) }
       case "prepareAdhan", "preparePrayerReminder":
         guard let args = call.arguments as? [String: Any], let id = args["id"] as? String,
-              (id.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|reminder-[0-9a-f]{16}-(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil), let path = args["path"] as? String else {
+              (id.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil), let path = args["path"] as? String else {
           result(FlutterError(code: "audio", message: "Invalid voice", details: nil)); return
         }
         let source = URL(fileURLWithPath: path).standardizedFileURL.resolvingSymlinksInPath()
@@ -237,10 +245,16 @@ private final class HaqReminderCenter {
     if let mode = job["alertMode"] as? String {
       if mode == "silent" || mode == "vibration" { c.sound = nil }
       else if (mode == "adhan" || mode == "reminderVoice"),
-              let voice = job["voice"] as? String, voice.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|reminder-[0-9a-f]{16}-(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil {
+              let voice = job["voice"] as? String, voice.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil {
         let name = "haq-adhan-\(voice).caf"
         if FileManager.default.fileExists(atPath: NSHomeDirectory() + "/Library/Sounds/" + name) {
           c.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: name))
+        } else if mode == "reminderVoice", let prayer = voice.split(separator: "-").last,
+                  ["fajr", "dhuhr", "asr", "maghrib", "isha"].contains(String(prayer)),
+                  let variant = job["reminderVariant"] as? String,
+                  ["ar-ps", "ar-eg", "ar-gulf", "en"].contains(variant),
+                  Bundle.main.url(forResource: "haq-reminder-\(variant)-\(prayer)", withExtension: "caf") != nil {
+          c.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "haq-reminder-\(variant)-\(prayer).caf"))
         }
       }
     }

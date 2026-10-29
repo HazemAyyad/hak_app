@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_preferences.dart';
+import 'package:haq_app/features/adhkar/data/adhkar_progress.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_repository.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_session_controller.dart';
 import 'package:haq_app/features/adhkar/data/personal_adhkar.dart';
@@ -84,6 +85,57 @@ void main() {
     await editor.saveDhikr(text: 'الأول', target: '٣');
     await editor.saveDhikr(text: 'الثاني', target: '۱');
   }
+
+  test(
+    'daily card progress reads existing counts, undo, reset day and account without creating sessions',
+    () async {
+      final p = AdhkarProgress(
+        activity,
+        repository,
+        clock: () => now,
+        autoRefresh: false,
+      );
+      addTearDown(p.dispose);
+      await p.refresh();
+      expect(p.groups['daily:morning']!.percent, 0);
+      expect(
+        await store.entities('guest', kind: PersonalEntityKind.session),
+        isEmpty,
+      );
+      final session = await open(id: 'daily:morning');
+      for (final item in session.items.take(5)) {
+        await session.count(item.id, complete: true);
+      }
+      await p.refresh();
+      var result = p.groups['daily:morning']!;
+      expect(result.completed, 5);
+      expect(result.total, session.items.length);
+      expect(result.fraction, closeTo(session.progress, .00001));
+      final restored = AdhkarProgress(
+        activity,
+        repository,
+        clock: () => now,
+        autoRefresh: false,
+      );
+      await restored.refresh();
+      expect(restored.groups['daily:morning']!.completed, 5);
+      restored.dispose();
+      await session.undo(subjectId: session.items[4].id);
+      await p.refresh();
+      expect(p.groups['daily:morning']!.completed, 4);
+      expect(p.groups['daily:evening']!.read, 0);
+      now = now.add(const Duration(days: 1));
+      await p.refresh();
+      expect(p.groups['daily:morning']!.read, 0);
+      now = now.subtract(const Duration(days: 1));
+      final stale = p.refresh();
+      quran.account.profile = {'id': 44, 'name': 'حساب آخر'};
+      await quran.account.expireSession();
+      await stale;
+      await p.refresh();
+      expect(p.groups['daily:morning']!.read, 0);
+    },
+  );
 
   test(
     'official source has 14 complete groups and verified count corrections without changing Quran',

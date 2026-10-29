@@ -115,9 +115,10 @@ void main() {
               colorSchemeSeed: const Color(0xFF2A8C82),
             ),
             builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(visualScale(scale))),
+              data: MediaQuery.of(context).copyWith(
+                disableAnimations: true,
+                textScaler: TextScaler.linear(visualScale(scale)),
+              ),
               child: child!,
             ),
             home: page,
@@ -163,7 +164,7 @@ void main() {
   }
 
   testWidgets(
-    'granted permission hides the request; live settings persist and preview stays scrollable',
+    'granted permission hides the request; live settings persist and preview fits the viewport',
     (tester) async {
       var allowed = false;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -214,13 +215,153 @@ void main() {
       await tester.pump(const Duration(seconds: 11));
       await settle(tester);
       expect(tester.takeException(), isNull);
+      expect(find.byType(Scrollable), findsNothing);
+      expect(find.text('أذكار بعد الصلاة'), findsOneWidget);
+      await capture(tester, 'adhan-screen-preview');
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'animated adhan title has no scrolling and preview buttons return precise destinations',
+    (tester) async {
+      for (final entry in {
+        'أذكار بعد الصلاة': 'adhkar-after-prayer',
+        'القرآن': 'quran',
+        'القبلة': 'qibla',
+        'إعدادات الأذان': 'prayer-settings',
+      }.entries) {
+        String? destination;
+        await pump(
+          tester,
+          Builder(
+            builder: (context) => Scaffold(
+              body: TextButton(
+                child: const Text('فتح المعاينة'),
+                onPressed: () async {
+                  destination = await Navigator.push<String>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => AdhanScreenPreview(controller: c),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.text('فتح المعاينة'));
+        await settle(tester);
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 20)),
+        );
+        await settle(tester);
+        expect(
+          find.byKey(const ValueKey('adhan-animated-title')),
+          findsOneWidget,
+        );
+        expect(find.text('الله أكبر'), findsOneWidget);
+        expect(find.byType(Scrollable), findsNothing);
+        if (entry.key == 'إعدادات الأذان') {
+          await tester.tap(find.byTooltip(entry.key));
+        } else {
+          await tester.ensureVisible(find.text(entry.key));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text(entry.key));
+        }
+        await settle(tester);
+        expect(destination, entry.value);
+        await tester.pumpWidget(const SizedBox());
+      }
+    },
+  );
+
+  testWidgets(
+    'all five bundled synthetic reminder choices stay readable with large Arabic text',
+    (tester) async {
+      await pump(tester, PrayerReminderRecordingsPage(controller: c));
+      expect(find.textContaining('مولّد اصطناعيًا'), findsOneWidget);
       await tester.scrollUntilVisible(
-        find.text('أذكار الصلاة'),
+        find.text('قرب وقت صلاة العشاء'),
         250,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.text('أذكار الصلاة'), findsOneWidget);
-      await capture(tester, 'adhan-screen-preview');
+      expect(tester.takeException(), isNull);
+      await capture(tester, 'bundled-reminder-voices');
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'reminder picker offers three Arabic dialects and a single English voice',
+    (tester) async {
+      await pump(tester, PrayerReminderRecordingsPage(controller: c));
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('reminder-dialect-palestinian')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const ValueKey('reminder-dialect-palestinian')),
+      );
+      await settle(tester);
+      expect(find.text('مصرية'), findsOneWidget);
+      expect(find.text('خليجية'), findsOneWidget);
+      await tester.tap(find.text('مصرية'));
+      await settle(tester);
+      expect(c.config.reminderDialect, PrayerReminderDialect.egyptian);
+      await tester.ensureVisible(
+        find.byKey(const ValueKey('reminder-language-auto')),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('reminder-language-auto')));
+      await settle(tester);
+      await tester.tap(find.text('English').last);
+      await settle(tester);
+      expect(c.config.reminderLanguage, 'en');
+      expect(c.reminderVariant, 'en');
+      expect(find.text('English uses one voice.'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('reminder-dialect-egyptian')),
+        findsNothing,
+      );
+      await tester.scrollUntilVisible(
+        find.text('It is almost time for Isha prayer'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(tester.takeException(), isNull);
+      await capture(tester, 'english-reminder-voice');
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets('Qibla top settings icon opens the shared adhan settings', (
+    tester,
+  ) async {
+    await pump(tester, QiblaPage(controller: c));
+    await tester.tap(find.byKey(const ValueKey('qibla-adhan-settings')));
+    await settle(tester);
+    expect(find.byType(PrayerAdhanSettingsPage), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'adhan screen has no scrolling at phone height and enlarged text',
+    (tester) async {
+      await pump(tester, AdhanScreenPreview(controller: c), scale: 1.5);
+      tester.view.physicalSize = const Size(320, 568);
+      await settle(tester);
+      expect(find.byType(Scrollable), findsNothing);
+      expect(
+        find.byKey(const ValueKey('adhan-animated-title')),
+        findsOneWidget,
+      );
+      expect(
+        tester.getRect(find.text('أذكار بعد الصلاة')).bottom,
+        lessThan(568),
+      );
+      expect(tester.getRect(find.text('إغلاق المعاينة')).bottom, lessThan(568));
+      expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     },
   );

@@ -11,6 +11,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/main.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_repository.dart';
+import 'package:haq_app/features/adhkar/data/adhkar_session_controller.dart';
 import 'package:haq_app/features/adhkar/data/personal_adhkar.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_volume_controls.dart';
 import 'package:haq_app/features/adhkar/presentation/adhkar_host.dart';
@@ -263,6 +264,46 @@ void main() {
       kind: PersonalEntityKind.dhikr,
     )).single.key;
   }
+
+  testWidgets(
+    'morning card shows five completed entries outside the reader and survives reopening',
+    (tester) async {
+      final library = await source.library(store, activity.scope);
+      final session = await AdhkarSessionController.open(
+        activity: activity,
+        group: library.groups.firstWhere((g) => g.id == 'daily:morning'),
+        library: library,
+        catalogVersion: source.version,
+      );
+      for (final item in session.items.take(5)) {
+        await session.count(item.id, complete: true);
+      }
+      await session.flush();
+      session.dispose();
+      await pump(tester, width: 320, scale: 1.3);
+      await until(
+        tester,
+        () => find
+            .byKey(const ValueKey('progress-count-daily:morning'))
+            .evaluate()
+            .isNotEmpty,
+      );
+      final count = tester.widget<Text>(
+        find.byKey(const ValueKey('progress-count-daily:morning')),
+      );
+      expect(count.data, startsWith('5 من 23 أذكار'));
+      expect(
+        tester
+            .widget<LinearProgressIndicator>(
+              find.byKey(const ValueKey('progress-bar-daily:morning')),
+            )
+            .value,
+        greaterThan(0),
+      );
+      await capture(tester, 'index-five-completed');
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   for (final mode in [ThemeMode.light, ThemeMode.dark]) {
     testWidgets('daily index and no-results ${mode.name}', (tester) async {

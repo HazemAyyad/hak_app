@@ -93,6 +93,11 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/prayer/reminders/
+    - assets/prayer/reminders/ar-ps/
+    - assets/prayer/reminders/ar-eg/
+    - assets/prayer/reminders/ar-gulf/
+    - assets/prayer/reminders/en/
     - assets/branding/haq_app_icon.png
     - assets/branding/haq_logo_transparent.png
     - assets/images/mosque_sunrise.png

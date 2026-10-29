@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:file_selector/file_selector.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:timezone/timezone.dart' as tz;
 import '../../../app_appearance.dart';
@@ -53,7 +55,9 @@ class PrayerPage extends StatelessWidget {
     required this.controller,
     this.beforeAudio,
     this.enableReminders,
+    this.onOpenRoute,
   });
+  final ValueChanged<String>? onOpenRoute;
   final PrayerController controller;
   final Future<void> Function()? beforeAudio;
   final Future<bool> Function()? enableReminders;
@@ -129,6 +133,7 @@ class PrayerPage extends StatelessWidget {
                       MaterialPageRoute<void>(
                         builder: (_) => PrayerAdhanSettingsPage(
                           controller: controller,
+                          onOpenRoute: onOpenRoute,
                           beforeAudio: beforeAudio,
                           enableReminders: enableReminders,
                         ),

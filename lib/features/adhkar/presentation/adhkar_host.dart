@@ -13,6 +13,7 @@ import '../../religious_activity/data/activity_controller.dart';
 import '../../religious_activity/data/activity_models.dart';
 import '../../religious_content/data/religious_controller.dart';
 import '../data/adhkar_repository.dart';
+import '../data/adhkar_progress.dart';
 import '../data/adhkar_session_controller.dart';
 import '../data/adhkar_volume_controls.dart';
 import '../data/personal_adhkar.dart';
@@ -226,6 +227,45 @@ class _AdhkarIndex extends StatefulWidget {
 
 class _AdhkarIndexState extends State<_AdhkarIndex> {
   String query = '';
+  AdhkarProgress? progress;
+  String? progressError;
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_loadProgress());
+  }
+
+  Future<void> _loadProgress() async {
+    try {
+      final source = await widget.host.source;
+      final activity = await widget.host.widget.controller.activity;
+      if (!mounted) return;
+      widget.host._bindActivity(activity);
+      progress?.removeListener(_changed);
+      progress?.dispose();
+      progress = AdhkarProgress(activity, source)..addListener(_changed);
+      await progress!.refresh();
+      if (mounted) setState(() => progressError = null);
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => progressError = 'تعذّر تحميل تقدّم اليوم؛ اضغط لإعادة المحاولة',
+        );
+      }
+    }
+  }
+
+  void _changed() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    progress?.removeListener(_changed);
+    progress?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final host = widget.host, colors = AppPalette.of(context);
@@ -314,6 +354,13 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                               const Center(child: CircularProgressIndicator()),
                             if (repository != null && groups.isEmpty)
                               _notice(context, 'لا توجد مجموعات تطابق بحثك'),
+                            if (progressError != null ||
+                                progress?.error != null)
+                              _notice(
+                                context,
+                                progressError ?? progress!.error!,
+                                action: _loadProgress,
+                              ),
                             LayoutBuilder(
                               builder: (context, constraints) => GridView.builder(
                                 shrinkWrap: true,
@@ -327,7 +374,7 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                       mainAxisSpacing: 10,
                                       mainAxisExtent: MediaQuery.textScalerOf(
                                         context,
-                                      ).scale(104).clamp(118, 170),
+                                      ).scale(152).clamp(156, 240),
                                     ),
                                 itemBuilder: (context, index) {
                                   final group = groups[index];
@@ -341,10 +388,28 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Icon(
-                                          _groupIcon(group.icon),
-                                          color: colors.gold,
-                                          size: 29,
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              _groupIcon(group.icon),
+                                              color: colors.gold,
+                                              size: 26,
+                                            ),
+                                            const Spacer(),
+                                            if (progress?.groups[group.id]
+                                                case final p?)
+                                              Text(
+                                                '${p.percent}٪',
+                                                key: ValueKey(
+                                                  'progress-percent-${group.id}',
+                                                ),
+                                                style: TextStyle(
+                                                  color: colors.tealHeading,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                          ],
                                         ),
                                         Text(
                                           group.title,
@@ -354,6 +419,41 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                             fontSize: 15,
                                           ),
                                         ),
+                                        if (progress?.groups[group.id]
+                                            case final p?) ...[
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            child: LinearProgressIndicator(
+                                              key: ValueKey(
+                                                'progress-bar-${group.id}',
+                                              ),
+                                              value: p.fraction,
+                                              minHeight: 5,
+                                              color: colors.tealHeading,
+                                              backgroundColor: colors.border,
+                                            ),
+                                          ),
+                                          Text(
+                                            '${p.completed} من ${p.total} أذكار • ${p.read} من ${p.target} تكرار',
+                                            key: ValueKey(
+                                              'progress-count-${group.id}',
+                                            ),
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: colors.muted,
+                                            ),
+                                          ),
+                                        ] else
+                                          Text(
+                                            'تحميل تقدّم اليوم…',
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: colors.muted,
+                                            ),
+                                          ),
                                       ],
                                     ),
                                   );

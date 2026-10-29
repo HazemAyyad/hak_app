@@ -38,6 +38,68 @@ void main() {
     label: 'اختبار',
   );
   test(
+    'reminder dialect and English selection persist; auto follows locale and scopes custom audio by variant',
+    () async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final c = PrayerController(
+        prefs,
+        scopeOf: () => 'guest',
+        autoTick: false,
+        clock: () => DateTime.utc(2026, 10, 27, 10),
+      );
+      addTearDown(c.dispose);
+      await c.save(
+        PrayerConfig(
+          location: place,
+          notifications: true,
+          enabledPrayers: ['fajr'],
+          reminderLanguage: 'ar',
+          reminderDialect: PrayerReminderDialect.egyptian,
+        ),
+      );
+      expect(c.reminderVariant, 'ar-eg');
+      var job = c.reminderJobs().firstWhere(
+        (j) => j.alertMode == 'reminderVoice',
+      );
+      expect(job.toJson()['reminderVariant'], 'ar-eg');
+      expect(job.voice, contains('-ar-eg-fajr'));
+      final reopened = PrayerController(
+        prefs,
+        scopeOf: () => 'guest',
+        autoTick: false,
+      );
+      expect(reopened.config.reminderDialect, PrayerReminderDialect.egyptian);
+      reopened.dispose();
+      await c.save(c.config.copyWith(reminderLanguage: 'en'));
+      expect(c.reminderVariant, 'en');
+      job = c.reminderJobs().firstWhere((j) => j.alertMode == 'reminderVoice');
+      expect(job.title, contains('Fajr prayer'));
+      expect(job.voice, endsWith('-en-fajr'));
+      await c.save(
+        c.config.copyWith(
+          reminderLanguage: 'auto',
+          reminderDialect: PrayerReminderDialect.gulf,
+        ),
+      );
+      c.setAppLanguage('en-US');
+      expect(c.reminderVariant, 'en');
+      c.setAppLanguage('ar-PS');
+      expect(c.reminderVariant, 'ar-gulf');
+      expect(
+        prayerReminderVoiceId('guest', PrayerName.fajr, variant: 'en'),
+        isNot(
+          prayerReminderVoiceId('guest', PrayerName.fajr, variant: 'ar-eg'),
+        ),
+      );
+      final old = c.config.toJson()
+        ..remove('reminderLanguage')
+        ..remove('reminderDialect');
+      expect(PrayerConfig.fromJson(old).reminderLanguage, 'auto');
+    },
+  );
+
+  test(
     'new adhan preferences and actual location names preserve legacy data and isolate human clips',
     () async {
       final legacy = PrayerConfig(location: place).toJson()

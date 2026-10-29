@@ -1,0 +1,128 @@
+{
+  "type": "synthetic",
+  "provider": "Microsoft Edge speech via edge-tts",
+  "source": "https://github.com/rany2/edge-tts",
+  "clips": {
+    "ar-ps/fajr": {
+      "text": "قَرَّب وَقْت صَلاة الفَجْر. يَلَّا نْجَهِّز حالْنا لِلصَّلاة.",
+      "voice": "ar-JO-TaimNeural",
+      "asset": "assets/prayer/reminders/ar-ps/fajr.mp3",
+      "sha256": "83f944057bf54ad5e4e9f106b618ec129703370e9c6211284a660ae236e70fec"
+    },
+    "ar-ps/dhuhr": {
+      "text": "قَرَّب وَقْت صَلاة الظُّهْر. يَلَّا نْجَهِّز حالْنا لِلصَّلاة.",
+      "voice": "ar-JO-TaimNeural",
+      "asset": "assets/prayer/reminders/ar-ps/dhuhr.mp3",
+      "sha256": "656a7f4ef119066cf985487e35abe4b5bca8ec6ab45e8c3076c73b2118abd6dc"
+    },
+    "ar-ps/asr": {
+      "text": "قَرَّب وَقْت صَلاة العَصْر. يَلَّا نْجَهِّز حالْنا لِلصَّلاة.",
+      "voice": "ar-JO-TaimNeural",
+      "asset": "assets/prayer/reminders/ar-ps/asr.mp3",
+      "sha256": "d2dd42601fbbb1c5dc4c8be8ed50e9bcbc08bdd2f1a33cc53d2a998f1fafef1d"
+    },
+    "ar-ps/maghrib": {
+      "text": "قَرَّب وَقْت صَلاة المَغْرِب. يَلَّا نْجَهِّز حالْنا لِلصَّلاة.",
+      "voice": "ar-JO-TaimNeural",
+      "asset": "assets/prayer/reminders/ar-ps/maghrib.mp3",
+      "sha256": "b98e29e53f0d3f3b7962db981685b9242a33aa410f0fd8c5b604f3135e5660ec"
+    },
+    "ar-ps/isha": {
+      "text": "قَرَّب وَقْت صَلاة العِشاء. يَلَّا نْجَهِّز حالْنا لِلصَّلاة.",
+      "voice": "ar-JO-TaimNeural",
+      "asset": "assets/prayer/reminders/ar-ps/isha.mp3",
+      "sha256": "d22f58e8fdfd04d9b8c0532c1074e17667324b4cbf50921a0962637bc9ae41ec"
+    },
+    "ar-eg/fajr": {
+      "text": "قَرَّب مِيعاد صَلاة الفَجْر. يَلَّا نِسْتَعِدّ لِلصَّلاة.",
+      "voice": "ar-EG-ShakirNeural",
+      "asset": "assets/prayer/reminders/ar-eg/fajr.mp3",
+      "sha256": "ec19663ce7f0c8d2fabb1b15a103327e92d0e5784d034daaa88dc63da611cd94"
+    },
+    "ar-eg/dhuhr": {
+      "text": "قَرَّب مِيعاد صَلاة الظُّهْر. يَلَّا نِسْتَعِدّ لِلصَّلاة.",
+      "voice": "ar-EG-ShakirNeural",
+      "asset": "assets/prayer/reminders/ar-eg/dhuhr.mp3",
+      "sha256": "4cc73f44a23c43a9ca8e66fdadaa0a006756813542d5dde547554eeff22e802e"
+    },
+    "ar-eg/asr": {
+      "text": "قَرَّب مِيعاد صَلاة العَصْر. يَلَّا نِسْتَعِدّ لِلصَّلاة.",
+      "voice": "ar-EG-ShakirNeural",
+      "asset": "assets/prayer/reminders/ar-eg/asr.mp3",
+      "sha256": "c5348ab8b808f094f77fd4ce8a039b66529f741500148986ea79f64ab40cc8de"
+    },
+    "ar-eg/maghrib": {
+      "text": "قَرَّب مِيعاد صَلاة المَغْرِب. يَلَّا نِسْتَعِدّ لِلصَّلاة.",
+      "voice": "ar-EG-ShakirNeural",
+      "asset": "assets/prayer/reminders/ar-eg/maghrib.mp3",
+      "sha256": "b4206a30a35a1e11b099b0c038f06949da469ee3236df6da74a240eaba4c5fe0"
+    },
+    "ar-eg/isha": {
+      "text": "قَرَّب مِيعاد صَلاة العِشاء. يَلَّا نِسْتَعِدّ لِلصَّلاة.",
+      "voice": "ar-EG-ShakirNeural",
+      "asset": "assets/prayer/reminders/ar-eg/isha.mp3",
+      "sha256": "864622d8592d5a2872ea4cecedf57d477d5451290c8927375f95d36cbaa3c109"
+    },
+    "ar-gulf/fajr": {
+      "text": "قَرَّب وَقْت صَلاة الفَجْر. خَلّنا نِسْتَعِدّ لِلصَّلاة.",
+      "voice": "ar-SA-HamedNeural",
+      "asset": "assets/prayer/reminders/ar-gulf/fajr.mp3",
+      "sha256": "fe4a99f1be66cc7ec1832db07edbed55c2a54b290475f17bc8b413a2cb96c926"
+    },
+    "ar-gulf/dhuhr": {
+      "text": "قَرَّب وَقْت صَلاة الظُّهْر. خَلّنا نِسْتَعِدّ لِلصَّلاة.",
+      "voice": "ar-SA-HamedNeural",
+      "asset": "assets/prayer/reminders/ar-gulf/dhuhr.mp3",
+      "sha256": "9df75543697e39574a19b18084f02aecc119e83fee42b25b0d18f7fd38a93ef0"
+    },
+    "ar-gulf/asr": {
+      "text": "قَرَّب وَقْت صَلاة العَصْر. خَلّنا نِسْتَعِدّ لِلصَّلاة.",
+      "voice": "ar-SA-HamedNeural",
+      "asset": "assets/prayer/reminders/ar-gulf/asr.mp3",
+      "sha256": "a7ab2cf3a2cb572010f9339d01969f8a1a6ad19d38f78fd4d8e1294c49b326a4"
+    },
+    "ar-gulf/maghrib": {
+      "text": "قَرَّب وَقْت صَلاة المَغْرِب. خَلّنا نِسْتَعِدّ لِلصَّلاة.",
+      "voice": "ar-SA-HamedNeural",
+      "asset": "assets/prayer/reminders/ar-gulf/maghrib.mp3",
+      "sha256": "8f0a50344c5dc63b468e92db6b4a88c66c9cb202297f61dbf7280810acd6c9d8"
+    },
+    "ar-gulf/isha": {
+      "text": "قَرَّب وَقْت صَلاة العِشاء. خَلّنا نِسْتَعِدّ لِلصَّلاة.",
+      "voice": "ar-SA-HamedNeural",
+      "asset": "assets/prayer/reminders/ar-gulf/isha.mp3",
+      "sha256": "1b35ceccb3d6f6f9df46ff8886ae3e2fd50f06b556d64fcfe7e0fa5ef9149a7e"
+    },
+    "en/fajr": {
+      "text": "It is almost time for Fajr prayer. Please get ready to pray.",
+      "voice": "en-US-GuyNeural",
+      "asset": "assets/prayer/reminders/en/fajr.mp3",
+      "sha256": "79a2adec5caf2dd53fb6e7d2973fb1a632c129f80da4059f33fd7b446d04ab22"
+    },
+    "en/dhuhr": {
+      "text": "It is almost time for Dhuhr prayer. Please get ready to pray.",
+      "voice": "en-US-GuyNeural",
+      "asset": "assets/prayer/reminders/en/dhuhr.mp3",
+      "sha256": "8e349b9b40f307e833988538e3d33f03d524ecaefcda802609dcdee0041f4d3e"
+    },
+    "en/asr": {
+      "text": "It is almost time for Asr prayer. Please get ready to pray.",
+      "voice": "en-US-GuyNeural",
+      "asset": "assets/prayer/reminders/en/asr.mp3",
+      "sha256": "7fed6ad6154080c67c6e5e5d47783a1e78cf9021c9533b5e81b6081141a5cc32"
+    },
+    "en/maghrib": {
+      "text": "It is almost time for Maghrib prayer. Please get ready to pray.",
+      "voice": "en-US-GuyNeural",
+      "asset": "assets/prayer/reminders/en/maghrib.mp3",
+      "sha256": "2ab21d678b0237a105e277a85d0ccc890f84c3b8c33334fed845bad4d879ac60"
+    },
+    "en/isha": {
+      "text": "It is almost time for Isha prayer. Please get ready to pray.",
+      "voice": "en-US-GuyNeural",
+      "asset": "assets/prayer/reminders/en/isha.mp3",
+      "sha256": "1aa92f3d4cc25ebc4ca4d57e142d6c93e52ed7c1d7579be1a5eef6be76a9fe0e"
+    }
+  },
+  "palestinian_note": "Palestinian wording using ar-JO-TaimNeural; not a human recording."
+}

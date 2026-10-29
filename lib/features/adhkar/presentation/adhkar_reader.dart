@@ -639,6 +639,25 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: Column(
+                  children: [
+                    LinearProgressIndicator(
+                      key: ValueKey('item-progress-${item.id}'),
+                      value: 1 - remaining / c.session.targets[item.id]!,
+                      minHeight: 4,
+                      color: colors.tealHeading,
+                      backgroundColor: colors.border,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '${((1 - remaining / c.session.targets[item.id]!) * 100).round()}٪ • ${c.session.targets[item.id]! - remaining} من ${c.session.targets[item.id]}',
+                      style: TextStyle(fontSize: 12, color: colors.muted),
+                    ),
+                  ],
+                ),
+              ),
               if (!list)
                 Padding(
                   padding: const EdgeInsets.only(top: 9),

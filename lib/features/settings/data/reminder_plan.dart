@@ -19,13 +19,14 @@ class ReminderJob {
     this.volume,
     this.showAdhanScreen,
     this.iqamaMinutes,
+    this.reminderVariant,
   });
   final String id, title, body, route;
   final int minute;
   final int? weekday, interval, at, volume, iqamaMinutes;
   final bool? showAdhanScreen;
   final String? start, end;
-  final String? alertMode, voice;
+  final String? alertMode, voice, reminderVariant;
   final bool fullAdhan;
   Map<String, Object> toJson() => {
     'id': id,
@@ -40,6 +41,7 @@ class ReminderJob {
     'at': ?at,
     'alertMode': ?alertMode,
     'voice': ?voice,
+    'reminderVariant': ?reminderVariant,
     if (alertMode == 'adhan') 'fullAdhan': fullAdhan,
     'volume': ?volume,
     'showAdhanScreen': ?showAdhanScreen,
