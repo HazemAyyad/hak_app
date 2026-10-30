@@ -1,3 +1,5 @@
+import '../../../core/localization/ui_text.dart';
+import 'account_labels.dart';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:file_selector/file_selector.dart';
@@ -54,10 +56,12 @@ class AccountHubPage extends StatelessWidget {
               future: controller.activity,
               builder: (context, result) {
                 if (result.hasError) {
-                  return const Padding(
+                  return Padding(
                     padding: EdgeInsets.all(18),
                     child: Text(
-                      'تعذّر فتح بيانات النشاط؛ أعد فتح الصفحة للمحاولة.',
+                      context.accountLabel(
+                        'تعذّر فتح بيانات النشاط؛ أعد فتح الصفحة للمحاولة.',
+                      ),
                     ),
                   );
                 }
@@ -228,7 +232,9 @@ class _AccountToolsState extends State<_AccountTools> {
         setState(
           () => message = e is FormatException
               ? e.message.toString()
-              : 'تعذّر إكمال العملية. بياناتك المحلية محفوظة؛ حاول مجددًا.',
+              : context.accountLabel(
+                  'تعذّر إكمال العملية. بياناتك المحلية محفوظة؛ حاول مجددًا.',
+                ),
         );
       }
     } finally {
@@ -262,8 +268,10 @@ class _AccountToolsState extends State<_AccountTools> {
     if (mounted) {
       setState(
         () => message = result.status == ShareResultStatus.dismissed
-            ? 'أُغلقت نافذة مشاركة النسخة.'
-            : 'أُعدّت النسخة وأُرسلت لواجهة الحفظ أو المشاركة.',
+            ? context.accountLabel('أُغلقت نافذة مشاركة النسخة.')
+            : context.accountLabel(
+                'أُعدّت النسخة وأُرسلت لواجهة الحفظ أو المشاركة.',
+              ),
       );
     }
   });
@@ -291,33 +299,43 @@ class _AccountToolsState extends State<_AccountTools> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, update) => AlertDialog(
-          title: const Text('معاينة النسخة'),
+          title: Text(context.accountLabel('معاينة النسخة')),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(accountBackupDate(context, archive.created)),
                 Text(
-                  'تاريخ النسخة: ${archive.created.toLocal().toString().substring(0, 16)}',
-                ),
-                Text(
-                  '${archive.personal.length} عناصر شخصية • ${archive.events.length} عمليات في السجل',
+                  accountBackupCounts(
+                    context,
+                    archive.personal.length,
+                    archive.events.length,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 SwitchListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: const Text('استبدال المحفوظات والإعدادات'),
+                  title: Text(
+                    context.accountLabel('استبدال المحفوظات والإعدادات'),
+                  ),
                   value: replace,
                   onChanged: (v) => update(() => replace = v),
                 ),
                 Text(
                   replace
-                      ? 'ستُستبدل المفضلة والتقدم والعناصر الشخصية والإعدادات. يبقى سجل النشاط ويُدمج دون تكرار.'
-                      : 'تُضاف العناصر غير الموجودة. تبقى تعديلاتك الحالية والعناصر المحذوفة من الحساب.',
+                      ? context.accountLabel(
+                          'ستُستبدل المفضلة والتقدم والعناصر الشخصية والإعدادات. يبقى سجل النشاط ويُدمج دون تكرار.',
+                        )
+                      : context.accountLabel(
+                          'تُضاف العناصر غير الموجودة. تبقى تعديلاتك الحالية والعناصر المحذوفة من الحساب.',
+                        ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  'تُستعاد الإعدادات والموقع المختار أيضًا. أذونات الجهاز والتنزيلات وتسجيل الدخول تبقى مستقلة.',
+                Text(
+                  context.accountLabel(
+                    'تُستعاد الإعدادات والموقع المختار أيضًا. أذونات الجهاز والتنزيلات وتسجيل الدخول تبقى مستقلة.',
+                  ),
                 ),
               ],
             ),
@@ -325,11 +343,11 @@ class _AccountToolsState extends State<_AccountTools> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('إلغاء'),
+              child: Text(context.accountLabel('إلغاء')),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('تأكيد الاستعادة'),
+              child: Text(context.accountLabel('تأكيد الاستعادة')),
             ),
           ],
         ),
@@ -343,16 +361,18 @@ class _AccountToolsState extends State<_AccountTools> {
     } catch (_) {
       if (mounted) {
         setState(
-          () => message =
-              'تمت استعادة البيانات. تعذّر تحديث التنبيهات؛ راجع إعداداتها.',
+          () => message = context.accountLabel(
+            'تمت استعادة البيانات. تعذّر تحديث التنبيهات؛ راجع إعداداتها.',
+          ),
         );
       }
       return;
     }
     if (mounted) {
       setState(
-        () =>
-            message = 'تمت الاستعادة على هذا الجهاز. راجع حالة المزامنة أدناه.',
+        () => message = context.accountLabel(
+          'تمت الاستعادة على هذا الجهاز. راجع حالة المزامنة أدناه.',
+        ),
       );
     }
   });
@@ -366,22 +386,26 @@ class _AccountToolsState extends State<_AccountTools> {
     final save = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('إعدادات الحساب'),
+        title: Text(context.accountLabel('إعدادات الحساب')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: name,
               maxLength: 100,
-              decoration: const InputDecoration(labelText: 'الاسم'),
+              decoration: InputDecoration(
+                labelText: context.accountLabel('الاسم'),
+              ),
             ),
             TextField(
               controller: username,
               maxLength: 30,
               textDirection: TextDirection.ltr,
-              decoration: const InputDecoration(
-                labelText: 'اسم المستخدم',
-                helperText: '7–30 حرفًا أو رقمًا، يبدأ بحرف إنجليزي',
+              decoration: InputDecoration(
+                labelText: context.accountLabel('اسم المستخدم'),
+                helperText: context.accountLabel(
+                  '7–30 حرفًا أو رقمًا، يبدأ بحرف إنجليزي',
+                ),
               ),
             ),
           ],
@@ -389,11 +413,11 @@ class _AccountToolsState extends State<_AccountTools> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('إلغاء'),
+            child: Text(context.accountLabel('إلغاء')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('حفظ'),
+            child: Text(context.accountLabel('حفظ')),
           ),
         ],
       ),
@@ -402,7 +426,11 @@ class _AccountToolsState extends State<_AccountTools> {
       await _run(() async {
         final done = await account.updateProfile(username.text, name.text);
         if (mounted) {
-          setState(() => message = done ? 'تم حفظ الحساب' : account.error);
+          setState(
+            () => message = done
+                ? context.accountLabel('تم حفظ الحساب')
+                : account.error,
+          );
         }
       });
     }
@@ -415,7 +443,11 @@ class _AccountToolsState extends State<_AccountTools> {
     if (token != null) {
       final done = await account.google(token, link: true);
       if (mounted) {
-        setState(() => message = done ? 'تم ربط حساب Google' : account.error);
+        setState(
+          () => message = done
+              ? context.accountLabel('تم ربط حساب Google')
+              : account.error,
+        );
       }
     }
   });
@@ -425,25 +457,29 @@ class _AccountToolsState extends State<_AccountTools> {
     final agreed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('حذف حساب حق'),
+        title: Text(context.accountLabel('حذف حساب حق')),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'سيُحذف الحساب وبياناته السحابية نهائيًا. صدّر نسخة أولًا إذا احتجتها. تبقى النسخة المحلية معزولة على هذا الجهاز ولا تُنقل للضيف. حذف حساب حق لا يلغي تجديد اشتراك المتجر؛ ألغِ التجديد من إعدادات اشتراكات Google Play أو Apple قبل الحذف إذا أردت إيقاف الدفع.',
+              Text(
+                context.accountLabel(
+                  'سيُحذف الحساب وبياناته السحابية نهائيًا. صدّر نسخة أولًا إذا احتجتها. تبقى النسخة المحلية معزولة على هذا الجهاز ولا تُنقل للضيف. حذف حساب حق لا يلغي تجديد اشتراك المتجر؛ ألغِ التجديد من إعدادات اشتراكات Google Play أو Apple قبل الحذف إذا أردت إيقاف الدفع.',
+                ),
               ),
               if (account.profile?['password_enabled'] != false)
                 TextField(
                   controller: password,
                   obscureText: true,
-                  decoration: const InputDecoration(labelText: 'كلمة المرور'),
+                  decoration: InputDecoration(
+                    labelText: context.accountLabel('كلمة المرور'),
+                  ),
                 ),
               TextField(
                 controller: confirmation,
                 textDirection: TextDirection.ltr,
-                decoration: const InputDecoration(
-                  labelText: 'اكتب DELETE للتأكيد',
+                decoration: InputDecoration(
+                  labelText: context.accountLabel('اكتب DELETE للتأكيد'),
                 ),
               ),
             ],
@@ -452,11 +488,11 @@ class _AccountToolsState extends State<_AccountTools> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('إلغاء'),
+            child: Text(context.accountLabel('إلغاء')),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, confirmation.text == 'DELETE'),
-            child: const Text('حذف الحساب نهائيًا'),
+            child: Text(context.accountLabel('حذف الحساب نهائيًا')),
           ),
         ],
       ),
@@ -475,7 +511,7 @@ class _AccountToolsState extends State<_AccountTools> {
         if (mounted) {
           setState(
             () => message = done
-                ? 'تم حذف الحساب والعودة لبيانات الضيف'
+                ? context.accountLabel('تم حذف الحساب والعودة لبيانات الضيف')
                 : account.error,
           );
         }
@@ -498,36 +534,40 @@ class _AccountToolsState extends State<_AccountTools> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'حالة بياناتك',
+                  context.accountLabel('حالة بياناتك'),
                   style: qText(context, size: 19, weight: FontWeight.w800),
                 ),
                 const SizedBox(height: 12),
                 _status(
-                  'القرآن',
+                  context.accountLabel('القرآن'),
                   account.ledger.pending.length,
                   account.error,
                   account.syncing,
                 ),
                 _status(
-                  'المحتوى والمفضلة',
+                  context.accountLabel('المحتوى والمفضلة'),
                   widget.controller.ledger.pending.length,
                   widget.controller.syncError,
                   widget.controller.syncing,
                 ),
                 _status(
-                  'الأذكار والعادات والختمة والسجل',
+                  context.accountLabel('الأذكار والعادات والختمة والسجل'),
                   pending + personal,
                   widget.activity.syncError,
                   false,
                 ),
                 if (account.profile == null)
                   Text(
-                    'بيانات ضيف على هذا الجهاز. إنشاء حساب اختياري للمزامنة.',
+                    context.accountLabel(
+                      'بيانات ضيف على هذا الجهاز. إنشاء حساب اختياري للمزامنة.',
+                    ),
                     style: qText(context, size: 12),
                   ),
                 const SizedBox(height: 10),
                 QPrimaryButton(
-                  label: working ? 'جارٍ التنفيذ…' : 'مزامنة جميع الأقسام',
+                  label: working
+                      ? context.accountLabel('جارٍ التنفيذ…')
+                      : context.accountLabel('مزامنة جميع الأقسام'),
                   icon: Icons.sync,
                   onTap: working || account.token == null
                       ? null
@@ -546,24 +586,26 @@ class _AccountToolsState extends State<_AccountTools> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'النسخ الاحتياطي والاستعادة',
+                  context.accountLabel('النسخ الاحتياطي والاستعادة'),
                   style: qText(context, size: 19, weight: FontWeight.w800),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'نسخة خاصة بمحفوظاتك وتقدمك وسجل نشاطك وإعداداتك، بما فيها الموقع المختار. الملف غير مشفّر؛ احفظه في مكان خاص. كلمات المرور ورموز الدخول والتنزيلات لا تُضمّن.',
+                  context.accountLabel(
+                    'نسخة خاصة بمحفوظاتك وتقدمك وسجل نشاطك وإعداداتك، بما فيها الموقع المختار. الملف غير مشفّر؛ احفظه في مكان خاص. كلمات المرور ورموز الدخول والتنزيلات لا تُضمّن.',
+                  ),
                   style: qText(context, size: 13),
                 ),
                 const SizedBox(height: 14),
                 QPrimaryButton(
-                  label: 'أخذ نسخة احتياطية',
+                  label: context.accountLabel('أخذ نسخة احتياطية'),
                   icon: Icons.backup_outlined,
                   onTap: working ? null : _export,
                 ),
                 OutlinedButton.icon(
                   onPressed: working ? null : _import,
                   icon: const Icon(Icons.restore),
-                  label: const Text('اختيار نسخة للاستعادة'),
+                  label: Text(context.accountLabel('اختيار نسخة للاستعادة')),
                 ),
               ],
             ),
@@ -579,8 +621,8 @@ class _AccountToolsState extends State<_AccountTools> {
                     icon: const Icon(Icons.person_outline),
                     label: Text(
                       account.profile?['username'] == null
-                          ? 'إكمال اسم المستخدم'
-                          : 'الاسم واسم المستخدم',
+                          ? context.accountLabel('إكمال اسم المستخدم')
+                          : context.accountLabel('الاسم واسم المستخدم'),
                     ),
                   ),
                   if (HaqGoogleAccount.configured &&
@@ -588,12 +630,12 @@ class _AccountToolsState extends State<_AccountTools> {
                       account.profile?['google_linked'] != true)
                     TextButton(
                       onPressed: working ? null : _link,
-                      child: const Text('ربط حساب Google'),
+                      child: Text(context.accountLabel('ربط حساب Google')),
                     ),
                   TextButton(
                     onPressed: working ? null : _delete,
                     child: Text(
-                      'حذف حساب حق',
+                      context.accountLabel('حذف حساب حق'),
                       style: TextStyle(
                         color: AppPalette.of(context).dark
                             ? const Color(0xFFFFAAAA)
@@ -606,14 +648,17 @@ class _AccountToolsState extends State<_AccountTools> {
             ),
           ],
           if (working)
-            const Padding(
+            Padding(
               padding: EdgeInsets.all(12),
               child: LinearProgressIndicator(),
             ),
           if (message != null)
             Padding(
               padding: const EdgeInsets.all(12),
-              child: Text(message!, style: qText(context, size: 13)),
+              child: Text(
+                context.accountLabel(message!),
+                style: qText(context, size: 13),
+              ),
             ),
         ],
       ),
@@ -640,16 +685,17 @@ class _AccountToolsState extends State<_AccountTools> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    context.accountLabel(title),
                     style: qText(context, size: 14, weight: FontWeight.w700),
                   ),
                   Text(
                     account.profile == null
-                        ? 'محفوظ محليًا'
-                        : error ??
-                              (syncing
-                                  ? 'جارٍ المزامنة…'
-                                  : '$count تغييرات بانتظار المزامنة'),
+                        ? context.accountLabel('محفوظ محليًا')
+                        : error != null
+                        ? context.accountLabel(error)
+                        : (syncing
+                              ? context.accountLabel('جارٍ المزامنة…')
+                              : accountPendingChanges(context, count)),
                     style: qText(context, size: 12),
                   ),
                 ],

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -22,7 +23,16 @@ class LocaleFormats {
 
   // Gregorian dates only. Hijri dates retain the app's separate verified calendar.
   String gregorianDate(DateTime value) =>
-      DateFormat.yMMMd(_supported(DateFormat.localeExists)).format(value);
+      DateFormat.yMMMd(_dateLocale).format(value);
+
+  String get _dateLocale {
+    // Bundled Intl symbols are registered synchronously before this Future completes.
+    unawaited(prepare());
+    return _supported(DateFormat.localeExists);
+  }
+
+  String gregorianDateTime(DateTime value) =>
+      DateFormat.yMMMd(_dateLocale).add_jm().format(value);
 
   String pluralCategory(num count) => Intl.pluralLogic(
     count,

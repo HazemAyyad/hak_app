@@ -1,3 +1,5 @@
+import '../../../core/localization/ui_text.dart';
+import '../../account/presentation/account_labels.dart';
 import 'package:flutter/material.dart';
 import '../data/quran_controller.dart';
 import 'quran_widgets.dart';
@@ -31,23 +33,25 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
     final value = await showDialog<String>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('الدخول بحساب Google'),
+        title: Text(context.accountLabel('الدخول بحساب Google')),
         content: TextField(
           controller: username,
           textDirection: TextDirection.ltr,
-          decoration: const InputDecoration(
-            labelText: 'اسم مستخدم للحساب الجديد',
-            helperText: '7–30 حرفًا إنجليزيًا أو رقمًا، يبدأ بحرف',
+          decoration: InputDecoration(
+            labelText: context.accountLabel('اسم مستخدم للحساب الجديد'),
+            helperText: context.accountLabel(
+              '7–30 حرفًا إنجليزيًا أو رقمًا، يبدأ بحرف',
+            ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('إلغاء'),
+            child: Text(context.accountLabel('إلغاء')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, username.text.trim()),
-            child: const Text('متابعة'),
+            child: Text(context.accountLabel('متابعة')),
           ),
         ],
       ),
@@ -70,8 +74,9 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
     } catch (_) {
       if (mounted) {
         setState(
-          () => googleError =
-              'تعذّر فتح Google. تحقق من إعدادات الدخول وحاول مجددًا.',
+          () => googleError = context.accountLabel(
+            'تعذّر فتح Google. تحقق من إعدادات الدخول وحاول مجددًا.',
+          ),
         );
       }
     } finally {
@@ -89,7 +94,7 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, update) => AlertDialog(
-          title: const Text('استعادة كلمة المرور'),
+          title: Text(context.accountLabel('استعادة كلمة المرور')),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -98,30 +103,34 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                   controller: address,
                   keyboardType: TextInputType.emailAddress,
                   textDirection: TextDirection.ltr,
-                  decoration: const InputDecoration(
-                    labelText: 'البريد الإلكتروني',
+                  decoration: InputDecoration(
+                    labelText: context.accountLabel('البريد الإلكتروني'),
                   ),
                 ),
                 if (sent) ...[
                   TextField(
                     controller: code,
                     textDirection: TextDirection.ltr,
-                    decoration: const InputDecoration(
-                      labelText: 'رمز الاستعادة من البريد',
+                    decoration: InputDecoration(
+                      labelText: context.accountLabel(
+                        'رمز الاستعادة من البريد',
+                      ),
                     ),
                   ),
                   TextField(
                     controller: next,
                     obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'كلمة مرور جديدة (10 أحرف على الأقل)',
+                    decoration: InputDecoration(
+                      labelText: context.accountLabel(
+                        'كلمة مرور جديدة (10 أحرف على الأقل)',
+                      ),
                     ),
                   ),
                 ],
                 if (notice != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 12),
-                    child: Text(notice!),
+                    child: Text(context.accountLabel(notice!)),
                   ),
               ],
             ),
@@ -129,7 +138,7 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
           actions: [
             TextButton(
               onPressed: working ? null : () => Navigator.pop(ctx),
-              child: const Text('إغلاق'),
+              child: Text(context.accountLabel('إغلاق')),
             ),
             FilledButton(
               onPressed: working
@@ -153,10 +162,10 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                     },
               child: Text(
                 working
-                    ? 'جارٍ الاتصال…'
+                    ? context.accountLabel('جارٍ الاتصال…')
                     : sent
-                    ? 'تغيير كلمة المرور'
-                    : 'إرسال رمز الاستعادة',
+                    ? context.accountLabel('تغيير كلمة المرور')
+                    : context.accountLabel('إرسال رمز الاستعادة'),
               ),
             ),
           ],
@@ -186,8 +195,8 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
         padding: const EdgeInsets.only(bottom: 100),
         children: [
           QuranHeader(
-            title: 'الحساب والمزامنة',
-            subtitle: 'حسابك ومحفوظاتك ونسخك الاحتياطية',
+            title: context.accountLabel('الحساب والمزامنة'),
+            subtitle: context.accountLabel('حسابك ومحفوظاتك ونسخك الاحتياطية'),
             onBack: () => Navigator.pop(context),
           ),
           Padding(
@@ -215,13 +224,18 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                         const SizedBox(height: 16),
                         Text(
                           account.syncing
-                              ? 'جارٍ مزامنة بيانات القرآن…'
-                              : '${account.ledger.pending.length} تغييرات بانتظار المزامنة',
+                              ? context.accountLabel(
+                                  'جارٍ مزامنة بيانات القرآن…',
+                                )
+                              : accountPendingChanges(
+                                  context,
+                                  account.ledger.pending.length,
+                                ),
                           style: qText(context),
                         ),
                         if (account.lastSync != null)
                           Text(
-                            'آخر مزامنة: ${account.lastSync!.substring(0, 16).replaceAll('T', ' ')}',
+                            accountLastSync(context, account.lastSync!),
                             style: qText(context, size: 12),
                           ),
                         if (account.profile!['username'] != null)
@@ -232,7 +246,7 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                           ),
                         const SizedBox(height: 12),
                         QPrimaryButton(
-                          label: 'مزامنة الآن',
+                          label: context.accountLabel('مزامنة الآن'),
                           icon: Icons.sync,
                           onTap: account.syncing || account.busy
                               ? null
@@ -240,13 +254,17 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'لكل حساب محفوظاته الخاصة. عند تعارض تعديلين يُعتمد الإصدار الأحدث الموجود على الحساب، وتبقى عمليات الحذف محفوظة.',
+                          context.accountLabel(
+                            'لكل حساب محفوظاته الخاصة. عند تعارض تعديلين يُعتمد الإصدار الأحدث الموجود على الحساب، وتبقى عمليات الحذف محفوظة.',
+                          ),
                           style: qText(context, size: 12),
                         ),
                         TextButton(
                           onPressed: account.busy ? null : account.logout,
-                          child: const Text(
-                            'تسجيل الخروج والعودة لبيانات الضيف',
+                          child: Text(
+                            context.accountLabel(
+                              'تسجيل الخروج والعودة لبيانات الضيف',
+                            ),
                           ),
                         ),
                       ],
@@ -258,10 +276,10 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                         children: [
                           Text(
                             account.sessionExpired
-                                ? 'تجديد جلسة الحساب'
+                                ? context.accountLabel('تجديد جلسة الحساب')
                                 : creating
-                                ? 'إنشاء حساب'
-                                : 'تسجيل الدخول',
+                                ? context.accountLabel('إنشاء حساب')
+                                : context.accountLabel('تسجيل الدخول'),
                             textAlign: TextAlign.center,
                             style: qText(
                               context,
@@ -272,33 +290,38 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                           const SizedBox(height: 18),
                           if (account.sessionExpired)
                             Text(
-                              'بياناتك محفوظة. ادخل بنفس الحساب لاستكمال المزامنة، أو سجل الخروج للعودة للضيف.',
+                              context.accountLabel(
+                                'بياناتك محفوظة. ادخل بنفس الحساب لاستكمال المزامنة، أو سجل الخروج للعودة للضيف.',
+                              ),
                               style: qText(context, size: 13),
                             ),
                           if (creating)
                             TextFormField(
                               controller: name,
-                              decoration: const InputDecoration(
-                                labelText: 'الاسم',
+                              decoration: InputDecoration(
+                                labelText: context.accountLabel('الاسم'),
                               ),
                               maxLength: 100,
-                              validator: (v) =>
-                                  v!.trim().isEmpty ? 'أدخل الاسم' : null,
+                              validator: (v) => v!.trim().isEmpty
+                                  ? context.accountLabel('أدخل الاسم')
+                                  : null,
                             ),
                           TextFormField(
                             controller: email,
                             textDirection: TextDirection.ltr,
                             keyboardType: TextInputType.emailAddress,
                             autofillHints: const [AutofillHints.email],
-                            decoration: const InputDecoration(
-                              labelText: 'البريد الإلكتروني',
+                            decoration: InputDecoration(
+                              labelText: context.accountLabel(
+                                'البريد الإلكتروني',
+                              ),
                             ),
                             validator: (v) =>
                                 RegExp(
                                   r'^[^\s@]+@[^\s@]+\.[^\s@]+$',
                                 ).hasMatch(v!.trim())
                                 ? null
-                                : 'أدخل بريدًا صحيحًا',
+                                : context.accountLabel('أدخل بريدًا صحيحًا'),
                           ),
                           const SizedBox(height: 12),
                           TextFormField(
@@ -311,7 +334,7 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                                   : AutofillHints.password,
                             ],
                             decoration: InputDecoration(
-                              labelText: 'كلمة المرور',
+                              labelText: context.accountLabel('كلمة المرور'),
                               suffixIcon: IconButton(
                                 onPressed: () =>
                                     setState(() => obscure = !obscure),
@@ -324,8 +347,12 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                             ),
                             validator: (v) => v!.length < (creating ? 10 : 1)
                                 ? (creating
-                                      ? 'استخدم 10 أحرف على الأقل'
-                                      : 'أدخل كلمة المرور')
+                                      ? context.accountLabel(
+                                          'استخدم 10 أحرف على الأقل',
+                                        )
+                                      : context.accountLabel(
+                                          'أدخل كلمة المرور',
+                                        ))
                                 : null,
                           ),
                           CheckboxListTile(
@@ -335,20 +362,24 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                                 ? null
                                 : (v) => setState(() => mergeGuest = v!),
                             title: Text(
-                              'دمج محفوظات الضيف مع هذا الحساب',
+                              context.accountLabel(
+                                'دمج محفوظات الضيف مع هذا الحساب',
+                              ),
                               style: qText(context, size: 13),
                             ),
                             subtitle: Text(
-                              'تُضاف المحفوظات غير الموجودة، وتُحترم العناصر المحذوفة وإعدادات الحساب السابقة.',
+                              context.accountLabel(
+                                'تُضاف المحفوظات غير الموجودة، وتُحترم العناصر المحذوفة وإعدادات الحساب السابقة.',
+                              ),
                               style: qText(context, size: 11),
                             ),
                           ),
                           QPrimaryButton(
                             label: account.busy
-                                ? 'جارٍ الاتصال…'
+                                ? context.accountLabel('جارٍ الاتصال…')
                                 : creating
-                                ? 'إنشاء الحساب'
-                                : 'تسجيل الدخول',
+                                ? context.accountLabel('إنشاء الحساب')
+                                : context.accountLabel('تسجيل الدخول'),
                             icon: Icons.login,
                             onTap: account.busy
                                 ? null
@@ -370,14 +401,18 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                                 : () => setState(() => register = !register),
                             child: Text(
                               register
-                                  ? 'لديك حساب؟ تسجيل الدخول'
-                                  : 'إنشاء حساب جديد',
+                                  ? context.accountLabel(
+                                      'لديك حساب؟ تسجيل الدخول',
+                                    )
+                                  : context.accountLabel('إنشاء حساب جديد'),
                             ),
                           ),
                           if (account.recoveryAvailable)
                             TextButton(
                               onPressed: account.busy ? null : _recover,
-                              child: const Text('نسيت كلمة المرور؟'),
+                              child: Text(
+                                context.accountLabel('نسيت كلمة المرور؟'),
+                              ),
                             ),
                           if (HaqGoogleAccount.configured &&
                               account.googleAvailable)
@@ -388,17 +423,25 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
                               icon: const Icon(Icons.account_circle_outlined),
                               label: Text(
                                 googleBusy
-                                    ? 'جارٍ فتح Google…'
-                                    : 'المتابعة باستخدام Google',
+                                    ? context.accountLabel('جارٍ فتح Google…')
+                                    : context.accountLabel(
+                                        'المتابعة باستخدام Google',
+                                      ),
                               ),
                             ),
                           if (account.sessionExpired)
                             TextButton(
                               onPressed: account.busy ? null : account.logout,
-                              child: const Text('تسجيل الخروج والعودة للضيف'),
+                              child: Text(
+                                context.accountLabel(
+                                  'تسجيل الخروج والعودة للضيف',
+                                ),
+                              ),
                             ),
                           Text(
-                            'يمكنك قراءة القرآن وحفظ تقدمك كضيف دون إنشاء حساب.',
+                            context.accountLabel(
+                              'يمكنك قراءة القرآن وحفظ تقدمك كضيف دون إنشاء حساب.',
+                            ),
                             textAlign: TextAlign.center,
                             style: qText(context, size: 12),
                           ),
@@ -411,14 +454,17 @@ class _QuranAccountPageState extends State<QuranAccountPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 18),
               child: Text(
-                account.error!,
+                context.accountLabel(account.error!),
                 style: qText(context, size: 13, color: const Color(0xFFAB3838)),
               ),
             ),
           if (googleError != null)
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Text(googleError!, style: qText(context, size: 13)),
+              child: Text(
+                context.accountLabel(googleError!),
+                style: qText(context, size: 13),
+              ),
             ),
           if (widget.details != null) widget.details!,
         ],

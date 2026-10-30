@@ -18,6 +18,7 @@ extension FixedInterfaceText on BuildContext {
   }
 
   String quranLabel(String original) => _interfaceLabel(original, 'quran');
+  String accountLabel(String original) => _interfaceLabel(original, 'account');
   String _interfaceLabel(String original, String namespace) {
     final key = _sourceKeys['$namespace\u0000$original'];
     return key == null ? original : tr(key, fallback: original);

@@ -2250,5 +2250,529 @@
   "quran.surahCount.other": {
     "en": "{count} surahs",
     "ar": "{count} سورة"
+  },
+  "account.label.1b039eab6210": {
+    "ar": "الدخول بحساب Google",
+    "en": "Sign in with Google"
+  },
+  "account.label.1c45f140b258": {
+    "ar": "اسم مستخدم للحساب الجديد",
+    "en": "Username for the new account"
+  },
+  "account.label.5771827a9e5c": {
+    "ar": "7–30 حرفًا إنجليزيًا أو رقمًا، يبدأ بحرف",
+    "en": "7–30 English letters or digits, starting with a letter"
+  },
+  "account.label.9a30dc2a96b8": {
+    "ar": "إلغاء",
+    "en": "Cancel"
+  },
+  "account.label.322b7b613468": {
+    "ar": "متابعة",
+    "en": "Continue"
+  },
+  "account.label.56605d0a8bd3": {
+    "ar": "تعذّر فتح Google. تحقق من إعدادات الدخول وحاول مجددًا.",
+    "en": "Could not open Google sign-in. Check the sign-in configuration and try again."
+  },
+  "account.label.28185b7702b0": {
+    "ar": "استعادة كلمة المرور",
+    "en": "Reset password"
+  },
+  "account.label.ddf0fca39a4f": {
+    "ar": "البريد الإلكتروني",
+    "en": "Email"
+  },
+  "account.label.85a5beb4b97b": {
+    "ar": "رمز الاستعادة من البريد",
+    "en": "Reset code from your email"
+  },
+  "account.label.3ba3e60bad4a": {
+    "ar": "كلمة مرور جديدة (10 أحرف على الأقل)",
+    "en": "New password (at least 10 characters)"
+  },
+  "account.label.ca90c297b099": {
+    "ar": "إغلاق",
+    "en": "Close"
+  },
+  "account.label.ee64f0ac744f": {
+    "ar": "جارٍ الاتصال…",
+    "en": "Connecting…"
+  },
+  "account.label.473bcc4e9b46": {
+    "ar": "تغيير كلمة المرور",
+    "en": "Change password"
+  },
+  "account.label.ec972aace13e": {
+    "ar": "إرسال رمز الاستعادة",
+    "en": "Send reset code"
+  },
+  "account.label.0458a671e96c": {
+    "ar": "الحساب والمزامنة",
+    "en": "Account and sync"
+  },
+  "account.label.18a313bbe503": {
+    "ar": "حسابك ومحفوظاتك ونسخك الاحتياطية",
+    "en": "Your account, saved content and backups"
+  },
+  "account.label.e2f04c4fd120": {
+    "ar": "جارٍ مزامنة بيانات القرآن…",
+    "en": "Syncing Quran data…"
+  },
+  "account.label.1c9524c2caca": {
+    "ar": "مزامنة الآن",
+    "en": "Sync now"
+  },
+  "account.label.aa2cd376446f": {
+    "ar": "لكل حساب محفوظاته الخاصة. عند تعارض تعديلين يُعتمد الإصدار الأحدث الموجود على الحساب، وتبقى عمليات الحذف محفوظة.",
+    "en": "Each account has its own saved data. Conflicting edits use the latest account version, and deletions are preserved."
+  },
+  "account.label.e76939f86bd2": {
+    "ar": "تسجيل الخروج والعودة لبيانات الضيف",
+    "en": "Sign out and return to guest data"
+  },
+  "account.label.52e4c2d8e10d": {
+    "ar": "تجديد جلسة الحساب",
+    "en": "Renew account session"
+  },
+  "account.label.af21ddc4ae9d": {
+    "ar": "إنشاء حساب",
+    "en": "Create an account"
+  },
+  "account.label.beb869eecc12": {
+    "ar": "تسجيل الدخول",
+    "en": "Sign in"
+  },
+  "account.label.43a22f058717": {
+    "ar": "بياناتك محفوظة. ادخل بنفس الحساب لاستكمال المزامنة، أو سجل الخروج للعودة للضيف.",
+    "en": "Your data is saved. Sign in with the same account to continue syncing, or sign out to return to guest mode."
+  },
+  "account.label.52ab09847cf8": {
+    "ar": "الاسم",
+    "en": "Name"
+  },
+  "account.label.d9000b79f199": {
+    "ar": "أدخل الاسم",
+    "en": "Enter your name"
+  },
+  "account.label.796bf5bc2135": {
+    "ar": "أدخل بريدًا صحيحًا",
+    "en": "Enter a valid email"
+  },
+  "account.label.b05d306b5591": {
+    "ar": "كلمة المرور",
+    "en": "Password"
+  },
+  "account.label.63322174c01f": {
+    "ar": "استخدم 10 أحرف على الأقل",
+    "en": "Use at least 10 characters"
+  },
+  "account.label.fcd318aaae5d": {
+    "ar": "أدخل كلمة المرور",
+    "en": "Enter your password"
+  },
+  "account.label.bb076115412c": {
+    "ar": "دمج محفوظات الضيف مع هذا الحساب",
+    "en": "Merge guest data into this account"
+  },
+  "account.label.a401e317f115": {
+    "ar": "تُضاف المحفوظات غير الموجودة، وتُحترم العناصر المحذوفة وإعدادات الحساب السابقة.",
+    "en": "Missing saved items are added while preserving deleted items and existing account preferences."
+  },
+  "account.label.91c491f97ca1": {
+    "ar": "إنشاء الحساب",
+    "en": "Create account"
+  },
+  "account.label.590ccd5086b4": {
+    "ar": "لديك حساب؟ تسجيل الدخول",
+    "en": "Already have an account? Sign in"
+  },
+  "account.label.ed4b7376537b": {
+    "ar": "إنشاء حساب جديد",
+    "en": "Create a new account"
+  },
+  "account.label.bdd3483245bc": {
+    "ar": "نسيت كلمة المرور؟",
+    "en": "Forgot your password?"
+  },
+  "account.label.40bd2afd432f": {
+    "ar": "جارٍ فتح Google…",
+    "en": "Opening Google…"
+  },
+  "account.label.f8402c2a1011": {
+    "ar": "المتابعة باستخدام Google",
+    "en": "Continue with Google"
+  },
+  "account.label.4c61bf84049c": {
+    "ar": "تسجيل الخروج والعودة للضيف",
+    "en": "Sign out and return to guest mode"
+  },
+  "account.label.c330e23fd68e": {
+    "ar": "يمكنك قراءة القرآن وحفظ تقدمك كضيف دون إنشاء حساب.",
+    "en": "You can read the Quran and save your progress as a guest without creating an account."
+  },
+  "account.label.9a2c7c2b5ae7": {
+    "ar": "تعذّر فتح بيانات النشاط؛ أعد فتح الصفحة للمحاولة.",
+    "en": "Could not open activity data. Reopen the page to try again."
+  },
+  "account.label.cf3eb8d1bfe2": {
+    "ar": "تعذّر إكمال العملية. بياناتك المحلية محفوظة؛ حاول مجددًا.",
+    "en": "Could not complete the operation. Your local data is safe. Try again."
+  },
+  "account.label.e3dd4ba613e4": {
+    "ar": "أُغلقت نافذة مشاركة النسخة.",
+    "en": "The backup sharing window was closed."
+  },
+  "account.label.70d3e794e465": {
+    "ar": "أُعدّت النسخة وأُرسلت لواجهة الحفظ أو المشاركة.",
+    "en": "The backup is ready and was sent to the save or share interface."
+  },
+  "account.label.545acc4e812d": {
+    "ar": "الملف يتجاوز 8 ميغابايت",
+    "en": "The file exceeds 8 MiB"
+  },
+  "account.label.9272b1b7863e": {
+    "ar": "معاينة النسخة",
+    "en": "Backup preview"
+  },
+  "account.label.bafd17c3223d": {
+    "ar": "استبدال المحفوظات والإعدادات",
+    "en": "Replace saved data and preferences"
+  },
+  "account.label.cff825f2772d": {
+    "ar": "ستُستبدل المفضلة والتقدم والعناصر الشخصية والإعدادات. يبقى سجل النشاط ويُدمج دون تكرار.",
+    "en": "Favorites, progress, personal items and preferences will be replaced. Activity history is retained and merged without duplicates."
+  },
+  "account.label.6b55c2677433": {
+    "ar": "تُضاف العناصر غير الموجودة. تبقى تعديلاتك الحالية والعناصر المحذوفة من الحساب.",
+    "en": "Missing items are added. Current edits and items deleted from the account are preserved."
+  },
+  "account.label.9302f1001e85": {
+    "ar": "تُستعاد الإعدادات والموقع المختار أيضًا. أذونات الجهاز والتنزيلات وتسجيل الدخول تبقى مستقلة.",
+    "en": "Preferences and the selected location are also restored. Device permissions, downloads and sign-in stay separate."
+  },
+  "account.label.db92ccc67d75": {
+    "ar": "تأكيد الاستعادة",
+    "en": "Confirm restore"
+  },
+  "account.label.317a273ae79c": {
+    "ar": "تمت استعادة البيانات. تعذّر تحديث التنبيهات؛ راجع إعداداتها.",
+    "en": "Data restored. Alerts could not be updated. Check their settings."
+  },
+  "account.label.8ae5a8b882ce": {
+    "ar": "تمت الاستعادة على هذا الجهاز. راجع حالة المزامنة أدناه.",
+    "en": "Restored on this device. Check the sync status below."
+  },
+  "account.label.2fc160909f1f": {
+    "ar": "إعدادات الحساب",
+    "en": "Account settings"
+  },
+  "account.label.06668ac85e3d": {
+    "ar": "اسم المستخدم",
+    "en": "Username"
+  },
+  "account.label.11cb14a596b5": {
+    "ar": "7–30 حرفًا أو رقمًا، يبدأ بحرف إنجليزي",
+    "en": "7–30 letters or digits, starting with an English letter"
+  },
+  "account.label.ddfcaf9d0144": {
+    "ar": "حفظ",
+    "en": "Save"
+  },
+  "account.label.8a7ce06014e1": {
+    "ar": "تم حفظ الحساب",
+    "en": "Account saved"
+  },
+  "account.label.c357346d898c": {
+    "ar": "تم ربط حساب Google",
+    "en": "Google account linked"
+  },
+  "account.label.8583d6c4ee8c": {
+    "ar": "حذف حساب حق",
+    "en": "Delete Haq account"
+  },
+  "account.label.8abb61694390": {
+    "ar": "سيُحذف الحساب وبياناته السحابية نهائيًا. صدّر نسخة أولًا إذا احتجتها. تبقى النسخة المحلية معزولة على هذا الجهاز ولا تُنقل للضيف. حذف حساب حق لا يلغي تجديد اشتراك المتجر؛ ألغِ التجديد من إعدادات اشتراكات Google Play أو Apple قبل الحذف إذا أردت إيقاف الدفع.",
+    "en": "Your account and cloud data will be permanently deleted. Export a backup first if needed. Local data stays isolated on this device and is not transferred to the guest. Deleting a Haq account does not cancel store subscription renewals. Cancel renewal in Google Play or Apple subscription settings before deletion if you want billing to stop."
+  },
+  "account.label.bde7f4848593": {
+    "ar": "اكتب DELETE للتأكيد",
+    "en": "Type DELETE to confirm"
+  },
+  "account.label.00b62bf82fec": {
+    "ar": "حذف الحساب نهائيًا",
+    "en": "Permanently delete account"
+  },
+  "account.label.ada215938af6": {
+    "ar": "تم حذف الحساب والعودة لبيانات الضيف",
+    "en": "Account deleted. Returned to guest data."
+  },
+  "account.label.080afd1742ba": {
+    "ar": "حالة بياناتك",
+    "en": "Your data status"
+  },
+  "account.label.78cbb551f87a": {
+    "ar": "القرآن",
+    "en": "Quran"
+  },
+  "account.label.2b2f2a4904df": {
+    "ar": "المحتوى والمفضلة",
+    "en": "Content and favorites"
+  },
+  "account.label.6c7bc37ccb0f": {
+    "ar": "الأذكار والعادات والختمة والسجل",
+    "en": "Remembrances, habits, Quran completion and activity"
+  },
+  "account.label.7ce60b9cb172": {
+    "ar": "بيانات ضيف على هذا الجهاز. إنشاء حساب اختياري للمزامنة.",
+    "en": "Guest data on this device. Create an account if you want to sync."
+  },
+  "account.label.7327c822049b": {
+    "ar": "جارٍ التنفيذ…",
+    "en": "Working…"
+  },
+  "account.label.92dda3361102": {
+    "ar": "مزامنة جميع الأقسام",
+    "en": "Sync all sections"
+  },
+  "account.label.fc5660577cac": {
+    "ar": "النسخ الاحتياطي والاستعادة",
+    "en": "Backup and restore"
+  },
+  "account.label.354024a5e70b": {
+    "ar": "نسخة خاصة بمحفوظاتك وتقدمك وسجل نشاطك وإعداداتك، بما فيها الموقع المختار. الملف غير مشفّر؛ احفظه في مكان خاص. كلمات المرور ورموز الدخول والتنزيلات لا تُضمّن.",
+    "en": "A private copy of saved content, progress, activity and preferences, including the selected location. The file is not encrypted. Keep it somewhere private. Passwords, access tokens and downloads are excluded."
+  },
+  "account.label.3d6344d7a020": {
+    "ar": "أخذ نسخة احتياطية",
+    "en": "Create a backup"
+  },
+  "account.label.a4d5b8f9b09a": {
+    "ar": "اختيار نسخة للاستعادة",
+    "en": "Choose a backup to restore"
+  },
+  "account.label.03189fb2527f": {
+    "ar": "إكمال اسم المستخدم",
+    "en": "Complete your username"
+  },
+  "account.label.2d561a03a3c6": {
+    "ar": "الاسم واسم المستخدم",
+    "en": "Name and username"
+  },
+  "account.label.261a507c788e": {
+    "ar": "ربط حساب Google",
+    "en": "Link Google account"
+  },
+  "account.label.c235b40de097": {
+    "ar": "محفوظ محليًا",
+    "en": "Saved locally"
+  },
+  "account.label.738ffebf16bc": {
+    "ar": "جارٍ المزامنة…",
+    "en": "Syncing…"
+  },
+  "account.label.0c0bf3beca09": {
+    "ar": "تعذّر استعادة الحساب؛ يمكنك متابعة القراءة دون اتصال",
+    "en": "Could not restore the account. You can keep reading offline."
+  },
+  "account.label.aac84cd4d53e": {
+    "ar": "انتهت الجلسة. بياناتك محفوظة؛ ادخل بنفس الحساب لاستكمال المزامنة",
+    "en": "Your session expired. Your data is saved. Sign in with the same account to continue syncing."
+  },
+  "account.label.511758e86145": {
+    "ar": "تم تغيير كلمة المرور؛ ادخل مجددًا",
+    "en": "Password changed. Sign in again."
+  },
+  "account.label.bdff9bb938bc": {
+    "ar": "ادخل بنفس الحساب الحالي، أو سجل الخروج أولًا لاختيار حساب آخر",
+    "en": "Use the current account, or sign out first to choose another account."
+  },
+  "account.label.a2ae428a4e4f": {
+    "ar": "خدمة الحساب غير متاحة على السيرفر حاليًا؛ يمكنك الاستمرار كضيف",
+    "en": "The account service is currently unavailable. You can continue as a guest."
+  },
+  "account.label.59a71d5a9cbc": {
+    "ar": "انتهت جلسة الحساب؛ سجل الخروج ثم ادخل مجددًا",
+    "en": "Your account session expired. Sign out and sign in again."
+  },
+  "account.label.264f8443ec84": {
+    "ar": "تعذّر الاتصال؛ تغييرات القراءة محفوظة على هذا الجهاز وستُزامن عند عودة الاتصال",
+    "en": "Could not connect. Reading changes are saved on this device and will sync when the connection returns."
+  },
+  "account.label.27c26cbb042c": {
+    "ar": "وصل تعديل أحدث من جهاز آخر؛ تم اعتماد النسخة الموجودة على الحساب",
+    "en": "A newer edit arrived from another device. The account version was kept."
+  },
+  "account.label.ce3c093bf36a": {
+    "ar": "النسخة تتجاوز 8 ميغابايت",
+    "en": "The backup exceeds 8 MiB"
+  },
+  "account.label.419cdaa0189c": {
+    "ar": "الملف أكبر من الحد المسموح",
+    "en": "The file exceeds the size limit"
+  },
+  "account.label.a5c739c70779": {
+    "ar": "النسخة تالفة أو إصدارها غير مدعوم. لم تتغيّر بياناتك.",
+    "en": "The backup is damaged or its version is unsupported. Your data has not changed."
+  },
+  "account.label.ce8f6661e001": {
+    "ar": "النسخة تخص ضيفًا أو حسابًا آخر. افتح نفس الحساب أولًا.",
+    "en": "This backup belongs to a guest or another account. Open the matching account first."
+  },
+  "account.label.c47790cb77ed": {
+    "ar": "علامة قرآن غير صالحة",
+    "en": "Invalid Quran bookmark"
+  },
+  "account.label.f7dc41111803": {
+    "ar": "فهرس قرآن غير صالح",
+    "en": "Invalid Quran index"
+  },
+  "account.label.25bdd8ed8684": {
+    "ar": "موضع قراءة غير صالح",
+    "en": "Invalid reading position"
+  },
+  "account.label.11c89a622f13": {
+    "ar": "إعدادات قرآن غير صالحة",
+    "en": "Invalid Quran preferences"
+  },
+  "account.label.849085b35a1c": {
+    "ar": "عنصر قرآن غير معروف",
+    "en": "Unknown Quran item"
+  },
+  "account.label.186b045bc496": {
+    "ar": "عنصر محتوى غير معروف",
+    "en": "Unknown content item"
+  },
+  "account.label.e53dc64252f6": {
+    "ar": "موضع صوت غير صالح",
+    "en": "Invalid audio position"
+  },
+  "account.label.65c18932642f": {
+    "ar": "محفوظات غير صالحة",
+    "en": "Invalid saved data"
+  },
+  "account.label.3e48f38d538b": {
+    "ar": "إعداد غير معروف",
+    "en": "Unknown preference"
+  },
+  "account.label.be5999b33583": {
+    "ar": "إعداد مسبحة غير صالح",
+    "en": "Invalid prayer beads preference"
+  },
+  "account.label.5da68a1aaf12": {
+    "ar": "إعداد غير صالح",
+    "en": "Invalid preference"
+  },
+  "account.label.988fbf129e0f": {
+    "ar": "إعدادات الرسائل غير صالحة",
+    "en": "Invalid message preferences"
+  },
+  "account.label.8565ef111070": {
+    "ar": "معرّفات رسائل غير صالحة",
+    "en": "Invalid message identifiers"
+  },
+  "account.label.af4e95055968": {
+    "ar": "إعداد صلاة غير معروف",
+    "en": "Unknown prayer preference"
+  },
+  "account.label.b0ecbb230dd7": {
+    "ar": "إعدادات سكينة غير صالحة",
+    "en": "Invalid Sakinah preferences"
+  },
+  "account.label.9e18225ec0b3": {
+    "ar": "نمط تنفس غير صالح",
+    "en": "Invalid breathing pattern"
+  },
+  "account.label.bf628d29d566": {
+    "ar": "إعداد عرض غير معروف",
+    "en": "Unknown display preference"
+  },
+  "account.label.d21d2055c0a7": {
+    "ar": "إعداد عرض غير صالح",
+    "en": "Invalid display preference"
+  },
+  "account.pendingChanges.zero": {
+    "ar": "لا توجد تغييرات بانتظار المزامنة",
+    "en": "No changes pending sync"
+  },
+  "account.pendingChanges.one": {
+    "ar": "تغيير واحد بانتظار المزامنة",
+    "en": "One change pending sync"
+  },
+  "account.pendingChanges.two": {
+    "ar": "تغييران بانتظار المزامنة",
+    "en": "Two changes pending sync"
+  },
+  "account.pendingChanges.few": {
+    "ar": "{count} تغييرات بانتظار المزامنة",
+    "en": "{count} changes pending sync"
+  },
+  "account.pendingChanges.many": {
+    "ar": "{count} تغييرًا بانتظار المزامنة",
+    "en": "{count} changes pending sync"
+  },
+  "account.pendingChanges.other": {
+    "ar": "{count} تغيير بانتظار المزامنة",
+    "en": "{count} changes pending sync"
+  },
+  "account.personalItems.zero": {
+    "ar": "لا توجد عناصر شخصية",
+    "en": "No personal items"
+  },
+  "account.personalItems.one": {
+    "ar": "عنصر شخصي واحد",
+    "en": "One personal item"
+  },
+  "account.personalItems.two": {
+    "ar": "عنصران شخصيان",
+    "en": "Two personal items"
+  },
+  "account.personalItems.few": {
+    "ar": "{count} عناصر شخصية",
+    "en": "{count} personal items"
+  },
+  "account.personalItems.many": {
+    "ar": "{count} عنصرًا شخصيًا",
+    "en": "{count} personal items"
+  },
+  "account.personalItems.other": {
+    "ar": "{count} عنصر شخصي",
+    "en": "{count} personal items"
+  },
+  "account.activityEntries.zero": {
+    "ar": "لا توجد عمليات في السجل",
+    "en": "No activity entries"
+  },
+  "account.activityEntries.one": {
+    "ar": "عملية واحدة في السجل",
+    "en": "One activity entry"
+  },
+  "account.activityEntries.two": {
+    "ar": "عمليتان في السجل",
+    "en": "Two activity entries"
+  },
+  "account.activityEntries.few": {
+    "ar": "{count} عمليات في السجل",
+    "en": "{count} activity entries"
+  },
+  "account.activityEntries.many": {
+    "ar": "{count} عملية في السجل",
+    "en": "{count} activity entries"
+  },
+  "account.activityEntries.other": {
+    "ar": "{count} عملية في السجل",
+    "en": "{count} activity entries"
+  },
+  "account.backupCounts": {
+    "ar": "{personal} • {events}",
+    "en": "{personal} • {events}"
+  },
+  "account.backupDate": {
+    "ar": "تاريخ النسخة: {date}",
+    "en": "Backup date: {date}"
+  },
+  "account.lastSync": {
+    "ar": "آخر مزامنة: {date}",
+    "en": "Last sync: {date}"
   }
 }

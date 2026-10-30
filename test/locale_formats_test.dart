@@ -33,8 +33,7 @@ void main() {
 
   test(
     'numbers follow the locale and dates preserve the Gregorian calendar',
-    () async {
-      await LocaleFormats.prepare();
+    () {
       expect(const LocaleFormats('en').number(1234.5), '1,234.5');
       expect(const LocaleFormats('ar').number(1234.5), '1,234.5');
       expect(const LocaleFormats('de').number(1234.5), '1.234,5');
@@ -47,6 +46,12 @@ void main() {
         contains('2026'),
       );
       expect(const LocaleFormats('unregistered').number(1234.5), '1,234.5');
+      expect(
+        const LocaleFormats(
+          'en',
+        ).gregorianDateTime(DateTime(2026, 10, 30, 16, 5)),
+        contains(RegExp(r'4:05\s+PM', unicode: true)),
+      );
     },
   );
 }

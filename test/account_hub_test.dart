@@ -19,6 +19,7 @@ import 'package:haq_app/features/religious_activity/data/activity_controller.dar
 import 'package:haq_app/features/religious_activity/data/activity_store.dart';
 import 'quran_media_test.dart' show StubHttp;
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'support/visual_audit.dart';
 
 void main() {
@@ -101,39 +102,43 @@ void main() {
     bool dark = false,
     double scale = 1,
     Size size = const Size(360, 1000),
+    AppLocalization? localization,
   }) async {
     await tester.binding.setSurfaceSize(visualSize(size));
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: ThemeData(
+    final screen = MaterialApp(
+      theme: ThemeData(
+        brightness: dark ? Brightness.dark : Brightness.light,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF2A8C82),
           brightness: dark ? Brightness.dark : Brightness.light,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF2A8C82),
-            brightness: dark ? Brightness.dark : Brightness.light,
-            primary: const Color(0xFF2A8C82),
-          ),
-          scaffoldBackgroundColor: dark
-              ? const Color(0xFF081722)
-              : const Color(0xFFFFFCF7),
-          fontFamily: 'QuranUI',
+          primary: const Color(0xFF2A8C82),
         ),
-        home: MediaQuery(
-          data: MediaQueryData(
-            size: visualSize(size),
-            textScaler: TextScaler.linear(visualScale(scale)),
-          ),
-          child: Directionality(
-            textDirection: TextDirection.rtl,
-            child: RepaintBoundary(
-              key: capture,
-              child: AppearanceScope(
-                controller: appearance,
-                child: Scaffold(body: AccountHubPage(controller: content)),
-              ),
+        scaffoldBackgroundColor: dark
+            ? const Color(0xFF081722)
+            : const Color(0xFFFFFCF7),
+        fontFamily: 'QuranUI',
+      ),
+      home: MediaQuery(
+        data: MediaQueryData(
+          size: visualSize(size),
+          textScaler: TextScaler.linear(visualScale(scale)),
+        ),
+        child: Directionality(
+          textDirection: localization?.language.direction ?? TextDirection.rtl,
+          child: RepaintBoundary(
+            key: capture,
+            child: AppearanceScope(
+              controller: appearance,
+              child: Scaffold(body: AccountHubPage(controller: content)),
             ),
           ),
         ),
       ),
+    );
+    await tester.pumpWidget(
+      localization == null
+          ? screen
+          : LocalizationScope(controller: localization, child: screen),
     );
     for (var i = 0; i < 8; i++) {
       await tester.pump(const Duration(milliseconds: 50));
@@ -142,6 +147,47 @@ void main() {
       );
     }
   }
+
+  testWidgets(
+    'English account forms preserve typed Arabic names and credentials on a narrow screen',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await mount(
+        tester,
+        size: const Size(320, 760),
+        scale: 1.2,
+        localization: localization,
+      );
+      expect(find.text('Account and sync'), findsOneWidget);
+      expect(find.text('Email'), findsOneWidget);
+      expect(find.text('Password'), findsOneWidget);
+      await tester.ensureVisible(find.text('Create a new account'));
+      await tester.tap(find.text('Create a new account'));
+      await tester.pumpAndSettle();
+      final fields = find.byType(TextFormField);
+      await tester.enterText(fields.at(0), 'حفظ');
+      await tester.enterText(fields.at(1), 'reader@example.test');
+      await tester.enterText(fields.at(2), 'Private-value-123');
+      expect(
+        tester.widget<TextFormField>(fields.at(0)).controller!.text,
+        'حفظ',
+      );
+      expect(
+        tester.widget<TextFormField>(fields.at(1)).controller!.text,
+        'reader@example.test',
+      );
+      expect(
+        tester.widget<TextFormField>(fields.at(2)).controller!.text,
+        'Private-value-123',
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   testWidgets(
     'guest sees local backup and real section status without unconfigured Google or deletion',
