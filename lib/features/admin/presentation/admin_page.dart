@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../core/localization/app_localization.dart';
 import '../../account/data/app_session.dart';
 import 'admin_sources_page.dart';
+import 'admin_translation_exchange_page.dart';
 
 String adminError(Object error) =>
     error is DioException && error.response?.statusCode == 409
@@ -237,6 +238,20 @@ class _AdminPageState extends State<AdminPage> {
                   trailing: PopupMenuButton<String>(
                     enabled: !_busy,
                     onSelected: (value) async {
+                      if (value == 'exchange') {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => AdminTranslationExchangePage(
+                              session: session,
+                              locale: language['locale'] as String,
+                              kind: _kind,
+                            ),
+                          ),
+                        );
+                        await _load();
+                        return;
+                      }
                       if (value == 'sources') {
                         await Navigator.push(
                           context,
@@ -266,6 +281,10 @@ class _AdminPageState extends State<AdminPage> {
                       }
                     },
                     itemBuilder: (ctx) => [
+                      PopupMenuItem(
+                        value: 'exchange',
+                        child: Text(ctx.tr('exchange.title')),
+                      ),
                       PopupMenuItem(
                         value: 'sources',
                         child: Text(ctx.tr('source.title')),

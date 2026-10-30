@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app_appearance.dart';
+import '../core/localization/app_localization.dart';
 import 'feature_routes.dart';
 
 /// Every destination has local artwork, including settings in search results.
@@ -207,7 +208,10 @@ class _ServiceCard extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                _description(feature),
+                                context.tr(
+                                  'feature.description.${feature.name}',
+                                  fallback: _description(feature),
+                                ),
                                 style: TextStyle(
                                   color: palette.muted,
                                   fontSize: 11,
@@ -219,7 +223,9 @@ class _ServiceCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Icon(
-                          Icons.chevron_left,
+                          Directionality.of(context) == TextDirection.rtl
+                              ? Icons.chevron_left
+                              : Icons.chevron_right,
                           textDirection: TextDirection.ltr,
                           color: palette.tealHeading,
                           size: 22,

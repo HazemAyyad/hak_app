@@ -550,5 +550,881 @@
   "feature.short.tasbih": {
     "ar": "المسبحة",
     "en": "Prayer beads"
+  },
+  "exchange.title": {
+    "en": "Import and export translations",
+    "ar": "استيراد وتصدير الترجمات"
+  },
+  "exchange.instructions": {
+    "en": "Export a page, edit its translation values, then paste the document and validate it before saving. Saving creates drafts. Revision numbers protect newer edits.",
+    "ar": "صدّر صفحة، وعدّل قيم الترجمة، ثم الصق الملف وافحصه قبل الحفظ. الحفظ ينشئ مسودات ولا ينشرها. أرقام المراجعة تمنع الكتابة فوق تعديلات أحدث."
+  },
+  "exchange.export": {
+    "en": "Export page",
+    "ar": "تصدير الصفحة"
+  },
+  "exchange.copy": {
+    "en": "Copy document",
+    "ar": "نسخ الملف"
+  },
+  "exchange.copied": {
+    "en": "Translation document copied",
+    "ar": "تم نسخ ملف الترجمات"
+  },
+  "exchange.previous": {
+    "en": "Previous page",
+    "ar": "الصفحة السابقة"
+  },
+  "exchange.next": {
+    "en": "Next page",
+    "ar": "الصفحة التالية"
+  },
+  "exchange.document": {
+    "en": "Translation document (JSON)",
+    "ar": "ملف الترجمات JSON"
+  },
+  "exchange.valid": {
+    "en": "Valid batch: {count} translations. They will be saved as drafts.",
+    "ar": "الدفعة صالحة: {count} ترجمة. ستحفظ كمسودات."
+  },
+  "exchange.preview": {
+    "en": "Validate batch",
+    "ar": "فحص الدفعة"
+  },
+  "exchange.apply": {
+    "en": "Save batch as drafts",
+    "ar": "حفظ الدفعة كمسودات"
+  },
+  "exchange.saved": {
+    "en": "Translation drafts saved. Review and publication are separate steps.",
+    "ar": "تم حفظ مسودات الترجمات؛ المراجعة والنشر خطوتان مستقلتان."
+  },
+  "exchange.invalid": {
+    "en": "The translation document is invalid or exceeds the size limit",
+    "ar": "ملف الترجمة غير صالح أو أكبر من الحجم المسموح"
+  },
+  "directory.results": {
+    "en": "Search results",
+    "ar": "نتائج البحث"
+  },
+  "directory.more": {
+    "en": "More",
+    "ar": "المزيد"
+  },
+  "directory.layout": {
+    "en": "View layout",
+    "ar": "طريقة العرض"
+  },
+  "directory.grid": {
+    "en": "Grid",
+    "ar": "شبكة"
+  },
+  "directory.list": {
+    "en": "Illustrated list",
+    "ar": "قائمة مصوّرة"
+  },
+  "directory.settings": {
+    "en": "Settings",
+    "ar": "الإعدادات"
+  },
+  "directory.search": {
+    "en": "Search services…",
+    "ar": "ابحث عن خدمة…"
+  },
+  "directory.clear": {
+    "en": "Clear search",
+    "ar": "مسح البحث"
+  },
+  "directory.empty": {
+    "en": "No services match your search",
+    "ar": "لا توجد خدمات تطابق بحثك"
+  },
+  "directory.back": {
+    "en": "Back",
+    "ar": "رجوع"
+  },
+  "directory.group.worship": {
+    "en": "Worship and remembrance",
+    "ar": "العبادات والأذكار"
+  },
+  "directory.group.journey": {
+    "en": "Your spiritual journey",
+    "ar": "رحلتك الإيمانية"
+  },
+  "directory.group.quran": {
+    "en": "Quran, supplications and practices",
+    "ar": "القرآن والأدعية والسنن"
+  },
+  "directory.group.community": {
+    "en": "Haq community",
+    "ar": "مجتمع حق"
+  },
+  "directory.group.services": {
+    "en": "Haq services",
+    "ar": "خدمات حق"
+  },
+  "onboarding.error": {
+    "en": "Could not save your choice. Try again.",
+    "ar": "تعذر حفظ الاختيار. حاول مجددًا."
+  },
+  "onboarding.back": {
+    "en": "Back",
+    "ar": "رجوع"
+  },
+  "onboarding.skip": {
+    "en": "Skip",
+    "ar": "تخطي"
+  },
+  "onboarding.quran.title": {
+    "en": "Keep the Quran close",
+    "ar": "القرآن قريبٌ منك"
+  },
+  "onboarding.quran.description": {
+    "en": "Read the Quran offline, search verses and save your reading position to return at any time.",
+    "ar": "اقرأ القرآن دون إنترنت، وابحث عن الآيات، واحفظ موضع قراءتك للعودة إليه في أي وقت."
+  },
+  "onboarding.dhikr.title": {
+    "en": "Begin your day with remembrance",
+    "ar": "ابدأ يومك بذكر الله"
+  },
+  "onboarding.dhikr.description": {
+    "en": "Explore remembrances, supplications, the daily verse and religious content in one place.",
+    "ar": "تعرّف على أقسام الأذكار والأدعية، واستكشف آية اليوم والمحتوى الديني في مكان واحد."
+  },
+  "onboarding.appearance.title": {
+    "en": "Make it your own",
+    "ar": "تجربة تناسبك"
+  },
+  "onboarding.appearance.description": {
+    "en": "Choose light or dark appearance and adjust your font and text size in settings for comfortable reading.",
+    "ar": "اختر المظهر الفاتح أو الداكن، وغيّر نوع الخط وحجمه من الإعدادات لقراءة أكثر راحة."
+  },
+  "onboarding.saving": {
+    "en": "Saving…",
+    "ar": "جارٍ الحفظ…"
+  },
+  "onboarding.start": {
+    "en": "Get started",
+    "ar": "ابدأ الآن"
+  },
+  "onboarding.next": {
+    "en": "Next",
+    "ar": "التالي"
+  },
+  "onboarding.morning": {
+    "en": "Morning remembrances",
+    "ar": "أذكار الصباح"
+  },
+  "onboarding.evening": {
+    "en": "Evening remembrances",
+    "ar": "أذكار المساء"
+  },
+  "onboarding.font": {
+    "en": "A font that suits your reading",
+    "ar": "خطٌ يناسب قراءتك"
+  },
+  "onboarding.progress": {
+    "en": "{page} of {total}",
+    "ar": "{page} من {total}"
+  },
+  "onboarding.page": {
+    "en": "Page {page} of {total}",
+    "ar": "الصفحة {page} من {total}"
+  },
+  "feature.description.dailyDuas": {
+    "en": "Supplications and manners for everyday situations",
+    "ar": "أدعية وآداب لمواقف يومك"
+  },
+  "feature.description.savedContent": {
+    "en": "Your saved supplications and content",
+    "ar": "الأدعية والمحتوى الذي حفظته"
+  },
+  "feature.description.duaTogether": {
+    "en": "Share prayers and connect with the community",
+    "ar": "شارك الدعاء وتفاعل مع المجتمع"
+  },
+  "feature.description.circles": {
+    "en": "Remember together and track contributions",
+    "ar": "ذكر مشترك ومتابعة المساهمات"
+  },
+  "feature.description.settings": {
+    "en": "Customize your Haq experience",
+    "ar": "خصص تجربتك في حق"
+  },
+  "feature.description.tasbih": {
+    "en": "Digital prayer beads for daily remembrance",
+    "ar": "المسبحة الإلكترونية لذكرك الدائم"
+  },
+  "feature.description.names": {
+    "en": "The names of Allah and their meanings",
+    "ar": "أسماء الله الحسنى ومعانيها"
+  },
+  "feature.description.feelings": {
+    "en": "Support for your emotional and spiritual wellbeing",
+    "ar": "دعمك النفسي والروحي"
+  },
+  "feature.description.adhkar": {
+    "en": "Remembrances from the Quran and Sunnah",
+    "ar": "أذكار من الكتاب والسنة"
+  },
+  "feature.description.statistics": {
+    "en": "Track your recorded activity and achievements",
+    "ar": "تابع نشاطك وإنجازاتك المسجلة"
+  },
+  "feature.description.personalAdhkar": {
+    "en": "Your personal remembrances and collections",
+    "ar": "أذكارك ومجموعاتك الخاصة"
+  },
+  "feature.description.quran": {
+    "en": "Reading, listening and explanations",
+    "ar": "تلاوة واستماع وتفسير"
+  },
+  "feature.description.qibla": {
+    "en": "Find the direction of the Qibla",
+    "ar": "اعرف اتجاه القبلة"
+  },
+  "feature.description.habits": {
+    "en": "Organize habits and track your commitment",
+    "ar": "نظم عاداتك وتابع التزامك"
+  },
+  "feature.description.ruqya": {
+    "en": "Quranic verses and supplications for ruqya",
+    "ar": "آيات وأدعية الرقية الشرعية"
+  },
+  "feature.description.istighfar": {
+    "en": "Words of seeking forgiveness and their virtues",
+    "ar": "صيغ الاستغفار وفضله"
+  },
+  "feature.description.praise": {
+    "en": "Remembrances of praise and gratitude",
+    "ar": "أذكار الحمد والثناء"
+  },
+  "feature.description.glorification": {
+    "en": "Glorify Allah and remember Him regularly",
+    "ar": "سبح الله وداوم على ذكره"
+  },
+  "feature.description.nawawi": {
+    "en": "Prophetic hadiths with explanations and sources",
+    "ar": "أحاديث نبوية مع الشرح والمصدر"
+  },
+  "feature.description.prophets": {
+    "en": "Supplications of the prophets from the Quran and Sunnah",
+    "ar": "أدعية الأنبياء من القرآن والسنة"
+  },
+  "feature.description.propheticDuas": {
+    "en": "Supplications narrated from the Prophet",
+    "ar": "أدعية مأثورة عن النبي ﷺ"
+  },
+  "feature.description.quranDuas": {
+    "en": "Supplications from Quranic verses",
+    "ar": "أدعية من آيات القرآن الكريم"
+  },
+  "feature.description.khatma": {
+    "en": "Track your Quran completion",
+    "ar": "متابعة ختمة القرآن الكريم"
+  },
+  "feature.description.friday": {
+    "en": "Practices and manners from the prophetic tradition",
+    "ar": "سنن وآداب من الهدي النبوي"
+  },
+  "feature.description.ramadan": {
+    "en": "Daily readings, supplications and practices for Ramadan",
+    "ar": "ورد وأدعية وأعمال رمضان"
+  },
+  "feature.description.sunnah": {
+    "en": "Practices and manners from the prophetic tradition",
+    "ar": "سنن وآداب من الهدي النبوي"
+  },
+  "feature.description.appearance": {
+    "en": "Colors, fonts and text size",
+    "ar": "الألوان والخط وحجم النص"
+  },
+  "feature.description.sakinah": {
+    "en": "Breathing and calming exercises",
+    "ar": "تمارين التنفس والطمأنينة"
+  },
+  "feature.description.hadith": {
+    "en": "Prophetic hadiths with explanations and sources",
+    "ar": "أحاديث نبوية مع الشرح والمصدر"
+  },
+  "feature.description.mosques": {
+    "en": "Find mosques near you",
+    "ar": "ابحث عن المساجد القريبة منك"
+  },
+  "feature.description.messages": {
+    "en": "Spiritual content from Haq",
+    "ar": "محتوى إيماني من حق"
+  },
+  "feature.description.stories": {
+    "en": "Spiritual content from Haq",
+    "ar": "محتوى إيماني من حق"
+  },
+  "feature.description.assistant": {
+    "en": "Open the assistant and your conversations",
+    "ar": "افتح المساعد وسجل محادثاتك"
+  },
+  "feature.description.subscription": {
+    "en": "Package details and subscription management",
+    "ar": "تفاصيل الباكج وإدارة الاشتراك"
+  },
+  "feature.description.ourApps": {
+    "en": "Discover Haq apps",
+    "ar": "تعرف على تطبيقات حق"
+  },
+  "settings.label.cd04524ebf8a": {
+    "en": "App settings",
+    "ar": "إعدادات التطبيق"
+  },
+  "settings.label.ad7f09410bd0": {
+    "en": "Customize your experience",
+    "ar": "خصص تجربتك بما يناسبك"
+  },
+  "settings.label.35e2fc5d7341": {
+    "en": "Account and data",
+    "ar": "الحساب والبيانات"
+  },
+  "settings.label.b298a005714f": {
+    "en": "Appearance and reading",
+    "ar": "المظهر والقراءة"
+  },
+  "settings.label.d61d02ad40a6": {
+    "en": "Prayer and reminders",
+    "ar": "الصلاة والتذكيرات"
+  },
+  "settings.label.b2201007068e": {
+    "en": "Additional settings",
+    "ar": "إعدادات إضافية"
+  },
+  "settings.label.0458a671e96c": {
+    "en": "Account and sync",
+    "ar": "الحساب والمزامنة"
+  },
+  "settings.label.a8a2fbb67c3d": {
+    "en": "Keep your progress and preferences",
+    "ar": "احتفظ بتقدمك وإعداداتك"
+  },
+  "settings.label.0ef51730a848": {
+    "en": "Appearance and display",
+    "ar": "المظهر وإعدادات العرض"
+  },
+  "settings.label.69bcd488a908": {
+    "en": "Customize colors, font and text size",
+    "ar": "خصص الألوان ونوع الخط وحجمه"
+  },
+  "settings.label.038c27935db5": {
+    "en": "Quran settings",
+    "ar": "إعدادات القرآن الكريم"
+  },
+  "settings.label.d5ee61a2b799": {
+    "en": "Reading, recitation and explanations",
+    "ar": "القراءة والتلاوة والتفسير"
+  },
+  "settings.label.d1fd9905a208": {
+    "en": "Prayer times and adhan",
+    "ar": "مواقيت الصلاة والأذان"
+  },
+  "settings.label.854f6f1adad2": {
+    "en": "Location, calculation and alerts",
+    "ar": "الموقع والحساب والتنبيهات"
+  },
+  "settings.label.b012fcf75b76": {
+    "en": "Remembrances and reminders",
+    "ar": "الأذكار والتذكيرات"
+  },
+  "settings.label.eb62de02ec34": {
+    "en": "Choose times for remembrance and daily reading",
+    "ar": "خصص أوقات الذكر والورد"
+  },
+  "settings.label.c7c27df4a00d": {
+    "en": "Smart reminders",
+    "ar": "التنبيهات الذكية"
+  },
+  "settings.label.62026352de8a": {
+    "en": "Sound, appearance and interaction",
+    "ar": "الصوت والمظهر وطريقة التفاعل"
+  },
+  "settings.label.6b4400026797": {
+    "en": "Hijri date",
+    "ar": "التاريخ الهجري"
+  },
+  "settings.label.29f42007bc4d": {
+    "en": "Adjust the day and date display",
+    "ar": "تصحيح اليوم وعرض التاريخ"
+  },
+  "settings.label.ea4aca2a120c": {
+    "en": "Offline storage",
+    "ar": "التخزين دون إنترنت"
+  },
+  "settings.label.ab47619c5f47": {
+    "en": "Manage downloaded content",
+    "ar": "إدارة المواد المحملة"
+  },
+  "settings.label.c6dd7079dac7": {
+    "en": "Permissions and privacy",
+    "ar": "الصلاحيات والخصوصية"
+  },
+  "settings.label.7650f1cb8cc9": {
+    "en": "Your location, notifications and data",
+    "ar": "موقعك وإشعاراتك وبياناتك"
+  },
+  "settings.label.1a28ed5a19c8": {
+    "en": "About Haq",
+    "ar": "حول تطبيق حق"
+  },
+  "settings.label.60adbec628fe": {
+    "en": "Help and official information",
+    "ar": "المساعدة والمعلومات الرسمية"
+  },
+  "settings.label.96f480620f8a": {
+    "en": "Could not finish saving",
+    "ar": "لم يكتمل الحفظ"
+  },
+  "settings.label.52ac9916f061": {
+    "en": "Your account and data",
+    "ar": "حسابك وبياناتك"
+  },
+  "settings.label.58146ad7528e": {
+    "en": "You are using religious content as a guest",
+    "ar": "تستخدم الجزء الديني حالياً كضيف"
+  },
+  "settings.label.f15ccf1789a6": {
+    "en": "Guest — saved locally",
+    "ar": "ضيف — حفظ محلي"
+  },
+  "settings.label.beb869eecc12": {
+    "en": "Sign in",
+    "ar": "تسجيل الدخول"
+  },
+  "settings.label.d58fabc5f51c": {
+    "en": "Sign in or create an account",
+    "ar": "تسجيل الدخول أو إنشاء حساب"
+  },
+  "settings.label.437c45c6c2ac": {
+    "en": "You can continue as a guest",
+    "ar": "يمكنك الاستمرار كضيف"
+  },
+  "settings.label.a78eff4b0ee5": {
+    "en": "Your remembrances, preferences and progress stay on this device without syncing across devices.",
+    "ar": "تبقى أذكارك وإعداداتك وتقدمك محفوظة على هذا الجهاز فقط، دون مزامنة بين الأجهزة."
+  },
+  "settings.label.164f3da6f67f": {
+    "en": "Data storage and sync",
+    "ar": "حفظ البيانات والمزامنة"
+  },
+  "settings.label.6638039a2be3": {
+    "en": "Sync progress and preferences",
+    "ar": "مزامنة التقدم والإعدادات"
+  },
+  "settings.label.dd855e30d832": {
+    "en": "Available after signing in and linking your account",
+    "ar": "تعمل بعد تسجيل الدخول وربط الحساب"
+  },
+  "settings.label.705d7edb786c": {
+    "en": "Account required",
+    "ar": "يتطلب حساب"
+  },
+  "settings.label.2c7cfcab5211": {
+    "en": "Saved guest data",
+    "ar": "بيانات الضيف المحفوظة"
+  },
+  "settings.label.d981d8f06202": {
+    "en": "Remembrances, bookmarks and reading progress",
+    "ar": "الأذكار والعلامات المرجعية وتقدم القراءة"
+  },
+  "settings.label.abfd2cdfdc6c": {
+    "en": "On this device",
+    "ar": "على هذا الجهاز"
+  },
+  "settings.label.5acf749150cc": {
+    "en": "Restore data",
+    "ar": "استعادة البيانات"
+  },
+  "settings.label.5655b4e73d50": {
+    "en": "Restore synced account progress",
+    "ar": "استرجاع التقدم المتزامن للحساب"
+  },
+  "settings.label.71e5af2adeda": {
+    "en": "Guest data when signing up",
+    "ar": "نقل بيانات الضيف عند التسجيل"
+  },
+  "settings.label.09c9e55793e4": {
+    "en": "Guest data transfer and merging follow the account data policy.",
+    "ar": "تحدد آلية دمج أو نقل بيانات الضيف إلى الحساب في السياسة التنفيذية قبل البرمجة."
+  },
+  "settings.label.c772294afa31": {
+    "en": "App color",
+    "ar": "لون التطبيق"
+  },
+  "settings.label.dd71c71ed71d": {
+    "en": "Appearance mode",
+    "ar": "وضع التطبيق"
+  },
+  "settings.label.aabb4f12fa31": {
+    "en": "Light",
+    "ar": "فاتح"
+  },
+  "settings.label.b95b2ced0e0a": {
+    "en": "Dark",
+    "ar": "داكن"
+  },
+  "settings.label.c190381bd30c": {
+    "en": "Automatic",
+    "ar": "تلقائي"
+  },
+  "settings.label.e9742c360360": {
+    "en": "Automatic mode",
+    "ar": "الوضع التلقائي"
+  },
+  "settings.label.15cb414b725d": {
+    "en": "Follows your device appearance and updates when it changes.",
+    "ar": "يتبع مظهر الجهاز تلقائياً، ويتغير عند تغيير إعداداته."
+  },
+  "settings.label.001a841f9901": {
+    "en": "Scheduled appearance",
+    "ar": "المظهر حسب الوقت"
+  },
+  "settings.label.d3bf514db7ab": {
+    "en": "Light by day and dark at night using device time",
+    "ar": "نهار فاتح وليل داكن حسب وقت الجهاز"
+  },
+  "settings.label.71b08044a419": {
+    "en": "Day and night times",
+    "ar": "أوقات النهار والليل"
+  },
+  "settings.label.cc37c294627f": {
+    "en": "The home remembrance card switches between morning and evening at these times, even when appearance is selected manually.",
+    "ar": "تتبدل بطاقة أذكار الرئيسية بين الصباح والمساء حسب هذين الوقتين، حتى عند اختيار المظهر يدويًا."
+  },
+  "settings.label.52ef417cc39b": {
+    "en": "Day starts",
+    "ar": "بداية النهار"
+  },
+  "settings.label.5a32785f53ea": {
+    "en": "Night starts",
+    "ar": "بداية الليل"
+  },
+  "settings.label.10c13bf2df84": {
+    "en": "Device local time",
+    "ar": "التوقيت المحلي للجهاز"
+  },
+  "settings.label.30e806b79b9a": {
+    "en": "Choose different times for day and night",
+    "ar": "اختر وقتين مختلفين للنهار والليل"
+  },
+  "settings.label.13776e9638ca": {
+    "en": "Font",
+    "ar": "نوع الخط"
+  },
+  "settings.label.5472395ab0b0": {
+    "en": "App font",
+    "ar": "خط التطبيق"
+  },
+  "settings.label.cf7cb56fbea2": {
+    "en": "The selected font is applied immediately and saved on this device. Quran text keeps its dedicated font to preserve its marks.",
+    "ar": "يُطبق الاختيار فورًا على الواجهة ويُحفظ على الجهاز. يبقى نص المصحف بخط قرآني مخصص لضبط الحركات."
+  },
+  "settings.label.cbcf3bf7ef78": {
+    "en": "Text size",
+    "ar": "حجم الخط"
+  },
+  "settings.label.b8310196f8ce": {
+    "en": "Religious content text",
+    "ar": "نصوص المحتوى الديني"
+  },
+  "settings.label.b960aee6db3e": {
+    "en": "Adjust the text size for comfortable reading",
+    "ar": "اضبط حجم الخط بما يناسب القراءة"
+  },
+  "settings.label.560ef2b6869c": {
+    "en": "Small",
+    "ar": "صغير"
+  },
+  "settings.label.42a5dadf6e45": {
+    "en": "Medium",
+    "ar": "متوسط"
+  },
+  "settings.label.fd52a3d1cdb7": {
+    "en": "Large",
+    "ar": "كبير"
+  },
+  "settings.label.3de97ca55f5c": {
+    "en": "Display preview",
+    "ar": "معاينة العرض"
+  },
+  "settings.label.5b5405b93418": {
+    "en": "Text size preview",
+    "ar": "مثال على حجم الخط"
+  },
+  "settings.label.c5fac0ef8de8": {
+    "en": "Surah Ar-Rad — verse 28 (excerpt)",
+    "ar": "سورة الرعد — الآية 28 (مقتطف)"
+  },
+  "settings.label.cd40c689fab0": {
+    "en": "Display preferences",
+    "ar": "تفضيلات العرض"
+  },
+  "settings.label.329fd5c14a90": {
+    "en": "Apply appearance throughout the app",
+    "ar": "تطبيق المظهر على جميع الصفحات"
+  },
+  "settings.label.f2b369cc1a08": {
+    "en": "Applied immediately and saved on this device",
+    "ar": "يُطبق فوراً ويحفظ الجهاز التفضيل المختار"
+  },
+  "settings.label.bde7d935ca19": {
+    "en": "Open Quran settings from the main settings menu to use the reader preferences.",
+    "ar": "افتح إعدادات القرآن من القائمة الرئيسية للإعدادات؛ تُستخدم إعدادات القارئ الأصلية دون نسخة مكررة."
+  },
+  "settings.label.f6bede49b704": {
+    "en": "Prayer times",
+    "ar": "مواقيت الصلاة"
+  },
+  "settings.label.a4381950eff6": {
+    "en": "Content storage",
+    "ar": "مساحة المحتوى"
+  },
+  "settings.label.dac8e756e47f": {
+    "en": "Content saved on this device",
+    "ar": "المحتوى المحفوظ على الجهاز"
+  },
+  "settings.label.df503db5ee77": {
+    "en": "Illustration — actual figures come from the device",
+    "ar": "مثال توضيحي — الأرقام الفعلية من الجهاز"
+  },
+  "settings.label.0738ac9f6007": {
+    "en": "• Recitations and Quran",
+    "ar": "• التلاوات والقرآن"
+  },
+  "settings.label.64c2656cacca": {
+    "en": "• Remembrances and files",
+    "ar": "• الأذكار والملفات"
+  },
+  "settings.label.bd5276c97ae1": {
+    "en": "Saved files",
+    "ar": "الملفات المحفوظة"
+  },
+  "settings.label.cfe928f21e7c": {
+    "en": "Manage audio recitations",
+    "ar": "إدارة التلاوات الصوتية"
+  },
+  "settings.label.da44d2872c36": {
+    "en": "Browse or delete downloaded files",
+    "ar": "تصفح أو حذف الملفات المحملة"
+  },
+  "settings.label.3765484d0c5f": {
+    "en": "Open",
+    "ar": "فتح"
+  },
+  "settings.label.431c70e19a91": {
+    "en": "Local religious content",
+    "ar": "المحتوى الديني المحلي"
+  },
+  "settings.label.2e3bb099a89e": {
+    "en": "Verses and remembrances available offline",
+    "ar": "الآيات والأذكار المتاحة دون إنترنت"
+  },
+  "settings.label.3824e18ca83b": {
+    "en": "View",
+    "ar": "عرض"
+  },
+  "settings.label.d245e3ab8096": {
+    "en": "Pending downloads",
+    "ar": "تنزيلات قيد الانتظار"
+  },
+  "settings.label.52a46efebd7e": {
+    "en": "Continue or retry",
+    "ar": "المتابعة أو إعادة المحاولة"
+  },
+  "settings.label.0fef9404367c": {
+    "en": "Manage",
+    "ar": "إدارة"
+  },
+  "settings.label.b12f94fc7397": {
+    "en": "Storage controls",
+    "ar": "التحكم في التخزين"
+  },
+  "settings.label.0a7b78013a8b": {
+    "en": "Delete downloads",
+    "ar": "حذف ما تم تحميله"
+  },
+  "settings.label.ce08251f8c72": {
+    "en": "Deletion requires your confirmation",
+    "ar": "الحذف بعد تأكيد المستخدم"
+  },
+  "settings.label.6e1bb3632e1c": {
+    "en": "Choose files",
+    "ar": "اختيار الملفات"
+  },
+  "settings.label.748c0e5f5460": {
+    "en": "Sync and downloads",
+    "ar": "المزامنة والتنزيل"
+  },
+  "settings.label.754259053b31": {
+    "en": "Downloaded content remains available offline when supported by its format and source.",
+    "ar": "يبقى المحتوى المحمل متاحاً دون اتصال حينما تسمح خصائصه ومصادره."
+  },
+  "settings.label.b30a0cc1c56c": {
+    "en": "Displayed date",
+    "ar": "التاريخ المعروض"
+  },
+  "settings.label.4d9910344dd3": {
+    "en": "Current Hijri date",
+    "ar": "التاريخ الهجري الحالي"
+  },
+  "settings.label.be853df6dfa2": {
+    "en": "Adjust the day manually if needed",
+    "ar": "يمكن تصحيح اليوم يدوياً عند الحاجة"
+  },
+  "settings.label.6029776af3da": {
+    "en": "Adjust the Hijri date",
+    "ar": "تصحيح التاريخ الهجري"
+  },
+  "settings.label.eb07f635d883": {
+    "en": "Day",
+    "ar": "يوم"
+  },
+  "settings.label.69a62e7a58e5": {
+    "en": "Offset from the calculated date",
+    "ar": "مقدار الإزاحة عن التاريخ المحسوب"
+  },
+  "settings.label.b9dd6b072962": {
+    "en": "Restore the default",
+    "ar": "إعادة القيمة الافتراضية"
+  },
+  "settings.label.ed8907b951a5": {
+    "en": "Remove the manual adjustment",
+    "ar": "إزالة التصحيح اليدوي"
+  },
+  "settings.label.a4df1d03d650": {
+    "en": "Reset",
+    "ar": "إعادة الضبط"
+  },
+  "settings.label.470112e1991e": {
+    "en": "Apply adjustment",
+    "ar": "تطبيق التصحيح"
+  },
+  "settings.label.59731a295a90": {
+    "en": "Use the adjusted date",
+    "ar": "استخدام التاريخ المصحح"
+  },
+  "settings.label.f09077085ef0": {
+    "en": "For the Hijri date shown in the app",
+    "ar": "في التاريخ الهجري المعروض داخل التطبيق"
+  },
+  "settings.label.1a49a5868e7a": {
+    "en": "Saved automatically",
+    "ar": "الحفظ تلقائي"
+  },
+  "settings.label.ee625d44c3ff": {
+    "en": "Changes from -3 to +3 days are saved immediately and apply to the calendar display. Umm al-Qura dates may differ from local month announcements. Prayer calculations and device dates stay unchanged.",
+    "ar": "يُحفظ التصحيح بين -3 و+3 أيام فور تغييره ويُطبق على عرض التقويم. تقويم أم القرى قد يختلف عن إعلان بداية الشهر محلياً؛ لا يغيّر حساب الصلاة أو تاريخ الجهاز."
+  },
+  "settings.label.52120e0fe560": {
+    "en": "Notice",
+    "ar": "تنبيه"
+  },
+  "settings.label.dadd50297afd": {
+    "en": "This adjusts the app Hijri date display and does not change the phone date.",
+    "ar": "هذا التعديل يغيّر العرض الهجري داخل التطبيق، ولا يغيّر تاريخ الهاتف نفسه."
+  },
+  "settings.label.4deea4a5afde": {
+    "en": "Haq app",
+    "ar": "تطبيق حق"
+  },
+  "settings.label.2e89f2c2999c": {
+    "en": "Religious content and Haq Foundation services",
+    "ar": "المحتوى الديني والخدمات المرتبطة بجمعية حق"
+  },
+  "settings.label.492e05656c95": {
+    "en": "Version: supplied by the app",
+    "ar": "الإصدار: يُعرض من التطبيق"
+  },
+  "settings.label.dbcba54cb8d1": {
+    "en": "Official information",
+    "ar": "المعلومات الرسمية"
+  },
+  "settings.label.3fc71a3c0dd7": {
+    "en": "About Haq Foundation",
+    "ar": "عن جمعية حق"
+  },
+  "settings.label.0756f52c1348": {
+    "en": "Foundation information and mission",
+    "ar": "معلومات الجمعية ورسالتها"
+  },
+  "settings.label.370b1e9cba0a": {
+    "en": "Terms and conditions",
+    "ar": "الشروط والأحكام"
+  },
+  "settings.label.ba2fdf98b09c": {
+    "en": "Official legal document",
+    "ar": "المستند القانوني المعتمد"
+  },
+  "settings.label.23a13bc51d58": {
+    "en": "Privacy policy",
+    "ar": "سياسة الخصوصية"
+  },
+  "settings.label.17d23986d65a": {
+    "en": "Your data and rights",
+    "ar": "بيانات المستخدم وحقوقه"
+  },
+  "settings.label.6ff676a53e2e": {
+    "en": "Help and contact",
+    "ar": "المساعدة والتواصل"
+  },
+  "settings.label.fd82ad22b4a1": {
+    "en": "Frequently asked questions",
+    "ar": "الأسئلة الشائعة"
+  },
+  "settings.label.882b5214e0e4": {
+    "en": "Answers about using the app and reminders",
+    "ar": "إجابات عن الاستخدام والتذكيرات"
+  },
+  "settings.label.b51a984f9104": {
+    "en": "Contact support",
+    "ar": "التواصل مع الدعم"
+  },
+  "settings.label.5d88537b09b3": {
+    "en": "Official foundation contact channels",
+    "ar": "قنوات التواصل التي تعتمدها الجمعية"
+  },
+  "settings.label.4270c9712753": {
+    "en": "Send feedback",
+    "ar": "إرسال ملاحظة"
+  },
+  "settings.label.63183be1c664": {
+    "en": "A suggestion or app issue",
+    "ar": "اقتراح أو مشكلة في التطبيق"
+  },
+  "language.content": {
+    "en": "Content language",
+    "ar": "لغة المحتوى"
+  },
+  "language.followInterface": {
+    "en": "Follow interface language",
+    "ar": "اتباع لغة الواجهة"
+  },
+  "exchange.reviewMode": {
+    "ar": "مراجعة النصوص المحفوظة واعتمادها",
+    "en": "Review and approve saved translations"
+  },
+  "exchange.reviewInstructions": {
+    "ar": "صدّر النصوص المحفوظة واقرأها قبل الاعتماد. يجب أن تطابق القيم وأرقام المراجعة المسودات الحالية. الاعتماد لا ينشر اللغة.",
+    "en": "Export and read the saved translations before approval. Values and revision numbers must match the current drafts. Approval does not publish the language."
+  },
+  "exchange.validReview": {
+    "ar": "تطابقت {count} ترجمة مع المسودات الحالية؛ جاهزة لاعتماد المراجع.",
+    "en": "{count} translations match the current drafts and are ready for reviewer approval."
+  },
+  "exchange.previewReview": {
+    "ar": "فحص المطابقة للمراجعة",
+    "en": "Validate review snapshot"
+  },
+  "exchange.review": {
+    "ar": "اعتماد الترجمات المحفوظة",
+    "en": "Approve saved translations"
+  },
+  "exchange.reviewed": {
+    "ar": "تم اعتماد الترجمات؛ يلزم نشر إصدار لإتاحتها للمستخدمين.",
+    "en": "Translations approved. Publish a release to make them available to users."
   }
 }

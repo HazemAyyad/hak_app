@@ -8,6 +8,7 @@ import 'package:haq_app/main.dart';
 import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/features/admin/presentation/admin_page.dart';
+import 'package:haq_app/features/admin/presentation/admin_translation_exchange_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haq_app/features/account/data/app_session.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
@@ -99,6 +100,12 @@ void main() {
                 .add(const Duration(minutes: 30))
                 .toIso8601String(),
             'permissions': ['admin.enter', 'translations.edit'],
+          };
+        } else if (request.path.endsWith('/translations/import')) {
+          data = {
+            'count': 1,
+            'dry_run': (request.data as Map)['dry_run'],
+            'status': 'draft',
           };
         } else if (request.path == '/admin/languages') {
           data = <Object>[];
@@ -245,6 +252,81 @@ void main() {
       expect(find.byType(HomePage), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
       appearance.dispose();
+    },
+  );
+
+  testWidgets(
+    'batch import requires preview of the current document and saves drafts without publishing',
+    (tester) async {
+      admin = true;
+      await tester.runAsync(
+        () => session.login('association', 'test@example.test', 'password'),
+      );
+      await tester.runAsync(() => session.adminRequest('GET', 'languages'));
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await tester.pumpWidget(
+        LocalizationScope(
+          controller: localization,
+          child: MaterialApp(
+            home: AdminTranslationExchangePage(
+              session: session,
+              locale: 'en',
+              kind: 'ui',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final document = jsonEncode({
+        'format': 'haq.translation.exchange',
+        'schema': 1,
+        'locale': 'en',
+        'records': [
+          {'key': 'ui/nav.home', 'revision': 1, 'value': 'Start'},
+        ],
+      });
+      await tester.enterText(find.byType(TextField), document);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Validate batch'));
+      await tester.tap(find.text('Validate batch'));
+      await tester.pumpAndSettle();
+      expect(
+        requests.any((r) => r.path.endsWith('/translations/import')),
+        true,
+        reason: tester
+            .widgetList<Text>(find.byType(Text))
+            .map((w) => w.data)
+            .join(' | '),
+      );
+      expect(requests.last.data['dry_run'], true);
+      expect(find.textContaining('Valid batch: 1'), findsOneWidget);
+      await tester.enterText(find.byType(TextField), '$document ');
+      await tester.pump();
+      expect(
+        tester
+            .widget<FilledButton>(
+              find.widgetWithText(FilledButton, 'Save batch as drafts'),
+            )
+            .onPressed,
+        isNull,
+      );
+      await tester.ensureVisible(find.text('Validate batch'));
+      await tester.tap(find.text('Validate batch'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save batch as drafts'));
+      await tester.pumpAndSettle();
+      expect(requests.last.data['dry_run'], false);
+      expect(
+        tester.widget<TextField>(find.byType(TextField)).controller!.text,
+        isEmpty,
+      );
+      expect(requests.any((r) => r.path.endsWith('/publish')), false);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
     },
   );
 

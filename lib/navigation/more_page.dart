@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../app_appearance.dart';
+import '../core/localization/app_localization.dart';
 import 'feature_routes.dart';
 import 'more_service_grid.dart';
 import 'more_service_list.dart';
+
+String _groupTitle(BuildContext context, String title) {
+  final key = switch (title) {
+    'العبادات والأذكار' => 'directory.group.worship',
+    'رحلتك الإيمانية' => 'directory.group.journey',
+    'القرآن والأدعية والسنن' => 'directory.group.quran',
+    'مجتمع حق' => 'directory.group.community',
+    'خدمات حق' => 'directory.group.services',
+    _ => null,
+  };
+  return key == null ? title : context.tr(key, fallback: title);
+}
 
 class MorePage extends StatefulWidget {
   const MorePage({super.key, required this.onFeature});
@@ -44,7 +57,9 @@ class _MorePageState extends State<MorePage> {
     final results = AppFeature.values.where(_matches).toList();
     final groups = _query.isEmpty
         ? moreServiceGroups
-        : <(String, List<AppFeature>)>[('نتائج البحث', results)];
+        : <(String, List<AppFeature>)>[
+            (context.tr('directory.results', fallback: 'نتائج البحث'), results),
+          ];
     return ColoredBox(
       color: palette.background,
       child: SafeArea(
@@ -57,7 +72,7 @@ class _MorePageState extends State<MorePage> {
                 children: [
                   Expanded(
                     child: Text(
-                      'المزيد',
+                      context.tr('directory.more', fallback: 'المزيد'),
                       style: TextStyle(
                         color: palette.heading,
                         fontSize: 24,
@@ -70,7 +85,10 @@ class _MorePageState extends State<MorePage> {
                     shape: const CircleBorder(),
                     child: PopupMenuButton<MoreDirectoryLayout>(
                       key: const ValueKey('more-layout'),
-                      tooltip: 'طريقة العرض',
+                      tooltip: context.tr(
+                        'directory.layout',
+                        fallback: 'طريقة العرض',
+                      ),
                       icon: Icon(
                         layout == MoreDirectoryLayout.grid
                             ? Icons.grid_view_outlined
@@ -93,12 +111,15 @@ class _MorePageState extends State<MorePage> {
                         for (final (value, label, icon) in [
                           (
                             MoreDirectoryLayout.grid,
-                            'شبكة',
+                            context.tr('directory.grid', fallback: 'شبكة'),
                             Icons.grid_view_outlined,
                           ),
                           (
                             MoreDirectoryLayout.list,
-                            'قائمة مصوّرة',
+                            context.tr(
+                              'directory.list',
+                              fallback: 'قائمة مصوّرة',
+                            ),
                             Icons.view_agenda_outlined,
                           ),
                         ])
@@ -140,7 +161,10 @@ class _MorePageState extends State<MorePage> {
                     shape: const CircleBorder(),
                     child: IconButton(
                       key: const ValueKey('more-settings'),
-                      tooltip: 'الإعدادات',
+                      tooltip: context.tr(
+                        'directory.settings',
+                        fallback: 'الإعدادات',
+                      ),
                       onPressed: () => widget.onFeature(AppFeature.settings),
                       icon: Icon(
                         Icons.settings_outlined,
@@ -172,7 +196,10 @@ class _MorePageState extends State<MorePage> {
                             onChanged: (value) =>
                                 setState(() => _query = _normalized(value)),
                             decoration: InputDecoration(
-                              hintText: 'ابحث عن خدمة…',
+                              hintText: context.tr(
+                                'directory.search',
+                                fallback: 'ابحث عن خدمة…',
+                              ),
                               prefixIcon: Icon(
                                 Icons.search,
                                 color: palette.muted,
@@ -180,7 +207,10 @@ class _MorePageState extends State<MorePage> {
                               suffixIcon: _query.isEmpty
                                   ? null
                                   : IconButton(
-                                      tooltip: 'مسح البحث',
+                                      tooltip: context.tr(
+                                        'directory.clear',
+                                        fallback: 'مسح البحث',
+                                      ),
                                       onPressed: () {
                                         _search.clear();
                                         setState(() => _query = '');
@@ -208,7 +238,7 @@ class _MorePageState extends State<MorePage> {
                             child: Semantics(
                               header: true,
                               child: Text(
-                                title,
+                                _groupTitle(context, title),
                                 style: TextStyle(
                                   color: palette.heading,
                                   fontSize: 18,
@@ -235,7 +265,10 @@ class _MorePageState extends State<MorePage> {
                           child: Padding(
                             padding: const EdgeInsets.all(24),
                             child: Text(
-                              'لا توجد خدمات تطابق بحثك',
+                              context.tr(
+                                'directory.empty',
+                                fallback: 'لا توجد خدمات تطابق بحثك',
+                              ),
                               textAlign: TextAlign.center,
                               style: TextStyle(color: palette.muted),
                             ),
@@ -358,7 +391,7 @@ class DirectoryHeader extends StatelessWidget {
                 shape: const CircleBorder(),
                 child: IconButton(
                   onPressed: onBack,
-                  tooltip: 'رجوع',
+                  tooltip: context.tr('directory.back', fallback: 'رجوع'),
                   icon: Icon(Icons.arrow_back_ios_new, color: palette.heading),
                 ),
               ),

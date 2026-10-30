@@ -4,8 +4,9 @@ import 'app_localization.dart';
 import 'published_meaning_card.dart';
 
 class LanguagePage extends StatefulWidget {
-  const LanguagePage({super.key, this.onContinue});
+  const LanguagePage({super.key, this.onContinue, this.contentOnly = false});
   final Future<void> Function()? onContinue;
+  final bool contentOnly;
   @override
   State<LanguagePage> createState() => _LanguagePageState();
 }
@@ -42,10 +43,20 @@ class _LanguagePageState extends State<LanguagePage> {
           ],
         ),
       );
-      if (confirm != true || !await controller.install(language.code)) return;
+      if (confirm != true ||
+          !await controller.install(
+            language.code,
+            contentOnly: widget.contentOnly,
+          )) {
+        return;
+      }
     }
     try {
-      await controller.select(language.code);
+      if (widget.contentOnly) {
+        await controller.selectContent(language.code);
+      } else {
+        await controller.select(language.code);
+      }
       await widget.onContinue?.call();
     } catch (_) {
       if (mounted) {
@@ -60,12 +71,39 @@ class _LanguagePageState extends State<LanguagePage> {
   Widget build(BuildContext context) {
     final controller = LocalizationScope.maybeOf(context);
     return Scaffold(
-      appBar: AppBar(title: Text(context.tr('language.title'))),
+      appBar: AppBar(
+        title: Text(
+          context.tr(
+            widget.contentOnly ? 'language.content' : 'language.title',
+          ),
+        ),
+      ),
       body: controller == null
           ? const SizedBox.shrink()
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
+                if (widget.contentOnly)
+                  ListTile(
+                    title: Text(context.tr('language.followInterface')),
+                    leading: controller.contentSelection == null
+                        ? const Icon(Icons.check_circle)
+                        : const Icon(Icons.sync),
+                    onTap: controller.busy
+                        ? null
+                        : () => controller.selectContent(null),
+                  ),
+                if (!widget.contentOnly && widget.onContinue == null)
+                  ListTile(
+                    title: Text(context.tr('language.content')),
+                    subtitle: Text(controller.contentLanguage.name),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) => const LanguagePage(contentOnly: true),
+                      ),
+                    ),
+                  ),
                 Text(
                   context.tr('language.choose'),
                   style: Theme.of(context).textTheme.headlineSmall,
@@ -99,8 +137,14 @@ class _LanguagePageState extends State<LanguagePage> {
                   ),
                 ],
                 const SizedBox(height: 12),
-                for (final language in controller.available)
+                for (final language
+                    in widget.contentOnly
+                        ? controller.availableContent
+                        : controller.available)
                   ListTile(
+                    key: ValueKey(
+                      'language-${widget.contentOnly ? "content" : "interface"}-${language.code}',
+                    ),
                     title: Text(
                       language.name,
                       textDirection: language.direction,
@@ -112,7 +156,11 @@ class _LanguagePageState extends State<LanguagePage> {
                             : 'language.download',
                       ),
                     ),
-                    leading: controller.code == language.code
+                    leading:
+                        (widget.contentOnly
+                                ? controller.contentCode
+                                : controller.code) ==
+                            language.code
                         ? const Icon(Icons.check_circle)
                         : const Icon(Icons.language),
                     onTap: controller.busy ? null : () => _choose(language),
@@ -125,7 +173,10 @@ class _LanguagePageState extends State<LanguagePage> {
                             onPressed: controller.busy
                                 ? null
                                 : () async {
-                                    await controller.install(language.code);
+                                    await controller.install(
+                                      language.code,
+                                      contentOnly: widget.contentOnly,
+                                    );
                                   },
                           )
                         : null,
@@ -148,11 +199,13 @@ class ContentTranslationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = LocalizationScope.maybeOf(context);
-    if (localization == null || localization.code == 'ar') {
+    if (localization == null || localization.contentCode == 'ar') {
       return const SizedBox.shrink();
     }
     final translation = localization.content(contentId);
-    final published = localization.installed[localization.code]?.quranSource
+    final published = localization
+        .installed[localization.contentCode]
+        ?.quranSource
         ?.forContent(contentId);
     if (translation == null && published != null && published.isNotEmpty) {
       return Padding(
@@ -166,7 +219,7 @@ class ContentTranslationCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Directionality(
-            textDirection: localization.language.direction,
+            textDirection: localization.contentLanguage.direction,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

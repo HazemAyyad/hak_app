@@ -51,7 +51,8 @@ class PublishedMeaningCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = LocalizationScope.maybeOf(context);
     if (localization == null) return const SizedBox.shrink();
-    final source = localization.installed[localization.code]?.quranSource;
+    final source =
+        localization.installed[localization.contentCode]?.quranSource;
     if (source == null) return const SizedBox.shrink();
     final rows = contentId != null
         ? source.forContent(contentId!)

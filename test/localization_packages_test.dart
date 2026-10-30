@@ -81,6 +81,58 @@ void main() {
   });
 
   test(
+    'content language is independent, persists and can follow the interface again',
+    () async {
+      expect(controller.code, 'ar');
+      await controller.selectContent('en');
+      expect(controller.code, 'ar');
+      expect(controller.contentCode, 'en');
+      final restored = AppLocalization(
+        controller.preferences,
+        directory: directory,
+      );
+      expect(restored.contentCode, 'en');
+      restored.dispose();
+      await expectLater(controller.selectContent('fr'), throwsStateError);
+      expect(controller.contentCode, 'en');
+      await controller.selectContent(null);
+      expect(controller.contentCode, 'ar');
+      await controller.select('en');
+      expect(controller.contentCode, 'en');
+    },
+  );
+
+  test(
+    'content selection does not require changing system interface delegates',
+    () async {
+      final candidates = controller.languages.where(
+        (language) => !AppLocalization.systemSupported(language),
+      );
+      if (candidates.isEmpty) {
+        return; // A newer SDK may provide every target delegate.
+      }
+      final language = candidates.first;
+      controller.installed[language.code] = LanguagePackage(
+        language.code,
+        1,
+        {},
+        {},
+      );
+      expect(controller.availableContent.contains(language), true);
+      expect(controller.available.contains(language), false);
+      await controller.selectContent(language.code);
+      expect(controller.contentCode, language.code);
+      expect(controller.code, 'ar');
+      await expectLater(
+        controller.select(language.code),
+        throwsFormatException,
+      );
+      await controller.remove(language.code);
+      expect(controller.installed.containsKey(language.code), true);
+    },
+  );
+
+  test(
     '35 unique language identities; bundled startup and asset sources agree',
     () {
       expect(
@@ -220,10 +272,16 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('العربية'), findsOneWidget);
-      expect(find.text('English'), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('language-interface-ar')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey('language-interface-en')),
+        findsOneWidget,
+      );
       expect(find.text('Français'), findsNothing);
-      await tester.tap(find.text('English'));
+      await tester.tap(find.byKey(const ValueKey('language-interface-en')));
       await tester.pumpAndSettle();
       expect(controller.code, 'en');
       expect(find.text('App language'), findsOneWidget);

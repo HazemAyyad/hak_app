@@ -182,6 +182,33 @@ class AppLocalization extends ChangeNotifier {
     orElse: () => languages.first,
   );
   bool get chosen => preferences.getBool('app.language.chosen.v1') == true;
+  String? get contentSelection =>
+      preferences.getString('app.content.language.v1');
+  String get contentCode {
+    final selected = contentSelection;
+    return selected != null &&
+            local(selected) &&
+            languages.any((language) => language.code == selected)
+        ? selected
+        : code;
+  }
+
+  AppLanguage get contentLanguage =>
+      languages.firstWhere((language) => language.code == contentCode);
+
+  Future<void> selectContent(String? locale) async {
+    if (locale != null &&
+        (!local(locale) ||
+            !languages.any((language) => language.code == locale))) {
+      throw StateError('Content language is not installed');
+    }
+    final saved = locale == null
+        ? await preferences.remove('app.content.language.v1')
+        : await preferences.setString('app.content.language.v1', locale);
+    if (!saved) throw StateError('Cannot save content language');
+    if (!_disposed) notifyListeners();
+  }
+
   bool local(String locale) =>
       ['ar', 'en'].contains(locale) || installed.containsKey(locale);
   List<AppLanguage> get available => languages
@@ -189,6 +216,12 @@ class AppLocalization extends ChangeNotifier {
         (v) =>
             systemSupported(v) &&
             (local(v.code) || published.containsKey(v.code)),
+      )
+      .toList();
+  List<AppLanguage> get availableContent => languages
+      .where(
+        (language) =>
+            local(language.code) || published.containsKey(language.code),
       )
       .toList();
 
@@ -225,7 +258,14 @@ class AppLocalization extends ChangeNotifier {
       /* Public content and bundled language resources do not depend on storage plugins. */
     }
     final saved = preferences.getString('app.language.v1');
-    code = saved != null && local(saved) ? saved : 'ar';
+    code =
+        saved != null &&
+            local(saved) &&
+            languages.any(
+              (language) => language.code == saved && systemSupported(language),
+            )
+        ? saved
+        : 'ar';
     _emit();
   }
 
@@ -247,7 +287,7 @@ class AppLocalization extends ChangeNotifier {
   }
 
   Map<String, dynamic>? content(String id) {
-    final value = installed[code]?.content[id];
+    final value = installed[contentCode]?.content[id];
     return value is Map ? Map<String, dynamic>.from(value) : null;
   }
 
@@ -292,12 +332,13 @@ class AppLocalization extends ChangeNotifier {
 
   void pause() => _cancel?.cancel('paused');
 
-  Future<bool> install(String locale) async {
+  Future<bool> install(String locale, {bool contentOnly = false}) async {
     if (busy || directory == null || !published.containsKey(locale)) {
       return false;
     }
     if (!languages.any(
-      (language) => language.code == locale && systemSupported(language),
+      (language) =>
+          language.code == locale && (contentOnly || systemSupported(language)),
     )) {
       return false;
     }
@@ -414,7 +455,12 @@ class AppLocalization extends ChangeNotifier {
   }
 
   Future<void> remove(String locale) async {
-    if (locale == code || ['ar', 'en'].contains(locale) || busy) return;
+    if (locale == code ||
+        locale == contentCode ||
+        ['ar', 'en'].contains(locale) ||
+        busy) {
+      return;
+    }
     final release = preferences.getInt('app.language.release.$locale');
     await preferences.remove('app.language.release.$locale');
     installed.remove(locale);

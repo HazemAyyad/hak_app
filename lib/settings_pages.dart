@@ -10,6 +10,7 @@ import 'features/settings/data/reminder_controller.dart';
 import 'features/prayer/data/prayer_models.dart';
 import 'core/localization/app_localization.dart';
 import 'core/localization/language_page.dart';
+import 'core/localization/ui_text.dart';
 
 part 'settings_reminders.dart';
 part 'settings_dhikr_picker.dart';
@@ -367,7 +368,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
                           const SizedBox(width: 7),
                           Expanded(
                             child: Text(
-                              color.label,
+                              context.settingsLabel(color.label),
                               style: TextStyle(
                                 color: AppPalette.of(context).heading,
                               ),
@@ -448,8 +449,12 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
                   (day ? appearance.nightStart : appearance.dayStart)) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('اختر وقتين مختلفين للنهار والليل'),
+                    SnackBar(
+                      content: Text(
+                        context.settingsLabel(
+                          'اختر وقتين مختلفين للنهار والليل',
+                        ),
+                      ),
                     ),
                   );
                 }
@@ -518,7 +523,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
                       onPressed: () =>
                           AppearanceScope.of(context).setFontScale(choice.$2),
                       child: Text(
-                        choice.$1,
+                        context.settingsLabel(choice.$1),
                         style: TextStyle(
                           fontWeight:
                               (AppearanceScope.of(context).fontScale -
@@ -542,7 +547,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
         child: Column(
           children: [
             Text(
-              'مثال على حجم الخط',
+              context.settingsLabel('مثال على حجم الخط'),
               style: TextStyle(
                 fontWeight: FontWeight.w800,
                 color: AppPalette.of(context).tealHeading,
@@ -558,7 +563,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
               ),
             ),
             Text(
-              'سورة الرعد — الآية 28 (مقتطف)',
+              context.settingsLabel('سورة الرعد — الآية 28 (مقتطف)'),
               style: TextStyle(color: AppPalette.of(context).muted),
             ),
           ],
@@ -613,11 +618,11 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
               runSpacing: 8,
               children: [
                 Text(
-                  '• التلاوات والقرآن',
+                  context.settingsLabel('• التلاوات والقرآن'),
                   style: TextStyle(color: AppPalette.of(context).tealHeading),
                 ),
                 Text(
-                  '• الأذكار والملفات',
+                  context.settingsLabel('• الأذكار والملفات'),
                   style: TextStyle(color: AppPalette.of(context).gold),
                 ),
               ],
@@ -665,7 +670,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
         child: Column(
           children: [
             Text(
-              'التاريخ الهجري الحالي',
+              context.settingsLabel('التاريخ الهجري الحالي'),
               style: TextStyle(color: AppPalette.of(context).muted),
             ),
             SizedBox(height: 18),
@@ -685,7 +690,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
             ),
             SizedBox(height: 18),
             Text(
-              'يمكن تصحيح اليوم يدوياً عند الحاجة',
+              context.settingsLabel('يمكن تصحيح اليوم يدوياً عند الحاجة'),
               style: TextStyle(color: AppPalette.of(context).muted),
             ),
           ],
@@ -716,7 +721,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
                       ),
                     ),
                     Text(
-                      'يوم',
+                      context.settingsLabel('يوم'),
                       style: TextStyle(color: AppPalette.of(context).muted),
                     ),
                   ],
@@ -732,7 +737,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
             ),
             SizedBox(height: 20),
             Text(
-              'مقدار الإزاحة عن التاريخ المحسوب',
+              context.settingsLabel('مقدار الإزاحة عن التاريخ المحسوب'),
               style: TextStyle(color: AppPalette.of(context).muted),
             ),
           ],
@@ -962,7 +967,7 @@ class _Header extends StatelessWidget {
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  title,
+                  context.settingsLabel(title),
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -976,7 +981,7 @@ class _Header extends StatelessWidget {
               FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  subtitle,
+                  context.settingsLabel(subtitle),
                   maxLines: 1,
                   style: TextStyle(
                     color: AppPalette.of(context).heading,
@@ -1000,9 +1005,9 @@ class _SectionTitle extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
     padding: EdgeInsets.fromLTRB(6, 13, 6, 8),
     child: Align(
-      alignment: Alignment.centerRight,
+      alignment: AlignmentDirectional.centerStart,
       child: Text(
-        text,
+        context.settingsLabel(text),
         style: TextStyle(
           color: AppPalette.of(context).gold,
           fontSize: 17,
@@ -1076,7 +1081,7 @@ class _SettingsTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        title,
+                        context.settingsLabel(title),
                         style: TextStyle(
                           color: AppPalette.of(context).tealHeading,
                           fontSize: compact ? 15 : 18,
@@ -1086,7 +1091,7 @@ class _SettingsTile extends StatelessWidget {
                       if (subtitle.isNotEmpty) SizedBox(height: 2),
                       if (subtitle.isNotEmpty)
                         Text(
-                          subtitle,
+                          context.settingsLabel(subtitle),
                           style: TextStyle(
                             color: AppPalette.of(context).muted,
                             fontSize: 12.5,
@@ -1097,7 +1102,7 @@ class _SettingsTile extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 4),
                           child: Text(
-                            value!,
+                            context.settingsLabel(value!),
                             style: TextStyle(
                               color: AppPalette.of(context).gold,
                               fontSize: 12,
@@ -1113,8 +1118,8 @@ class _SettingsTile extends StatelessWidget {
                   if (!compact && value != null)
                     Flexible(
                       child: Text(
-                        value!,
-                        textAlign: TextAlign.left,
+                        context.settingsLabel(value!),
+                        textAlign: TextAlign.end,
                         style: TextStyle(
                           color: Color(0xFF9C875B),
                           fontSize: 12,
@@ -1124,7 +1129,9 @@ class _SettingsTile extends StatelessWidget {
                   SizedBox(width: 5),
                   if (onTap != null)
                     Icon(
-                      Icons.chevron_left,
+                      Directionality.of(context) == TextDirection.rtl
+                          ? Icons.chevron_left
+                          : Icons.chevron_right,
                       textDirection: TextDirection.ltr,
                       color: AppPalette.of(context).tealHeading,
                       size: 19,
@@ -1171,7 +1178,7 @@ class _PanelHeading extends StatelessWidget {
     children: [
       Expanded(
         child: Text(
-          title,
+          context.settingsLabel(title),
           style: TextStyle(
             color: AppPalette.of(context).tealHeading,
             fontSize: 18,
@@ -1181,7 +1188,7 @@ class _PanelHeading extends StatelessWidget {
       ),
       Flexible(
         child: Text(
-          subtitle,
+          context.settingsLabel(subtitle),
           style: TextStyle(color: AppPalette.of(context).muted, fontSize: 11),
         ),
       ),
@@ -1226,7 +1233,7 @@ class _FeatureCard extends StatelessWidget {
               ),
         SizedBox(height: 10),
         Text(
-          title,
+          context.settingsLabel(title),
           style: TextStyle(
             color: AppPalette.of(context).tealHeading,
             fontSize: 22,
@@ -1235,7 +1242,7 @@ class _FeatureCard extends StatelessWidget {
         ),
         SizedBox(height: 9),
         Text(
-          subtitle,
+          context.settingsLabel(subtitle),
           textAlign: TextAlign.center,
           style: TextStyle(color: AppPalette.of(context).muted),
         ),
@@ -1247,7 +1254,7 @@ class _FeatureCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
-            badge,
+            context.settingsLabel(badge),
             style: TextStyle(color: AppPalette.of(context).gold),
           ),
         ),
@@ -1310,7 +1317,7 @@ class _ChoiceCard extends StatelessWidget {
                 ),
                 SizedBox(height: 13),
                 Text(
-                  label,
+                  context.settingsLabel(label),
                   style: TextStyle(
                     color: selected
                         ? AppPalette.of(context).tealHeading
@@ -1344,7 +1351,7 @@ class _InfoBox extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
+          context.settingsLabel(title),
           style: TextStyle(
             color: AppPalette.of(context).tealHeading,
             fontWeight: FontWeight.w900,
@@ -1352,7 +1359,7 @@ class _InfoBox extends StatelessWidget {
         ),
         SizedBox(height: 5),
         Text(
-          text,
+          context.settingsLabel(text),
           style: TextStyle(
             color: AppPalette.of(context).muted,
             fontSize: 12,
@@ -1381,7 +1388,7 @@ class _NoticeBox extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
+          context.settingsLabel(title),
           style: TextStyle(
             color: AppPalette.of(context).gold,
             fontWeight: FontWeight.w900,
@@ -1389,7 +1396,7 @@ class _NoticeBox extends StatelessWidget {
         ),
         SizedBox(height: 5),
         Text(
-          text,
+          context.settingsLabel(text),
           style: TextStyle(
             color: AppPalette.of(context).muted,
             fontSize: 12,
@@ -1415,7 +1422,7 @@ class _PrimaryButton extends StatelessWidget {
         onPressed: () {},
         icon: Icon(icon),
         label: Text(
-          text,
+          context.settingsLabel(text),
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
         ),
         style: FilledButton.styleFrom(

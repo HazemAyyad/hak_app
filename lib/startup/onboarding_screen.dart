@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../app_experience.dart';
+import '../core/localization/app_localization.dart';
 
 import '../app_appearance.dart';
 
@@ -41,7 +42,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       if (mounted) {
         setState(() => _saving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تعذر حفظ الاختيار. حاول مجددًا.')),
+          SnackBar(
+            content: Text(
+              context.tr(
+                'onboarding.error',
+                fallback: 'تعذر حفظ الاختيار. حاول مجددًا.',
+              ),
+            ),
+          ),
         );
       }
     }
@@ -51,7 +59,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection:
+          LocalizationScope.maybeOf(context)?.language.direction ??
+          TextDirection.rtl,
       child: PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) {
@@ -74,7 +84,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         child: _index == 0
                             ? null
                             : IconButton(
-                                tooltip: 'رجوع',
+                                tooltip: context.tr(
+                                  'onboarding.back',
+                                  fallback: 'رجوع',
+                                ),
                                 onPressed: _saving
                                     ? null
                                     : () => _go(_index - 1),
@@ -86,7 +99,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                       Expanded(
                         child: Text(
-                          '${_index + 1} من 3',
+                          context.tr(
+                            'onboarding.progress',
+                            fallback: '${_index + 1} من 3',
+                            args: {'page': _index + 1, 'total': 3},
+                          ),
                           textAlign: TextAlign.center,
                           style: TextStyle(color: palette.muted, fontSize: 12),
                         ),
@@ -95,8 +112,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         width: 64,
                         child: TextButton(
                           onPressed: _saving ? null : _complete,
-                          child: const Text(
-                            'تخطي',
+                          child: Text(
+                            context.tr('onboarding.skip', fallback: 'تخطي'),
                             style: TextStyle(color: _teal),
                           ),
                         ),
@@ -111,24 +128,42 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       AppExperienceScope.maybeOf(context)?.transition();
                       setState(() => _index = index);
                     },
-                    children: const [
+                    children: [
                       _OnboardingPage(
                         index: 0,
-                        title: 'القرآن قريبٌ منك',
-                        description:
-                            'اقرأ القرآن دون إنترنت، وابحث عن الآيات، واحفظ موضع قراءتك للعودة إليه في أي وقت.',
+                        title: context.tr(
+                          'onboarding.quran.title',
+                          fallback: 'القرآن قريبٌ منك',
+                        ),
+                        description: context.tr(
+                          'onboarding.quran.description',
+                          fallback:
+                              'اقرأ القرآن دون إنترنت، وابحث عن الآيات، واحفظ موضع قراءتك للعودة إليه في أي وقت.',
+                        ),
                       ),
                       _OnboardingPage(
                         index: 1,
-                        title: 'ابدأ يومك بذكر الله',
-                        description:
-                            'تعرّف على أقسام الأذكار والأدعية، واستكشف آية اليوم والمحتوى الديني في مكان واحد.',
+                        title: context.tr(
+                          'onboarding.dhikr.title',
+                          fallback: 'ابدأ يومك بذكر الله',
+                        ),
+                        description: context.tr(
+                          'onboarding.dhikr.description',
+                          fallback:
+                              'تعرّف على أقسام الأذكار والأدعية، واستكشف آية اليوم والمحتوى الديني في مكان واحد.',
+                        ),
                       ),
                       _OnboardingPage(
                         index: 2,
-                        title: 'تجربة تناسبك',
-                        description:
-                            'اختر المظهر الفاتح أو الداكن، وغيّر نوع الخط وحجمه من الإعدادات لقراءة أكثر راحة.',
+                        title: context.tr(
+                          'onboarding.appearance.title',
+                          fallback: 'تجربة تناسبك',
+                        ),
+                        description: context.tr(
+                          'onboarding.appearance.description',
+                          fallback:
+                              'اختر المظهر الفاتح أو الداكن، وغيّر نوع الخط وحجمه من الإعدادات لقراءة أكثر راحة.',
+                        ),
                       ),
                     ],
                   ),
@@ -138,7 +173,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   child: Column(
                     children: [
                       Semantics(
-                        label: 'الصفحة ${_index + 1} من 3',
+                        label: context.tr(
+                          'onboarding.page',
+                          fallback: 'الصفحة ${_index + 1} من 3',
+                          args: {'page': _index + 1, 'total': 3},
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(
@@ -175,10 +214,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                           child: Text(
                             _saving
-                                ? 'جارٍ الحفظ…'
+                                ? context.tr(
+                                    'onboarding.saving',
+                                    fallback: 'جارٍ الحفظ…',
+                                  )
                                 : _index == 2
-                                ? 'ابدأ الآن'
-                                : 'التالي',
+                                ? context.tr(
+                                    'onboarding.start',
+                                    fallback: 'ابدأ الآن',
+                                  )
+                                : context.tr(
+                                    'onboarding.next',
+                                    fallback: 'التالي',
+                                  ),
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w800,
@@ -296,13 +344,19 @@ class _OnboardingIllustration extends StatelessWidget {
                   const SizedBox(height: 16),
                   _IllustrationTile(
                     icon: Icons.wb_sunny_outlined,
-                    text: 'أذكار الصباح',
+                    text: context.tr(
+                      'onboarding.morning',
+                      fallback: 'أذكار الصباح',
+                    ),
                     color: _gold,
                   ),
                   const SizedBox(height: 8),
                   _IllustrationTile(
                     icon: Icons.dark_mode_outlined,
-                    text: 'أذكار المساء',
+                    text: context.tr(
+                      'onboarding.evening',
+                      fallback: 'أذكار المساء',
+                    ),
                     color: _teal,
                   ),
                 ],
@@ -322,7 +376,10 @@ class _OnboardingIllustration extends StatelessWidget {
                   const SizedBox(height: 18),
                   _IllustrationTile(
                     icon: Icons.text_fields,
-                    text: 'خطٌ يناسب قراءتك',
+                    text: context.tr(
+                      'onboarding.font',
+                      fallback: 'خطٌ يناسب قراءتك',
+                    ),
                     color: _teal,
                   ),
                 ],
