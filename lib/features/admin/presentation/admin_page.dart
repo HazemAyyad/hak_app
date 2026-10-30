@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../../core/localization/app_localization.dart';
 import '../../account/data/app_session.dart';
+import 'admin_sources_page.dart';
 
 String adminError(Object error) =>
     error is DioException && error.response?.statusCode == 409
@@ -236,6 +237,19 @@ class _AdminPageState extends State<AdminPage> {
                   trailing: PopupMenuButton<String>(
                     enabled: !_busy,
                     onSelected: (value) async {
+                      if (value == 'sources') {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => AdminSourcesPage(
+                              session: session,
+                              locale: language['locale'] as String,
+                              name: language['name'] as String,
+                            ),
+                          ),
+                        );
+                        await _load();
+                      }
                       if (value == 'publish') await _publish(language);
                       if (value == 'restore') await _restore(language);
                       if (value == 'hide') {
@@ -252,6 +266,10 @@ class _AdminPageState extends State<AdminPage> {
                       }
                     },
                     itemBuilder: (ctx) => [
+                      PopupMenuItem(
+                        value: 'sources',
+                        child: Text(ctx.tr('source.title')),
+                      ),
                       if (session.can('publish'))
                         PopupMenuItem(
                           value: 'publish',
@@ -335,7 +353,7 @@ class _AdminTranslationPageState extends State<AdminTranslationPage> {
   }
 
   @override
-  Widget build(BuildContext context) => _AdminBoundary(
+  Widget build(BuildContext context) => AdminSessionBoundary(
     session: widget.session,
     child: Scaffold(
       appBar: AppBar(title: Text(widget.name)),
@@ -505,7 +523,7 @@ class _AdminEditorPageState extends State<AdminEditorPage> {
   }
 
   @override
-  Widget build(BuildContext context) => _AdminBoundary(
+  Widget build(BuildContext context) => AdminSessionBoundary(
     session: widget.session,
     child: Scaffold(
       appBar: AppBar(title: Text(context.tr('admin.translation'))),
@@ -680,7 +698,7 @@ class _AdminTeamPageState extends State<AdminTeamPage> {
   }
 
   @override
-  Widget build(BuildContext context) => _AdminBoundary(
+  Widget build(BuildContext context) => AdminSessionBoundary(
     session: widget.session,
     child: Scaffold(
       appBar: AppBar(
@@ -738,15 +756,19 @@ class _AdminTeamPageState extends State<AdminTeamPage> {
   );
 }
 
-class _AdminBoundary extends StatefulWidget {
-  const _AdminBoundary({required this.session, required this.child});
+class AdminSessionBoundary extends StatefulWidget {
+  const AdminSessionBoundary({
+    super.key,
+    required this.session,
+    required this.child,
+  });
   final AppSession session;
   final Widget child;
   @override
-  State<_AdminBoundary> createState() => _AdminBoundaryState();
+  State<AdminSessionBoundary> createState() => AdminSessionBoundaryState();
 }
 
-class _AdminBoundaryState extends State<_AdminBoundary> {
+class AdminSessionBoundaryState extends State<AdminSessionBoundary> {
   late final Object? _owner = widget.session.profile?['id'];
   @override
   Widget build(BuildContext context) => ListenableBuilder(

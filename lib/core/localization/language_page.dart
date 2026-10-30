@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'app_localization.dart';
+import 'published_meaning_card.dart';
 
 class LanguagePage extends StatefulWidget {
   const LanguagePage({super.key, this.onContinue});
@@ -151,6 +152,14 @@ class ContentTranslationCard extends StatelessWidget {
       return const SizedBox.shrink();
     }
     final translation = localization.content(contentId);
+    final published = localization.installed[localization.code]?.quranSource
+        ?.forContent(contentId);
+    if (translation == null && published != null && published.isNotEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: PublishedMeaningCard(contentId: contentId),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(

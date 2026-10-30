@@ -22,10 +22,11 @@ class _MorePageState extends State<MorePage> {
       .replaceAll(RegExp(r'[\u064B-\u065F\u0670\u0640]'), '')
       .replaceAll(RegExp('[أإآٱ]'), 'ا')
       .replaceAll('ى', 'ي')
+      .toLowerCase()
       .trim();
 
   bool _matches(AppFeature feature) => _normalized(
-    '${feature.title} ${feature.subtitle ?? ''}',
+    '${feature.localizedTitle(context)} ${feature.title} ${feature.subtitle ?? ''}',
   ).contains(_query);
 
   @override

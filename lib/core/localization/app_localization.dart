@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/quran/data/haq_api.dart';
 import 'bundled_localization.dart';
+import 'quran_translation_source.dart';
 
 class AppLanguage {
   const AppLanguage(this.code, this.name, this.direction);
@@ -28,11 +29,18 @@ class AppLanguage {
 
 /// Validates exact published bytes before any disk/cache activation.
 class LanguagePackage {
-  LanguagePackage(this.locale, this.version, this.strings, this.content);
+  LanguagePackage(
+    this.locale,
+    this.version,
+    this.strings,
+    this.content, {
+    this.quranSource,
+  });
   final String locale;
   final int version;
   final Map<String, String> strings;
   final Map<String, dynamic> content;
+  final QuranTranslationSource? quranSource;
 
   static Future<LanguagePackage> verify(
     Map<String, dynamic> envelope,
@@ -105,6 +113,12 @@ class LanguagePackage {
       data['version'] as int,
       strings,
       content,
+      quranSource: data['quran_source'] == null
+          ? null
+          : QuranTranslationSource.verify(
+              data['quran_source'] as Map,
+              expectedLocale,
+            ),
     );
   }
 }

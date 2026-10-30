@@ -66,11 +66,8 @@ const moreServiceGroups = <(String, List<AppFeature>)>[
   ),
 ];
 
-String _title(AppFeature feature) => switch (feature) {
-  AppFeature.adhkar => 'الأذكار',
-  AppFeature.tasbih => 'المسبحة',
-  _ => feature.title,
-};
+String _title(BuildContext context, AppFeature feature) =>
+    feature.localizedTitle(context, short: true);
 
 const _titleStyle = TextStyle(
   fontSize: 15,
@@ -85,7 +82,7 @@ double moreServiceTileHeight(BuildContext context, double width) {
   var labelHeight = 0.0;
   for (final feature in AppFeature.values) {
     final painter = TextPainter(
-      text: TextSpan(text: _title(feature), style: style),
+      text: TextSpan(text: _title(context, feature), style: style),
       textDirection: Directionality.of(context),
       textScaler: MediaQuery.textScalerOf(context),
     )..layout(maxWidth: labelWidth);
@@ -181,7 +178,7 @@ class _ServiceTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    _title(feature),
+                    _title(context, feature),
                     textAlign: TextAlign.center,
                     style: _titleStyle.copyWith(color: palette.heading),
                   ),

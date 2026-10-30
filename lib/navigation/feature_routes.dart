@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/localization/app_localization.dart';
 
 /// Stable destinations shared by the directory, home shortcuts and section tabs.
 /// Planned services have an explicit unavailable route until their own stage.
@@ -165,6 +166,18 @@ enum AppFeature {
   final IconData icon;
   final String? category, subtitle, image;
   final bool ready;
+
+  String localizedTitle(BuildContext context, {bool short = false}) =>
+      context.tr(
+        short && (this == adhkar || this == tasbih)
+            ? 'feature.short.$name'
+            : 'feature.$name',
+        fallback: short && this == adhkar
+            ? 'الأذكار'
+            : short && this == tasbih
+            ? 'المسبحة'
+            : title,
+      );
 
   String get routeName => '/services/$name';
   String? get imageAsset => image == null

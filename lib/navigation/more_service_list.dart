@@ -117,11 +117,7 @@ class _ServiceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
-    final title = switch (feature) {
-      AppFeature.adhkar => 'الأذكار',
-      AppFeature.tasbih => 'المسبحة',
-      _ => feature.title,
-    };
+    final title = feature.localizedTitle(context, short: true);
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
