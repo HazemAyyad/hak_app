@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'source_text.dart';
 
 class PublishedVerseMeaning {
   const PublishedVerseMeaning(this.key, this.translation, this.footnotes);
@@ -15,10 +16,22 @@ class QuranTranslationSource {
     this.direction,
     this.verses,
     this.references,
-  );
+  ) : _searchIndex = {
+        for (final verse in verses.values)
+          verse.key: normalizeMeaningSearch(plainSourceText(verse.translation)),
+      };
   final String title, version, attribution, direction;
   final Map<String, PublishedVerseMeaning> verses;
   final Map<String, List<String>> references;
+  final Map<String, String> _searchIndex;
+
+  Iterable<PublishedVerseMeaning> search(String query) {
+    final needle = normalizeMeaningSearch(query);
+    if (needle.isEmpty) return const [];
+    return _searchIndex.entries
+        .where((entry) => entry.value.contains(needle))
+        .map((entry) => verses[entry.key]!);
+  }
 
   factory QuranTranslationSource.verify(Map envelope, String expectedLocale) {
     final artifact = envelope['artifact'] as String;

@@ -6,6 +6,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/features/quran/data/quran_controller.dart';
+import 'package:haq_app/features/quran/data/quran_repository.dart';
+import 'package:haq_app/features/quran/presentation/quran_search.dart';
 import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/core/localization/language_page.dart';
 import 'package:haq_app/core/localization/published_meaning_card.dart';
@@ -238,6 +243,66 @@ void main() {
       );
       expect(find.text(localization.text('content.missing')), findsNothing);
       expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'installed meaning search is offline, case insensitive and keeps the original verse and identity',
+    (tester) async {
+      FlutterSecureStorage.setMockInitialValues({});
+      await tester.runAsync(() => localization.install('en'));
+      await localization.selectContent('en');
+      final repo = QuranRepository.fromJson(
+        jsonDecode(File('assets/quran/quran.json').readAsStringSync())
+            as Map<String, dynamic>,
+      );
+      final quran = QuranController(
+        preferences: localization.preferences,
+        initialRepository: repo,
+      );
+      await tester.runAsync(quran.load);
+      final appearance = AppAppearance(localization.preferences);
+      addTearDown(quran.dispose);
+      addTearDown(appearance.dispose);
+      String? selected;
+      final source = localization.installed['en']!.quranSource!;
+      expect(source.search('PUBLISHED').single.key, verseKey);
+      expect(source.search('<b>'), isEmpty);
+      expect(source.search('   '), isEmpty);
+      tester.view.physicalSize = const Size(320, 760);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        LocalizationScope(
+          controller: localization,
+          child: AppearanceScope(
+            controller: appearance,
+            child: MaterialApp(
+              home: Scaffold(
+                body: QuranSearchPage(
+                  controller: quran,
+                  initialQuery: 'PUBLISHED',
+                  onRead: (verse, _) => selected = verse.key,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('ترجمة المعاني'));
+      await tester.pumpAndSettle();
+      expect(find.text('Meaning published1'), findsOneWidget);
+      expect(find.text(repo.byKey[verseKey]!.text), findsOneWidget);
+      expect(find.text(source.attribution), findsOneWidget);
+      await tester.ensureVisible(find.text('Meaning published1'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Meaning published1'));
+      expect(selected, verseKey);
+      expect(localization.code, 'ar');
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
     },
   );
 

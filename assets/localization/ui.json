@@ -1426,5 +1426,265 @@
   "exchange.reviewed": {
     "ar": "تم اعتماد الترجمات؛ يلزم نشر إصدار لإتاحتها للمستخدمين.",
     "en": "Translations approved. Publish a release to make them available to users."
+  },
+  "language.localPackages.zero": {
+    "en": "No local packages",
+    "ar": "لا توجد حزم محلية"
+  },
+  "language.localPackages.one": {
+    "en": "One local package",
+    "ar": "حزمة محلية واحدة"
+  },
+  "language.localPackages.two": {
+    "en": "Two local packages",
+    "ar": "حزمتان محليتان"
+  },
+  "language.localPackages.few": {
+    "en": "{count} local packages",
+    "ar": "{count} حزم محلية"
+  },
+  "language.localPackages.many": {
+    "en": "{count} local packages",
+    "ar": "{count} حزمة محلية"
+  },
+  "language.localPackages.other": {
+    "en": "{count} local packages",
+    "ar": "{count} حزمة محلية"
+  },
+  "language.downloadProgress": {
+    "en": "{received} / {total} bytes",
+    "ar": "{received} / {total} بايت"
+  },
+  "search.translation": {
+    "ar": "ترجمة المعاني",
+    "en": "Translated meanings"
+  },
+  "search.translationNotice": {
+    "ar": "البحث في ترجمة المعاني المثبتة على هذا الجهاز فقط، ضمن الآيات الموجودة في الحزمة. يبقى الأصل العربي ظاهرًا بجانب النتيجة.",
+    "en": "Searches the installed meaning translation only, within the verses included in the package. The original Arabic stays beside the result."
+  },
+  "search.translationUnavailable": {
+    "ar": "لا توجد ترجمة معانٍ مثبتة للغة المحتوى المختارة. ثبّت حزمة تتضمن ترجمة معاني من إعدادات اللغة أولًا.",
+    "en": "No meaning translation is installed for the selected content language. Install a package containing a meaning translation from language settings first."
+  },
+  "quran.label.cb822418a29d": {
+    "en": "Back",
+    "ar": "رجوع"
+  },
+  "quran.label.f6ec2e271b37": {
+    "en": "Previous verse",
+    "ar": "الآية السابقة"
+  },
+  "quran.label.6ebdfd456cf0": {
+    "en": "Next verse",
+    "ar": "الآية التالية"
+  },
+  "quran.label.eb0c1255f4b1": {
+    "en": "Filter search results",
+    "ar": "تصفية نتائج البحث"
+  },
+  "quran.label.9e1f54dd97f8": {
+    "en": "Choose filters to refine your search",
+    "ar": "حدد معايير البحث لعرض نتائج أكثر دقة"
+  },
+  "quran.label.26d6f27933fc": {
+    "en": "Search scope",
+    "ar": "نطاق البحث"
+  },
+  "quran.label.9f06a940c07d": {
+    "en": "Entire Quran",
+    "ar": "كل القرآن"
+  },
+  "quran.label.19f9aac381a8": {
+    "en": "Specific surah",
+    "ar": "سورة محددة"
+  },
+  "quran.label.d58d7817aed3": {
+    "en": "Specific juz",
+    "ar": "جزء محدد"
+  },
+  "quran.label.94cf3cb72b27": {
+    "en": "Choose surah",
+    "ar": "اختر السورة"
+  },
+  "quran.label.2f8d408f53b8": {
+    "en": "Choose juz",
+    "ar": "اختر الجزء"
+  },
+  "quran.label.6c0206278b9c": {
+    "en": "More options",
+    "ar": "خيارات إضافية"
+  },
+  "quran.label.3ee9218f4412": {
+    "en": "Group results by surah",
+    "ar": "تجميع النتائج حسب السور"
+  },
+  "quran.label.de8d62258f0c": {
+    "en": "Show the complete verse",
+    "ar": "عرض نص الآية بالكامل"
+  },
+  "quran.label.0402c54f9aa8": {
+    "en": "Show results",
+    "ar": "عرض النتائج"
+  },
+  "quran.label.a4df1d03d650": {
+    "en": "Reset",
+    "ar": "إعادة الضبط"
+  },
+  "quran.label.da3bc47f7b08": {
+    "en": "Search the Quran",
+    "ar": "البحث في القرآن الكريم"
+  },
+  "quran.label.0373a42f8d2e": {
+    "en": "Search Quranic verses",
+    "ar": "ابحث في آيات القرآن الكريم"
+  },
+  "quran.label.a6551d0afeb0": {
+    "en": "Search a word or phrase…",
+    "ar": "ابحث بكلمة أو عبارة ..."
+  },
+  "quran.label.b39192717577": {
+    "en": "Verses",
+    "ar": "الآيات"
+  },
+  "quran.label.47f4ac555bdf": {
+    "en": "Tafsir",
+    "ar": "التفسير"
+  },
+  "quran.label.5af497936aa2": {
+    "en": "Word meanings",
+    "ar": "معاني الكلمات"
+  },
+  "quran.label.93e561444555": {
+    "en": "Search works offline",
+    "ar": "البحث يعمل دون إنترنت"
+  },
+  "quran.label.ddbe4e081a51": {
+    "en": "Searching",
+    "ar": "جارٍ البحث"
+  },
+  "quran.label.4be299b4567d": {
+    "en": "No search results",
+    "ar": "لا توجد نتائج بحث"
+  },
+  "quran.label.cd30ed5ea77a": {
+    "en": "Try another word or reset the search scope",
+    "ar": "جرّب كلمة أخرى أو أعد ضبط نطاق البحث"
+  },
+  "quran.label.eceb76396193": {
+    "en": "Reset filters",
+    "ar": "إعادة ضبط التصفية"
+  },
+  "quran.label.41a3c0033a42": {
+    "en": "Search",
+    "ar": "البحث"
+  },
+  "quran.label.355bd9c0e166": {
+    "en": "The Holy Quran",
+    "ar": "القرآن الكريم"
+  },
+  "quran.label.f8b10a098be7": {
+    "en": "Surah index",
+    "ar": "فهرس السور"
+  },
+  "quran.label.bd51a8b5fb50": {
+    "en": "Juz index",
+    "ar": "الأجزاء"
+  },
+  "quran.label.5e5225c86cab": {
+    "en": "Surahs",
+    "ar": "السور"
+  },
+  "quran.label.ce1bdcc6a4a3": {
+    "en": "Bookmarks",
+    "ar": "العلامات المرجعية"
+  },
+  "quran.label.9f2908941570": {
+    "en": "Favorites",
+    "ar": "المفضلة"
+  },
+  "quran.label.2dea552e7835": {
+    "en": "Reading settings",
+    "ar": "إعدادات القراءة"
+  },
+  "quran.label.30a5f3f111a0": {
+    "en": "Quran settings",
+    "ar": "إعدادات القرآن"
+  },
+  "quran.label.8c84ce4c577f": {
+    "en": "Play",
+    "ar": "تشغيل"
+  },
+  "quran.label.cb7f6fd46259": {
+    "en": "Pause",
+    "ar": "إيقاف مؤقت"
+  },
+  "quran.label.87c89429ccaa": {
+    "en": "Stop",
+    "ar": "إيقاف"
+  },
+  "quran.label.dc963cf84c97": {
+    "en": "Reciter",
+    "ar": "القارئ"
+  },
+  "quran.label.9448a75580ce": {
+    "en": "Recitation",
+    "ar": "التلاوة"
+  },
+  "quran.label.ddfcaf9d0144": {
+    "en": "Save",
+    "ar": "حفظ"
+  },
+  "quran.label.9a30dc2a96b8": {
+    "en": "Cancel",
+    "ar": "إلغاء"
+  },
+  "quran.label.29a0e2739a92": {
+    "en": "Copy",
+    "ar": "نسخ"
+  },
+  "quran.label.ace24891cec1": {
+    "en": "Share",
+    "ar": "مشاركة"
+  },
+  "quran.label.14d5786f2e64": {
+    "en": "Retry",
+    "ar": "إعادة المحاولة"
+  },
+  "quran.label.83fcc51a28b4": {
+    "en": "Downloads",
+    "ar": "التنزيلات"
+  },
+  "quran.label.cc52200ebc71": {
+    "en": "View all",
+    "ar": "عرض الكل"
+  },
+  "search.results": {
+    "en": "Search results: {count}",
+    "ar": "نتائج البحث: {count}"
+  },
+  "search.surah": {
+    "en": "Surah {name}",
+    "ar": "سورة {name}"
+  },
+  "search.juz": {
+    "en": "Juz {number}",
+    "ar": "الجزء {number}"
+  },
+  "search.verse": {
+    "en": "Surah {name} • verse {ayah}",
+    "ar": "سورة {name} • الآية {ayah}"
+  },
+  "search.location": {
+    "en": "{juz} • page {page}",
+    "ar": "{juz} • الصفحة {page}"
+  },
+  "search.cachedTafsir": {
+    "en": "Searches tafsir already opened and saved on this device only. Open the content to download it first.",
+    "ar": "البحث في التفاسير التي فُتحت وحُفظت على هذا الجهاز فقط. افتح المحتوى المطلوب لتنزيله أولًا."
+  },
+  "search.cachedMeanings": {
+    "en": "Searches word meanings already opened and saved on this device only. Open the content to download it first.",
+    "ar": "البحث في المعاني التي فُتحت وحُفظت على هذا الجهاز فقط. افتح المحتوى المطلوب لتنزيله أولًا."
   }
 }

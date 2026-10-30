@@ -7,13 +7,19 @@ import 'bundled_localization.dart';
 // must use their own stable content identities and attributed translations.
 final _sourceKeys = <String, String>{
   for (final entry in (jsonDecode(bundledUiJson) as Map).entries)
-    if ((entry.key as String).startsWith('settings.label.'))
-      entry.value['ar'] as String: entry.key as String,
+    if ((entry.key as String).contains('.label.'))
+      '${(entry.key as String).split('.').first}\u0000${entry.value['ar']}':
+          entry.key as String,
 };
 
 extension FixedInterfaceText on BuildContext {
   String settingsLabel(String original) {
-    final key = _sourceKeys[original];
+    return _interfaceLabel(original, 'settings');
+  }
+
+  String quranLabel(String original) => _interfaceLabel(original, 'quran');
+  String _interfaceLabel(String original, String namespace) {
+    final key = _sourceKeys['$namespace\u0000$original'];
     return key == null ? original : tr(key, fallback: original);
   }
 }

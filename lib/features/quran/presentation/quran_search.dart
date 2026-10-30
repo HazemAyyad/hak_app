@@ -1,9 +1,13 @@
+import '../../../core/localization/ui_text.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
 import '../../../app_loading.dart';
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/quran_translation_source.dart';
+import '../../../core/localization/source_text.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
 import '../data/quran_cached_search.dart';
@@ -34,6 +38,38 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
   int type = 0, generation = 0;
   bool searching = false;
   Map<String, QuranContentMatch> contentMatches = {};
+  QuranTranslationSource? _source;
+
+  String _surahLabel(int id) {
+    final name = widget.controller.repository!.surah(id).name;
+    return context.tr(
+      'search.surah',
+      fallback: 'سورة $name',
+      args: {'name': name},
+    );
+  }
+
+  String _juzLabel(int id) {
+    final localization = LocalizationScope.maybeOf(context);
+    return localization == null || localization.code == 'ar'
+        ? juzName(id)
+        : localization.text(
+            'search.juz',
+            args: {'number': localization.formats.number(id)},
+          );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final localization = LocalizationScope.maybeOf(context);
+    final source =
+        localization?.installed[localization.contentCode]?.quranSource;
+    if (!identical(source, _source)) {
+      _source = source;
+      if (type == 3) _search();
+    }
+  }
 
   @override
   void initState() {
@@ -66,6 +102,37 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
           : [];
     });
     if (type == 0) return;
+    if (type == 3) {
+      final repo = widget.controller.repository!;
+      final matches = <QuranContentMatch>[];
+      for (final meaning
+          in _source?.search(executedQuery) ?? <PublishedVerseMeaning>[]) {
+        final verse = repo.byKey[meaning.key];
+        if (verse == null ||
+            surahId != null && verse.surah != surahId ||
+            juzId != null && verse.juz != juzId) {
+          continue;
+        }
+        matches.add(
+          QuranContentMatch(
+            verse,
+            plainSourceText(meaning.translation),
+            _source!.attribution,
+          ),
+        );
+      }
+      matches.sort(
+        (a, b) => a.verse.surah == b.verse.surah
+            ? a.verse.ayah.compareTo(b.verse.ayah)
+            : a.verse.surah.compareTo(b.verse.surah),
+      );
+      setState(() {
+        contentMatches = {for (final match in matches) match.verse.key: match};
+        results = matches.map((match) => match.verse).toList();
+        searching = false;
+      });
+      return;
+    }
     try {
       final found = await searchQuranCache(
         widget.controller.content,
@@ -115,7 +182,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'تصفية نتائج البحث',
+                  context.quranLabel('تصفية نتائج البحث'),
                   style: qText(
                     context,
                     size: 21,
@@ -124,7 +191,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                   ),
                 ),
                 Text(
-                  'حدد معايير البحث لعرض نتائج أكثر دقة',
+                  context.quranLabel('حدد معايير البحث لعرض نتائج أكثر دقة'),
                   style: qText(context, size: 12),
                 ),
                 const SizedBox(height: 20),
@@ -133,7 +200,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'نطاق البحث',
+                        context.quranLabel('نطاق البحث'),
                         style: qText(
                           context,
                           size: 17,
@@ -155,14 +222,14 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                     child: DropdownButtonFormField<int>(
                       initialValue: surah,
                       decoration: InputDecoration(
-                        labelText: 'اختر السورة',
+                        labelText: context.quranLabel('اختر السورة'),
                         labelStyle: qText(context, size: 12),
                       ),
                       items: widget.controller.repository!.surahs
                           .map(
                             (s) => DropdownMenuItem(
                               value: s.id,
-                              child: Text('سورة ${s.name}'),
+                              child: Text(_surahLabel(s.id)),
                             ),
                           )
                           .toList(),
@@ -176,14 +243,14 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                     child: DropdownButtonFormField<int>(
                       initialValue: juz,
                       decoration: InputDecoration(
-                        labelText: 'اختر الجزء',
+                        labelText: context.quranLabel('اختر الجزء'),
                         labelStyle: qText(context, size: 12),
                       ),
                       items: widget.controller.repository!.juzs
                           .map(
                             (j) => DropdownMenuItem(
                               value: j.id,
-                              child: Text(juzName(j.id)),
+                              child: Text(_juzLabel(j.id)),
                             ),
                           )
                           .toList(),
@@ -197,7 +264,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'خيارات إضافية',
+                        context.quranLabel('خيارات إضافية'),
                         style: qText(
                           context,
                           size: 17,
@@ -208,7 +275,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                         contentPadding: EdgeInsets.zero,
                         activeThumbColor: qAccent(context),
                         title: Text(
-                          'تجميع النتائج حسب السور',
+                          context.quranLabel('تجميع النتائج حسب السور'),
                           style: qText(context, size: 12),
                         ),
                         value: grouped,
@@ -218,7 +285,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                         contentPadding: EdgeInsets.zero,
                         activeThumbColor: qAccent(context),
                         title: Text(
-                          'عرض نص الآية بالكامل',
+                          context.quranLabel('عرض نص الآية بالكامل'),
                           style: qText(context, size: 12),
                         ),
                         value: full,
@@ -232,7 +299,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                   children: [
                     Expanded(
                       child: QPrimaryButton(
-                        label: 'عرض النتائج',
+                        label: context.quranLabel('عرض النتائج'),
                         icon: Icons.search,
                         onTap: () => Navigator.pop(context, true),
                       ),
@@ -246,7 +313,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                       }),
                       icon: const Icon(Icons.restart_alt, color: qGold),
                       label: Text(
-                        'إعادة الضبط',
+                        context.quranLabel('إعادة الضبط'),
                         style: qText(context, color: qGold, size: 12),
                       ),
                     ),
@@ -293,14 +360,19 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                   onChanged: _changed,
                   onSubmit: (_) => _search(),
                   trailing: IconButton(
-                    tooltip: 'تصفية نتائج البحث',
+                    tooltip: context.quranLabel('تصفية نتائج البحث'),
                     icon: Icon(Icons.tune, color: qAccent(context)),
                     onPressed: _filters,
                   ),
                 ),
                 const SizedBox(height: 10),
                 QSegments(
-                  labels: const ['الآيات', 'التفسير', 'معاني الكلمات'],
+                  labels: [
+                    'الآيات',
+                    'التفسير',
+                    'معاني الكلمات',
+                    context.tr('search.translation', fallback: 'ترجمة المعاني'),
+                  ],
                   selected: type,
                   onSelect: (value) {
                     type = value;
@@ -311,7 +383,19 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      'البحث في ${type == 1 ? 'التفاسير' : 'المعاني'} التي فُتحت وحُفظت على هذا الجهاز فقط. افتح المحتوى المطلوب لتنزيله أولًا.',
+                      type == 3
+                          ? context.tr(
+                              _source == null
+                                  ? 'search.translationUnavailable'
+                                  : 'search.translationNotice',
+                            )
+                          : context.tr(
+                              type == 1
+                                  ? 'search.cachedTafsir'
+                                  : 'search.cachedMeanings',
+                              fallback:
+                                  'البحث في ${type == 1 ? 'التفاسير' : 'المعاني'} التي فُتحت وحُفظت على هذا الجهاز فقط. افتح المحتوى المطلوب لتنزيله أولًا.',
+                            ),
                       style: qText(
                         context,
                         size: 11,
@@ -327,7 +411,17 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                       child: Text(
                         executedQuery.isEmpty
                             ? 'البحث يعمل دون إنترنت'
-                            : 'نتائج البحث: ${results.length}',
+                            : context.tr(
+                                'search.results',
+                                fallback: 'نتائج البحث: ${results.length}',
+                                args: {
+                                  'count':
+                                      LocalizationScope.maybeOf(
+                                        context,
+                                      )?.formats.number(results.length) ??
+                                      results.length,
+                                },
+                              ),
                         style: qText(
                           context,
                           size: 12,
@@ -340,9 +434,9 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                       icon: const Icon(Icons.filter_alt_outlined, size: 17),
                       label: Text(
                         surahId != null
-                            ? 'سورة ${repo.surah(surahId!).name}'
+                            ? _surahLabel(surahId!)
                             : juzId != null
-                            ? juzName(juzId!)
+                            ? _juzLabel(juzId!)
                             : 'كل القرآن',
                         style: qText(
                           context,
@@ -358,10 +452,13 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
           ),
         ),
         if (searching)
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(20),
-              child: AppLoadingSkeleton(label: 'جارٍ البحث', page: false),
+              padding: const EdgeInsets.all(20),
+              child: AppLoadingSkeleton(
+                label: context.quranLabel('جارٍ البحث'),
+                page: false,
+              ),
             ),
           ),
         if (!searching && executedQuery.isNotEmpty && results.isEmpty)
@@ -374,11 +471,13 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                     const Icon(Icons.search_off, size: 66, color: qGold),
                     const SizedBox(height: 12),
                     Text(
-                      'لا توجد نتائج بحث',
+                      context.quranLabel('لا توجد نتائج بحث'),
                       style: qText(context, size: 22, weight: FontWeight.w800),
                     ),
                     Text(
-                      'جرّب كلمة أخرى أو أعد ضبط نطاق البحث',
+                      context.quranLabel(
+                        'جرّب كلمة أخرى أو أعد ضبط نطاق البحث',
+                      ),
                       textAlign: TextAlign.center,
                       style: qText(
                         context,
@@ -388,7 +487,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                     ),
                     const SizedBox(height: 16),
                     QPrimaryButton(
-                      label: 'إعادة ضبط التصفية',
+                      label: context.quranLabel('إعادة ضبط التصفية'),
                       onTap: () {
                         surahId = null;
                         juzId = null;
@@ -414,7 +513,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Text(
-                        'سورة ${repo.surah(verse.surah).name}',
+                        _surahLabel(verse.surah),
                         style: qText(
                           context,
                           size: 17,
@@ -440,7 +539,15 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'سورة ${repo.surah(verse.surah).name} • الآية ${verse.ayah}',
+                                  context.tr(
+                                    'search.verse',
+                                    fallback:
+                                        'سورة ${repo.surah(verse.surah).name} • الآية ${verse.ayah}',
+                                    args: {
+                                      'name': repo.surah(verse.surah).name,
+                                      'ayah': verse.ayah,
+                                    },
+                                  ),
                                   style: qText(
                                     context,
                                     size: 12,
@@ -448,8 +555,23 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                                   ),
                                 ),
                                 const SizedBox(height: 5),
+                                if (type == 3)
+                                  Text(
+                                    verse.text,
+                                    textDirection: TextDirection.rtl,
+                                    style: const TextStyle(
+                                      fontFamily: 'AmiriQuran',
+                                      fontSize: 20,
+                                      height: 1.8,
+                                    ),
+                                  ),
                                 Text(
                                   contentMatches[verse.key]?.text ?? verse.text,
+                                  textDirection: type == 3
+                                      ? (_source?.direction == 'rtl'
+                                            ? TextDirection.rtl
+                                            : TextDirection.ltr)
+                                      : null,
                                   maxLines: fullText ? null : 3,
                                   overflow: fullText
                                       ? null
@@ -473,7 +595,15 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                                     ),
                                   ),
                                 Text(
-                                  '${juzName(verse.juz)} • الصفحة ${verse.page}',
+                                  context.tr(
+                                    'search.location',
+                                    fallback:
+                                        '${juzName(verse.juz)} • الصفحة ${verse.page}',
+                                    args: {
+                                      'juz': _juzLabel(verse.juz),
+                                      'page': verse.page,
+                                    },
+                                  ),
                                   style: qText(
                                     context,
                                     size: 10,

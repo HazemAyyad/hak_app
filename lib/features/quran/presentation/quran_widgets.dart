@@ -1,3 +1,5 @@
+import '../../../core/localization/ui_text.dart';
+import '../../../core/localization/app_localization.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -77,7 +79,9 @@ class QuranHeader extends StatelessWidget {
           right: 18,
           top: 12,
           child: Directionality(
-            textDirection: TextDirection.rtl,
+            textDirection:
+                LocalizationScope.maybeOf(context)?.language.direction ??
+                TextDirection.rtl,
             child: Row(
               children: [
                 if (onBack != null)
@@ -107,10 +111,10 @@ class QuranHeader extends StatelessWidget {
                 : CrossAxisAlignment.start,
             children: [
               Text(
-                title,
+                context.quranLabel(title),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                textAlign: center ? TextAlign.center : TextAlign.right,
+                textAlign: center ? TextAlign.center : TextAlign.start,
                 style: qText(
                   context,
                   size: center
@@ -124,10 +128,10 @@ class QuranHeader extends StatelessWidget {
               ),
               const SizedBox(height: 3),
               Text(
-                subtitle,
+                context.quranLabel(subtitle),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                textAlign: center ? TextAlign.center : TextAlign.right,
+                textAlign: center ? TextAlign.center : TextAlign.start,
                 style: qText(
                   context,
                   size: 12,
@@ -160,7 +164,7 @@ class QCircleButton extends StatelessWidget {
   final bool loading;
   @override
   Widget build(BuildContext context) => Tooltip(
-    message: label,
+    message: context.quranLabel(label),
     child: Material(
       color: AppPalette.of(context).surface,
       shape: const CircleBorder(),
@@ -351,7 +355,7 @@ class QSearchField extends StatelessWidget {
       onSubmitted: onSubmit,
       style: qText(context, size: 13),
       decoration: InputDecoration(
-        hintText: hint,
+        hintText: context.quranLabel(hint),
         hintStyle: qText(
           context,
           size: 13,
@@ -407,7 +411,7 @@ class QSegments extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
                 child: Text(
-                  labels[index],
+                  context.quranLabel(labels[index]),
                   textAlign: TextAlign.center,
                   style: qText(
                     context,
@@ -434,7 +438,7 @@ class QSectionTitle extends StatelessWidget {
     children: [
       Expanded(
         child: Text(
-          title,
+          context.quranLabel(title),
           style: qText(context, size: 17, weight: FontWeight.w800),
         ),
       ),
@@ -442,7 +446,7 @@ class QSectionTitle extends StatelessWidget {
         TextButton(
           onPressed: onAction,
           child: Text(
-            action!,
+            context.quranLabel(action!),
             style: qText(context, size: 12, color: qAccent(context)),
           ),
         ),
@@ -482,7 +486,7 @@ class QuranVerseNavigation extends StatelessWidget {
               const SizedBox(width: 5),
               Flexible(
                 child: Text(
-                  label,
+                  context.quranLabel(label),
                   textAlign: TextAlign.center,
                   style: qText(context, size: 12),
                 ),
@@ -496,20 +500,26 @@ class QuranVerseNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: Row(
       children: [
         _button(
           context,
           label: 'الآية السابقة',
-          icon: Icons.chevron_right,
+          icon: Directionality.of(context) == TextDirection.rtl
+              ? Icons.chevron_right
+              : Icons.chevron_left,
           onTap: onPrevious,
         ),
         const SizedBox(width: 10),
         _button(
           context,
           label: 'الآية التالية',
-          icon: Icons.chevron_left,
+          icon: Directionality.of(context) == TextDirection.rtl
+              ? Icons.chevron_left
+              : Icons.chevron_right,
           onTap: onNext,
         ),
       ],
@@ -538,7 +548,7 @@ class QPrimaryButton extends StatelessWidget {
     onPressed: onTap,
     icon: Icon(icon, size: 20),
     label: Text(
-      label,
+      context.quranLabel(label),
       style: qText(
         context,
         color: Colors.white,
@@ -553,8 +563,10 @@ void qNotice(BuildContext context, String message) =>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          message,
-          textDirection: TextDirection.rtl,
+          context.quranLabel(message),
+          textDirection:
+              LocalizationScope.maybeOf(context)?.language.direction ??
+              TextDirection.rtl,
           style: const TextStyle(fontFamily: 'QuranUI'),
         ),
       ),

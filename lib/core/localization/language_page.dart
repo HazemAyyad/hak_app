@@ -109,6 +109,12 @@ class _LanguagePageState extends State<LanguagePage> {
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 12),
+                Text(
+                  controller.pluralText(
+                    'language.localPackages',
+                    controller.localPackageCount,
+                  ),
+                ),
                 Text(context.tr('language.offline')),
                 const SizedBox(height: 8),
                 Text(context.tr('language.scope')),
@@ -129,7 +135,17 @@ class _LanguagePageState extends State<LanguagePage> {
                         : null,
                   ),
                   Text(
-                    '${controller.received} / ${controller.total > 0 ? controller.total : "…"} bytes',
+                    context.tr(
+                      'language.downloadProgress',
+                      args: {
+                        'received': controller.formats.number(
+                          controller.received,
+                        ),
+                        'total': controller.total > 0
+                            ? controller.formats.number(controller.total)
+                            : '…',
+                      },
+                    ),
                   ),
                   TextButton(
                     onPressed: controller.pause,

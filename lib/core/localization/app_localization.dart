@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../features/quran/data/haq_api.dart';
 import 'bundled_localization.dart';
 import 'quran_translation_source.dart';
+import 'locale_formats.dart';
 
 class AppLanguage {
   const AppLanguage(this.code, this.name, this.direction);
@@ -181,7 +182,18 @@ class AppLocalization extends ChangeNotifier {
     (v) => v.code == code,
     orElse: () => languages.first,
   );
+  LocaleFormats get formats => LocaleFormats(code);
+
+  String pluralText(String key, num count) {
+    final category = formats.pluralCategory(count);
+    final selected = registry.containsKey('$key.$category')
+        ? '$key.$category'
+        : '$key.other';
+    return text(selected, args: {'count': formats.number(count)});
+  }
+
   bool get chosen => preferences.getBool('app.language.chosen.v1') == true;
+  int get localPackageCount => <String>{'ar', 'en', ...installed.keys}.length;
   String? get contentSelection =>
       preferences.getString('app.content.language.v1');
   String get contentCode {
@@ -230,6 +242,7 @@ class AppLocalization extends ChangeNotifier {
       GlobalCupertinoLocalizations.delegate.isSupported(language.locale);
 
   Future<void> initialize() async {
+    await LocaleFormats.prepare();
     try {
       directory ??= Directory(
         '${(await getApplicationSupportDirectory()).path}/haq_language_packages_v1',
