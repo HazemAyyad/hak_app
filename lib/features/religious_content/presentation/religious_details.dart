@@ -16,7 +16,7 @@ class _ReligiousDetailsPage extends StatefulWidget {
 class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
   bool _explanationOnly = false;
   ReligiousHostState get host => widget.host;
-  ReligiousItem get item => widget.item;
+  ReligiousItem get item => host.catalog.byId[widget.item.id] ?? widget.item;
   String get fontPreference => 'religious.fontSize.${item.type}';
   late double fontSize =
       host.controller.quran.preferences!.getDouble(fontPreference) ??
@@ -85,6 +85,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
         padding: EdgeInsets.zero,
         key: PageStorageKey('religious-details-${item.id}'),
         children: [
+          ContentTranslationCard(contentId: item.id),
           ReligiousHeader(
             title: item.title,
             subtitle: name

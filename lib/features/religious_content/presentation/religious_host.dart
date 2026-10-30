@@ -17,6 +17,7 @@ import '../../quran/data/quran_content.dart' show TafsirText;
 import '../data/religious_catalog.dart';
 import '../data/religious_controller.dart';
 import 'religious_widgets.dart';
+import '../../../core/localization/language_page.dart';
 export 'religious_widgets.dart' show ReligiousNavigationBar;
 
 part 'religious_pages.dart';

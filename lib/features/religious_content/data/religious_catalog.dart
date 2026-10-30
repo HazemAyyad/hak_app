@@ -163,6 +163,33 @@ class ReligiousCatalog {
   final String sourceVersion;
   final Map<String, dynamic> _raw;
 
+  /// Published Arabic editorial updates preserve IDs and the bundled fallback.
+  /// Quran text remains owned by the verified Arabic dataset.
+  ReligiousCatalog editorialOverlay(Map<String, dynamic> updates) {
+    if (updates.isEmpty) return this;
+    return ReligiousCatalog.fromJson({
+      ..._raw,
+      'items': [
+        for (final record in _raw['items'] as List)
+          if (updates[record['id']] case final Map update)
+            {
+              ...Map<String, dynamic>.from(record as Map),
+              for (final field in [
+                'title',
+                'text',
+                'summary',
+                'source',
+                'sourceUrl',
+              ])
+                if (update[field] is String) field: update[field],
+              if (record['type'] == 'quran') 'text': record['text'],
+            }
+          else
+            record,
+      ],
+    });
+  }
+
   /// Keep new bundled features with an old server/cache, preserving editorial
   /// changes and never resurrecting unpublished legacy item IDs.
   ReligiousCatalog extendLegacy(Map<String, dynamic> candidate) {

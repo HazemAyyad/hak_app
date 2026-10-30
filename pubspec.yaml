@@ -31,6 +31,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cryptography: ^2.9.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -93,6 +96,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/localization/
     - assets/prayer/dhikr_recitations/
     - assets/prayer/reminders/
     - assets/prayer/adhans/nusuk-1/

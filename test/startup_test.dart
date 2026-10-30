@@ -15,6 +15,7 @@ import 'package:haq_app/settings_pages.dart';
 import 'package:haq_app/startup/onboarding_screen.dart';
 import 'package:haq_app/startup/splash_screen.dart';
 import 'package:haq_app/startup/startup_flow.dart';
+import 'package:haq_app/core/localization/language_page.dart';
 import 'package:rive/rive.dart' as rive;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -78,7 +79,7 @@ void main() {
   );
 
   testWidgets(
-    'first launch plays Rive then three pages; completion survives restart',
+    'first launch selects a language before onboarding; completion survives restart',
     (tester) async {
       tester.view.physicalSize = const Size(400, 800);
       tester.view.devicePixelRatio = 1;
@@ -96,6 +97,9 @@ void main() {
       await tester.pump(const Duration(milliseconds: 500));
       await _capture(tester, key, 'splash');
       await tester.pump(const Duration(milliseconds: 2700));
+      await tester.pumpAndSettle();
+      expect(find.byType(LanguagePage), findsOneWidget);
+      await tester.tap(find.text('العربية'));
       await tester.pumpAndSettle();
       expect(find.text('1 من 3'), findsOneWidget);
       expect(
@@ -155,6 +159,8 @@ void main() {
       expect(find.byType(SplashScreen), findsOneWidget);
       expect(find.byType(rive.RiveWidget), findsNothing);
       await tester.pump(const Duration(milliseconds: 450));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('العربية'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('تخطي'));
       await tester.pumpAndSettle();

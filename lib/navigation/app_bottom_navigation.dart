@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app_section.dart';
+import '../core/localization/app_localization.dart';
 
 /// Lets overlays reserve space above bars hosted on root navigator routes.
 class BottomNavigationRouteSettings extends RouteSettings {
@@ -37,7 +38,10 @@ class AppBottomNavigation extends StatelessWidget {
             NavigationDestination(
               icon: Icon(destination.icon),
               selectedIcon: Icon(destination.selectedIcon),
-              label: destination.label,
+              label: context.tr(
+                'nav.${destination.name}',
+                fallback: destination.label,
+              ),
             ),
         ],
       ),

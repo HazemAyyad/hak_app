@@ -12,6 +12,11 @@ import '../../religious_activity/data/activity_controller.dart';
 import '../data/google_account.dart';
 import '../data/haq_backup.dart';
 import '../../../app_appearance.dart';
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/language_page.dart';
+import '../../admin/presentation/admin_page.dart';
+import '../data/app_session.dart';
+import 'app_account_page.dart';
 
 class AccountHubPage extends StatelessWidget {
   const AccountHubPage({
@@ -19,8 +24,10 @@ class AccountHubPage extends StatelessWidget {
     required this.controller,
     this.beforeBackup,
     this.onRestored,
+    this.appSession,
   });
   final ReligiousController controller;
+  final AppSession? appSession;
   final Future<void> Function()? beforeBackup, onRestored;
   @override
   Widget build(BuildContext context) => Theme(
@@ -40,28 +47,125 @@ class AccountHubPage extends StatelessWidget {
       listenable: controller.quran.account,
       builder: (context, _) => QuranAccountPage(
         controller: controller.quran,
-        details: FutureBuilder<ReligiousActivityController>(
-          future: controller.activity,
-          builder: (context, result) {
-            if (result.hasError) {
-              return const Padding(
-                padding: EdgeInsets.all(18),
-                child: Text(
-                  'تعذّر فتح بيانات النشاط؛ أعد فتح الصفحة للمحاولة.',
+        details: Column(
+          children: [
+            if (appSession != null) _AppAccessPanel(session: appSession!),
+            FutureBuilder<ReligiousActivityController>(
+              future: controller.activity,
+              builder: (context, result) {
+                if (result.hasError) {
+                  return const Padding(
+                    padding: EdgeInsets.all(18),
+                    child: Text(
+                      'تعذّر فتح بيانات النشاط؛ أعد فتح الصفحة للمحاولة.',
+                    ),
+                  );
+                }
+                if (!result.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return _AccountTools(
+                  key: ValueKey(result.data!.scope),
+                  controller: controller,
+                  activity: result.data!,
+                  beforeBackup: beforeBackup,
+                  onRestored: onRestored,
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+class _AppAccessPanel extends StatelessWidget {
+  const _AppAccessPanel({required this.session});
+  final AppSession session;
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: session,
+    builder: (context, _) => Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (session.profile == null && session.religious.profile == null)
+              FilledButton.icon(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => AppAccountPage(session: session),
+                  ),
                 ),
-              );
-            }
-            if (!result.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return _AccountTools(
-              key: ValueKey(result.data!.scope),
-              controller: controller,
-              activity: result.data!,
-              beforeBackup: beforeBackup,
-              onRestored: onRestored,
-            );
-          },
+                icon: const Icon(Icons.account_circle_outlined),
+                label: Text(context.tr('account.login')),
+              ),
+            if (session.profile != null) ...[
+              Text(
+                session.profile?['name'] as String? ??
+                    context.tr('account.title'),
+              ),
+              Text(
+                context.tr(
+                  session.areas.length == 2
+                      ? 'account.both'
+                      : session.areas.contains('association')
+                      ? 'account.associationOnly'
+                      : 'account.religiousOnly',
+                ),
+              ),
+              if (session.areas.contains('association'))
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(context.tr('account.associationPending')),
+                ),
+              if (session.admin)
+                FilledButton.icon(
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (_) => AdminPage(session: session),
+                    ),
+                  ),
+                  icon: const Icon(Icons.admin_panel_settings_outlined),
+                  label: Text(context.tr('admin.title')),
+                ),
+              if (!session.verified)
+                TextButton(
+                  onPressed: session.refresh,
+                  child: Text(context.tr('common.retry')),
+                ),
+              if (session.verified && session.areas.length == 1)
+                OutlinedButton(
+                  onPressed: session.busy
+                      ? null
+                      : () => Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) =>
+                                AppAccountPage(session: session, link: true),
+                          ),
+                        ),
+                  child: Text(context.tr('account.link')),
+                ),
+              TextButton(
+                onPressed: session.busy ? null : session.logout,
+                child: Text(context.tr('account.logout')),
+              ),
+            ],
+            if (session.error != null) Text(context.tr(session.error!)),
+            OutlinedButton.icon(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const LanguagePage()),
+              ),
+              icon: const Icon(Icons.language),
+              label: Text(context.tr('language.title')),
+            ),
+          ],
         ),
       ),
     ),

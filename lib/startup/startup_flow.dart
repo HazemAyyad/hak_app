@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../app_experience.dart';
+import '../core/localization/app_localization.dart';
+import '../core/localization/language_page.dart';
 
 import 'onboarding_screen.dart';
 import 'splash_screen.dart';
 
-enum _StartupStage { splash, onboarding, ready }
+enum _StartupStage { splash, language, onboarding, ready }
 
 class StartupFlow extends StatefulWidget {
   const StartupFlow({
@@ -31,6 +33,9 @@ class _StartupFlowState extends State<StartupFlow> {
       () =>
           _stage = widget.preferences.getBool(StartupFlow.onboardingKey) == true
           ? _StartupStage.ready
+          : LocalizationScope.maybeOf(context) != null &&
+                !LocalizationScope.maybeOf(context)!.chosen
+          ? _StartupStage.language
           : _StartupStage.onboarding,
     );
   }
@@ -50,6 +55,11 @@ class _StartupFlowState extends State<StartupFlow> {
   @override
   Widget build(BuildContext context) => switch (_stage) {
     _StartupStage.splash => SplashScreen(onFinished: _finishSplash),
+    _StartupStage.language => LanguagePage(
+      onContinue: () async {
+        if (mounted) setState(() => _stage = _StartupStage.onboarding);
+      },
+    ),
     _StartupStage.onboarding => OnboardingScreen(onComplete: _finishOnboarding),
     _StartupStage.ready => widget.child,
   };

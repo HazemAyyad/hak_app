@@ -38,6 +38,16 @@ class ReligiousController extends ChangeNotifier {
   final Future<ReligiousActivityController> Function()? activityFactory;
   ReligiousCatalog? catalog;
   ReligiousCatalog? _bundledCatalog;
+  ReligiousCatalog? _editorialBase;
+  Map<String, dynamic> _editorialUpdates = const {};
+
+  void setEditorialUpdates(Map<String, dynamic> updates) {
+    if (identical(updates, _editorialUpdates)) return;
+    _editorialUpdates = updates;
+    _editorialBase ??= catalog;
+    catalog = _editorialBase?.editorialOverlay(updates);
+    _emit();
+  }
   QuranMedia? _media;
   Future<ReligiousActivityController>? _activity;
   Future<ReligiousActivityController> get activity =>
@@ -109,6 +119,8 @@ class ReligiousController extends ChangeNotifier {
           /* Bundled catalog remains available. */
         }
       }
+      _editorialBase = catalog;
+      catalog = catalog?.editorialOverlay(_editorialUpdates);
       _restore();
       quran.account.addListener(_accountChanged);
       _listening = true;
@@ -350,7 +362,8 @@ class ReligiousController extends ChangeNotifier {
       }
       if (_disposed) return;
       await quran.preferences!.setString('religious.catalog.v1', decoded);
-      catalog = next;
+      _editorialBase = next;
+      catalog = next.editorialOverlay(_editorialUpdates);
     } catch (_) {
       if (!silent) {
         updateError = 'تعذّر التحديث؛ المحتوى المحفوظ متاح دون اتصال';

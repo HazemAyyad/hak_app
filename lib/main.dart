@@ -9,6 +9,7 @@ import 'app_experience.dart';
 import 'app_refresh.dart';
 import 'settings_pages.dart';
 import 'features/quran/data/quran_controller.dart';
+import 'features/quran/data/quran_sync.dart' show QuranAccount;
 import 'features/quran/data/quran_repository.dart';
 import 'features/religious_content/data/religious_catalog.dart';
 import 'features/quran/presentation/quran_host.dart';
@@ -25,6 +26,10 @@ import 'features/prayer/data/prayer_controller.dart';
 import 'features/prayer/data/prayer_models.dart';
 import 'features/prayer/presentation/prayer_page.dart';
 import 'features/account/presentation/account_hub.dart';
+import 'features/account/data/app_session.dart';
+import 'features/admin/presentation/admin_page.dart';
+import 'core/localization/app_localization.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/community/data/community_controller.dart';
 import 'features/community/data/public_push.dart';
 import 'features/community/presentation/community_page.dart';
@@ -64,11 +69,13 @@ class HaqApp extends StatefulWidget {
     this.quranController,
     this.religiousController,
     this.showStartup = true,
+    this.appSessionFactory,
   });
   final AppAppearance? appearance;
   final QuranController? quranController;
   final ReligiousController? religiousController;
   final bool showStartup;
+  final AppSession Function(QuranAccount)? appSessionFactory;
 
   @override
   State<HaqApp> createState() => _HaqAppState();
@@ -76,6 +83,7 @@ class HaqApp extends StatefulWidget {
 
 class _HaqAppState extends State<HaqApp> {
   AppAppearance? _appearance;
+  AppLocalization? _localization;
   final _experience = AppExperienceController();
   late final _navigationObserver = _experience.observer('root');
 
@@ -84,11 +92,21 @@ class _HaqAppState extends State<HaqApp> {
     super.initState();
     if (widget.appearance != null) {
       _appearance = widget.appearance;
+      unawaited(_loadLocalization(_appearance!.preferences));
     } else {
       SharedPreferences.getInstance().then((preferences) {
-        if (mounted) setState(() => _appearance = AppAppearance(preferences));
+        if (mounted) {
+          setState(() => _appearance = AppAppearance(preferences));
+          unawaited(_loadLocalization(preferences));
+        }
       });
     }
+  }
+
+  Future<void> _loadLocalization(SharedPreferences preferences) async {
+    final localization = AppLocalization(preferences);
+    _localization = localization;
+    await localization.initialize();
   }
 
   void _toggleTheme() {
@@ -103,6 +121,7 @@ class _HaqAppState extends State<HaqApp> {
   @override
   void dispose() {
     _experience.dispose();
+    _localization?.dispose();
     if (widget.appearance == null) _appearance?.dispose();
     super.dispose();
   }
@@ -110,50 +129,69 @@ class _HaqAppState extends State<HaqApp> {
   @override
   Widget build(BuildContext context) {
     final appearance = _appearance;
-    if (appearance == null) return SizedBox.shrink();
-    return AppearanceScope(
-      controller: appearance,
-      child: ListenableBuilder(
-        listenable: appearance,
-        builder: (context, _) => MaterialApp(
-          navigatorKey: _experience.navigatorKey,
-          navigatorObservers: [_navigationObserver, prayerRoutes],
-          debugShowCheckedModeBanner: false,
-          title: 'حق',
-          themeMode: appearance.effectiveMode,
-          locale: Locale('ar'),
-          theme: _theme(Brightness.light),
-          darkTheme: _theme(Brightness.dark),
-          builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              textScaler: TextScaler.linear(
-                MediaQuery.textScalerOf(context).scale(1) *
-                    appearance.fontScale,
+    final localization = _localization;
+    if (appearance == null || localization == null) return SizedBox.shrink();
+    return LocalizationScope(
+      controller: localization,
+      child: AppearanceScope(
+        controller: appearance,
+        child: ListenableBuilder(
+          listenable: Listenable.merge([appearance, localization]),
+          builder: (context, _) => MaterialApp(
+            navigatorKey: _experience.navigatorKey,
+            navigatorObservers: [_navigationObserver, prayerRoutes],
+            debugShowCheckedModeBanner: false,
+            title: 'حق',
+            themeMode: appearance.effectiveMode,
+            locale: localization.language.locale,
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            supportedLocales: localization.languages
+                .where(
+                  (language) =>
+                      GlobalMaterialLocalizations.delegate.isSupported(
+                        language.locale,
+                      ) &&
+                      GlobalCupertinoLocalizations.delegate.isSupported(
+                        language.locale,
+                      ),
+                )
+                .map((language) => language.locale)
+                .toList(),
+            theme: _theme(Brightness.light),
+            darkTheme: _theme(Brightness.dark),
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: TextScaler.linear(
+                  MediaQuery.textScalerOf(context).scale(1) *
+                      appearance.fontScale,
+                ),
+              ),
+              child: AppRefreshHost(
+                onRefresh: () =>
+                    _experience.refreshCurrent?.call() ?? Future<void>.value(),
+                child: AppExperienceOverlay(
+                  controller: _experience,
+                  child: child!,
+                ),
               ),
             ),
-            child: AppRefreshHost(
-              onRefresh: () =>
-                  _experience.refreshCurrent?.call() ?? Future<void>.value(),
-              child: AppExperienceOverlay(
-                controller: _experience,
-                child: child!,
-              ),
-            ),
-          ),
-          home: widget.showStartup
-              ? StartupFlow(
-                  preferences: appearance.preferences,
-                  child: HomePage(
+            home: widget.showStartup
+                ? StartupFlow(
+                    preferences: appearance.preferences,
+                    child: HomePage(
+                      onToggleTheme: _toggleTheme,
+                      quranController: widget.quranController,
+                      religiousController: widget.religiousController,
+                      appSessionFactory: widget.appSessionFactory,
+                    ),
+                  )
+                : HomePage(
                     onToggleTheme: _toggleTheme,
                     quranController: widget.quranController,
                     religiousController: widget.religiousController,
+                    appSessionFactory: widget.appSessionFactory,
                   ),
-                )
-              : HomePage(
-                  onToggleTheme: _toggleTheme,
-                  quranController: widget.quranController,
-                  religiousController: widget.religiousController,
-                ),
+          ),
         ),
       ),
     );
@@ -227,11 +265,13 @@ class HomePage extends StatefulWidget {
     required this.onToggleTheme,
     this.quranController,
     this.religiousController,
+    this.appSessionFactory,
   });
 
   final VoidCallback onToggleTheme;
   final QuranController? quranController;
   final ReligiousController? religiousController;
+  final AppSession Function(QuranAccount)? appSessionFactory;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -255,10 +295,36 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   AppExperienceController? _experience;
   late final AssistantController _assistant;
   PublicPushController? _publicPush;
+  late final AppSession _appSession;
+  int _adminRedirectedRevision = -1;
+
+  void _accountSessionChanged() {
+    if (!mounted ||
+        !_appSession.admin ||
+        _adminRedirectedRevision == _appSession.sessionRevision) {
+      return;
+    }
+    _adminRedirectedRevision = _appSession.sessionRevision;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_appSession.admin) return;
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          settings: const RouteSettings(name: '/admin'),
+          builder: (_) => AdminPage(session: _appSession),
+        ),
+      );
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final publishedArabic =
+        LocalizationScope.maybeOf(context)?.installed['ar']?.content ??
+        const <String, dynamic>{};
+    _religious.setEditorialUpdates(publishedArabic);
     _prayer?.setAppLanguage(Localizations.localeOf(context).languageCode);
     final next = AppExperienceScope.maybeOf(context);
     if (next != _experience) {
@@ -279,22 +345,29 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _quran = widget.quranController ?? QuranController();
+    _appSession =
+        (widget.appSessionFactory?.call(_quran.account) ??
+              AppSession(_quran.account))
+          ..addListener(_accountSessionChanged);
     _religious =
         widget.religiousController ?? ReligiousController(quran: _quran);
     _assistant = AssistantController(_quran);
     if (_quran.repository == null) {
       _quran.load().then((_) {
+        if (mounted) unawaited(_appSession.initialize());
         if (mounted && _religious.catalog == null) _religious.load();
         if (mounted) unawaited(_prepareReminders());
         if (mounted) _preparePublicPush();
       });
     } else if (_religious.catalog == null) {
+      unawaited(_appSession.initialize());
       _religious.load();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) unawaited(_prepareReminders());
       });
       _preparePublicPush();
     } else {
+      unawaited(_appSession.initialize());
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) unawaited(_prepareReminders());
       });
@@ -395,6 +468,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _prayer?.setForeground(state == AppLifecycleState.resumed);
     if (state == AppLifecycleState.resumed) {
+      unawaited(_appSession.refresh());
       AppearanceScope.of(context).refreshTime();
       unawaited(_reminders?.reconcile(force: true) ?? Future.value());
       if (_publicPush?.wanted == true) unawaited(_publicPush!.reconcile());
@@ -404,6 +478,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _appSession.removeListener(_accountSessionChanged);
+    _appSession.dispose();
     _assistant.dispose();
     _publicPush?.dispose();
     _reminders?.dispose();
@@ -673,6 +749,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   Widget _accountHub() => AccountHubPage(
     controller: _religious,
+    appSession: _appSession,
     beforeBackup: () async {
       await _reminders?.settings.flush();
       await _prayer?.flush();
@@ -900,7 +977,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final religiousHandlesBack = _section == AppSection.more && _religiousOpen;
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection:
+          LocalizationScope.maybeOf(context)?.language.direction ??
+          TextDirection.rtl,
       child: PopScope<Object?>(
         canPop:
             _section == AppSection.home ||

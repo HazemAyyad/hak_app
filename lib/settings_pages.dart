@@ -8,6 +8,8 @@ import 'navigation/app_section.dart';
 import 'features/settings/data/app_settings.dart';
 import 'features/settings/data/reminder_controller.dart';
 import 'features/prayer/data/prayer_models.dart';
+import 'core/localization/app_localization.dart';
+import 'core/localization/language_page.dart';
 
 part 'settings_reminders.dart';
 part 'settings_dhikr_picker.dart';
@@ -59,6 +61,15 @@ class SettingsPage extends StatelessWidget {
         _link(context, SettingKind.reminders),
         _link(context, SettingKind.notifications),
         _section('إعدادات إضافية'),
+        _SettingsTile(
+          icon: Icons.language,
+          title: context.tr('language.title', fallback: 'لغة التطبيق'),
+          subtitle:
+              LocalizationScope.maybeOf(context)?.language.name ?? 'العربية',
+          onTap: () => Navigator.of(
+            context,
+          ).push(MaterialPageRoute<void>(builder: (_) => const LanguagePage())),
+        ),
         _link(context, SettingKind.hijri),
         _link(context, SettingKind.storage),
         _link(context, SettingKind.privacy),
@@ -840,7 +851,9 @@ class _SettingsShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: Scaffold(
       backgroundColor: AppPalette.of(context).background,
       extendBody: true,
@@ -910,8 +923,8 @@ class _Header extends StatelessWidget {
     ),
     child: Stack(
       children: [
-        Positioned(
-          right: 0,
+        PositionedDirectional(
+          start: 0,
           top: 0,
           child: Material(
             color: AppPalette.of(context).surface,
@@ -924,8 +937,8 @@ class _Header extends StatelessWidget {
                 width: 60,
                 height: 60,
                 child: Icon(
-                  Icons.arrow_forward_ios,
-                  textDirection: TextDirection.ltr,
+                  Icons.arrow_back_ios_new,
+                  textDirection: Directionality.of(context),
                   color: AppPalette.of(context).tealHeading,
                 ),
               ),
