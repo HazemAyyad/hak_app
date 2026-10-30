@@ -41,7 +41,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
   QuranTranslationSource? _source;
 
   String _surahLabel(int id) {
-    final name = widget.controller.repository!.surah(id).name;
+    final name = widget.controller.repository!.surah(id).localizedName(context);
     return context.tr(
       'search.surah',
       fallback: 'سورة $name',
@@ -542,9 +542,11 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                                   context.tr(
                                     'search.verse',
                                     fallback:
-                                        'سورة ${repo.surah(verse.surah).name} • الآية ${verse.ayah}',
+                                        'سورة ${repo.surah(verse.surah).localizedName(context)} • الآية ${verse.ayah}',
                                     args: {
-                                      'name': repo.surah(verse.surah).name,
+                                      'name': repo
+                                          .surah(verse.surah)
+                                          .localizedName(context),
                                       'ayah': verse.ayah,
                                     },
                                   ),

@@ -1686,5 +1686,569 @@
   "search.cachedMeanings": {
     "en": "Searches word meanings already opened and saved on this device only. Open the content to download it first.",
     "ar": "البحث في المعاني التي فُتحت وحُفظت على هذا الجهاز فقط. افتح المحتوى المطلوب لتنزيله أولًا."
+  },
+  "quran.surah.1": {
+    "ar": "الفاتحة",
+    "en": "Al-Fatihah"
+  },
+  "quran.surah.2": {
+    "ar": "البقرة",
+    "en": "Al-Baqarah"
+  },
+  "quran.surah.3": {
+    "ar": "آل عمران",
+    "en": "Ali 'Imran"
+  },
+  "quran.surah.4": {
+    "ar": "النساء",
+    "en": "An-Nisa"
+  },
+  "quran.surah.5": {
+    "ar": "المائدة",
+    "en": "Al-Ma'idah"
+  },
+  "quran.surah.6": {
+    "ar": "الأنعام",
+    "en": "Al-An'am"
+  },
+  "quran.surah.7": {
+    "ar": "الأعراف",
+    "en": "Al-A'raf"
+  },
+  "quran.surah.8": {
+    "ar": "الأنفال",
+    "en": "Al-Anfal"
+  },
+  "quran.surah.9": {
+    "ar": "التوبة",
+    "en": "At-Tawbah"
+  },
+  "quran.surah.10": {
+    "ar": "يونس",
+    "en": "Yunus"
+  },
+  "quran.surah.11": {
+    "ar": "هود",
+    "en": "Hud"
+  },
+  "quran.surah.12": {
+    "ar": "يوسف",
+    "en": "Yusuf"
+  },
+  "quran.surah.13": {
+    "ar": "الرعد",
+    "en": "Ar-Ra'd"
+  },
+  "quran.surah.14": {
+    "ar": "ابراهيم",
+    "en": "Ibrahim"
+  },
+  "quran.surah.15": {
+    "ar": "الحجر",
+    "en": "Al-Hijr"
+  },
+  "quran.surah.16": {
+    "ar": "النحل",
+    "en": "An-Nahl"
+  },
+  "quran.surah.17": {
+    "ar": "الإسراء",
+    "en": "Al-Isra"
+  },
+  "quran.surah.18": {
+    "ar": "الكهف",
+    "en": "Al-Kahf"
+  },
+  "quran.surah.19": {
+    "ar": "مريم",
+    "en": "Maryam"
+  },
+  "quran.surah.20": {
+    "ar": "طه",
+    "en": "Taha"
+  },
+  "quran.surah.21": {
+    "ar": "الأنبياء",
+    "en": "Al-Anbya"
+  },
+  "quran.surah.22": {
+    "ar": "الحج",
+    "en": "Al-Hajj"
+  },
+  "quran.surah.23": {
+    "ar": "المؤمنون",
+    "en": "Al-Mu'minun"
+  },
+  "quran.surah.24": {
+    "ar": "النور",
+    "en": "An-Nur"
+  },
+  "quran.surah.25": {
+    "ar": "الفرقان",
+    "en": "Al-Furqan"
+  },
+  "quran.surah.26": {
+    "ar": "الشعراء",
+    "en": "Ash-Shu'ara"
+  },
+  "quran.surah.27": {
+    "ar": "النمل",
+    "en": "An-Naml"
+  },
+  "quran.surah.28": {
+    "ar": "القصص",
+    "en": "Al-Qasas"
+  },
+  "quran.surah.29": {
+    "ar": "العنكبوت",
+    "en": "Al-'Ankabut"
+  },
+  "quran.surah.30": {
+    "ar": "الروم",
+    "en": "Ar-Rum"
+  },
+  "quran.surah.31": {
+    "ar": "لقمان",
+    "en": "Luqman"
+  },
+  "quran.surah.32": {
+    "ar": "السجدة",
+    "en": "As-Sajdah"
+  },
+  "quran.surah.33": {
+    "ar": "الأحزاب",
+    "en": "Al-Ahzab"
+  },
+  "quran.surah.34": {
+    "ar": "سبإ",
+    "en": "Saba"
+  },
+  "quran.surah.35": {
+    "ar": "فاطر",
+    "en": "Fatir"
+  },
+  "quran.surah.36": {
+    "ar": "يس",
+    "en": "Ya-Sin"
+  },
+  "quran.surah.37": {
+    "ar": "الصافات",
+    "en": "As-Saffat"
+  },
+  "quran.surah.38": {
+    "ar": "ص",
+    "en": "Sad"
+  },
+  "quran.surah.39": {
+    "ar": "الزمر",
+    "en": "Az-Zumar"
+  },
+  "quran.surah.40": {
+    "ar": "غافر",
+    "en": "Ghafir"
+  },
+  "quran.surah.41": {
+    "ar": "فصلت",
+    "en": "Fussilat"
+  },
+  "quran.surah.42": {
+    "ar": "الشورى",
+    "en": "Ash-Shuraa"
+  },
+  "quran.surah.43": {
+    "ar": "الزخرف",
+    "en": "Az-Zukhruf"
+  },
+  "quran.surah.44": {
+    "ar": "الدخان",
+    "en": "Ad-Dukhan"
+  },
+  "quran.surah.45": {
+    "ar": "الجاثية",
+    "en": "Al-Jathiyah"
+  },
+  "quran.surah.46": {
+    "ar": "الأحقاف",
+    "en": "Al-Ahqaf"
+  },
+  "quran.surah.47": {
+    "ar": "محمد",
+    "en": "Muhammad"
+  },
+  "quran.surah.48": {
+    "ar": "الفتح",
+    "en": "Al-Fath"
+  },
+  "quran.surah.49": {
+    "ar": "الحجرات",
+    "en": "Al-Hujurat"
+  },
+  "quran.surah.50": {
+    "ar": "ق",
+    "en": "Qaf"
+  },
+  "quran.surah.51": {
+    "ar": "الذاريات",
+    "en": "Adh-Dhariyat"
+  },
+  "quran.surah.52": {
+    "ar": "الطور",
+    "en": "At-Tur"
+  },
+  "quran.surah.53": {
+    "ar": "النجم",
+    "en": "An-Najm"
+  },
+  "quran.surah.54": {
+    "ar": "القمر",
+    "en": "Al-Qamar"
+  },
+  "quran.surah.55": {
+    "ar": "الرحمن",
+    "en": "Ar-Rahman"
+  },
+  "quran.surah.56": {
+    "ar": "الواقعة",
+    "en": "Al-Waqi'ah"
+  },
+  "quran.surah.57": {
+    "ar": "الحديد",
+    "en": "Al-Hadid"
+  },
+  "quran.surah.58": {
+    "ar": "المجادلة",
+    "en": "Al-Mujadila"
+  },
+  "quran.surah.59": {
+    "ar": "الحشر",
+    "en": "Al-Hashr"
+  },
+  "quran.surah.60": {
+    "ar": "الممتحنة",
+    "en": "Al-Mumtahanah"
+  },
+  "quran.surah.61": {
+    "ar": "الصف",
+    "en": "As-Saf"
+  },
+  "quran.surah.62": {
+    "ar": "الجمعة",
+    "en": "Al-Jumu'ah"
+  },
+  "quran.surah.63": {
+    "ar": "المنافقون",
+    "en": "Al-Munafiqun"
+  },
+  "quran.surah.64": {
+    "ar": "التغابن",
+    "en": "At-Taghabun"
+  },
+  "quran.surah.65": {
+    "ar": "الطلاق",
+    "en": "At-Talaq"
+  },
+  "quran.surah.66": {
+    "ar": "التحريم",
+    "en": "At-Tahrim"
+  },
+  "quran.surah.67": {
+    "ar": "الملك",
+    "en": "Al-Mulk"
+  },
+  "quran.surah.68": {
+    "ar": "القلم",
+    "en": "Al-Qalam"
+  },
+  "quran.surah.69": {
+    "ar": "الحاقة",
+    "en": "Al-Haqqah"
+  },
+  "quran.surah.70": {
+    "ar": "المعارج",
+    "en": "Al-Ma'arij"
+  },
+  "quran.surah.71": {
+    "ar": "نوح",
+    "en": "Nuh"
+  },
+  "quran.surah.72": {
+    "ar": "الجن",
+    "en": "Al-Jinn"
+  },
+  "quran.surah.73": {
+    "ar": "المزمل",
+    "en": "Al-Muzzammil"
+  },
+  "quran.surah.74": {
+    "ar": "المدثر",
+    "en": "Al-Muddaththir"
+  },
+  "quran.surah.75": {
+    "ar": "القيامة",
+    "en": "Al-Qiyamah"
+  },
+  "quran.surah.76": {
+    "ar": "الانسان",
+    "en": "Al-Insan"
+  },
+  "quran.surah.77": {
+    "ar": "المرسلات",
+    "en": "Al-Mursalat"
+  },
+  "quran.surah.78": {
+    "ar": "النبإ",
+    "en": "An-Naba"
+  },
+  "quran.surah.79": {
+    "ar": "النازعات",
+    "en": "An-Nazi'at"
+  },
+  "quran.surah.80": {
+    "ar": "عبس",
+    "en": "'Abasa"
+  },
+  "quran.surah.81": {
+    "ar": "التكوير",
+    "en": "At-Takwir"
+  },
+  "quran.surah.82": {
+    "ar": "الإنفطار",
+    "en": "Al-Infitar"
+  },
+  "quran.surah.83": {
+    "ar": "المطففين",
+    "en": "Al-Mutaffifin"
+  },
+  "quran.surah.84": {
+    "ar": "الإنشقاق",
+    "en": "Al-Inshiqaq"
+  },
+  "quran.surah.85": {
+    "ar": "البروج",
+    "en": "Al-Buruj"
+  },
+  "quran.surah.86": {
+    "ar": "الطارق",
+    "en": "At-Tariq"
+  },
+  "quran.surah.87": {
+    "ar": "الأعلى",
+    "en": "Al-A'la"
+  },
+  "quran.surah.88": {
+    "ar": "الغاشية",
+    "en": "Al-Ghashiyah"
+  },
+  "quran.surah.89": {
+    "ar": "الفجر",
+    "en": "Al-Fajr"
+  },
+  "quran.surah.90": {
+    "ar": "البلد",
+    "en": "Al-Balad"
+  },
+  "quran.surah.91": {
+    "ar": "الشمس",
+    "en": "Ash-Shams"
+  },
+  "quran.surah.92": {
+    "ar": "الليل",
+    "en": "Al-Layl"
+  },
+  "quran.surah.93": {
+    "ar": "الضحى",
+    "en": "Ad-Duhaa"
+  },
+  "quran.surah.94": {
+    "ar": "الشرح",
+    "en": "Ash-Sharh"
+  },
+  "quran.surah.95": {
+    "ar": "التين",
+    "en": "At-Tin"
+  },
+  "quran.surah.96": {
+    "ar": "العلق",
+    "en": "Al-'Alaq"
+  },
+  "quran.surah.97": {
+    "ar": "القدر",
+    "en": "Al-Qadr"
+  },
+  "quran.surah.98": {
+    "ar": "البينة",
+    "en": "Al-Bayyinah"
+  },
+  "quran.surah.99": {
+    "ar": "الزلزلة",
+    "en": "Az-Zalzalah"
+  },
+  "quran.surah.100": {
+    "ar": "العاديات",
+    "en": "Al-'Adiyat"
+  },
+  "quran.surah.101": {
+    "ar": "القارعة",
+    "en": "Al-Qari'ah"
+  },
+  "quran.surah.102": {
+    "ar": "التكاثر",
+    "en": "At-Takathur"
+  },
+  "quran.surah.103": {
+    "ar": "العصر",
+    "en": "Al-'Asr"
+  },
+  "quran.surah.104": {
+    "ar": "الهمزة",
+    "en": "Al-Humazah"
+  },
+  "quran.surah.105": {
+    "ar": "الفيل",
+    "en": "Al-Fil"
+  },
+  "quran.surah.106": {
+    "ar": "قريش",
+    "en": "Quraysh"
+  },
+  "quran.surah.107": {
+    "ar": "الماعون",
+    "en": "Al-Ma'un"
+  },
+  "quran.surah.108": {
+    "ar": "الكوثر",
+    "en": "Al-Kawthar"
+  },
+  "quran.surah.109": {
+    "ar": "الكافرون",
+    "en": "Al-Kafirun"
+  },
+  "quran.surah.110": {
+    "ar": "النصر",
+    "en": "An-Nasr"
+  },
+  "quran.surah.111": {
+    "ar": "المسد",
+    "en": "Al-Masad"
+  },
+  "quran.surah.112": {
+    "ar": "الإخلاص",
+    "en": "Al-Ikhlas"
+  },
+  "quran.surah.113": {
+    "ar": "الفلق",
+    "en": "Al-Falaq"
+  },
+  "quran.surah.114": {
+    "ar": "الناس",
+    "en": "An-Nas"
+  },
+  "quran.revelation.meccan": {
+    "ar": "مكية",
+    "en": "Meccan"
+  },
+  "quran.revelation.medinan": {
+    "ar": "مدنية",
+    "en": "Medinan"
+  },
+  "quran.chapterDetails": {
+    "ar": "{revelation} • {count} آية",
+    "en": "{revelation} • {count} verses"
+  },
+  "quran.label.5313df4086bf": {
+    "ar": "كل السور",
+    "en": "All surahs"
+  },
+  "quran.label.86e1ac9c80e9": {
+    "ar": "السور المكية",
+    "en": "Meccan surahs"
+  },
+  "quran.label.8ab25bdfe741": {
+    "ar": "السور المدنية",
+    "en": "Medinan surahs"
+  },
+  "quran.label.f98dcf32d58c": {
+    "ar": "ابحث في السور ...",
+    "en": "Search surahs…"
+  },
+  "quran.label.b61b624818d9": {
+    "ar": "ابحث في الأجزاء ...",
+    "en": "Search juz…"
+  },
+  "quran.label.7d96b27f64eb": {
+    "ar": "اختر السورة لبدء القراءة",
+    "en": "Choose a surah to start reading"
+  },
+  "quran.label.6a95220c20c1": {
+    "ar": "الأجزاء الثلاثون",
+    "en": "The thirty juz"
+  },
+  "quran.label.65f276da33cf": {
+    "ar": "الكل",
+    "en": "All"
+  },
+  "quran.label.14eaf6a42877": {
+    "ar": "الأجزاء المحفوظة",
+    "en": "Saved juz"
+  },
+  "quran.label.04cc7dfe0712": {
+    "ar": "الأجزاء التي تمت قراءتها",
+    "en": "Read juz"
+  },
+  "quran.label.909d12ae1e92": {
+    "ar": "ترتيب المصحف",
+    "en": "Quran order"
+  },
+  "quran.label.47bcbda2a089": {
+    "ar": "عدد الآيات",
+    "en": "Verse count"
+  },
+  "quran.label.52ab09847cf8": {
+    "ar": "الاسم",
+    "en": "Name"
+  },
+  "quran.label.077e793f4e99": {
+    "ar": "لا توجد عناصر مطابقة",
+    "en": "No matching items"
+  },
+  "quran.label.8e72c7da4a40": {
+    "ar": "حفظ السورة",
+    "en": "Save surah"
+  },
+  "quran.label.03d7727cd2e4": {
+    "ar": "إزالة السورة المحفوظة",
+    "en": "Remove saved surah"
+  },
+  "quran.label.9e7450f9693f": {
+    "ar": "المفضلة والعلامات",
+    "en": "Favorites and bookmarks"
+  },
+  "quran.label.64da176ec2b7": {
+    "ar": "احفظ الآيات والمواضع التي تهمك",
+    "en": "Save verses and reading positions"
+  },
+  "quran.surahCount.zero": {
+    "en": "No surahs",
+    "ar": "لا توجد سور"
+  },
+  "quran.surahCount.one": {
+    "en": "One surah",
+    "ar": "سورة واحدة"
+  },
+  "quran.surahCount.two": {
+    "en": "Two surahs",
+    "ar": "سورتان"
+  },
+  "quran.surahCount.few": {
+    "en": "{count} surahs",
+    "ar": "{count} سور"
+  },
+  "quran.surahCount.many": {
+    "en": "{count} surahs",
+    "ar": "{count} سورة"
+  },
+  "quran.surahCount.other": {
+    "en": "{count} surahs",
+    "ar": "{count} سورة"
   }
 }

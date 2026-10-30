@@ -254,7 +254,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                   (chapter) =>
                       recitation.chapters.contains(chapter.id) &&
                       normalizeQuranSearch(
-                        chapter.name,
+                        chapter.localizedName(context),
                       ).contains(normalizeQuranSearch(query)),
                 )
                 .toList();

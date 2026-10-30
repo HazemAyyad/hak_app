@@ -51,8 +51,10 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
             return (surah == null || verse.surah == surah) &&
                 (verse.searchText.contains(normalizeQuranSearch(query)) ||
                     normalizeQuranSearch(
-                      repo.surah(verse.surah).name,
-                    ).contains(normalizeQuranSearch(query)));
+                      '${repo.surah(verse.surah).name} ${repo.surah(verse.surah).localizedName(context)}',
+                    ).toLowerCase().contains(
+                      normalizeQuranSearch(query).toLowerCase(),
+                    ));
           }).toList()..sort(
             (a, b) => newest
                 ? b.value.compareTo(a.value)
@@ -107,7 +109,7 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                           ...repo.surahs.map(
                             (s) => PopupMenuItem(
                               value: s.id,
-                              child: Text('سورة ${s.name}'),
+                              child: Text(s.localizedTitle(context)),
                             ),
                           ),
                         ],
@@ -116,7 +118,7 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                             Text(
                               surah == null
                                   ? 'كل السور'
-                                  : 'سورة ${repo.surah(surah!).name}',
+                                  : repo.surah(surah!).localizedTitle(context),
                               style: qText(context, size: 11),
                             ),
                             const SizedBox(width: 8),
@@ -200,7 +202,7 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'سورة ${repo.surah(verse.surah).name}',
+                                repo.surah(verse.surah).localizedTitle(context),
                                 style: qText(
                                   context,
                                   size: 14,

@@ -5,6 +5,30 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
+import '../data/quran_repository.dart' show QuranSurah;
+
+extension QuranSurahInterfaceLabels on QuranSurah {
+  String localizedName(BuildContext context) =>
+      context.tr('quran.surah.$id', fallback: name);
+  String localizedTitle(BuildContext context) => context.tr(
+    'search.surah',
+    fallback: 'سورة $name',
+    args: {'name': localizedName(context)},
+  );
+  String localizedRevelation(BuildContext context) => context.tr(
+    meccan ? 'quran.revelation.meccan' : 'quran.revelation.medinan',
+    fallback: revelation,
+  );
+  String localizedDetails(BuildContext context) => context.tr(
+    'quran.chapterDetails',
+    fallback: '$revelation • $ayahCount آية',
+    args: {'revelation': localizedRevelation(context), 'count': ayahCount},
+  );
+}
+
+String quranSurahCountLabel(BuildContext context, int count) =>
+    LocalizationScope.maybeOf(context)?.pluralText('quran.surahCount', count) ??
+    '$count سورة';
 
 const qTeal = Color(0xFF007D85);
 const qNavy = Color(0xFF0C2057);

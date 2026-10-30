@@ -11,6 +11,8 @@ import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/quran/presentation/quran_search.dart';
+import 'package:haq_app/features/quran/presentation/quran_host.dart'
+    show QuranIndexPage;
 import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/core/localization/language_page.dart';
 import 'package:haq_app/core/localization/published_meaning_card.dart';
@@ -301,7 +303,49 @@ void main() {
       await tester.tap(find.text('Meaning published1'));
       expect(selected, verseKey);
       expect(localization.code, 'ar');
-      expect(tester.takeException(), isNull);
+      await localization.select('en');
+      await tester.pumpAndSettle();
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, 1800));
+      await tester.pumpAndSettle();
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'English meaning-search layout',
+      );
+      expect(find.text('Search the Quran'), findsOneWidget);
+      expect(find.text('Translated meanings'), findsOneWidget);
+      await tester.pumpWidget(
+        LocalizationScope(
+          controller: localization,
+          child: AppearanceScope(
+            controller: appearance,
+            child: MaterialApp(
+              home: Scaffold(
+                body: QuranIndexPage(
+                  controller: quran,
+                  onRead: (verse) => selected = verse.key,
+                  onSearch: ({String query = ''}) {},
+                  onJuz: (_) {},
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'AL-FATIHAH');
+      await tester.pumpAndSettle();
+      expect(find.text('Surah Al-Fatihah'), findsOneWidget);
+      await tester.enterText(find.byType(TextField), repo.surah(1).name);
+      await tester.pumpAndSettle();
+      expect(find.text('Surah Al-Fatihah'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('quran-open-surah-1')));
+      expect(selected, '1:1');
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'English chapter-index layout',
+      );
       await tester.pumpWidget(const SizedBox());
     },
   );
