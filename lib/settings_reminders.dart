@@ -331,183 +331,241 @@ extension _ReminderSettingsUI on _SettingsDetailPageState {
     ],
   );
 
-  Widget _notificationControls() => Column(
-    children: [
-      _switchTile(
-        'enabled',
-        'تفعيل التذكيرات',
-        'المفتاح العام لكل التذكيرات',
-        Icons.notifications_none,
-      ),
-      _deviceStatus(),
-      const _SectionTitle('إشعارات الأذكار الذكية'),
-      _switchTile(
-        'smart',
-        'تفعيل الأذكار المتكررة',
-        'اختر المحتوى والفاصل الزمني',
-        Icons.eco_outlined,
-      ),
-      _SettingsTile(
-        icon: Icons.menu_book_outlined,
-        title: 'محتوى التنبيهات',
-        subtitle: 'من الأذكار الموثقة أو أذكارك الشخصية',
-        value: '${_settings!.content.length} محدد',
-        onTap: widget.reminders == null ? null : _selectContent,
-      ),
-      _textChoice('type', 'مكان التنبيه', const {
-        'center': 'مركز الإشعارات',
-        'overlay': 'فوق التطبيقات • Android',
-      }, 'center'),
-      _numberChoice('frequency', 'تكرار ظهور الذكر', {
-        for (final v in AppSettings.frequencies) v: '$v دقيقة',
-      }, 5),
-      _switchTile(
-        'ordered',
-        'عرض الأذكار بالترتيب',
-        'Android: بالترتيب المحدد أو عشوائياً',
-        Icons.format_list_numbered,
-      ),
-      if (widget.reminders?.device.platform == 'ios')
-        const _NoticeBox(
-          'حدود iOS',
-          'يظهر التنبيه في مركز الإشعارات بالنص الأول المحدد. تخصيص الخط والألوان والظهور فوق التطبيقات والنطق في الخلفية غير متاح. تُحدّث تذكيرات الختمة المحددة المدة عند فتح التطبيق ضمن سعة النظام.',
-        ),
-      const _SectionTitle('التنبيه فوق التطبيقات • Android'),
-      if (widget.reminders case final c?) ...[
-        _SettingsTile(
-          icon: Icons.layers_outlined,
-          title: 'إذن الظهور فوق التطبيقات',
-          subtitle: c.device.overlay
-              ? 'الإذن مسموح من النظام'
-              : 'يُطلب فقط عند الضغط',
-          value: c.device.platform == 'ios' ? 'غير متاح' : 'فتح الإذن',
-          onTap: c.device.platform == 'android'
-              ? () => c.action('overlayPermission')
-              : null,
-        ),
-        Wrap(
-          spacing: 8,
+  Widget _notificationControls() {
+    final c = widget.reminders;
+    final overlay = _settings!.text('type', 'center') == 'overlay';
+    final android = c?.device.platform == 'android';
+    return _CompactSmartSettings(
+      child: Material(
+        color: Colors.transparent,
+        child: Column(
           children: [
-            FilledButton.icon(
-              onPressed:
-                  c.device.platform == 'android' &&
-                      c.device.overlay &&
-                      c.device.allowed &&
-                      _settings!.flag('enabled') &&
-                      _settings!.flag('smart') &&
-                      _settings!.content.isNotEmpty &&
-                      _settings!.text('type', 'center') == 'overlay'
-                  ? () => c.action('startOverlay')
-                  : null,
-              icon: const Icon(Icons.play_arrow),
-              label: Text(
-                c.device.overlayRunning
-                    ? 'إعادة بدء التنبيه العائم'
-                    : 'بدء التنبيه العائم',
-              ),
+            _switchTile(
+              'enabled',
+              'تفعيل التذكيرات',
+              'المفتاح العام لتذكيرات حق',
+              Icons.notifications_none,
             ),
-            OutlinedButton(
-              onPressed: c.device.overlayRunning
-                  ? () => c.action('stopOverlay')
-                  : null,
-              child: const Text('إيقاف'),
+            _switchTile(
+              'smart',
+              'تفعيل الأذكار المتكررة',
+              'أذكار تختارها وتتكرر خلال اليوم',
+              Icons.eco_outlined,
+            ),
+            _SettingsTile(
+              icon: Icons.menu_book_outlined,
+              title: 'محتوى التنبيهات',
+              subtitle: 'اختر الأذكار أو حدّدها كلها',
+              value: '${_settings!.content.length} محدد',
+              onTap: c == null ? null : _selectContent,
+            ),
+            _numberChoice('frequency', 'تكرار ظهور الذكر', {
+              for (final v in AppSettings.frequencies)
+                v: v < 60
+                    ? 'كل $v دقيقة'
+                    : v == 60
+                    ? 'كل ساعة'
+                    : 'كل ${v ~/ 60} ساعات',
+            }, 5),
+            _textChoice('type', 'مكان التنبيه', const {
+              'center': 'مركز الإشعارات',
+              'overlay': 'فوق التطبيقات • Android',
+            }, 'center'),
+            _switchTile(
+              'ordered',
+              'عرض الأذكار بالترتيب',
+              'أوقفه للاختيار العشوائي على Android',
+              Icons.format_list_numbered,
+            ),
+            if (!overlay)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Text(
+                  'تصل الأذكار كإشعارات عادية، دون خدمة عائمة أو إشعار تشغيل ثابت.',
+                ),
+              ),
+            if (overlay && android && c != null) ...[
+              if (!c.device.overlay)
+                _SettingsTile(
+                  icon: Icons.layers_outlined,
+                  title: 'السماح بالظهور فوق التطبيقات',
+                  subtitle: 'إذن مطلوب لعرض فقاعة الذكر',
+                  onTap: () => c.action('overlayPermission'),
+                ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed:
+                          c.device.overlay &&
+                              c.device.allowed &&
+                              _settings!.flag('enabled') &&
+                              _settings!.flag('smart') &&
+                              _settings!.content.isNotEmpty
+                          ? () => c.action('startOverlay')
+                          : null,
+                      icon: Icon(
+                        c.device.overlayRunning
+                            ? Icons.refresh
+                            : Icons.play_arrow,
+                      ),
+                      label: Text(
+                        c.device.overlayRunning
+                            ? 'إعادة بدء التنبيه العائم'
+                            : 'بدء التنبيه العائم',
+                      ),
+                    ),
+                  ),
+                  if (c.device.overlayRunning) ...[
+                    const SizedBox(width: 8),
+                    OutlinedButton(
+                      onPressed: () => c.action('stopOverlay'),
+                      child: const Text('إيقاف'),
+                    ),
+                  ],
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text(
+                  'التشغيل العائم يحتاج إشعار خدمة صامتًا من Android مع زر إيقاف. يمكنك إدارة ظهوره من إعدادات قناته. لا يظهر الذكر فوق شاشة القفل.',
+                  style: TextStyle(fontSize: 12, height: 1.6),
+                ),
+              ),
+              TextButton(
+                onPressed: () => c.action('overlayNotificationSettings'),
+                child: const Text('خيارات إشعار التشغيل في الجهاز'),
+              ),
+            ],
+            if (overlay && !android && c?.device.platform == 'ios')
+              const _NoticeBox(
+                'متاح على Android فقط',
+                'يستخدم iPhone مركز الإشعارات بالنص الأول المحدد، دون نافذة فوق التطبيقات أو نطق في الخلفية.',
+              ),
+            if (overlay)
+              ExpansionTile(
+                key: const PageStorageKey('smart-overlay-appearance'),
+                tilePadding: const EdgeInsets.symmetric(horizontal: 4),
+                title: const Text('مظهر الذكر العائم'),
+                subtitle: const Text('الموضع، مدة الظهور، الخط والألوان'),
+                children: [
+                  _textChoice('position', 'موضع التنبيه العائم', const {
+                    'top': 'أعلى الشاشة',
+                    'center': 'وسط الشاشة',
+                    'bottom': 'أسفل الشاشة',
+                  }, 'top'),
+                  _numberChoice('hide', 'إخفاء الذكر تلقائياً', const {
+                    -1: 'حسب عدد الكلمات',
+                    0: 'بالضغط فقط',
+                    5: '5 ثوانٍ',
+                    10: '10 ثوانٍ',
+                    20: '20 ثانية',
+                    30: '30 ثانية',
+                  }, -1),
+                  _switchTile(
+                    'transparent',
+                    'شفافية الخلفية',
+                    'مع بقاء الإطار والنص',
+                    Icons.palette_outlined,
+                  ),
+                  _numberChoice('fontSize', 'حجم خط التنبيه', {
+                    for (final v in [12, 15, 20, 25, 30, 35, 40, 45, 50])
+                      v: '$v',
+                  }, 20),
+                  _textChoice('font', 'خط التنبيه', const {
+                    'Cairo': 'القاهرة',
+                    'Tajawal': 'تجوال',
+                    'Amiri': 'أميري',
+                  }, 'Cairo'),
+                  for (final entry in const {
+                    'background': 'لون الخلفية',
+                    'border': 'لون الإطار',
+                    'textColor': 'لون النص',
+                  }.entries)
+                    _numberChoice(
+                      entry.key,
+                      entry.value,
+                      const {
+                        0xFF2A8C82: 'فيروزي',
+                        0xFF102A43: 'كحلي',
+                        0xFFC7A45A: 'ذهبي',
+                        0xFFFFFCF7: 'عاجي',
+                      },
+                      entry.key == 'background'
+                          ? 0xFF2A8C82
+                          : entry.key == 'border'
+                          ? 0xFFC7A45A
+                          : 0xFFFFFCF7,
+                      icon: Icons.color_lens_outlined,
+                    ),
+                  _switchTile(
+                    'effects',
+                    'حركة الظهور',
+                    'يمكن إيقافها لعرض ثابت',
+                    Icons.animation,
+                  ),
+                  if (_settings!.flag('effects'))
+                    _textChoice('animation', 'نوع الحركة', const {
+                      'zoom': 'تكبير',
+                      'fade': 'تلاشي',
+                      'height': 'امتداد طولي',
+                      'width': 'امتداد عرضي',
+                      'vertical': 'انزلاق عمودي',
+                      'horizontal': 'انزلاق أفقي',
+                      'bounce': 'ارتداد',
+                    }, 'zoom'),
+                  _overlayPreview(),
+                ],
+              ),
+            ExpansionTile(
+              key: const PageStorageKey('smart-sound-options'),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 4),
+              title: const Text('الصوت والتفاعل'),
+              children: [
+                _switchTile(
+                  'sound',
+                  'صوت التذكيرات',
+                  'يتبع أيضًا إعدادات قنوات الجهاز',
+                  Icons.volume_up_outlined,
+                ),
+                if (overlay && android)
+                  _switchTile(
+                    'speech',
+                    'نطق الذكر العائم',
+                    'يحتاج صوتًا عربيًا مثبتًا على الجهاز',
+                    Icons.record_voice_over_outlined,
+                  ),
+                _numberChoice('snooze', 'التأجيل السريع', {
+                  for (final v in AppSettings.snoozes) v: '$v دقيقة',
+                }, 10),
+                if (c != null)
+                  OutlinedButton.icon(
+                    onPressed: c.device.allowed
+                        ? () => c.action('preview')
+                        : null,
+                    icon: const Icon(Icons.notifications_outlined),
+                    label: const Text('إرسال إشعار معاينة للجهاز'),
+                  ),
+              ],
+            ),
+            ExpansionTile(
+              key: const PageStorageKey('smart-permissions'),
+              tilePadding: const EdgeInsets.symmetric(horizontal: 4),
+              title: const Text('حالة الجهاز والأذونات'),
+              subtitle: Text(
+                c?.device.allowed == true
+                    ? 'الإشعارات مسموحة'
+                    : 'تحقق من إذن الإشعارات',
+              ),
+              children: [_deviceStatus()],
             ),
           ],
         ),
-        const _InfoBox(
-          'تشغيل اختياري',
-          'يظهر إشعار دائم مع زر إيقاف. لا يظهر الذكر فوق شاشة القفل. بعد إعادة تشغيل الهاتف أو إيقاف الخدمة، يبدأ الظهور العائم من هذا الزر؛ تبقى تذكيرات مركز الإشعارات متاحة.',
-        ),
-      ],
-      _textChoice('position', 'موضع التنبيه العائم', const {
-        'top': 'أعلى الشاشة',
-        'center': 'وسط الشاشة',
-        'bottom': 'أسفل الشاشة',
-      }, 'top'),
-      _numberChoice('hide', 'إخفاء الذكر تلقائياً', const {
-        -1: 'حسب عدد الكلمات',
-        0: 'بالضغط فقط',
-        5: '5 ثوانٍ',
-        10: '10 ثوانٍ',
-        20: '20 ثانية',
-        30: '30 ثانية',
-      }, -1),
-      const _SectionTitle('مظهر التنبيه العائم'),
-      _switchTile(
-        'transparent',
-        'شفافية الخلفية',
-        'مع بقاء الإطار والنص',
-        Icons.palette_outlined,
       ),
-      _numberChoice('fontSize', 'حجم خط التنبيه', {
-        for (final v in [12, 15, 20, 25, 30, 35, 40, 45, 50]) v: '$v',
-      }, 20),
-      _textChoice('font', 'خط التنبيه', const {
-        'Cairo': 'القاهرة',
-        'Tajawal': 'تجوال',
-        'Amiri': 'أميري',
-      }, 'Cairo'),
-      for (final entry in const {
-        'background': 'لون الخلفية',
-        'border': 'لون الإطار',
-        'textColor': 'لون النص',
-      }.entries)
-        _numberChoice(
-          entry.key,
-          entry.value,
-          const {
-            0xFF2A8C82: 'فيروزي',
-            0xFF102A43: 'كحلي',
-            0xFFC7A45A: 'ذهبي',
-            0xFFFFFCF7: 'عاجي',
-          },
-          entry.key == 'background'
-              ? 0xFF2A8C82
-              : entry.key == 'border'
-              ? 0xFFC7A45A
-              : 0xFFFFFCF7,
-          icon: Icons.color_lens_outlined,
-        ),
-      _switchTile(
-        'effects',
-        'حركة الظهور',
-        'يمكن إيقافها لعرض ثابت',
-        Icons.animation,
-      ),
-      _textChoice('animation', 'نوع الحركة', const {
-        'zoom': 'تكبير',
-        'fade': 'تلاشي',
-        'height': 'امتداد طولي',
-        'width': 'امتداد عرضي',
-        'vertical': 'انزلاق عمودي',
-        'horizontal': 'انزلاق أفقي',
-        'bounce': 'ارتداد',
-      }, 'zoom'),
-      _overlayPreview(),
-      const _SectionTitle('الصوت والتفاعل'),
-      _switchTile(
-        'sound',
-        'صوت التذكيرات',
-        'يتبع أيضاً إعدادات قناة الإشعارات في الجهاز',
-        Icons.volume_up_outlined,
-      ),
-      _switchTile(
-        'speech',
-        'نطق الذكر العائم',
-        'Android: يحتاج صوتاً عربياً مثبتاً؛ لا ينطق إشعارات مركز الإشعارات',
-        Icons.record_voice_over_outlined,
-      ),
-      _numberChoice('snooze', 'التأجيل السريع', {
-        for (final v in AppSettings.snoozes) v: '$v دقيقة',
-      }, 10),
-      if (widget.reminders case final c?)
-        OutlinedButton.icon(
-          onPressed: c.device.allowed ? () => c.action('preview') : null,
-          icon: const Icon(Icons.notifications_outlined),
-          label: const Text('إرسال إشعار معاينة للجهاز'),
-        ),
-    ],
-  );
+    );
+  }
+
   Widget _overlayPreview() {
     final s = _settings!, c = widget.reminders;
     final chosen = s.content
@@ -543,69 +601,13 @@ extension _ReminderSettingsUI on _SettingsDetailPageState {
 
   Future<void> _selectContent() async {
     final owner = _settings!, c = widget.reminders!;
-    final selected = owner.content.toSet();
-    var query = '';
     final value = await showDialog<List<String>>(
       context: context,
       builder: (dialogContext) {
         _activeDialog = dialogContext;
-        return StatefulBuilder(
-          builder: (context, setDialog) {
-            final items = c.content.entries
-                .where((e) => query.isEmpty || e.value.contains(query))
-                .toList();
-            return AlertDialog(
-              title: Text('محتوى التنبيهات (${selected.length}/50)'),
-              content: SizedBox(
-                width: 440,
-                height: 440,
-                child: Column(
-                  children: [
-                    TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'بحث في الأذكار',
-                      ),
-                      onChanged: (value) => setDialog(() => query = value),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: items.length,
-                        itemBuilder: (context, i) {
-                          final entry = items[i];
-                          return CheckboxListTile(
-                            value: selected.contains(entry.key),
-                            title: Text(
-                              entry.value,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            onChanged: (value) => setDialog(() {
-                              if (value == false) {
-                                selected.remove(entry.key);
-                              } else if (selected.length < 50) {
-                                selected.add(entry.key);
-                              }
-                            }),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext),
-                  child: const Text('إلغاء'),
-                ),
-                FilledButton(
-                  onPressed: () =>
-                      Navigator.pop(dialogContext, selected.toList()),
-                  child: const Text('حفظ'),
-                ),
-              ],
-            );
-          },
+        return _DhikrContentPicker(
+          content: Map.of(c.content),
+          initial: owner.content,
         );
       },
     );

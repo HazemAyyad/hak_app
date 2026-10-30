@@ -277,13 +277,15 @@ void main() {
     (tester) async {
       await pump(tester, SettingKind.notifications);
       await tap(tester, 'تكرار ظهور الذكر');
-      await tester.tap(find.text('15 دقيقة'));
+      await tester.tap(find.text('كل 15 دقيقة'));
       await settle(tester);
       expect(c.settings.number('frequency', 5), 15);
+      await tap(tester, 'الصوت والتفاعل');
       await tap(tester, 'التأجيل السريع');
       await tester.tap(find.text('45 دقيقة'));
       await settle(tester);
       expect(c.settings.number('snooze', 10), 45);
+      await tap(tester, 'حالة الجهاز والأذونات');
       await tap(tester, 'طلب إذن الإشعارات');
       expect(calls.where((e) => e.method == 'requestPermission').length, 1);
       expect(c.device.allowed, false);
@@ -295,6 +297,96 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     },
   );
+  testWidgets(
+    'large content picker selects all, searches Arabic, cancels and commits explicitly',
+    (tester) async {
+      await pump(tester, SettingKind.notifications, scale: 1);
+      await tap(tester, 'محتوى التنبيهات');
+      final dialog = find.byKey(const ValueKey('dhikr-content-dialog'));
+      expect(tester.getSize(dialog).width, greaterThan(320));
+      expect(tester.getSize(dialog).height, greaterThan(750));
+      await tester.tap(find.byKey(const ValueKey('dhikr-select-all')));
+      await tester.pumpAndSettle();
+      expect(c.settings.content, isEmpty);
+      expect(
+        find.text('${c.content.length} محدد من ${c.content.length}'),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('إلغاء'));
+      await settle(tester);
+      expect(c.settings.content, isEmpty);
+      await tap(tester, 'محتوى التنبيهات');
+      await tester.enterText(
+        find.byKey(const ValueKey('dhikr-content-search')),
+        'سبحان',
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('dhikr-select-all')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('مسح البحث'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('dhikr-select-all')));
+      await tester.pumpAndSettle();
+      await capture(tester, 'p25-content-picker-all');
+      await tester.tap(find.byKey(const ValueKey('save-dhikr-content')));
+      await settle(tester);
+      expect(c.settings.content.toSet(), c.content.keys.toSet());
+      expect(c.settings.content.length, greaterThan(50));
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'center mode hides overlay details and overlay styling is collapsed',
+    (tester) async {
+      await pump(tester, SettingKind.notifications, scale: 1);
+      expect(find.text('موضع التنبيه العائم'), findsNothing);
+      expect(find.text('خيارات إشعار التشغيل في الجهاز'), findsNothing);
+      await capture(tester, 'p25-smart-center');
+      await tap(tester, 'مكان التنبيه');
+      await tester.tap(find.text('فوق التطبيقات • Android'));
+      await settle(tester);
+      expect(find.text('مظهر الذكر العائم'), findsOneWidget);
+      expect(find.text('لون الخلفية'), findsNothing);
+      await tap(tester, 'مظهر الذكر العائم');
+      expect(find.text('لون الخلفية'), findsOneWidget);
+      await tap(tester, 'خيارات إشعار التشغيل في الجهاز');
+      expect(
+        calls.any((call) => call.method == 'overlayNotificationSettings'),
+        true,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'content picker stays usable on a narrow enlarged screen with keyboard',
+    (tester) async {
+      await pump(tester, SettingKind.notifications, scale: 1.4);
+      tester.view.physicalSize = const Size(320, 568);
+      await tester.pumpAndSettle();
+      await tap(tester, 'محتوى التنبيهات');
+      expect(tester.takeException(), isNull);
+      tester.view.viewInsets = const FakeViewPadding(bottom: 210);
+      addTearDown(tester.view.resetViewInsets);
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.byKey(const ValueKey('dhikr-content-search')),
+        'سبحان',
+      );
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(
+        find.byKey(const ValueKey('save-dhikr-content')).hitTestable(),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('إلغاء'));
+      await settle(tester);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
   testWidgets(
     'account switch dismisses content picker and prevents private selections leaking',
     (tester) async {
@@ -309,11 +401,14 @@ void main() {
       });
       await pump(tester, SettingKind.notifications);
       await tap(tester, 'محتوى التنبيهات');
-      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('dhikr-content-dialog')),
+        findsOneWidget,
+      );
       quran.account.profile = {'id': 42};
       activity.changed(activity.scope);
       await settle(tester);
-      expect(find.byType(AlertDialog), findsNothing);
+      expect(find.byKey(const ValueKey('dhikr-content-dialog')), findsNothing);
       expect(c.settings.scope, 'account.42');
       expect(c.settings.content, isEmpty);
       expect(c.content.containsKey(personal.id), false);

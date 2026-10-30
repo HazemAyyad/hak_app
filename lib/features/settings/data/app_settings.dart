@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// General settings have one durable, account-scoped owner. Quran, appearance
 /// and exercise preferences retain their existing authoritative repositories.
 class AppSettings extends ChangeNotifier {
+  static const maxContent = 1000;
   AppSettings(this.preferences, this.scope) {
     final raw = preferences.getString('app.settings.v1.$scope');
     try {
@@ -81,7 +82,7 @@ class AppSettings extends ChangeNotifier {
   List<String> get content =>
       (_data['content'] is List ? _data['content'] as List : const [])
           .whereType<String>()
-          .take(50)
+          .take(maxContent)
           .toList();
   static String clockLabel(int minute) =>
       '${(minute ~/ 60).toString().padLeft(2, '0')}:${(minute % 60).toString().padLeft(2, '0')}';
@@ -141,7 +142,7 @@ class AppSettings extends ChangeNotifier {
                         e.length <= 120 &&
                         RegExp(r'^[a-z0-9:_-]+$').hasMatch(e),
                   ) &&
-                  value.length <= 50 &&
+                  value.length <= maxContent &&
                   value.toSet().length == value.length,
             _ => false,
           };

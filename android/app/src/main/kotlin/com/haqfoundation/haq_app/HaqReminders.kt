@@ -822,6 +822,10 @@ class HaqOverlayService : Service(), TextToSpeech.OnInitListener {
         val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, "haq_overlay") else Notification.Builder(this)
         startForeground(7249, builder.setSmallIcon(R.drawable.ic_haq_reminder).setContentTitle("تذكيرات حق العائمة تعمل")
             .setContentText("اضغط إيقاف لإنهاء الظهور فوق التطبيقات").setOngoing(true)
+            .setOnlyAlertOnce(true).setShowWhen(false).setCategory(Notification.CATEGORY_SERVICE)
+            .setContentIntent(HaqReminders.open(this, "settings", HaqReminders.plan(this).optString("scope")))
+            .setSound(null).setDefaults(0)
+            .apply { if (Build.VERSION.SDK_INT < 26) setPriority(Notification.PRIORITY_LOW) }
             .addAction(Notification.Action.Builder(null, "إيقاف", stop).build()).build())
         reload(); HaqReminders.restore(this)
         return START_NOT_STICKY
@@ -1002,6 +1006,11 @@ class HaqRemindersBridge(private val activity: MainActivity, private val channel
                     }
                     "overlayPermission" -> { activity.startActivity(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${activity.packageName}"))); result.success(null) }
                     "notificationSettings" -> { activity.startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName)); result.success(null) }
+                    "overlayNotificationSettings" -> {
+                        activity.startActivity(Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                            .putExtra(Settings.EXTRA_APP_PACKAGE, activity.packageName).putExtra(Settings.EXTRA_CHANNEL_ID, "haq_overlay"))
+                        result.success(null)
+                    }
                     "batterySettings" -> { activity.startActivity(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)); result.success(null) }
                     "startOverlay" -> {
                         check(Settings.canDrawOverlays(activity) && HaqReminders.allowed(activity))

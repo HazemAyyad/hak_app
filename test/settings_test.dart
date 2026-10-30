@@ -127,6 +127,24 @@ void main() {
     corrupt.dispose();
   });
   test(
+    'select all persists the full catalog beyond fifty without truncation',
+    () async {
+      final ids = List.generate(267, (i) => 'dhikr:$i');
+      await settings.set('content', ids);
+      await prefs.reload();
+      final reopened = AppSettings(prefs, 'guest');
+      expect(reopened.content, ids);
+      expect(
+        () => settings.set(
+          'content',
+          List.generate(AppSettings.maxContent + 1, (i) => 'dhikr:$i'),
+        ),
+        throwsArgumentError,
+      );
+      reopened.dispose();
+    },
+  );
+  test(
     'daily weekly and smart jobs retain stable identities across edits and toggles',
     () async {
       await settings.set('enabled', true);

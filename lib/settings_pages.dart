@@ -10,6 +10,7 @@ import 'features/settings/data/reminder_controller.dart';
 import 'features/prayer/data/prayer_models.dart';
 
 part 'settings_reminders.dart';
+part 'settings_dhikr_picker.dart';
 
 const _teal = Color(0xFF0A8B80);
 
@@ -223,6 +224,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
   Widget build(BuildContext context) => ListenableBuilder(
     listenable: widget.reminders ?? _settings ?? const _EmptySettings(),
     builder: (context, _) => _SettingsShell(
+      compact: widget.kind == SettingKind.notifications,
       title: widget.kind.title,
       subtitle: widget.kind.subtitle,
       icon: widget.kind.icon,
@@ -826,6 +828,7 @@ class _SettingsShell extends StatelessWidget {
     required this.child,
     this.section = AppSection.more,
     this.onDestinationSelected,
+    this.compact = false,
   });
   final String title;
   final String subtitle;
@@ -833,6 +836,7 @@ class _SettingsShell extends StatelessWidget {
   final Widget child;
   final AppSection section;
   final ValueChanged<int>? onDestinationSelected;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) => Directionality(
@@ -843,12 +847,17 @@ class _SettingsShell extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: _Header(title: title, subtitle: subtitle, icon: icon),
+            child: _Header(
+              title: title,
+              subtitle: subtitle,
+              icon: icon,
+              compact: compact,
+            ),
           ),
           SliverToBoxAdapter(
             child: Container(
               transform: Matrix4.translationValues(0, -22, 0),
-              padding: EdgeInsets.fromLTRB(18, 28, 18, 125),
+              padding: EdgeInsets.fromLTRB(18, compact ? 12 : 28, 18, 125),
               decoration: BoxDecoration(
                 color: AppPalette.of(context).background,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
@@ -873,14 +882,16 @@ class _Header extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.icon,
+    this.compact = false,
   });
   final String title;
   final String subtitle;
   final IconData icon;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) => Container(
-    height: 265,
+    height: compact ? 200 : 265,
     padding: EdgeInsets.fromLTRB(
       18,
       MediaQuery.paddingOf(context).top + 12,
@@ -913,7 +924,8 @@ class _Header extends StatelessWidget {
                 width: 60,
                 height: 60,
                 child: Icon(
-                  Icons.arrow_back_ios_new,
+                  Icons.arrow_forward_ios,
+                  textDirection: TextDirection.ltr,
                   color: AppPalette.of(context).tealHeading,
                 ),
               ),
@@ -1005,84 +1017,119 @@ class _SettingsTile extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: EdgeInsets.only(bottom: 9),
-    child: Material(
-      color: AppPalette.of(context).surface,
-      elevation: .5,
-      shadowColor: AppPalette.of(context).heading.withValues(alpha: .14),
-      borderRadius: BorderRadius.circular(18),
-      child: InkWell(
-        onTap: onTap,
+  Widget build(BuildContext context) {
+    final compact =
+        context.dependOnInheritedWidgetOfExactType<_CompactSmartSettings>() !=
+        null;
+    return Padding(
+      padding: EdgeInsets.only(bottom: 9),
+      child: Material(
+        color: AppPalette.of(context).surface,
+        elevation: .5,
+        shadowColor: AppPalette.of(context).heading.withValues(alpha: .14),
         borderRadius: BorderRadius.circular(18),
-        child: Container(
-          constraints: BoxConstraints(minHeight: 82),
-          padding: EdgeInsets.symmetric(horizontal: 14, vertical: 11),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppPalette.of(context).border),
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: AppPalette.of(context).paleTeal,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: appAccent(context, _teal), size: 27),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: AppPalette.of(context).tealHeading,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: AppPalette.of(context).muted,
-                        fontSize: 12.5,
-                        height: 1.25,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (trailing != null)
-                trailing!
-              else ...[
-                if (value != null)
-                  Flexible(
-                    child: Text(
-                      value!,
-                      textAlign: TextAlign.left,
-                      style: TextStyle(color: Color(0xFF9C875B), fontSize: 12),
-                    ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(18),
+          child: Container(
+            constraints: BoxConstraints(minHeight: compact ? 64 : 82),
+            padding: EdgeInsets.symmetric(
+              horizontal: compact ? 10 : 14,
+              vertical: compact ? 8 : 11,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppPalette.of(context).border),
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: compact ? 36 : 50,
+                  height: compact ? 36 : 50,
+                  decoration: BoxDecoration(
+                    color: AppPalette.of(context).paleTeal,
+                    shape: BoxShape.circle,
                   ),
-                SizedBox(width: 5),
-                Icon(
-                  Icons.chevron_left,
-                  color: AppPalette.of(context).tealHeading,
-                  size: 19,
+                  child: Icon(
+                    icon,
+                    color: appAccent(context, _teal),
+                    size: compact ? 22 : 27,
+                  ),
                 ),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          color: AppPalette.of(context).tealHeading,
+                          fontSize: compact ? 15 : 18,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      if (subtitle.isNotEmpty) SizedBox(height: 2),
+                      if (subtitle.isNotEmpty)
+                        Text(
+                          subtitle,
+                          style: TextStyle(
+                            color: AppPalette.of(context).muted,
+                            fontSize: 12.5,
+                            height: 1.25,
+                          ),
+                        ),
+                      if (compact && value != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            value!,
+                            style: TextStyle(
+                              color: AppPalette.of(context).gold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                if (trailing != null)
+                  trailing!
+                else ...[
+                  if (!compact && value != null)
+                    Flexible(
+                      child: Text(
+                        value!,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                          color: Color(0xFF9C875B),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  SizedBox(width: 5),
+                  if (onTap != null)
+                    Icon(
+                      Icons.chevron_left,
+                      textDirection: TextDirection.ltr,
+                      color: AppPalette.of(context).tealHeading,
+                      size: 19,
+                    ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
+}
+
+class _CompactSmartSettings extends InheritedWidget {
+  const _CompactSmartSettings({required super.child});
+  @override
+  bool updateShouldNotify(_CompactSmartSettings oldWidget) => false;
 }
 
 class _Panel extends StatelessWidget {
