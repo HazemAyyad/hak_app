@@ -80,7 +80,10 @@ class _EmptyDhikrGroupState extends State<_EmptyDhikrGroup> {
   Widget build(BuildContext context) {
     final colors = AppPalette.of(context);
     if (widget.activity.scope != widget.owner) {
-      return _notice(context, 'تغيّر الحساب؛ ارجع لفتح أذكارك الحالية');
+      return _notice(
+        context,
+        context.adhkarLabel('تغيّر الحساب؛ ارجع لفتح أذكارك الحالية'),
+      );
     }
     return ColoredBox(
       color: colors.background,
@@ -90,8 +93,8 @@ class _EmptyDhikrGroupState extends State<_EmptyDhikrGroup> {
           Stack(
             children: [
               DirectoryHeader(
-                title: widget.group.title,
-                subtitle: 'اذكر الله واطمئن',
+                title: widget.group.displayTitle(context),
+                subtitle: context.adhkarLabel('اذكر الله واطمئن'),
                 maxTitleLines: 2,
               ),
               Positioned(
@@ -99,7 +102,7 @@ class _EmptyDhikrGroupState extends State<_EmptyDhikrGroup> {
                 top: MediaQuery.paddingOf(context).top + 12,
                 child: IconButton.filledTonal(
                   onPressed: () => Navigator.pop(context),
-                  tooltip: 'العودة للأذكار',
+                  tooltip: context.adhkarLabel('العودة للأذكار'),
                   icon: const Icon(
                     Icons.arrow_forward,
                     textDirection: TextDirection.ltr,
@@ -121,7 +124,9 @@ class _EmptyDhikrGroupState extends State<_EmptyDhikrGroup> {
                   ),
                   const SizedBox(height: 18),
                   Text(
-                    saved ? 'لم تحفظ أذكارًا بعد' : 'هذه المجموعة خالية',
+                    saved
+                        ? context.adhkarLabel('لم تحفظ أذكارًا بعد')
+                        : context.adhkarLabel('هذه المجموعة خالية'),
                     style: TextStyle(
                       fontSize: 21,
                       fontWeight: FontWeight.w700,
@@ -131,8 +136,12 @@ class _EmptyDhikrGroupState extends State<_EmptyDhikrGroup> {
                   const SizedBox(height: 8),
                   Text(
                     saved
-                        ? 'اضغط «حفظ» داخل قارئ الأذكار لتجدها هنا.'
-                        : 'أضف ذكرًا شخصيًا أو اختر من الأذكار الجاهزة.',
+                        ? context.adhkarLabel(
+                            'اضغط «حفظ» داخل قارئ الأذكار لتجدها هنا.',
+                          )
+                        : context.adhkarLabel(
+                            'أضف ذكرًا شخصيًا أو اختر من الأذكار الجاهزة.',
+                          ),
                     textAlign: TextAlign.center,
                     style: TextStyle(color: colors.muted, height: 1.8),
                   ),
@@ -142,10 +151,10 @@ class _EmptyDhikrGroupState extends State<_EmptyDhikrGroup> {
                     icon: const Icon(Icons.add),
                     label: Text(
                       busy
-                          ? 'جارٍ الفتح...'
+                          ? context.adhkarLabel('جارٍ الفتح...')
                           : saved
-                          ? 'تصفّح الأذكار'
-                          : 'إضافة ذكر',
+                          ? context.adhkarLabel('تصفّح الأذكار')
+                          : context.adhkarLabel('إضافة ذكر'),
                     ),
                   ),
                 ],

@@ -22,6 +22,9 @@ class LocaleFormats {
   ).format(value);
   String integer(int value) =>
       NumberFormat('0', _supported(NumberFormat.localeExists)).format(value);
+  String percent(num value) => NumberFormat.percentPattern(
+    _supported(NumberFormat.localeExists),
+  ).format(value);
   String clock24(DateTime value) => DateFormat.Hm(_dateLocale).format(value);
 
   // Gregorian dates only. Hijri dates retain the app's separate verified calendar.

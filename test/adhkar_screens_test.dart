@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/main.dart';
 import 'package:haq_app/settings_pages.dart';
 import 'package:haq_app/navigation/more_page.dart';
@@ -122,87 +123,91 @@ void main() {
     double scale = 1,
     ThemeMode mode = ThemeMode.light,
     bool fullApp = false,
+    AppLocalization? localization,
   }) async {
     tester.view.physicalSize = visualSize(Size(width, 1100));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await appearance.setMode(mode);
-    await tester.pumpWidget(
-      AppearanceScope(
-        controller: appearance,
-        child: RepaintBoundary(
-          key: preview,
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              fontFamily: 'QuranUI',
+    final screen = AppearanceScope(
+      controller: appearance,
+      child: RepaintBoundary(
+        key: preview,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            fontFamily: 'QuranUI',
+            brightness: mode == ThemeMode.dark
+                ? Brightness.dark
+                : Brightness.light,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF278B83),
               brightness: mode == ThemeMode.dark
                   ? Brightness.dark
                   : Brightness.light,
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: const Color(0xFF278B83),
-                brightness: mode == ThemeMode.dark
-                    ? Brightness.dark
-                    : Brightness.light,
-              ),
             ),
-            builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(visualScale(scale))),
-              child: child!,
-            ),
-            home: fullApp
-                ? HomePage(
-                    onToggleTheme: () {},
-                    quranController: quran,
-                    religiousController: religious,
-                  )
-                : Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Scaffold(
-                      body: ValueListenableBuilder<bool>(
-                        valueListenable: visible,
-                        builder: (context, active, _) => AdhkarSectionPage(
-                          key: host,
-                          controller: religious,
-                          onFeature: (_) {},
-                          onExit: () {},
-                          initialRepository: source,
-                          active: active,
-                        ),
-                      ),
-                      bottomNavigationBar: NavigationBar(
-                        selectedIndex: 2,
-                        destinations: const [
-                          NavigationDestination(
-                            icon: Icon(Icons.home_outlined),
-                            label: 'الرئيسية',
-                          ),
-                          NavigationDestination(
-                            icon: Icon(Icons.menu_book_outlined),
-                            label: 'القرآن',
-                          ),
-                          NavigationDestination(
-                            icon: Icon(Icons.eco_outlined),
-                            label: 'الأذكار',
-                          ),
-                          NavigationDestination(
-                            icon: Icon(Icons.explore_outlined),
-                            label: 'القبلة',
-                          ),
-                          NavigationDestination(
-                            icon: Icon(Icons.more_horiz),
-                            label: 'المزيد',
-                          ),
-                        ],
+          ),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.linear(visualScale(scale))),
+            child: child!,
+          ),
+          home: fullApp
+              ? HomePage(
+                  onToggleTheme: () {},
+                  quranController: quran,
+                  religiousController: religious,
+                )
+              : Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Scaffold(
+                    body: ValueListenableBuilder<bool>(
+                      valueListenable: visible,
+                      builder: (context, active, _) => AdhkarSectionPage(
+                        key: host,
+                        controller: religious,
+                        onFeature: (_) {},
+                        onExit: () {},
+                        initialRepository: source,
+                        active: active,
                       ),
                     ),
+                    bottomNavigationBar: NavigationBar(
+                      selectedIndex: 2,
+                      destinations: const [
+                        NavigationDestination(
+                          icon: Icon(Icons.home_outlined),
+                          label: 'الرئيسية',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.menu_book_outlined),
+                          label: 'القرآن',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.eco_outlined),
+                          label: 'الأذكار',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.explore_outlined),
+                          label: 'القبلة',
+                        ),
+                        NavigationDestination(
+                          icon: Icon(Icons.more_horiz),
+                          label: 'المزيد',
+                        ),
+                      ],
+                    ),
                   ),
-          ),
+                ),
         ),
       ),
+    );
+    await tester.pumpWidget(
+      localization == null
+          ? screen
+          : LocalizationScope(controller: localization, child: screen),
     );
     await tester.pumpAndSettle();
   }
@@ -267,6 +272,121 @@ void main() {
       kind: PersonalEntityKind.dhikr,
     )).single.key;
   }
+
+  testWidgets(
+    'English group search keeps canonical Arabic text and reading direction',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await pump(tester, width: 320, scale: 1.3, localization: localization);
+      expect(find.text('Muslim remembrances'), findsOneWidget);
+      await tester.enterText(
+        find.byKey(const ValueKey('adhkar-search')),
+        'MORNING',
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Morning remembrances'), findsOneWidget);
+      expect(find.text('Evening remembrances'), findsNothing);
+      final firstId = source.groups
+          .firstWhere((group) => group.id == 'daily:morning')
+          .itemIds
+          .first;
+      final original = source.items[firstId]!.text;
+      unawaitedForTest(host.currentState!.openGroup('daily:morning'));
+      await until(
+        tester,
+        () => find.byKey(ValueKey('count-$firstId')).evaluate().isNotEmpty,
+      );
+      expect(find.text('Morning remembrances'), findsWidgets);
+      expect(
+        tester.widget<Text>(find.text(original).first).textDirection,
+        TextDirection.rtl,
+      );
+      expect(source.items[firstId]!.text, original);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'English personal forms preserve Arabic text and group names through a language change and counting',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await pump(tester, width: 320, scale: 1.2, localization: localization);
+      unawaitedForTest(host.currentState!.openPersonal());
+      await until(
+        tester,
+        () => find
+            .byKey(const ValueKey('add-personal-dhikr'))
+            .evaluate()
+            .isNotEmpty,
+      );
+      await tap(tester, find.byKey(const ValueKey('add-personal-dhikr')));
+      const ownText = 'نص من إدخال المستخدم';
+      await tester.enterText(find.byKey(const ValueKey('dhikr-text')), ownText);
+      await tester.pump();
+      final editor = find.descendant(
+        of: find.byKey(const ValueKey('dhikr-text')),
+        matching: find.byType(EditableText),
+      );
+      expect(
+        tester.widget<EditableText>(editor).textDirection,
+        TextDirection.rtl,
+      );
+      await tester.enterText(find.byKey(const ValueKey('dhikr-target')), '٣');
+      await tap(
+        tester,
+        find.byKey(const ValueKey('save-dhikr')),
+        done: () => find.byKey(const ValueKey('save-dhikr')).evaluate().isEmpty,
+      );
+      expect(find.text(ownText), findsOneWidget);
+      await tap(tester, find.byKey(const ValueKey('add-personal-group')));
+      await tester.enterText(find.byKey(const ValueKey('group-title')), 'حفظ');
+      await tap(
+        tester,
+        find.byKey(const ValueKey('save-group')),
+        done: () => find.byKey(const ValueKey('save-group')).evaluate().isEmpty,
+      );
+      await tap(tester, find.widgetWithText(ChoiceChip, 'My groups'));
+      expect(find.text('حفظ'), findsOneWidget);
+      final personal = (await store.entities(
+        activity.scope,
+        kind: PersonalEntityKind.dhikr,
+      )).whereType<PersonalDhikr>().single;
+      expect(personal.text, ownText);
+      expect(personal.target, 3);
+      unawaitedForTest(host.currentState!.openGroup('personal:all'));
+      final counter = find.byKey(ValueKey('count-${personal.key}'));
+      await until(tester, () => counter.evaluate().isNotEmpty);
+      await tap(tester, counter);
+      final number = find
+          .descendant(of: counter, matching: find.byType(Text))
+          .first;
+      expect(tester.widget<Text>(number).data, '2');
+      final before = (await store.entities(
+        activity.scope,
+      )).map((entity) => entity.toJson()).toList();
+      await localization.select('ar');
+      await tester.pumpAndSettle();
+      expect(tester.widget<Text>(number).data, '2');
+      expect(find.text(ownText), findsOneWidget);
+      expect(
+        (await store.entities(
+          activity.scope,
+        )).map((entity) => entity.toJson()).toList(),
+        before,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   testWidgets(
     'morning card shows five completed entries outside the reader and survives reopening',

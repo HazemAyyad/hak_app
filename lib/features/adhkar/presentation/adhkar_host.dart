@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
+import 'adhkar_labels.dart';
 import '../../sharing/share_card.dart';
 
 import '../../../app_appearance.dart';
@@ -110,7 +113,9 @@ class AdhkarSectionPageState extends State<AdhkarSectionPage> {
 
   void _message(String text) {
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.adhkarLabel(text))));
     }
   }
 
@@ -198,34 +203,39 @@ class AdhkarSectionPageState extends State<AdhkarSectionPage> {
     );
   });
   @override
-  Widget build(BuildContext context) => Stack(
-    children: [
-      NavigatorPopHandler<void>(
-        enabled: widget.active,
-        onPopWithResult: (_) => navigator.currentState?.maybePop(),
-        child: Navigator(
-          key: navigator,
-          observers: [routes],
-          onGenerateRoute: (settings) => MaterialPageRoute<void>(
-            settings: settings,
-            builder: (_) => PopScope<Object?>(
-              canPop: false,
-              onPopInvokedWithResult: (didPop, _) {
-                if (!didPop && widget.active) widget.onExit();
-              },
-              child: _AdhkarIndex(host: this),
+  Widget build(BuildContext context) => Directionality(
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        Directionality.of(context),
+    child: Stack(
+      children: [
+        NavigatorPopHandler<void>(
+          enabled: widget.active,
+          onPopWithResult: (_) => navigator.currentState?.maybePop(),
+          child: Navigator(
+            key: navigator,
+            observers: [routes],
+            onGenerateRoute: (settings) => MaterialPageRoute<void>(
+              settings: settings,
+              builder: (_) => PopScope<Object?>(
+                canPop: false,
+                onPopInvokedWithResult: (didPop, _) {
+                  if (!didPop && widget.active) widget.onExit();
+                },
+                child: _AdhkarIndex(host: this),
+              ),
             ),
           ),
         ),
-      ),
-      if (_working)
-        Positioned.fill(
-          child: ColoredBox(
-            color: Colors.black26,
-            child: const Center(child: CircularProgressIndicator()),
+        if (_working)
+          Positioned.fill(
+            child: ColoredBox(
+              color: Colors.black26,
+              child: Center(child: CircularProgressIndicator()),
+            ),
           ),
-        ),
-    ],
+      ],
+    ),
   );
 }
 
@@ -260,7 +270,9 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
     } catch (_) {
       if (mounted) {
         setState(
-          () => progressError = 'تعذّر تحميل تقدّم اليوم؛ اضغط لإعادة المحاولة',
+          () => progressError = context.adhkarLabel(
+            'تعذّر تحميل تقدّم اليوم؛ اضغط لإعادة المحاولة',
+          ),
         );
       }
     }
@@ -285,7 +297,7 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
       child: ListenableBuilder(
         listenable: host.widget.controller.quran,
         builder: (context, _) => host.widget.controller.quran.repository == null
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(child: CircularProgressIndicator())
             : FutureBuilder<AdhkarRepository>(
                 future: host.source,
                 builder: (context, snapshot) {
@@ -294,18 +306,19 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                   final groups =
                       repository?.groups
                           .where(
-                            (g) =>
-                                normalizeQuranSearch(g.title).contains(needle),
+                            (g) => normalizeQuranSearch(
+                              '${g.title} ${g.displayTitle(context)}',
+                            ).toLowerCase().contains(needle.toLowerCase()),
                           )
                           .toList() ??
                       [];
                   return CustomScrollView(
                     key: const PageStorageKey('adhkar-section'),
                     slivers: [
-                      const SliverToBoxAdapter(
+                      SliverToBoxAdapter(
                         child: DirectoryHeader(
-                          title: 'أذكار المسلم',
-                          subtitle: 'اذكر الله واطمئن',
+                          title: context.adhkarLabel('أذكار المسلم'),
+                          subtitle: context.adhkarLabel('اذكر الله واطمئن'),
                         ),
                       ),
                       SliverPadding(
@@ -318,7 +331,9 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                   setState(() => query = value),
                               decoration: _input(
                                 context,
-                                'ابحث في مجموعات الأذكار...',
+                                context.adhkarLabel(
+                                  'ابحث في مجموعات الأذكار...',
+                                ),
                                 icon: Icons.search,
                               ),
                             ),
@@ -330,12 +345,16 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                 ActionChip(
                                   key: const ValueKey('adhkar-personal'),
                                   avatar: const Icon(Icons.edit_note),
-                                  label: const Text('أذكاري الشخصية'),
+                                  label: Text(
+                                    context.adhkarLabel('أذكاري الشخصية'),
+                                  ),
                                   onPressed: host.openPersonal,
                                 ),
                                 ActionChip(
                                   avatar: const Icon(Icons.favorite_border),
-                                  label: const Text('الأذكار المحفوظة'),
+                                  label: Text(
+                                    context.adhkarLabel('الأذكار المحفوظة'),
+                                  ),
                                   onPressed: () => host.openGroup(
                                     'group:${AdhkarRepository.savedGroupId}',
                                   ),
@@ -343,7 +362,11 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                 ActionChip(
                                   key: const ValueKey('adhkar-personalAdhkar'),
                                   avatar: const Icon(Icons.bookmarks_outlined),
-                                  label: const Text('المواد المحفوظة سابقًا'),
+                                  label: Text(
+                                    context.adhkarLabel(
+                                      'المواد المحفوظة سابقًا',
+                                    ),
+                                  ),
                                   onPressed: () => host.widget.onFeature(
                                     AppFeature.personalAdhkar,
                                   ),
@@ -354,7 +377,7 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                             if (snapshot.hasError)
                               _notice(
                                 context,
-                                'تعذّر تحميل المصدر',
+                                context.adhkarLabel('تعذّر تحميل المصدر'),
                                 action: () {
                                   host._source = null;
                                   setState(() {});
@@ -362,9 +385,14 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                               ),
                             if (snapshot.connectionState !=
                                 ConnectionState.done)
-                              const Center(child: CircularProgressIndicator()),
+                              Center(child: CircularProgressIndicator()),
                             if (repository != null && groups.isEmpty)
-                              _notice(context, 'لا توجد مجموعات تطابق بحثك'),
+                              _notice(
+                                context,
+                                context.adhkarLabel(
+                                  'لا توجد مجموعات تطابق بحثك',
+                                ),
+                              ),
                             if (progressError != null ||
                                 progress?.error != null)
                               _notice(
@@ -383,9 +411,18 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                           constraints.maxWidth >= 600 ? 3 : 2,
                                       crossAxisSpacing: 10,
                                       mainAxisSpacing: 10,
-                                      mainAxisExtent: MediaQuery.textScalerOf(
+                                      mainAxisExtent: adhkarTileExtent(
                                         context,
-                                      ).scale(152).clamp(156, 240),
+                                        groups,
+                                        (constraints.maxWidth -
+                                                    (constraints.maxWidth >= 600
+                                                        ? 20
+                                                        : 10)) /
+                                                (constraints.maxWidth >= 600
+                                                    ? 3
+                                                    : 2) -
+                                            32,
+                                      ),
                                     ),
                                 itemBuilder: (context, index) {
                                   final group = groups[index];
@@ -423,7 +460,7 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                           ],
                                         ),
                                         Text(
-                                          group.title,
+                                          group.displayTitle(context),
                                           style: TextStyle(
                                             color: colors.heading,
                                             fontWeight: FontWeight.w700,
@@ -447,7 +484,27 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                             ),
                                           ),
                                           Text(
-                                            '${p.completed} من ${p.total} أذكار • ${p.read} من ${p.target} تكرار',
+                                            context.tr(
+                                              'adhkar.progress',
+                                              args: {
+                                                'completed': adhkarNumber(
+                                                  context,
+                                                  p.completed,
+                                                ),
+                                                'total': adhkarNumber(
+                                                  context,
+                                                  p.total,
+                                                ),
+                                                'read': adhkarNumber(
+                                                  context,
+                                                  p.read,
+                                                ),
+                                                'target': adhkarNumber(
+                                                  context,
+                                                  p.target,
+                                                ),
+                                              },
+                                            ),
                                             key: ValueKey(
                                               'progress-count-${group.id}',
                                             ),
@@ -459,7 +516,9 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                           ),
                                         ] else
                                           Text(
-                                            'تحميل تقدّم اليوم…',
+                                            context.adhkarLabel(
+                                              'تحميل تقدّم اليوم…',
+                                            ),
                                             style: TextStyle(
                                               fontSize: 11,
                                               color: colors.muted,
@@ -473,7 +532,9 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'حصن المسلم • نصوص وأعداد موثّقة، وتقدّمك محفوظ على الجهاز',
+                              context.adhkarLabel(
+                                'حصن المسلم • نصوص وأعداد موثّقة، وتقدّمك محفوظ على الجهاز',
+                              ),
                               style: TextStyle(
                                 color: colors.muted,
                                 fontSize: 12,
@@ -503,7 +564,7 @@ IconData _groupIcon(String name) => switch (name) {
 InputDecoration _input(BuildContext context, String hint, {IconData? icon}) {
   final colors = AppPalette.of(context);
   return InputDecoration(
-    hintText: hint,
+    hintText: context.adhkarLabel(hint),
     prefixIcon: icon == null ? null : Icon(icon, color: colors.tealHeading),
     filled: true,
     fillColor: colors.surface,
@@ -548,12 +609,15 @@ Widget _notice(BuildContext context, String text, {VoidCallback? action}) =>
       child: Column(
         children: [
           Text(
-            text,
+            context.adhkarLabel(text),
             textAlign: TextAlign.center,
             style: TextStyle(color: AppPalette.of(context).muted, height: 1.8),
           ),
           if (action != null)
-            TextButton(onPressed: action, child: const Text('إعادة المحاولة')),
+            TextButton(
+              onPressed: action,
+              child: Text(context.adhkarLabel('إعادة المحاولة')),
+            ),
         ],
       ),
     );
@@ -568,16 +632,16 @@ Future<bool> _confirm(
       context: context,
       useRootNavigator: false,
       builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(text),
+        title: Text(context.adhkarLabel(title)),
+        content: Text(context.adhkarLabel(text)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text(context.adhkarLabel('إلغاء')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text(accept),
+            child: Text(context.adhkarLabel(accept)),
           ),
         ],
       ),

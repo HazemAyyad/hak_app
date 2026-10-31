@@ -43,9 +43,9 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
   Future<void> _delete(DhikrEntry item) async {
     if (!await _confirm(
           context,
-          'حذف الذكر الشخصي؟',
-          'يُحذف من مجموعاتك، ويبقى تاريخ قراءتك محفوظًا.',
-          accept: 'حذف',
+          context.adhkarLabel('حذف الذكر الشخصي؟'),
+          context.adhkarLabel('يُحذف من مجموعاتك، ويبقى تاريخ قراءتك محفوظًا.'),
+          accept: context.adhkarLabel('حذف'),
         ) ||
         !mounted) {
       return;
@@ -60,9 +60,9 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
   Future<void> _deleteGroup(PersonalDhikrGroup group) async {
     if (!await _confirm(
           context,
-          'حذف المجموعة؟',
-          'تبقى أذكارها الشخصية في «كل أذكاري الشخصية».',
-          accept: 'حذف',
+          context.adhkarLabel('حذف المجموعة؟'),
+          context.adhkarLabel('تبقى أذكارها الشخصية في «كل أذكاري الشخصية».'),
+          accept: context.adhkarLabel('حذف'),
         ) ||
         !mounted) {
       return;
@@ -106,15 +106,17 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
             children: [
               Stack(
                 children: [
-                  const DirectoryHeader(
-                    title: 'أذكاري',
-                    subtitle: 'أذكارك ومجموعاتك\nكما تحبّها',
+                  DirectoryHeader(
+                    title: context.adhkarLabel('أذكاري'),
+                    subtitle: context.adhkarLabel(
+                      'أذكارك ومجموعاتك\nكما تحبّها',
+                    ),
                   ),
                   Positioned(
                     left: 12,
                     top: MediaQuery.paddingOf(context).top + 12,
                     child: IconButton.filledTonal(
-                      tooltip: 'العودة للأذكار',
+                      tooltip: context.adhkarLabel('العودة للأذكار'),
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(
                         Icons.arrow_forward,
@@ -132,7 +134,9 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                     if (widget.activity.scope != editor.scope)
                       _notice(
                         context,
-                        'تغيّر الحساب؛ ارجع لفتح أذكار الحساب الحالي',
+                        context.adhkarLabel(
+                          'تغيّر الحساب؛ ارجع لفتح أذكار الحساب الحالي',
+                        ),
                       )
                     else ...[
                       Wrap(
@@ -140,17 +144,17 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                         runSpacing: 8,
                         children: [
                           ChoiceChip(
-                            label: const Text('الأذكار الشخصية'),
+                            label: Text(context.adhkarLabel('الأذكار الشخصية')),
                             selected: !groups,
                             onSelected: (_) => setState(() => groups = false),
                           ),
                           ChoiceChip(
-                            label: const Text('مجموعاتي'),
+                            label: Text(context.adhkarLabel('مجموعاتي')),
                             selected: groups,
                             onSelected: (_) => setState(() => groups = true),
                           ),
                           ActionChip(
-                            label: const Text('الأذكار الجاهزة'),
+                            label: Text(context.adhkarLabel('الأذكار الجاهزة')),
                             onPressed: () => Navigator.pop(context),
                           ),
                         ],
@@ -164,7 +168,7 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                             key: const ValueKey('add-personal-dhikr'),
                             onPressed: () => _editDhikrDialog(context, editor),
                             icon: const Icon(Icons.add),
-                            label: const Text('إضافة ذكر'),
+                            label: Text(context.adhkarLabel('إضافة ذكر')),
                           ),
                           OutlinedButton.icon(
                             key: const ValueKey('add-personal-group'),
@@ -179,7 +183,7 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                                     ),
                                   ),
                             icon: const Icon(Icons.create_new_folder_outlined),
-                            label: const Text('إنشاء مجموعة'),
+                            label: Text(context.adhkarLabel('إنشاء مجموعة')),
                           ),
                         ],
                       ),
@@ -187,17 +191,17 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                       if (snapshot.hasError)
                         _notice(
                           context,
-                          'تعذّر قراءة المحفوظات',
+                          context.adhkarLabel('تعذّر قراءة المحفوظات'),
                           action: _changed,
                         ),
                       if (library == null && !snapshot.hasError)
-                        const Center(child: CircularProgressIndicator()),
+                        Center(child: CircularProgressIndicator()),
                       if (library != null && !groups) ...[
                         TextField(
                           onChanged: (v) => setState(() => query = v),
                           decoration: _input(
                             context,
-                            'ابحث في أذكارك...',
+                            context.adhkarLabel('ابحث في أذكارك...'),
                             icon: Icons.search,
                           ),
                         ),
@@ -206,15 +210,21 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                           _notice(
                             context,
                             query.isEmpty
-                                ? 'لم تضف أذكارًا شخصية بعد؛ ابدأ بذكر تحبّه.'
-                                : 'لا توجد نتائج لهذا البحث',
+                                ? context.adhkarLabel(
+                                    'لم تضف أذكارًا شخصية بعد؛ ابدأ بذكر تحبّه.',
+                                  )
+                                : context.adhkarLabel(
+                                    'لا توجد نتائج لهذا البحث',
+                                  ),
                           ),
                         if (entries.isNotEmpty)
                           TextButton.icon(
                             onPressed: () =>
                                 widget.host.openGroup('personal:all'),
                             icon: const Icon(Icons.auto_stories_outlined),
-                            label: const Text('قراءة كل أذكاري الشخصية'),
+                            label: Text(
+                              context.adhkarLabel('قراءة كل أذكاري الشخصية'),
+                            ),
                           ),
                         for (final entry in entries)
                           Padding(
@@ -226,6 +236,7 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                                 children: [
                                   Text(
                                     entry.text,
+                                    textDirection: entry.contentDirection,
                                     maxLines: 4,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -236,7 +247,7 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    '${entry.target} مرة${entry.source.isEmpty ? '' : ' • ${entry.source}'}',
+                                    '${adhkarRepetitions(context, entry.target)}${entry.source.isEmpty ? '' : ' • ${entry.source}'}',
                                     style: TextStyle(
                                       color: colors.muted,
                                       fontSize: 12,
@@ -246,7 +257,9 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       IconButton(
-                                        tooltip: 'تعديل الذكر',
+                                        tooltip: context.adhkarLabel(
+                                          'تعديل الذكر',
+                                        ),
                                         onPressed: () => _editDhikrDialog(
                                           context,
                                           editor,
@@ -255,7 +268,9 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                                         icon: const Icon(Icons.edit_outlined),
                                       ),
                                       IconButton(
-                                        tooltip: 'حذف الذكر',
+                                        tooltip: context.adhkarLabel(
+                                          'حذف الذكر',
+                                        ),
                                         onPressed: () => _delete(entry),
                                         icon: const Icon(Icons.delete_outline),
                                       ),
@@ -270,7 +285,9 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                         if (custom.isEmpty)
                           _notice(
                             context,
-                            'أنشئ مجموعة واجمع فيها أذكارك المختارة.',
+                            context.adhkarLabel(
+                              'أنشئ مجموعة واجمع فيها أذكارك المختارة.',
+                            ),
                           ),
                         ReorderableListView.builder(
                           shrinkWrap: true,
@@ -311,7 +328,10 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                                       ),
                                     ),
                                     Text(
-                                      '${group.itemIds.length} ذكر',
+                                      adhkarGroupSize(
+                                        context,
+                                        group.itemIds.length,
+                                      ),
                                       style: TextStyle(color: colors.muted),
                                     ),
                                     Row(
@@ -328,7 +348,9 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                                         ),
                                         const Spacer(),
                                         IconButton(
-                                          tooltip: 'تعديل المجموعة والترتيب',
+                                          tooltip: context.adhkarLabel(
+                                            'تعديل المجموعة والترتيب',
+                                          ),
                                           onPressed: () => showDialog<void>(
                                             context: context,
                                             useRootNavigator: false,
@@ -341,7 +363,9 @@ class _PersonalAdhkarPageState extends State<_PersonalAdhkarPage> {
                                           icon: const Icon(Icons.edit_outlined),
                                         ),
                                         IconButton(
-                                          tooltip: 'حذف المجموعة',
+                                          tooltip: context.adhkarLabel(
+                                            'حذف المجموعة',
+                                          ),
                                           onPressed: () => _deleteGroup(model),
                                           icon: const Icon(
                                             Icons.delete_outline,
@@ -429,7 +453,9 @@ class _DhikrEditDialogState extends State<_DhikrEditDialog> {
       if (mounted) {
         setState(() {
           saving = false;
-          error = 'تعذّر الحفظ؛ تأكد من الحساب والبيانات وأعد المحاولة';
+          error = context.adhkarLabel(
+            'تعذّر الحفظ؛ تأكد من الحساب والبيانات وأعد المحاولة',
+          );
         });
       }
     }
@@ -439,10 +465,10 @@ class _DhikrEditDialogState extends State<_DhikrEditDialog> {
   Widget build(BuildContext context) => AlertDialog(
     title: Text(
       widget.item == null
-          ? 'إضافة ذكر'
+          ? context.adhkarLabel('إضافة ذكر')
           : widget.item!.personal
-          ? 'تعديل الذكر'
-          : 'حفظ نسخة شخصية',
+          ? context.adhkarLabel('تعديل الذكر')
+          : context.adhkarLabel('حفظ نسخة شخصية'),
     ),
     content: SizedBox(
       width: 440,
@@ -454,21 +480,29 @@ class _DhikrEditDialogState extends State<_DhikrEditDialog> {
             children: [
               TextFormField(
                 controller: preface,
+                textDirection: adhkarTextDirection(preface.text),
+                onChanged: (_) => setState(() {}),
                 maxLength: 500,
                 minLines: 1,
                 maxLines: 3,
-                decoration: _input(context, 'ما قبل الذكر (اختياري)'),
+                decoration: _input(
+                  context,
+                  context.adhkarLabel('ما قبل الذكر (اختياري)'),
+                ),
               ),
               const SizedBox(height: 12),
               TextFormField(
                 key: const ValueKey('dhikr-text'),
                 controller: text,
+                textDirection: adhkarTextDirection(text.text),
+                onChanged: (_) => setState(() {}),
                 minLines: 3,
                 maxLines: 6,
                 maxLength: 10000,
-                decoration: _input(context, 'نص الذكر'),
-                validator: (v) =>
-                    v == null || v.trim().isEmpty ? 'اكتب نص الذكر' : null,
+                decoration: _input(context, context.adhkarLabel('نص الذكر')),
+                validator: (v) => v == null || v.trim().isEmpty
+                    ? context.adhkarLabel('اكتب نص الذكر')
+                    : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
@@ -480,25 +514,32 @@ class _DhikrEditDialogState extends State<_DhikrEditDialog> {
                     (old, next) => next.copyWith(text: adhkarDigits(next.text)),
                   ),
                 ],
-                decoration: _input(context, 'عدد التكرار'),
+                decoration: _input(context, context.adhkarLabel('عدد التكرار')),
                 validator: (v) {
                   final n = int.tryParse(adhkarDigits(v ?? '').trim());
                   return n == null || n < 1 || n > 1000000
-                      ? 'اكتب عددًا صحيحًا من1 إلى1000000'
+                      ? context.adhkarLabel('اكتب عددًا صحيحًا من1 إلى1000000')
                       : null;
                 },
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: note,
+                textDirection: adhkarTextDirection(note.text),
+                onChanged: (_) => setState(() {}),
                 maxLength: 500,
                 minLines: 1,
                 maxLines: 3,
-                decoration: _input(context, 'ملاحظة أو مصدر (اختياري)'),
+                decoration: _input(
+                  context,
+                  context.adhkarLabel('ملاحظة أو مصدر (اختياري)'),
+                ),
               ),
               if (widget.item?.personal == false)
-                const Text(
-                  'تُحفظ نسخة في أذكارك الشخصية، ويبقى نص المصدر المعتمد محفوظًا.',
+                Text(
+                  context.adhkarLabel(
+                    'تُحفظ نسخة في أذكارك الشخصية، ويبقى نص المصدر المعتمد محفوظًا.',
+                  ),
                   style: TextStyle(fontSize: 12),
                 ),
               if (error != null)
@@ -514,12 +555,16 @@ class _DhikrEditDialogState extends State<_DhikrEditDialog> {
     actions: [
       TextButton(
         onPressed: saving ? null : () => Navigator.pop(context),
-        child: const Text('إلغاء'),
+        child: Text(context.adhkarLabel('إلغاء')),
       ),
       FilledButton(
         key: const ValueKey('save-dhikr'),
         onPressed: saving ? null : save,
-        child: Text(saving ? 'جارٍ الحفظ...' : 'حفظ'),
+        child: Text(
+          saving
+              ? context.adhkarLabel('جارٍ الحفظ...')
+              : context.adhkarLabel('حفظ'),
+        ),
       ),
     ],
   );
@@ -591,7 +636,7 @@ class _GroupEditDialogState extends State<_GroupEditDialog> {
   Future<void> save() async {
     if (saving) return;
     if (title.text.trim().isEmpty) {
-      setState(() => error = 'اكتب اسم المجموعة');
+      setState(() => error = context.adhkarLabel('اكتب اسم المجموعة'));
       return;
     }
     setState(() => saving = true);
@@ -607,7 +652,7 @@ class _GroupEditDialogState extends State<_GroupEditDialog> {
       if (mounted) {
         setState(() {
           saving = false;
-          error = 'تعذّر حفظ المجموعة؛ أعد المحاولة';
+          error = context.adhkarLabel('تعذّر حفظ المجموعة؛ أعد المحاولة');
         });
       }
     }
@@ -634,7 +679,9 @@ class _GroupEditDialogState extends State<_GroupEditDialog> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                widget.group == null ? 'إنشاء مجموعة' : 'تعديل المجموعة',
+                widget.group == null
+                    ? context.adhkarLabel('إنشاء مجموعة')
+                    : context.adhkarLabel('تعديل المجموعة'),
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 12),
@@ -642,25 +689,35 @@ class _GroupEditDialogState extends State<_GroupEditDialog> {
                 key: const ValueKey('group-title'),
                 readOnly: widget.readOnlyTitle,
                 controller: title,
+                textDirection: adhkarTextDirection(title.text),
+                onChanged: (_) => setState(() {}),
                 maxLength: 160,
-                decoration: _input(context, 'اسم المجموعة'),
+                decoration: _input(
+                  context,
+                  context.adhkarLabel('اسم المجموعة'),
+                ),
               ),
               Wrap(
                 spacing: 8,
                 children: [
                   ChoiceChip(
-                    label: Text('الأذكار (${selected.length})'),
+                    label: Text(
+                      context.tr(
+                        'adhkar.selectedCount',
+                        args: {'count': adhkarNumber(context, selected.length)},
+                      ),
+                    ),
                     selected: !ordering,
                     onSelected: (_) => setState(() => ordering = false),
                   ),
                   ChoiceChip(
-                    label: const Text('الترتيب'),
+                    label: Text(context.adhkarLabel('الترتيب')),
                     selected: ordering,
                     onSelected: (_) => setState(() => ordering = true),
                   ),
                   ActionChip(
                     avatar: const Icon(Icons.add, size: 18),
-                    label: const Text('ذكر جديد'),
+                    label: Text(context.adhkarLabel('ذكر جديد')),
                     onPressed: saving ? null : _newDhikr,
                   ),
                 ],
@@ -671,7 +728,7 @@ class _GroupEditDialogState extends State<_GroupEditDialog> {
                   onChanged: (v) => setState(() => query = v),
                   decoration: _input(
                     context,
-                    'ابحث لإضافة ذكر...',
+                    context.adhkarLabel('ابحث لإضافة ذكر...'),
                     icon: Icons.search,
                   ),
                 ),
@@ -689,7 +746,7 @@ class _GroupEditDialogState extends State<_GroupEditDialog> {
                           return ListTile(
                             key: ValueKey(selected[index]),
                             title: Text(
-                              entry?.text ?? 'عنصر محفوظ',
+                              entry?.text ?? context.adhkarLabel('عنصر محفوظ'),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -717,6 +774,7 @@ class _GroupEditDialogState extends State<_GroupEditDialog> {
                                   }),
                             title: Text(
                               entry.text,
+                              textDirection: entry.contentDirection,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -747,13 +805,17 @@ class _GroupEditDialogState extends State<_GroupEditDialog> {
                 children: [
                   TextButton(
                     onPressed: saving ? null : () => Navigator.pop(context),
-                    child: const Text('إلغاء'),
+                    child: Text(context.adhkarLabel('إلغاء')),
                   ),
                   const SizedBox(width: 8),
                   FilledButton(
                     key: const ValueKey('save-group'),
                     onPressed: saving ? null : save,
-                    child: Text(saving ? 'جارٍ الحفظ...' : 'حفظ المجموعة'),
+                    child: Text(
+                      saving
+                          ? context.adhkarLabel('جارٍ الحفظ...')
+                          : context.adhkarLabel('حفظ المجموعة'),
+                    ),
                   ),
                 ],
               ),

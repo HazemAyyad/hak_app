@@ -177,9 +177,9 @@ class _AdhkarReaderState extends State<_AdhkarReader>
         await _overlay(
               () => _confirm(
                 context,
-                'مغادرة الأذكار؟',
-                'تقدّمك محفوظ، ويمكنك استكماله لاحقًا.',
-                accept: 'مغادرة',
+                context.adhkarLabel('مغادرة الأذكار؟'),
+                context.adhkarLabel('تقدّمك محفوظ، ويمكنك استكماله لاحقًا.'),
+                accept: context.adhkarLabel('مغادرة'),
               ),
             ) ==
             true;
@@ -201,9 +201,12 @@ class _AdhkarReaderState extends State<_AdhkarReader>
             size: 46,
             color: AppPalette.of(context).tealHeading,
           ),
-          title: const Text('تقبّل الله منك', textAlign: TextAlign.center),
-          content: const Text(
-            'أتممت أذكار هذه الجلسة، وحُفظ تقدمك.',
+          title: Text(
+            context.adhkarLabel('تقبّل الله منك'),
+            textAlign: TextAlign.center,
+          ),
+          content: Text(
+            context.adhkarLabel('أتممت أذكار هذه الجلسة، وحُفظ تقدمك.'),
             textAlign: TextAlign.center,
           ),
           actions: [
@@ -212,11 +215,11 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                 await c.undo();
                 if (context.mounted) Navigator.pop(context);
               },
-              child: const Text('تراجع'),
+              child: Text(context.adhkarLabel('تراجع')),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('تم'),
+              child: Text(context.adhkarLabel('تم')),
             ),
           ],
         ),
@@ -267,9 +270,11 @@ class _AdhkarReaderState extends State<_AdhkarReader>
         if (await _overlay(
               () => _confirm(
                 context,
-                'بدء العدّ من جديد؟',
-                'يبدأ عدّ جديد، ويبقى تاريخ الجلسة محفوظًا.',
-                accept: 'ابدأ من جديد',
+                context.adhkarLabel('بدء العدّ من جديد؟'),
+                context.adhkarLabel(
+                  'يبدأ عدّ جديد، ويبقى تاريخ الجلسة محفوظًا.',
+                ),
+                accept: context.adhkarLabel('ابدأ من جديد'),
               ),
             ) ==
             true) {
@@ -281,16 +286,19 @@ class _AdhkarReaderState extends State<_AdhkarReader>
             context: context,
             useRootNavigator: false,
             builder: (context) => AlertDialog(
-              title: const Text('مصدر الذكر'),
+              title: Text(context.adhkarLabel('مصدر الذكر')),
               content: SingleChildScrollView(
                 child: SelectableText(
-                  '${item.source}\n${item.sourceUrl ?? ''}\n\nالنصوص المركبة تتضمن تعليماتها وأعدادها داخل النص كما وردت في المصدر.',
+                  context.tr(
+                    'adhkar.sourceNotice',
+                    args: {'source': item.source, 'url': item.sourceUrl ?? ''},
+                  ),
                 ),
               ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('تم'),
+                  child: Text(context.adhkarLabel('تم')),
                 ),
               ],
             ),
@@ -307,9 +315,11 @@ class _AdhkarReaderState extends State<_AdhkarReader>
             await _overlay(
                   () => _confirm(
                     context,
-                    'حذف الذكر الشخصي؟',
-                    'يُحذف من مجموعاتك، ويبقى تاريخ قراءتك محفوظًا.',
-                    accept: 'حذف',
+                    context.adhkarLabel('حذف الذكر الشخصي؟'),
+                    context.adhkarLabel(
+                      'يُحذف من مجموعاتك، ويبقى تاريخ قراءتك محفوظًا.',
+                    ),
+                    accept: context.adhkarLabel('حذف'),
                   ),
                 ) ==
                 true) {
@@ -372,21 +382,28 @@ class _AdhkarReaderState extends State<_AdhkarReader>
   }
 
   Widget _listMenu(DhikrEntry item) => PopupMenuButton<String>(
-    tooltip: 'خيارات الذكر',
+    tooltip: context.adhkarLabel('خيارات الذكر'),
     onSelected: (value) => _options(value, item),
     itemBuilder: (_) => [
       for (final (id, label) in [
-        ('copy', 'نسخ النص'),
-        ('share', 'مشاركة'),
+        ('copy', context.adhkarLabel('نسخ النص')),
+        ('share', context.adhkarLabel('مشاركة')),
         (
           'save',
-          _savedItems.contains(item.id) ? 'إزالة من المحفوظات' : 'حفظ الذكر',
+          _savedItems.contains(item.id)
+              ? context.adhkarLabel('إزالة من المحفوظات')
+              : context.adhkarLabel('حفظ الذكر'),
         ),
-        ('complete', 'إكمال هذا الذكر'),
-        ('edit', item.personal ? 'تعديل الذكر الشخصي' : 'حفظ نسخة شخصية'),
-        if (item.personal) ('delete', 'حذف الذكر الشخصي'),
+        ('complete', context.adhkarLabel('إكمال هذا الذكر')),
+        (
+          'edit',
+          item.personal
+              ? context.adhkarLabel('تعديل الذكر الشخصي')
+              : context.adhkarLabel('حفظ نسخة شخصية'),
+        ),
+        if (item.personal) ('delete', context.adhkarLabel('حذف الذكر الشخصي')),
         if (c.group.id != 'personal:all')
-          ('group', 'تعديل المجموعة وترتيب الأذكار'),
+          ('group', context.adhkarLabel('تعديل المجموعة وترتيب الأذكار')),
       ])
         PopupMenuItem(value: id, child: Text(label)),
     ],
@@ -428,18 +445,18 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 30),
                 children: [
                   Text(
-                    'عرض الأذكار والجلسة',
+                    context.adhkarLabel('عرض الأذكار والجلسة'),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<String>(
                     initialValue: settings.font,
-                    decoration: _input(context, 'الخط'),
+                    decoration: _input(context, context.adhkarLabel('الخط')),
                     items: [
                       for (final (id, label) in [
-                        ('QuranUI', 'القاهرة'),
-                        ('Tajawal', 'تجوال'),
-                        ('AmiriQuran', 'أميري'),
+                        ('QuranUI', context.adhkarLabel('القاهرة')),
+                        ('Tajawal', context.adhkarLabel('تجوال')),
+                        ('AmiriQuran', context.adhkarLabel('أميري')),
                       ])
                         DropdownMenuItem(value: id, child: Text(label)),
                     ],
@@ -448,7 +465,14 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                     },
                   ),
                   const SizedBox(height: 12),
-                  Text('حجم الخط: ${settings.size.round()}'),
+                  Text(
+                    context.tr(
+                      'adhkar.fontSize',
+                      args: {
+                        'size': adhkarNumber(context, settings.size.round()),
+                      },
+                    ),
+                  ),
                   Slider(
                     value: settings.size,
                     min: 16,
@@ -458,57 +482,57 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                   ),
                   toggle(
                     'zero',
-                    'اهتزاز عند الصفر',
+                    context.adhkarLabel('اهتزاز عند الصفر'),
                     settings.hapticZero,
                     (v) => settings.hapticZero = v,
                   ),
                   toggle(
                     'every',
-                    'اهتزاز عند كل ضغطة',
+                    context.adhkarLabel('اهتزاز عند كل ضغطة'),
                     settings.hapticEvery,
                     (v) => settings.hapticEvery = v,
                   ),
                   toggle(
                     'hide',
-                    'إخفاء الذكر عند الصفر',
+                    context.adhkarLabel('إخفاء الذكر عند الصفر'),
                     settings.hideCompleted,
                     (v) => settings.hideCompleted = v,
                   ),
                   toggle(
                     'tap',
-                    'العدّ بالضغط على نص الذكر',
+                    context.adhkarLabel('العدّ بالضغط على نص الذكر'),
                     settings.tapText,
                     (v) => settings.tapText = v,
                   ),
                   const Divider(),
                   toggle(
                     'auto',
-                    'الانتقال التلقائي في الجلسة',
+                    context.adhkarLabel('الانتقال التلقائي في الجلسة'),
                     settings.autoAdvance,
                     (v) => settings.autoAdvance = v,
                   ),
                   toggle(
                     'dim',
-                    'الوضع الخافت أثناء الجلسة',
+                    context.adhkarLabel('الوضع الخافت أثناء الجلسة'),
                     settings.dim,
                     (v) => settings.dim = v,
                   ),
                   toggle(
                     'volume',
-                    'العدّ بأزرار الصوت في جلسة أندرويد',
+                    context.adhkarLabel('العدّ بأزرار الصوت في جلسة أندرويد'),
                     settings.volumeKeys,
                     (v) => settings.volumeKeys = v,
                     enabled: volume.supported,
                   ),
                   toggle(
                     'exit',
-                    'تأكيد مغادرة الأذكار',
+                    context.adhkarLabel('تأكيد مغادرة الأذكار'),
                     settings.confirmExit,
                     (v) => settings.confirmExit = v,
                   ),
                   FilledButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('تم'),
+                    child: Text(context.adhkarLabel('تم')),
                   ),
                 ],
               );
@@ -535,7 +559,10 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                 children: [
                   Expanded(
                     child: Text(
-                      item.title,
+                      item.displayTitle(context),
+                      textDirection: adhkarTextDirection(
+                        item.displayTitle(context),
+                      ),
                       style: TextStyle(
                         color: colors.gold,
                         fontWeight: FontWeight.w700,
@@ -552,6 +579,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Text(
                     item.preface,
+                    textDirection: adhkarTextDirection(item.preface),
                     style: TextStyle(
                       color: colors.muted,
                       fontSize: 14,
@@ -569,6 +597,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                   key: ValueKey('dhikr-text-scroll-${item.id}'),
                   child: Text(
                     item.text,
+                    textDirection: item.contentDirection,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: c.settings.font,
@@ -582,6 +611,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
               const SizedBox(height: 20),
               Text(
                 item.source,
+                textDirection: adhkarTextDirection(item.source),
                 style: TextStyle(
                   color: colors.muted,
                   fontSize: 11,
@@ -599,7 +629,13 @@ class _AdhkarReaderState extends State<_AdhkarReader>
             children: [
               Semantics(
                 button: true,
-                label: 'المتبقي $remaining من ${c.session.targets[item.id]}',
+                label: context.tr(
+                  'adhkar.remaining',
+                  args: {
+                    'count': adhkarNumber(context, remaining),
+                    'total': adhkarNumber(context, c.session.targets[item.id]!),
+                  },
+                ),
                 child: Material(
                   color: remaining == 0
                       ? const Color(0xFFB84949)
@@ -617,7 +653,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              '$remaining',
+                              adhkarNumber(context, remaining),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: list ? 30 : 42,
@@ -627,7 +663,9 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                             ),
                           ),
                           Text(
-                            remaining == 0 ? 'تمّ' : 'متبقّي',
+                            remaining == 0
+                                ? context.adhkarLabel('تمّ')
+                                : context.adhkarLabel('متبقّي'),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 13,
@@ -652,7 +690,26 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '${((1 - remaining / c.session.targets[item.id]!) * 100).round()}٪ • ${c.session.targets[item.id]! - remaining} من ${c.session.targets[item.id]}',
+                      context.tr(
+                        'adhkar.counterProgress',
+                        args: {
+                          'percent': adhkarPercent(
+                            context,
+                            (1 - remaining / c.session.targets[item.id]!).clamp(
+                              0,
+                              1,
+                            ),
+                          ),
+                          'count': adhkarNumber(
+                            context,
+                            c.session.targets[item.id]! - remaining,
+                          ),
+                          'total': adhkarNumber(
+                            context,
+                            c.session.targets[item.id]!,
+                          ),
+                        },
+                      ),
                       style: TextStyle(fontSize: 12, color: colors.muted),
                     ),
                   ],
@@ -662,7 +719,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                 Padding(
                   padding: const EdgeInsets.only(top: 9),
                   child: Text(
-                    'اضغط على الرقم للعدّ',
+                    context.adhkarLabel('اضغط على الرقم للعدّ'),
                     style: TextStyle(color: colors.muted, fontSize: 12),
                   ),
                 ),
@@ -680,7 +737,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                   child: _action(
                     context,
                     Icons.settings_outlined,
-                    'العرض',
+                    context.adhkarLabel('العرض'),
                     _settings,
                   ),
                 ),
@@ -688,7 +745,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                   child: _action(
                     context,
                     _saved ? Icons.favorite : Icons.favorite_border,
-                    'حفظ',
+                    context.adhkarLabel('حفظ'),
                     _favorite,
                   ),
                 ),
@@ -696,25 +753,30 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                   child: _action(
                     context,
                     Icons.share_outlined,
-                    'مشاركة',
+                    context.adhkarLabel('مشاركة'),
                     () => _share(item),
                   ),
                 ),
                 PopupMenuButton<String>(
-                  tooltip: 'خيارات الذكر',
+                  tooltip: context.adhkarLabel('خيارات الذكر'),
                   onSelected: (value) => _options(value, item),
                   itemBuilder: (_) => [
                     for (final (id, label) in [
-                      ('copy', 'نسخ النص'),
-                      ('source', 'المصدر'),
-                      ('complete', 'إكمال هذا الذكر'),
+                      ('copy', context.adhkarLabel('نسخ النص')),
+                      ('source', context.adhkarLabel('المصدر')),
+                      ('complete', context.adhkarLabel('إكمال هذا الذكر')),
                       (
                         'edit',
-                        item.personal ? 'تعديل الذكر الشخصي' : 'حفظ نسخة شخصية',
+                        item.personal
+                            ? context.adhkarLabel('تعديل الذكر الشخصي')
+                            : context.adhkarLabel('حفظ نسخة شخصية'),
                       ),
-                      ('restart', 'بدء العدّ من جديد'),
+                      ('restart', context.adhkarLabel('بدء العدّ من جديد')),
                       if (c.group.id != 'personal:all')
-                        ('group', 'تعديل المجموعة وترتيب الأذكار'),
+                        (
+                          'group',
+                          context.adhkarLabel('تعديل المجموعة وترتيب الأذكار'),
+                        ),
                     ])
                       PopupMenuItem(value: id, child: Text(label)),
                   ],
@@ -737,10 +799,12 @@ class _AdhkarReaderState extends State<_AdhkarReader>
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('تغيّر الحساب؛ افتح أذكار الحساب الحالي'),
+                Text(
+                  context.adhkarLabel('تغيّر الحساب؛ افتح أذكار الحساب الحالي'),
+                ),
                 TextButton(
                   onPressed: _leave,
-                  child: const Text('العودة للأذكار'),
+                  child: Text(context.adhkarLabel('العودة للأذكار')),
                 ),
               ],
             ),
@@ -772,15 +836,15 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                 return Stack(
                   children: [
                     DirectoryHeader(
-                      title: c.group.title,
+                      title: c.group.displayTitle(context),
                       maxTitleLines: 2,
-                      subtitle: 'اذكر الله واطمئن',
+                      subtitle: context.adhkarLabel('اذكر الله واطمئن'),
                     ),
                     Positioned(
                       left: 12,
                       top: MediaQuery.paddingOf(context).top + 12,
                       child: IconButton.filledTonal(
-                        tooltip: 'العودة للأذكار',
+                        tooltip: context.adhkarLabel('العودة للأذكار'),
                         onPressed: _leave,
                         icon: const Icon(
                           Icons.arrow_forward,
@@ -801,9 +865,18 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                         runSpacing: 6,
                         children: [
                           for (final (mode, label) in [
-                            (DhikrReadingMode.cards, 'أفقي'),
-                            (DhikrReadingMode.list, 'عمودي'),
-                            (DhikrReadingMode.focus, 'جلسة'),
+                            (
+                              DhikrReadingMode.cards,
+                              context.adhkarLabel('أفقي'),
+                            ),
+                            (
+                              DhikrReadingMode.list,
+                              context.adhkarLabel('عمودي'),
+                            ),
+                            (
+                              DhikrReadingMode.focus,
+                              context.adhkarLabel('جلسة'),
+                            ),
                           ])
                             ChoiceChip(
                               key: ValueKey('adhkar-mode-${mode.name}'),
@@ -828,7 +901,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                             ),
                           ActionChip(
                             avatar: const Icon(Icons.undo, size: 18),
-                            label: const Text('تراجع'),
+                            label: Text(context.adhkarLabel('تراجع')),
                             onPressed: c.available ? c.undo : null,
                           ),
                           ActionChip(
@@ -836,7 +909,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                               Icons.settings_outlined,
                               size: 18,
                             ),
-                            label: const Text('العرض'),
+                            label: Text(context.adhkarLabel('العرض')),
                             onPressed: _settings,
                           ),
                         ],
@@ -846,7 +919,16 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                         children: [
                           Expanded(
                             child: Text(
-                              '${c.cursor + 1} من ${c.items.length}',
+                              context.tr(
+                                'adhkar.sessionProgress',
+                                args: {
+                                  'index': adhkarNumber(context, c.cursor + 1),
+                                  'total': adhkarNumber(
+                                    context,
+                                    c.items.length,
+                                  ),
+                                },
+                              ),
                               style: TextStyle(
                                 color: colors.muted,
                                 fontSize: 12,
@@ -854,7 +936,15 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                             ),
                           ),
                           Text(
-                            '${c.completedItems} مكتمل',
+                            context.tr(
+                              'adhkar.completed',
+                              args: {
+                                'count': adhkarNumber(
+                                  context,
+                                  c.completedItems,
+                                ),
+                              },
+                            ),
                             style: TextStyle(color: colors.muted, fontSize: 12),
                           ),
                         ],
@@ -873,7 +963,9 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                         Padding(
                           padding: const EdgeInsets.only(top: 12),
                           child: Text(
-                            'تقبّل الله منك • اكتملت الجلسة',
+                            context.adhkarLabel(
+                              'تقبّل الله منك • اكتملت الجلسة',
+                            ),
                             style: TextStyle(
                               color: colors.tealHeading,
                               fontWeight: FontWeight.w700,
@@ -884,7 +976,9 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                         _notice(
                           context,
                           c.error ??
-                              'تغيّر الحساب أو اليوم؛ ارجع لفتح أذكارك الحالية',
+                              context.adhkarLabel(
+                                'تغيّر الحساب أو اليوم؛ ارجع لفتح أذكارك الحالية',
+                              ),
                         ),
                       if (c.activity.syncError case final message?)
                         Padding(
@@ -936,7 +1030,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                                 Icons.chevron_right,
                                 textDirection: TextDirection.ltr,
                               ),
-                              label: const Text('السابق'),
+                              label: Text(context.adhkarLabel('السابق')),
                             ),
                             TextButton.icon(
                               onPressed: c.cursor < c.items.length - 1
@@ -946,14 +1040,14 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                                 Icons.chevron_left,
                                 textDirection: TextDirection.ltr,
                               ),
-                              label: const Text('التالي'),
+                              label: Text(context.adhkarLabel('التالي')),
                             ),
                           ],
                         ),
                         if (item.audioUrl != null)
                           OutlinedButton.icon(
                             icon: const Icon(Icons.headphones_outlined),
-                            label: const Text('استماع'),
+                            label: Text(context.adhkarLabel('استماع')),
                             onPressed: c.available
                                 ? () async {
                                     await widget.host.widget.controller
@@ -961,8 +1055,9 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                                           QuranAudioTrack(
                                             id: 'adhkar:${item.id}',
                                             recitation: 'hisn-ar',
-                                            reciter:
-                                                'حصن المسلم • التسجيل الأصلي',
+                                            reciter: context.adhkarLabel(
+                                              'حصن المسلم • التسجيل الأصلي',
+                                            ),
                                             title: item.title,
                                             surah: 0,
                                             url: item.audioUrl!,

@@ -36,6 +36,7 @@ void main() {
     () {
       expect(const LocaleFormats('en').number(1234.5), '1,234.5');
       expect(const LocaleFormats('en').integer(1448), '1448');
+      expect(const LocaleFormats('en').percent(2 / 3), '67%');
       expect(
         const LocaleFormats('en').clock24(DateTime(2026, 10, 31, 5, 7)),
         '05:07',

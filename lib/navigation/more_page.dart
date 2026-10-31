@@ -304,22 +304,50 @@ class DirectoryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final palette = AppPalette.of(context);
+    final textWidth = MediaQuery.sizeOf(context).width * .53;
+    double labelHeight(String value, TextStyle style, {int? maxLines}) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: value,
+          style: DefaultTextStyle.of(context).style.merge(style),
+        ),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+        maxLines: maxLines,
+      )..layout(maxWidth: textWidth);
+      final height = painter.height;
+      painter.dispose();
+      return height;
+    }
+
+    final contentHeight =
+        MediaQuery.paddingOf(context).top +
+        49 +
+        5 +
+        labelHeight(
+          title,
+          const TextStyle(fontSize: 29, fontWeight: FontWeight.w900),
+          maxLines: maxTitleLines,
+        ) +
+        labelHeight(subtitle, const TextStyle(fontSize: 13, height: 1.7));
     return SizedBox(
       height:
-          218 +
-          (onBack == null
-              ? 0
-              : 60 +
-                    (MediaQuery.textScalerOf(context).scale(1) - 1).clamp(
-                          0,
-                          3,
-                        ) *
-                        180) +
-          MediaQuery.paddingOf(context).top +
-          (imageAsset == 'assets/navigation/more_header.png'
-              ? 0
-              : (MediaQuery.textScalerOf(context).scale(1) - 1).clamp(0, 3) *
-                    110),
+          (218 +
+                  (onBack == null
+                      ? 0
+                      : 60 +
+                            (MediaQuery.textScalerOf(context).scale(1) - 1)
+                                    .clamp(0, 3) *
+                                180) +
+                  MediaQuery.paddingOf(context).top +
+                  (imageAsset == 'assets/navigation/more_header.png'
+                      ? 0
+                      : (MediaQuery.textScalerOf(context).scale(1) - 1).clamp(
+                              0,
+                              3,
+                            ) *
+                            110))
+              .clamp(contentHeight, double.infinity),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -349,7 +377,7 @@ class DirectoryHeader extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: SizedBox(
-                width: MediaQuery.sizeOf(context).width * .53,
+                width: textWidth,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,

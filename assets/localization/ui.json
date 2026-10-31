@@ -4186,5 +4186,657 @@
   "hadith.document": {
     "ar": "معلومات وثيقة الناشر",
     "en": "Publisher document information"
+  },
+  "adhkar.label.93631359aea8": {
+    "ar": "تعذّر فتح الأذكار؛ بياناتك محفوظة، أعد المحاولة",
+    "en": "Could not open remembrances. Your data is saved; try again."
+  },
+  "adhkar.label.810c2f344503": {
+    "ar": "هذه المجموعة غير متاحة حاليًا",
+    "en": "This group is currently unavailable"
+  },
+  "adhkar.label.472bbf64147d": {
+    "ar": "تعذّر تحميل تقدّم اليوم؛ اضغط لإعادة المحاولة",
+    "en": "Could not load today's progress. Tap to try again."
+  },
+  "adhkar.label.6223e6da3b23": {
+    "ar": "أذكار المسلم",
+    "en": "Muslim remembrances"
+  },
+  "adhkar.label.7603a34e56d5": {
+    "ar": "اذكر الله واطمئن",
+    "en": "Remember Allah and find peace"
+  },
+  "adhkar.label.f7291511b610": {
+    "ar": "ابحث في مجموعات الأذكار...",
+    "en": "Search remembrance groups…"
+  },
+  "adhkar.label.f5abe330a32b": {
+    "ar": "أذكاري الشخصية",
+    "en": "My personal remembrances"
+  },
+  "adhkar.label.be57388482bf": {
+    "ar": "الأذكار المحفوظة",
+    "en": "Saved remembrances"
+  },
+  "adhkar.label.361824c007d7": {
+    "ar": "المواد المحفوظة سابقًا",
+    "en": "Previously saved content"
+  },
+  "adhkar.label.44cff94e9f10": {
+    "ar": "تعذّر تحميل المصدر",
+    "en": "Could not load the source"
+  },
+  "adhkar.label.37e0d9e825a8": {
+    "ar": "لا توجد مجموعات تطابق بحثك",
+    "en": "No groups match your search"
+  },
+  "adhkar.label.a4e6a872a61b": {
+    "ar": "تحميل تقدّم اليوم…",
+    "en": "Loading today's progress…"
+  },
+  "adhkar.label.850db605642c": {
+    "ar": "حصن المسلم • نصوص وأعداد موثّقة، وتقدّمك محفوظ على الجهاز",
+    "en": "Hisn al-Muslim • sourced texts and repetition counts, with progress saved on this device"
+  },
+  "adhkar.label.14d5786f2e64": {
+    "ar": "إعادة المحاولة",
+    "en": "Try again"
+  },
+  "adhkar.label.8f7d74ac0eac": {
+    "ar": "تأكيد",
+    "en": "Confirm"
+  },
+  "adhkar.label.9a30dc2a96b8": {
+    "ar": "إلغاء",
+    "en": "Cancel"
+  },
+  "adhkar.label.aa66f1e69a87": {
+    "ar": "حذف الذكر الشخصي؟",
+    "en": "Delete this personal remembrance?"
+  },
+  "adhkar.label.519f09b96a1c": {
+    "ar": "يُحذف من مجموعاتك، ويبقى تاريخ قراءتك محفوظًا.",
+    "en": "It will be removed from your groups. Your reading history is kept."
+  },
+  "adhkar.label.59ca629220a6": {
+    "ar": "حذف",
+    "en": "Delete"
+  },
+  "adhkar.label.cc456b00618b": {
+    "ar": "تعذّر الحذف؛ أعد المحاولة",
+    "en": "Could not delete it. Try again."
+  },
+  "adhkar.label.a886b42c730f": {
+    "ar": "حذف المجموعة؟",
+    "en": "Delete this group?"
+  },
+  "adhkar.label.4686a3ba6991": {
+    "ar": "تبقى أذكارها الشخصية في «كل أذكاري الشخصية».",
+    "en": "Its personal remembrances remain in All my personal remembrances."
+  },
+  "adhkar.label.05d70a0d6da4": {
+    "ar": "تعذّر حذف المجموعة",
+    "en": "Could not delete the group"
+  },
+  "adhkar.label.699c41a09359": {
+    "ar": "أذكاري",
+    "en": "My remembrances"
+  },
+  "adhkar.label.6c4316329fd9": {
+    "ar": "أذكارك ومجموعاتك\nكما تحبّها",
+    "en": "Your remembrances and groups,\nthe way you like them"
+  },
+  "adhkar.label.f7e1686f2257": {
+    "ar": "العودة للأذكار",
+    "en": "Back to remembrances"
+  },
+  "adhkar.label.45865b4317a5": {
+    "ar": "تغيّر الحساب؛ ارجع لفتح أذكار الحساب الحالي",
+    "en": "The account changed. Go back to open the current account's remembrances."
+  },
+  "adhkar.label.8a51411df3e7": {
+    "ar": "الأذكار الشخصية",
+    "en": "Personal remembrances"
+  },
+  "adhkar.label.eb38313b6900": {
+    "ar": "مجموعاتي",
+    "en": "My groups"
+  },
+  "adhkar.label.cd9b19c9974a": {
+    "ar": "الأذكار الجاهزة",
+    "en": "Bundled remembrances"
+  },
+  "adhkar.label.37125d028b87": {
+    "ar": "إضافة ذكر",
+    "en": "Add a remembrance"
+  },
+  "adhkar.label.cff6321749c9": {
+    "ar": "إنشاء مجموعة",
+    "en": "Create a group"
+  },
+  "adhkar.label.5992d6ad08d5": {
+    "ar": "تعذّر قراءة المحفوظات",
+    "en": "Could not read saved items"
+  },
+  "adhkar.label.f3d59ae5898f": {
+    "ar": "ابحث في أذكارك...",
+    "en": "Search your remembrances…"
+  },
+  "adhkar.label.38f16bc1c321": {
+    "ar": "لم تضف أذكارًا شخصية بعد؛ ابدأ بذكر تحبّه.",
+    "en": "You have no personal remembrances yet. Add one to get started."
+  },
+  "adhkar.label.2560082e1084": {
+    "ar": "لا توجد نتائج لهذا البحث",
+    "en": "No results match this search"
+  },
+  "adhkar.label.ca7f53631886": {
+    "ar": "قراءة كل أذكاري الشخصية",
+    "en": "Read all my personal remembrances"
+  },
+  "adhkar.label.0c5303ed23a7": {
+    "ar": "تعديل الذكر",
+    "en": "Edit remembrance"
+  },
+  "adhkar.label.21da55cf5a72": {
+    "ar": "حذف الذكر",
+    "en": "Delete remembrance"
+  },
+  "adhkar.label.22c566a505b0": {
+    "ar": "أنشئ مجموعة واجمع فيها أذكارك المختارة.",
+    "en": "Create a group for your chosen remembrances."
+  },
+  "adhkar.label.0c1a31a064d5": {
+    "ar": "تعذّر حفظ الترتيب",
+    "en": "Could not save the order"
+  },
+  "adhkar.label.6cdf1f043a46": {
+    "ar": "تعديل المجموعة والترتيب",
+    "en": "Edit group and order"
+  },
+  "adhkar.label.f3d2e384af86": {
+    "ar": "حذف المجموعة",
+    "en": "Delete group"
+  },
+  "adhkar.label.8da0ba059f61": {
+    "ar": "تعذّر الحفظ؛ تأكد من الحساب والبيانات وأعد المحاولة",
+    "en": "Could not save. Check the account and information, then try again."
+  },
+  "adhkar.label.871a8c87125a": {
+    "ar": "حفظ نسخة شخصية",
+    "en": "Save a personal copy"
+  },
+  "adhkar.label.8ad7dafbbc11": {
+    "ar": "ما قبل الذكر (اختياري)",
+    "en": "Preface (optional)"
+  },
+  "adhkar.label.73322bc991c4": {
+    "ar": "نص الذكر",
+    "en": "Remembrance text"
+  },
+  "adhkar.label.de7f1b6f48d7": {
+    "ar": "اكتب نص الذكر",
+    "en": "Enter the remembrance text"
+  },
+  "adhkar.label.9640df7aac75": {
+    "ar": "عدد التكرار",
+    "en": "Repetition count"
+  },
+  "adhkar.label.fd1495e49556": {
+    "ar": "اكتب عددًا صحيحًا من1 إلى1000000",
+    "en": "Enter a whole number from 1 to 1000000"
+  },
+  "adhkar.label.b517721527ae": {
+    "ar": "ملاحظة أو مصدر (اختياري)",
+    "en": "Note or source (optional)"
+  },
+  "adhkar.label.a627c6bb096c": {
+    "ar": "تُحفظ نسخة في أذكارك الشخصية، ويبقى نص المصدر المعتمد محفوظًا.",
+    "en": "A copy is saved in your personal remembrances. The approved source text is kept."
+  },
+  "adhkar.label.dd81b078c15b": {
+    "ar": "جارٍ الحفظ...",
+    "en": "Saving…"
+  },
+  "adhkar.label.ddfcaf9d0144": {
+    "ar": "حفظ",
+    "en": "Save"
+  },
+  "adhkar.label.68e1de7e417a": {
+    "ar": "ذكر شخصي",
+    "en": "Personal remembrance"
+  },
+  "adhkar.label.6caea1a767e9": {
+    "ar": "اكتب اسم المجموعة",
+    "en": "Enter a group name"
+  },
+  "adhkar.label.292efbeeea0d": {
+    "ar": "تعذّر حفظ المجموعة؛ أعد المحاولة",
+    "en": "Could not save the group. Try again."
+  },
+  "adhkar.label.7c57cf4e1134": {
+    "ar": "تعديل المجموعة",
+    "en": "Edit group"
+  },
+  "adhkar.label.cf351b231af2": {
+    "ar": "اسم المجموعة",
+    "en": "Group name"
+  },
+  "adhkar.label.96ba5e8c4caa": {
+    "ar": "الترتيب",
+    "en": "Order"
+  },
+  "adhkar.label.ef61847bc6e0": {
+    "ar": "ذكر جديد",
+    "en": "New remembrance"
+  },
+  "adhkar.label.775fcbf15496": {
+    "ar": "ابحث لإضافة ذكر...",
+    "en": "Search to add a remembrance…"
+  },
+  "adhkar.label.2864be352420": {
+    "ar": "عنصر محفوظ",
+    "en": "Saved item"
+  },
+  "adhkar.label.aea1bd14cf63": {
+    "ar": "حفظ المجموعة",
+    "en": "Save group"
+  },
+  "adhkar.label.bbef3010c49a": {
+    "ar": "تعذّر تحديث المجموعة؛ أعد المحاولة",
+    "en": "Could not update the group. Try again."
+  },
+  "adhkar.label.48e9829296be": {
+    "ar": "تغيّر الحساب؛ ارجع لفتح أذكارك الحالية",
+    "en": "The account changed. Go back to open your current remembrances."
+  },
+  "adhkar.label.450b21cb6bd1": {
+    "ar": "لم تحفظ أذكارًا بعد",
+    "en": "No saved remembrances yet"
+  },
+  "adhkar.label.e31f371cf9c3": {
+    "ar": "هذه المجموعة خالية",
+    "en": "This group is empty"
+  },
+  "adhkar.label.1521e19ccb04": {
+    "ar": "اضغط «حفظ» داخل قارئ الأذكار لتجدها هنا.",
+    "en": "Tap Save in the remembrance reader to find items here."
+  },
+  "adhkar.label.ec65e9ada0f3": {
+    "ar": "أضف ذكرًا شخصيًا أو اختر من الأذكار الجاهزة.",
+    "en": "Add a personal remembrance or choose a bundled one."
+  },
+  "adhkar.label.9a01dfeca8c2": {
+    "ar": "جارٍ الفتح...",
+    "en": "Opening…"
+  },
+  "adhkar.label.ee1f97fb903c": {
+    "ar": "تصفّح الأذكار",
+    "en": "Browse remembrances"
+  },
+  "adhkar.label.a7fc3c7acb17": {
+    "ar": "تعذّر قراءة الأذكار المحفوظة؛ أعد المحاولة",
+    "en": "Could not read saved remembrances. Try again."
+  },
+  "adhkar.label.a5b277d8bb21": {
+    "ar": "مغادرة الأذكار؟",
+    "en": "Leave the remembrance session?"
+  },
+  "adhkar.label.1760d6c0905c": {
+    "ar": "تقدّمك محفوظ، ويمكنك استكماله لاحقًا.",
+    "en": "Your progress is saved. You can continue later."
+  },
+  "adhkar.label.4797d4074866": {
+    "ar": "مغادرة",
+    "en": "Leave"
+  },
+  "adhkar.label.bdf18726d37a": {
+    "ar": "تقبّل الله منك",
+    "en": "May Allah accept your deeds"
+  },
+  "adhkar.label.f9733372a24e": {
+    "ar": "أتممت أذكار هذه الجلسة، وحُفظ تقدمك.",
+    "en": "You completed this session's remembrances. Your progress is saved."
+  },
+  "adhkar.label.eec0e6368fef": {
+    "ar": "تراجع",
+    "en": "Undo"
+  },
+  "adhkar.label.3ef541b90a31": {
+    "ar": "تم",
+    "en": "Done"
+  },
+  "adhkar.label.7629f4330c78": {
+    "ar": "تعذّر حفظ الذكر؛ أعد المحاولة",
+    "en": "Could not save the remembrance. Try again."
+  },
+  "adhkar.label.483776c2fc21": {
+    "ar": "تم نسخ الذكر",
+    "en": "Remembrance copied"
+  },
+  "adhkar.label.c48114b75b2f": {
+    "ar": "بدء العدّ من جديد؟",
+    "en": "Restart the counter?"
+  },
+  "adhkar.label.d3f5e0b6a88a": {
+    "ar": "يبدأ عدّ جديد، ويبقى تاريخ الجلسة محفوظًا.",
+    "en": "A new count starts. Your session history is kept."
+  },
+  "adhkar.label.b1e3319d8111": {
+    "ar": "ابدأ من جديد",
+    "en": "Restart"
+  },
+  "adhkar.label.3b3a4958f6a5": {
+    "ar": "مصدر الذكر",
+    "en": "Remembrance source"
+  },
+  "adhkar.label.02a221304273": {
+    "ar": "خيارات الذكر",
+    "en": "Remembrance options"
+  },
+  "adhkar.label.f49a33372591": {
+    "ar": "نسخ النص",
+    "en": "Copy text"
+  },
+  "adhkar.label.ace24891cec1": {
+    "ar": "مشاركة",
+    "en": "Share"
+  },
+  "adhkar.label.44e843a7a538": {
+    "ar": "إزالة من المحفوظات",
+    "en": "Remove from saved items"
+  },
+  "adhkar.label.cbf025e21858": {
+    "ar": "حفظ الذكر",
+    "en": "Save remembrance"
+  },
+  "adhkar.label.0a2653cb4729": {
+    "ar": "إكمال هذا الذكر",
+    "en": "Complete this remembrance"
+  },
+  "adhkar.label.147f041381e3": {
+    "ar": "تعديل الذكر الشخصي",
+    "en": "Edit personal remembrance"
+  },
+  "adhkar.label.caeabd2adb5a": {
+    "ar": "حذف الذكر الشخصي",
+    "en": "Delete personal remembrance"
+  },
+  "adhkar.label.85fd62849e80": {
+    "ar": "تعديل المجموعة وترتيب الأذكار",
+    "en": "Edit group and remembrance order"
+  },
+  "adhkar.label.eb56c51e4595": {
+    "ar": "عرض الأذكار والجلسة",
+    "en": "Reader and session appearance"
+  },
+  "adhkar.label.4004b5dc6406": {
+    "ar": "الخط",
+    "en": "Font"
+  },
+  "adhkar.label.972ecc0cbd5b": {
+    "ar": "القاهرة",
+    "en": "Cairo"
+  },
+  "adhkar.label.481fdc951fbe": {
+    "ar": "تجوال",
+    "en": "Tajawal"
+  },
+  "adhkar.label.589c3fbd999d": {
+    "ar": "أميري",
+    "en": "Amiri"
+  },
+  "adhkar.label.2756ce4b6b9a": {
+    "ar": "اهتزاز عند الصفر",
+    "en": "Vibrate at zero"
+  },
+  "adhkar.label.fe4bd1be1336": {
+    "ar": "اهتزاز عند كل ضغطة",
+    "en": "Vibrate on each tap"
+  },
+  "adhkar.label.ee204fbb3cc9": {
+    "ar": "إخفاء الذكر عند الصفر",
+    "en": "Hide the remembrance at zero"
+  },
+  "adhkar.label.68306d13e6ee": {
+    "ar": "العدّ بالضغط على نص الذكر",
+    "en": "Count by tapping the remembrance text"
+  },
+  "adhkar.label.dc6bd22d93cd": {
+    "ar": "الانتقال التلقائي في الجلسة",
+    "en": "Advance automatically during the session"
+  },
+  "adhkar.label.0dc6612e003f": {
+    "ar": "الوضع الخافت أثناء الجلسة",
+    "en": "Dim mode during the session"
+  },
+  "adhkar.label.041697bbc1e5": {
+    "ar": "العدّ بأزرار الصوت في جلسة أندرويد",
+    "en": "Use Android volume buttons to count during a session"
+  },
+  "adhkar.label.ba4be299456c": {
+    "ar": "تأكيد مغادرة الأذكار",
+    "en": "Confirm leaving the remembrance session"
+  },
+  "adhkar.label.1f7d8ae15c01": {
+    "ar": "تمّ",
+    "en": "Complete"
+  },
+  "adhkar.label.70664c0d3f60": {
+    "ar": "متبقّي",
+    "en": "Remaining"
+  },
+  "adhkar.label.6654ac7c0ad5": {
+    "ar": "اضغط على الرقم للعدّ",
+    "en": "Tap the number to count"
+  },
+  "adhkar.label.40504fc32bfc": {
+    "ar": "العرض",
+    "en": "Appearance"
+  },
+  "adhkar.label.64660bb87d89": {
+    "ar": "المصدر",
+    "en": "Source"
+  },
+  "adhkar.label.3fedebc5a1fb": {
+    "ar": "بدء العدّ من جديد",
+    "en": "Restart the counter"
+  },
+  "adhkar.label.92cd85b3fd8e": {
+    "ar": "تغيّر الحساب؛ افتح أذكار الحساب الحالي",
+    "en": "The account changed. Open the current account's remembrances."
+  },
+  "adhkar.label.18b2b3de737a": {
+    "ar": "أفقي",
+    "en": "Horizontal"
+  },
+  "adhkar.label.c6d93a558f2e": {
+    "ar": "عمودي",
+    "en": "Vertical"
+  },
+  "adhkar.label.b96305d62caf": {
+    "ar": "جلسة",
+    "en": "Session"
+  },
+  "adhkar.label.76f674493532": {
+    "ar": "تقبّل الله منك • اكتملت الجلسة",
+    "en": "May Allah accept your deeds • session complete"
+  },
+  "adhkar.label.ea47a8adea65": {
+    "ar": "تغيّر الحساب أو اليوم؛ ارجع لفتح أذكارك الحالية",
+    "en": "The account or day changed. Go back to open your current remembrances."
+  },
+  "adhkar.label.a9e9d067101a": {
+    "ar": "السابق",
+    "en": "Previous"
+  },
+  "adhkar.label.5cf7af74fd3a": {
+    "ar": "التالي",
+    "en": "Next"
+  },
+  "adhkar.label.9e3c894e8c35": {
+    "ar": "استماع",
+    "en": "Listen"
+  },
+  "adhkar.label.c30ddcefaa76": {
+    "ar": "حصن المسلم • التسجيل الأصلي",
+    "en": "Hisn al-Muslim • original recording"
+  },
+  "adhkar.label.aa625d409767": {
+    "ar": "المصدر الأصلي",
+    "en": "Original source"
+  },
+  "adhkar.label.ddf8c441cc4b": {
+    "ar": "تغيّرت عناصر المجموعة؛ ارجع لفتح نسختها الحالية",
+    "en": "The group's items changed. Go back to open its current version."
+  },
+  "adhkar.label.6456c3ea14b2": {
+    "ar": "بدأ يوم جديد؛ ارجع لبدء أذكار اليوم",
+    "en": "A new day has started. Go back to begin today's remembrances."
+  },
+  "adhkar.label.4817d95c96f1": {
+    "ar": "تعذّر حفظ التغيير؛ بقي تقدمك السابق محفوظًا",
+    "en": "Could not save the change. Your previous progress is kept."
+  },
+  "adhkar.label.910a42f53844": {
+    "ar": "كل أذكاري الشخصية",
+    "en": "All my personal remembrances"
+  },
+  "adhkar.progress": {
+    "ar": "{completed} من {total} أذكار • {read} من {target} تكرار",
+    "en": "{completed} of {total} remembrances • {read} of {target} repetitions"
+  },
+  "adhkar.fontSize": {
+    "ar": "حجم الخط: {size}",
+    "en": "Font size: {size}"
+  },
+  "adhkar.remaining": {
+    "ar": "المتبقي {count} من {total}",
+    "en": "Remaining: {count} of {total}"
+  },
+  "adhkar.counterProgress": {
+    "ar": "{percent} • {count} من {total}",
+    "en": "{percent} • {count} of {total}"
+  },
+  "adhkar.sessionProgress": {
+    "ar": "{index} من {total}",
+    "en": "{index} of {total}"
+  },
+  "adhkar.completed": {
+    "ar": "{count} مكتمل",
+    "en": "{count} complete"
+  },
+  "adhkar.selectedCount": {
+    "ar": "الأذكار ({count})",
+    "en": "Remembrances ({count})"
+  },
+  "adhkar.sourceNotice": {
+    "ar": "{source}\n{url}\n\nالنصوص المركبة تتضمن تعليماتها وأعدادها داخل النص كما وردت في المصدر.",
+    "en": "{source}\n{url}\n\nCombined texts include their instructions and repetition counts within the text as provided by the source."
+  },
+  "adhkar.group.daily:morning": {
+    "ar": "أذكار الصباح",
+    "en": "Morning remembrances"
+  },
+  "adhkar.group.daily:evening": {
+    "ar": "أذكار المساء",
+    "en": "Evening remembrances"
+  },
+  "adhkar.group.daily:after-prayer": {
+    "ar": "أذكار بعد الصلاة",
+    "en": "Remembrance after prayer"
+  },
+  "adhkar.group.daily:prayer": {
+    "ar": "أذكار الصلاة",
+    "en": "Prayer remembrances"
+  },
+  "adhkar.group.daily:sleep": {
+    "ar": "أذكار النوم",
+    "en": "Bedtime remembrances"
+  },
+  "adhkar.group.daily:adhan": {
+    "ar": "أذكار سماع الأذان",
+    "en": "Remembrance when hearing the adhan"
+  },
+  "adhkar.group.daily:mosque": {
+    "ar": "أذكار المسجد",
+    "en": "Mosque remembrances"
+  },
+  "adhkar.group.daily:awakening": {
+    "ar": "أذكار الاستيقاظ",
+    "en": "Waking-up remembrances"
+  },
+  "adhkar.group.daily:home": {
+    "ar": "أذكار المنزل",
+    "en": "Home remembrances"
+  },
+  "adhkar.group.daily:wudu": {
+    "ar": "أذكار الوضوء",
+    "en": "Ablution remembrances"
+  },
+  "adhkar.group.daily:toilet": {
+    "ar": "أذكار الخلاء",
+    "en": "Bathroom remembrances"
+  },
+  "adhkar.group.daily:food": {
+    "ar": "أذكار الطعام والشراب",
+    "en": "Food and drink remembrances"
+  },
+  "adhkar.group.daily:travel": {
+    "ar": "أذكار السفر",
+    "en": "Travel remembrances"
+  },
+  "adhkar.group.daily:other": {
+    "ar": "أذكار أخرى",
+    "en": "Other remembrances"
+  },
+  "adhkar.groupSize.zero": {
+    "ar": "{count} أذكار",
+    "en": "{count} remembrances"
+  },
+  "adhkar.repetitions.zero": {
+    "ar": "{count} مرة",
+    "en": "{count} repetitions"
+  },
+  "adhkar.groupSize.one": {
+    "ar": "{count} ذكر",
+    "en": "{count} remembrance"
+  },
+  "adhkar.repetitions.one": {
+    "ar": "{count} مرة",
+    "en": "{count} repetition"
+  },
+  "adhkar.groupSize.two": {
+    "ar": "{count} من الأذكار",
+    "en": "{count} remembrances"
+  },
+  "adhkar.repetitions.two": {
+    "ar": "{count} من المرات",
+    "en": "{count} repetitions"
+  },
+  "adhkar.groupSize.few": {
+    "ar": "{count} أذكار",
+    "en": "{count} remembrances"
+  },
+  "adhkar.repetitions.few": {
+    "ar": "{count} مرات",
+    "en": "{count} repetitions"
+  },
+  "adhkar.groupSize.many": {
+    "ar": "{count} ذكرًا",
+    "en": "{count} remembrances"
+  },
+  "adhkar.repetitions.many": {
+    "ar": "{count} مرة",
+    "en": "{count} repetitions"
+  },
+  "adhkar.groupSize.other": {
+    "ar": "{count} ذكر",
+    "en": "{count} remembrances"
+  },
+  "adhkar.repetitions.other": {
+    "ar": "{count} مرة",
+    "en": "{count} repetitions"
   }
 }
