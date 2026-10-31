@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/core/localization/interface_messages.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_repository.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
@@ -352,6 +353,45 @@ void main() {
         await c.reconcile();
         expect(calls.where((e) => e.method == 'replace').length, before);
         expect(c.content.length, greaterThan(200));
+      },
+    );
+    test(
+      'language replacement persists native labels and retains smart scripture bytes',
+      () async {
+        await c.settings.set('enabled', true);
+        await c.settings.set('morning', true);
+        final id = c.content.keys.first;
+        final originalText = c.content[id];
+        await c.settings.set('smart', true);
+        await c.settings.set('content', [id]);
+        await c.reconcile();
+        final before =
+            calls.lastWhere((call) => call.method == 'replace').arguments
+                as Map;
+        c.setInterfaceMessages(InterfaceMessages.bundled('en'));
+        await c.reconcile();
+        final after =
+            calls.lastWhere((call) => call.method == 'replace').arguments
+                as Map;
+        expect((after['ui'] as Map)['locale'], 'en');
+        expect(
+          ((after['ui'] as Map)['strings'] as Map)['native.stopAdhan'],
+          'Stop adhan',
+        );
+        expect(
+          (after['jobs'] as List).map((job) => job['id']),
+          (before['jobs'] as List).map((job) => job['id']),
+        );
+        expect(after['smartItems'], [originalText]);
+        final replacements = calls
+            .where((call) => call.method == 'replace')
+            .length;
+        c.setInterfaceMessages(InterfaceMessages.bundled('en'));
+        await c.reconcile();
+        expect(
+          calls.where((call) => call.method == 'replace').length,
+          replacements,
+        );
       },
     );
     test(

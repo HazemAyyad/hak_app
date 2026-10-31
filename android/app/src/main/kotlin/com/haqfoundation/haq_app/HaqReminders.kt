@@ -36,6 +36,20 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.UUID
 
+/** Interface labels in the persisted plan, independent of the Android locale.
+ * Older plans keep their Arabic defaults. Text payloads never select routes,
+ * identifiers, recordings or calendar calculations. */
+object HaqNativeText {
+    fun text(plan: JSONObject, key: String, fallback: String, vararg args: Pair<String, Any>): String {
+        val saved = plan.optJSONObject("ui")?.optJSONObject("strings")?.opt(key) as? String
+        var value = saved?.takeIf { it.isNotBlank() && it.length <= 3000 } ?: fallback
+        for ((name, item) in args) value = value.replace("{$name}", item.toString())
+        return value
+    }
+    fun rtl(plan: JSONObject) = plan.optJSONObject("ui")?.optString("direction", "rtl") != "ltr"
+    fun locale(plan: JSONObject): Locale = Locale.forLanguageTag(plan.optJSONObject("ui")?.optString("locale", "ar") ?: "ar")
+}
+
 /** Persisted native plan survives the Flutter process and device reboot. No
  * optional prayer exact alarms require explicit special access. */
 object HaqReminders {
@@ -44,6 +58,7 @@ object HaqReminders {
     const val NOTIFICATION_PERMISSION = 7248
     fun prefs(c: Context) = c.getSharedPreferences(PREF, Context.MODE_PRIVATE)
     fun plan(c: Context) = JSONObject(prefs(c).getString("plan", "{}") ?: "{}")
+    fun ui(c: Context, key: String, fallback: String, vararg args: Pair<String, Any>) = HaqNativeText.text(plan(c), key, fallback, *args)
     fun jobs(p: JSONObject): List<JSONObject> {
         val values = p.optJSONArray("jobs") ?: JSONArray()
         return (0 until values.length()).map { values.getJSONObject(it) }
@@ -54,13 +69,13 @@ object HaqReminders {
     fun channels(c: Context) {
         if (Build.VERSION.SDK_INT < 26) return
         val manager = c.getSystemService(NotificationManager::class.java)
-        manager.createNotificationChannel(NotificationChannel("haq_reminders_sound", "تذكيرات حق", NotificationManager.IMPORTANCE_DEFAULT))
-        manager.createNotificationChannel(NotificationChannel("haq_reminders_silent", "تذكيرات حق الصامتة", NotificationManager.IMPORTANCE_LOW).apply { setSound(null, null); enableVibration(false) })
-        manager.createNotificationChannel(NotificationChannel("haq_overlay", "التنبيه العائم", NotificationManager.IMPORTANCE_LOW).apply { setSound(null, null) })
-        manager.createNotificationChannel(NotificationChannel("haq_prayer_vibration", "تنبيه الصلاة بالاهتزاز", NotificationManager.IMPORTANCE_DEFAULT).apply { setSound(null, null); enableVibration(true); vibrationPattern = longArrayOf(0, 350, 150, 350) })
-        manager.createNotificationChannel(NotificationChannel("haq_adhan_playback", "الأذان", NotificationManager.IMPORTANCE_HIGH).apply { setSound(null, null); enableVibration(false) })
-        manager.createNotificationChannel(NotificationChannel("haq_dhikr_alarm", "منبّه أذكار الصباح والمساء والنوم", NotificationManager.IMPORTANCE_HIGH).apply { setSound(null, null); enableVibration(false) })
-        manager.createNotificationChannel(NotificationChannel("haq_community_push", "رسائل حق العامة", NotificationManager.IMPORTANCE_DEFAULT).apply { setSound(null, null); enableVibration(false) })
+        manager.createNotificationChannel(NotificationChannel("haq_reminders_sound", HaqReminders.ui(c, "native.channel.reminders", "تذكيرات حق"), NotificationManager.IMPORTANCE_DEFAULT))
+        manager.createNotificationChannel(NotificationChannel("haq_reminders_silent", HaqReminders.ui(c, "native.channel.silent", "تذكيرات حق الصامتة"), NotificationManager.IMPORTANCE_LOW).apply { setSound(null, null); enableVibration(false) })
+        manager.createNotificationChannel(NotificationChannel("haq_overlay", HaqReminders.ui(c, "native.channel.overlay", "التنبيه العائم"), NotificationManager.IMPORTANCE_LOW).apply { setSound(null, null) })
+        manager.createNotificationChannel(NotificationChannel("haq_prayer_vibration", HaqReminders.ui(c, "native.channel.vibration", "تنبيه الصلاة بالاهتزاز"), NotificationManager.IMPORTANCE_DEFAULT).apply { setSound(null, null); enableVibration(true); vibrationPattern = longArrayOf(0, 350, 150, 350) })
+        manager.createNotificationChannel(NotificationChannel("haq_adhan_playback", HaqReminders.ui(c, "native.channel.adhan", "الأذان"), NotificationManager.IMPORTANCE_HIGH).apply { setSound(null, null); enableVibration(false) })
+        manager.createNotificationChannel(NotificationChannel("haq_dhikr_alarm", HaqReminders.ui(c, "native.channel.dhikr", "منبّه أذكار الصباح والمساء والنوم"), NotificationManager.IMPORTANCE_HIGH).apply { setSound(null, null); enableVibration(false) })
+        manager.createNotificationChannel(NotificationChannel("haq_community_push", HaqReminders.ui(c, "native.channel.community", "رسائل حق العامة"), NotificationManager.IMPORTANCE_DEFAULT).apply { setSound(null, null); enableVibration(false) })
     }
     fun status(c: Context): Map<String, Any> {
         channels(c)
@@ -90,8 +105,8 @@ object HaqReminders {
             "reminder-$hash-${if(variant=="ar-ps")"" else "$variant-"}dhuhr"
         }
         val job=JSONObject().put("id","$scope:prayer:dhuhr:test-$at").put("test",true)
-            .put("title",if(kind=="adhan")"اختبار • حان وقت صلاة الظهر" else "اختبار • اقتربت صلاة الظهر")
-            .put("body","اختبار حق على الجهاز — ليس موعد صلاة فعليًا").put("route","prayer")
+            .put("title",if(kind=="adhan")HaqReminders.ui(c, "native.testDhuhr", "اختبار • حان وقت صلاة الظهر") else HaqReminders.ui(c, "native.testBeforeDhuhr", "اختبار • اقتربت صلاة الظهر"))
+            .put("body",HaqReminders.ui(c, "native.testPrayerBody", "اختبار حق على الجهاز — ليس موعد صلاة فعليًا")).put("route","prayer")
             .put("at",at).put("minute",0).put("alertMode",kind).put("voice",clip).put("reminderVariant",variant)
             .put("fullAdhan",true).put("showAdhanScreen",true).put("volume",100).put("iqamaMinutes",15)
         kept.put(job);p.put("jobs",kept)
@@ -121,8 +136,8 @@ object HaqReminders {
         val source = jobs(p).find { if (kind == "khatma") it.optString("route") == "khatma" else it.optString("id") == "$scope:$kind" }
         val job = if (source != null) JSONObject(source.toString()) else JSONObject()
         for (key in listOf("weekday", "start", "end", "interval", "at")) job.remove(key)
-        job.put("id", "$scope:timed-test:$kind:$at").put("test", true).put("title", "اختبار • ${labels.getValue(kind)}")
-            .put("body", "اختبار حق على الجهاز — ليس موعدك المحفوظ")
+        job.put("id", "$scope:timed-test:$kind:$at").put("test", true).put("title", ui(c, "native.testTitle", "اختبار • {name}", "name" to jobs(p).firstOrNull { it.optString("id").endsWith(":$kind") }?.optString("title").orEmpty().ifBlank { labels.getValue(kind) }))
+            .put("body", HaqReminders.ui(c, "native.testBody", "اختبار حق على الجهاز — ليس موعدك المحفوظ"))
             .put("minute", Calendar.getInstance().apply { timeInMillis = at }.let { it.get(Calendar.HOUR_OF_DAY) * 60 + it.get(Calendar.MINUTE) })
             .put("route", when (kind) { "dailyWird" -> "quran"; "friday" -> "friday"; "khatma" -> "khatma"; else -> "adhkar-$kind" })
         if (!recurring) job.put("at", at)
@@ -173,8 +188,8 @@ object HaqReminders {
             putExtra("haqRoute", route); putExtra("haqScope", scope)
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-    private fun cancel(c: Context, p: JSONObject) {
-        c.stopService(Intent(c, HaqAdhanService::class.java))
+    private fun cancel(c: Context, p: JSONObject, stopPlayback: Boolean = true) {
+        if (stopPlayback) c.stopService(Intent(c, HaqAdhanService::class.java))
         val alarms = c.getSystemService(AlarmManager::class.java)
         for (job in jobs(p)) {
             val id = job.getString("id")
@@ -199,7 +214,7 @@ object HaqReminders {
         if (old.optString("signature").isNotEmpty() && old.optString("signature") == next.optString("signature")) {
             restore(c); return
         }
-        cancel(c, old)
+        cancel(c, old, stopPlayback = !HaqAdhanRules.retainPlayback(old, next))
         next.put("revision", UUID.randomUUID().toString())
         check(prefs(c).edit().putString("plan", next.toString()).remove("snoozes").putBoolean("scheduleError", false).commit())
         if (!hasOverlay(next)) c.stopService(Intent(c, HaqOverlayService::class.java))
@@ -274,7 +289,7 @@ object HaqReminders {
             .setStyle(Notification.BigTextStyle().bigText(body)).setAutoCancel(true)
             .setVisibility(Notification.VISIBILITY_PRIVATE).setCategory(Notification.CATEGORY_REMINDER)
             .setContentIntent(open(c, job.getString("route"), p.optString("scope")))
-            .addAction(Notification.Action.Builder(null, "تأجيل ${p.optInt("snooze", 10)} د", pending(c, job.getString("id"), "snooze")).build())
+            .addAction(Notification.Action.Builder(null, ui(c, "native.snoozeMinutes", "تأجيل {count} د", "count" to p.optInt("snooze", 10)), pending(c, job.getString("id"), "snooze")).build())
         if (Build.VERSION.SDK_INT < 26) {
             if (sound) builder.setDefaults(Notification.DEFAULT_SOUND)
             else if (mode == "vibration") builder.setVibrate(longArrayOf(0, 350, 150, 350))
@@ -286,8 +301,8 @@ object HaqReminders {
         channels(c)
         val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(c,
             if (sound) "haq_reminders_sound" else "haq_reminders_silent") else Notification.Builder(c)
-        builder.setSmallIcon(R.drawable.ic_haq_reminder).setContentTitle("رسائل حق")
-            .setContentText("وصل محتوى جديد إلى رسائل حق").setAutoCancel(true)
+        builder.setSmallIcon(R.drawable.ic_haq_reminder).setContentTitle(HaqReminders.ui(c, "native.communityTitle", "رسائل حق"))
+            .setContentText(HaqReminders.ui(c, "native.communityBody", "وصل محتوى جديد إلى رسائل حق")).setAutoCancel(true)
             .setVisibility(Notification.VISIBILITY_PRIVATE).setContentIntent(open(c, "messages", scope))
         if (Build.VERSION.SDK_INT < 26 && sound) builder.setDefaults(Notification.DEFAULT_SOUND)
         c.getSystemService(NotificationManager::class.java).notify("$ROOT:community", 0, builder.build())
@@ -342,6 +357,35 @@ object HaqReminders {
 /** No network, arbitrary file path or religious text in the alarm intent.
  * A persisted current plan is revalidated before the downloaded audio starts. */
 object HaqAdhanRules {
+    /** Updating interface labels must not interrupt an active, same-account
+     * recording. A changed schedule, permission-sensitive mode, volume or
+     * selected scripture still requires cancellation. */
+    fun retainPlayback(old: JSONObject, next: JSONObject): Boolean {
+        if (old.optString("scope").isBlank() || old.optString("scope") != next.optString("scope")) return false
+        val oldLocale = old.optJSONObject("ui")?.optString("locale").orEmpty()
+        val newLocale = next.optJSONObject("ui")?.optString("locale").orEmpty()
+        val changedLanguage = oldLocale.isNotBlank() && newLocale.isNotBlank() && oldLocale != newLocale
+        fun playbackPlan(value: JSONObject): JSONObject {
+            val copy = JSONObject(value.toString())
+            for (key in listOf("ui", "signature", "revision")) copy.remove(key)
+            for (job in HaqReminders.jobs(copy)) {
+                job.remove("title"); job.remove("body")
+                // The old spoken cue may finish; future alarms use the newly
+                // selected automatic language without replacing its current file.
+                if (changedLanguage) { job.remove("voice"); job.remove("reminderVariant") }
+            }
+            return copy
+        }
+        return equivalent(playbackPlan(old), playbackPlan(next))
+    }
+    private fun equivalent(a: Any?, b: Any?): Boolean = when {
+        a is JSONObject && b is JSONObject -> {
+            val keys = a.keys().asSequence().toSet()
+            keys == b.keys().asSequence().toSet() && keys.all { equivalent(a.opt(it), b.opt(it)) }
+        }
+        a is JSONArray && b is JSONArray -> a.length() == b.length() && (0 until a.length()).all { equivalent(a.opt(it), b.opt(it)) }
+        else -> a == b
+    }
     fun dhikrKind(job: JSONObject): String? = job.optString("voice").removePrefix("dhikr-").takeIf {
         job.optString("alertMode") == "dhikr" && it in listOf("morning", "evening", "sleep") && job.optString("voice") == "dhikr-$it"
     }
@@ -488,7 +532,7 @@ class HaqAdhanService : Service(), SensorEventListener {
                 }
             } catch (_: Exception) {
                 HaqReminders.prefs(this).edit().putBoolean("scheduleError", true).apply()
-                HaqReminders.show(this, JSONObject(job.toString()).put("body", "تعذّر تشغيل تسجيلات الأذكار؛ افتح المجموعة للاستماع"))
+                HaqReminders.show(this, JSONObject(job.toString()).put("body", HaqReminders.ui(this@HaqAdhanService, "native.recordingError", "تعذّر تشغيل تسجيلات الأذكار؛ افتح المجموعة للاستماع")))
                 stopSelf(); return START_NOT_STICKY
             }
         }
@@ -517,11 +561,11 @@ class HaqAdhanService : Service(), SensorEventListener {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, if (dhikr != null) "haq_dhikr_alarm" else "haq_adhan_playback") else Notification.Builder(this)
         builder.setSmallIcon(R.drawable.ic_haq_reminder).setContentTitle(job.optString("title"))
-            .setContentText("المس للإيقاف، أو اقلب الهاتف على وجهه")
+            .setContentText(HaqReminders.ui(this@HaqAdhanService, "native.stopHint", "المس للإيقاف، أو اقلب الهاتف على وجهه"))
             .setCategory(Notification.CATEGORY_ALARM).setVisibility(Notification.VISIBILITY_PUBLIC)
             .setOngoing(true).setContentIntent(if (humanReminder) HaqReminders.open(this, "prayer", p.optString("scope")) else screen).setDeleteIntent(stop)
-            .addAction(Notification.Action.Builder(null, if(humanReminder || dhikr != null)"إيقاف الصوت" else "إيقاف الأذان", stop).build())
-        if (dhikr != null) builder.addAction(Notification.Action.Builder(null, "تأجيل ${p.optInt("snooze",10)} د", PendingIntent.getBroadcast(this, 0,
+            .addAction(Notification.Action.Builder(null, if(humanReminder || dhikr != null)HaqReminders.ui(this@HaqAdhanService, "native.stopAudio", "إيقاف الصوت") else HaqReminders.ui(this@HaqAdhanService, "native.stopAdhan", "إيقاف الأذان"), stop).build())
+        if (dhikr != null) builder.addAction(Notification.Action.Builder(null, HaqReminders.ui(this@HaqAdhanService, "native.snoozeMinutes", "تأجيل {count} د", "count" to p.optInt("snooze",10)), PendingIntent.getBroadcast(this, 0,
             Intent(this, HaqReminderReceiver::class.java).setAction("snooze").setData(Uri.parse("haq-reminder://job/${Uri.encode(job.getString("id"))}"))
                 .putExtra("id", job.getString("id")).putExtra("revision", p.optString("revision")), PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)).build())
         if (Build.VERSION.SDK_INT < 26) builder.setPriority(Notification.PRIORITY_HIGH)
@@ -652,10 +696,10 @@ class HaqAdhanActivity : Activity() {
         override fun run() {
             if(HaqAdhanService.current==null) { finish();return }
             HaqAdhanService.current?.dhikrProgress()?.let { (index, total) ->
-                listening?.text = if(index == 0) "نداء التذكير" else "القراءة الصوتية · المقطع $index من $total"
+                listening?.text = if(index == 0) HaqReminders.ui(this@HaqAdhanActivity, "native.dhikrCue", "نداء التذكير") else HaqReminders.ui(this@HaqAdhanActivity, "native.dhikrProgress", "القراءة الصوتية · المقطع {index} من {total}", "index" to index, "total" to total)
             }
             val remaining=((deadline-System.currentTimeMillis())/1000).coerceAtLeast(0)
-            countdown.text=if(remaining>0)"الإقامة بعد\n%02d:%02d".format(remaining/60,remaining%60) else "حان وقت الصلاة"
+            countdown.text=if(remaining>0) HaqReminders.ui(this@HaqAdhanActivity, "native.iqama", "الإقامة بعد\n{time}", "time" to String.format(HaqNativeText.locale(HaqReminders.plan(this@HaqAdhanActivity)), "%02d:%02d", remaining/60, remaining%60)) else HaqReminders.ui(this@HaqAdhanActivity, "native.prayerTime", "حان وقت الصلاة")
             handler.postDelayed(this,1000)
         }
     }
@@ -686,7 +730,7 @@ class HaqAdhanActivity : Activity() {
         val compact=resources.configuration.screenHeightDp<700 || resources.configuration.fontScale>1.3f
         val brand=try { Typeface.createFromAsset(assets,"flutter_assets/assets/fonts/Cairo.ttf") } catch(_:Exception) { Typeface.DEFAULT }
         deadline=intent.getLongExtra("at",System.currentTimeMillis())+intent.getIntExtra("iqamaMinutes",15).coerceIn(0,60)*60000L
-        val root=FrameLayout(this).apply { setBackgroundColor(navy);layoutDirection=View.LAYOUT_DIRECTION_RTL }
+        val root=FrameLayout(this).apply { setBackgroundColor(navy);layoutDirection=if(HaqNativeText.rtl(HaqReminders.plan(this@HaqAdhanActivity))) View.LAYOUT_DIRECTION_RTL else View.LAYOUT_DIRECTION_LTR }
         photo=ImageView(this).apply { scaleType=ImageView.ScaleType.CENTER_CROP }
         root.addView(photo,FrameLayout.LayoutParams(-1,-1));loadScene()
         root.addView(View(this).apply { background=GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
@@ -703,24 +747,24 @@ class HaqAdhanActivity : Activity() {
         fun icon(value:String,label:String,action:()->Unit)=Button(this).apply {
             text=value;contentDescription=label;setTextColor(Color.WHITE);setBackgroundColor(Color.TRANSPARENT);setOnClickListener { action() }
         }
-        header.addView(icon("×",if(dhikr != null) "إيقاف التذكير" else "إيقاف الأذان",::stop),LinearLayout.LayoutParams(dp(48),dp(48)))
-        header.addView(text(if(dhikr != null) "حق · تذكير الأذكار" else "حق · نداء الصلاة",16f).apply { maxLines=1;autosize(this,12,16) },LinearLayout.LayoutParams(0,dp(48),1f))
-        header.addView(icon("⚙",if(dhikr != null) "إعدادات التذكير" else "إعدادات الأذان") { open(if(dhikr != null) "settings" else "prayer-settings") },LinearLayout.LayoutParams(dp(48),dp(48)))
+        header.addView(icon("×",if(dhikr != null) HaqReminders.ui(this@HaqAdhanActivity, "native.stopDhikr", "إيقاف التذكير") else HaqReminders.ui(this@HaqAdhanActivity, "native.stopAdhan", "إيقاف الأذان"),::stop),LinearLayout.LayoutParams(dp(48),dp(48)))
+        header.addView(text(if(dhikr != null) HaqReminders.ui(this@HaqAdhanActivity, "native.headerDhikr", "حق · تذكير الأذكار") else HaqReminders.ui(this@HaqAdhanActivity, "native.headerPrayer", "حق · نداء الصلاة"),16f).apply { maxLines=1;autosize(this,12,16) },LinearLayout.LayoutParams(0,dp(48),1f))
+        header.addView(icon("⚙",if(dhikr != null) HaqReminders.ui(this@HaqAdhanActivity, "native.reminderSettings", "إعدادات التذكير") else HaqReminders.ui(this@HaqAdhanActivity, "native.prayerSettings", "إعدادات الأذان")) { open(if(dhikr != null) "settings" else "prayer-settings") },LinearLayout.LayoutParams(dp(48),dp(48)))
         content.addView(header,LinearLayout.LayoutParams(-1,dp(48)))
-        content.addView(text(intent.getStringExtra("title") ?: "حان وقت الصلاة",24f,gold).apply { maxLines=2;autosize(this,15,24) },
+        content.addView(text(intent.getStringExtra("title") ?: HaqReminders.ui(this@HaqAdhanActivity, "native.prayerTime", "حان وقت الصلاة"),24f,gold).apply { maxLines=2;autosize(this,15,24) },
             LinearLayout.LayoutParams(-1,dp(if(compact)44 else 56)))
         val logo=ImageView(this).apply {
-            scaleType=ImageView.ScaleType.FIT_CENTER;contentDescription="شعار حق";setPadding(dp(9),dp(9),dp(9),dp(9))
+            scaleType=ImageView.ScaleType.FIT_CENTER;contentDescription=HaqReminders.ui(this@HaqAdhanActivity, "native.logo", "شعار حق");setPadding(dp(9),dp(9),dp(9),dp(9))
             background=GradientDrawable().apply { shape=GradientDrawable.OVAL;setColor(Color.rgb(247,244,237));setStroke(dp(1),gold) }
         }
         try { assets.open("flutter_assets/assets/branding/haq_logo_transparent.png").use { logo.setImageDrawable(android.graphics.drawable.Drawable.createFromStream(it,null)) } } catch(_:Exception) { }
         val logoSize=dp(if(compact)48 else 68)
         content.addView(logo,LinearLayout.LayoutParams(logoSize,logoSize))
         val middle=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL;gravity=Gravity.CENTER }
-        val words=text(if(dhikr != null) "حان وقت الذكر" else "الله أكبر",56f).apply { maxLines=1;autosize(this,28,56) }
+        val words=text(if(dhikr != null) HaqReminders.ui(this@HaqAdhanActivity, "native.dhikrTime", "حان وقت الذكر") else "الله أكبر",56f).apply { maxLines=1;autosize(this,28,56) }
         middle.addView(words,LinearLayout.LayoutParams(-1,dp(if(compact)76 else 110)))
         if(dhikr != null) {
-            listening = text("نداء التذكير",16f,gold).apply { maxLines=2;autosize(this,12,16) }
+            listening = text(HaqReminders.ui(this@HaqAdhanActivity, "native.dhikrCue", "نداء التذكير"),16f,gold).apply { maxLines=2;autosize(this,12,16) }
             middle.addView(listening,LinearLayout.LayoutParams(-1,dp(48)))
         }
         if(Build.VERSION.SDK_INT<26 || android.animation.ValueAnimator.areAnimatorsEnabled()) {
@@ -737,7 +781,7 @@ class HaqAdhanActivity : Activity() {
         if(intent.getIntExtra("iqamaMinutes",15)>0) {
             val circle=dp(if(compact)76 else 106)
             middle.addView(countdown,LinearLayout.LayoutParams(circle,circle).apply { topMargin=dp(8) })
-            middle.addView(text("مدة الإقامة حسب إعدادك",11f,Color.LTGRAY),LinearLayout.LayoutParams(-1,dp(24)))
+            middle.addView(text(HaqReminders.ui(this@HaqAdhanActivity, "native.iqamaPersonal", "مدة الإقامة حسب إعدادك"),11f,Color.LTGRAY),LinearLayout.LayoutParams(-1,dp(24)))
         }
         content.addView(middle,LinearLayout.LayoutParams(-1,0,1f))
         fun button(title:String,route:String?,filled:Boolean)=Button(this).apply {
@@ -745,13 +789,13 @@ class HaqAdhanActivity : Activity() {
             background=GradientDrawable().apply { cornerRadius=dp(18).toFloat();setColor(if(filled)teal else Color.argb(80,16,42,67));setStroke(dp(1),if(filled)teal else gold) }
             setOnClickListener { if(route==null)stop() else open(route) }
         }
-        content.addView(button(if(dhikr != null) "ابدأ الأذكار" else "أذكار بعد الصلاة",if(dhikr != null) "adhkar-$dhikr" else "adhkar-after-prayer",true),LinearLayout.LayoutParams(-1,dp(48)).apply { bottomMargin=dp(8) })
+        content.addView(button(if(dhikr != null) HaqReminders.ui(this@HaqAdhanActivity, "native.beginDhikr", "ابدأ الأذكار") else HaqReminders.ui(this@HaqAdhanActivity, "native.afterPrayer", "أذكار بعد الصلاة"),if(dhikr != null) "adhkar-$dhikr" else "adhkar-after-prayer",true),LinearLayout.LayoutParams(-1,dp(48)).apply { bottomMargin=dp(8) })
         val shortcuts=LinearLayout(this)
-        shortcuts.addView(button("القرآن","quran",false),LinearLayout.LayoutParams(0,dp(48),1f).apply { marginEnd=dp(4) })
-        shortcuts.addView(button("القبلة","qibla",false),LinearLayout.LayoutParams(0,dp(48),1f).apply { marginStart=dp(4) })
+        shortcuts.addView(button(HaqReminders.ui(this@HaqAdhanActivity, "native.quran", "القرآن"),"quran",false),LinearLayout.LayoutParams(0,dp(48),1f).apply { marginEnd=dp(4) })
+        shortcuts.addView(button(HaqReminders.ui(this@HaqAdhanActivity, "native.qibla", "القبلة"),"qibla",false),LinearLayout.LayoutParams(0,dp(48),1f).apply { marginStart=dp(4) })
         content.addView(shortcuts,LinearLayout.LayoutParams(-1,dp(48)))
-        content.addView(button(if(dhikr != null) "إيقاف التذكير" else "إيقاف الأذان",null,false),LinearLayout.LayoutParams(-1,dp(44)).apply { topMargin=dp(8) })
-        content.addView(text("زر الجهاز أو قلب الهاتف يوقف الصوت",11f,Color.LTGRAY).apply { maxLines=1;autosize(this,9,11) },LinearLayout.LayoutParams(-1,dp(24)))
+        content.addView(button(if(dhikr != null) HaqReminders.ui(this@HaqAdhanActivity, "native.stopDhikr", "إيقاف التذكير") else HaqReminders.ui(this@HaqAdhanActivity, "native.stopAdhan", "إيقاف الأذان"),null,false),LinearLayout.LayoutParams(-1,dp(44)).apply { topMargin=dp(8) })
+        content.addView(text(HaqReminders.ui(this@HaqAdhanActivity, "native.deviceStop", "زر الجهاز أو قلب الهاتف يوقف الصوت"),11f,Color.LTGRAY).apply { maxLines=1;autosize(this,9,11) },LinearLayout.LayoutParams(-1,dp(24)))
         root.addView(content,FrameLayout.LayoutParams(-1,-1))
         root.setOnApplyWindowInsetsListener { _, insets ->
             content.setPadding(dp(18)+insets.systemWindowInsetLeft,dp(8)+insets.systemWindowInsetTop,
@@ -820,13 +864,13 @@ class HaqOverlayService : Service(), TextToSpeech.OnInitListener {
         HaqReminders.channels(this)
         val stop = PendingIntent.getService(this, 0, Intent(this, HaqOverlayService::class.java).setAction("stop"), PendingIntent.FLAG_IMMUTABLE)
         val builder = if (Build.VERSION.SDK_INT >= 26) Notification.Builder(this, "haq_overlay") else Notification.Builder(this)
-        startForeground(7249, builder.setSmallIcon(R.drawable.ic_haq_reminder).setContentTitle("تذكيرات حق العائمة تعمل")
-            .setContentText("اضغط إيقاف لإنهاء الظهور فوق التطبيقات").setOngoing(true)
+        startForeground(7249, builder.setSmallIcon(R.drawable.ic_haq_reminder).setContentTitle(HaqReminders.ui(this@HaqOverlayService, "native.overlayTitle", "تذكيرات حق العائمة تعمل"))
+            .setContentText(HaqReminders.ui(this@HaqOverlayService, "native.overlayBody", "اضغط إيقاف لإنهاء الظهور فوق التطبيقات")).setOngoing(true)
             .setOnlyAlertOnce(true).setShowWhen(false).setCategory(Notification.CATEGORY_SERVICE)
             .setContentIntent(HaqReminders.open(this, "settings", HaqReminders.plan(this).optString("scope")))
             .setSound(null).setDefaults(0)
             .apply { if (Build.VERSION.SDK_INT < 26) setPriority(Notification.PRIORITY_LOW) }
-            .addAction(Notification.Action.Builder(null, "إيقاف", stop).build()).build())
+            .addAction(Notification.Action.Builder(null, HaqReminders.ui(this@HaqOverlayService, "native.stop", "إيقاف"), stop).build()).build())
         reload(); HaqReminders.restore(this)
         return START_NOT_STICKY
     }
@@ -847,7 +891,7 @@ class HaqOverlayService : Service(), TextToSpeech.OnInitListener {
         if (text.isBlank() || getSystemService(KeyguardManager::class.java).isKeyguardLocked) return
         try {
             val card = LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL; layoutDirection = View.LAYOUT_DIRECTION_RTL; setPadding(24, 16, 24, 12)
+                orientation = LinearLayout.VERTICAL; layoutDirection = if(HaqNativeText.rtl(p)) View.LAYOUT_DIRECTION_RTL else View.LAYOUT_DIRECTION_LTR; setPadding(24, 16, 24, 12)
                 background = GradientDrawable().apply {
                     setColor(if (p.optBoolean("transparent")) Color.TRANSPARENT else p.optLong("background", 0xFF2A8C82).toInt())
                     cornerRadius = 24f; setStroke(2, p.optLong("border", 0xFFC7A45A).toInt())
@@ -865,8 +909,8 @@ class HaqOverlayService : Service(), TextToSpeech.OnInitListener {
                 height = minOf(message.measuredHeight, (resources.displayMetrics.heightPixels * .30).toInt()).coerceAtLeast(44)
             })
             card.addView(LinearLayout(this).apply {
-                addView(Button(this@HaqOverlayService).apply { this.text = "إخفاء"; setOnClickListener { removeCard() } })
-                addView(Button(this@HaqOverlayService).apply { this.text = "تأجيل"; setOnClickListener {
+                addView(Button(this@HaqOverlayService).apply { this.text = HaqReminders.ui(this@HaqOverlayService, "native.hide", "إخفاء"); setOnClickListener { removeCard() } })
+                addView(Button(this@HaqOverlayService).apply { this.text = HaqReminders.ui(this@HaqOverlayService, "native.snooze", "تأجيل"); setOnClickListener {
                     nextAt = SystemClock.elapsedRealtime() + p.optInt("snooze", 10) * 60000L; removeCard()
                 } })
             })
@@ -1021,7 +1065,7 @@ class HaqRemindersBridge(private val activity: MainActivity, private val channel
                     "stopOverlay" -> { activity.stopService(Intent(activity, HaqOverlayService::class.java)); result.success(null) }
                     "preview" -> {
                         val job = HaqReminders.jobs(HaqReminders.plan(activity)).firstOrNull()
-                            ?: JSONObject().put("id", "preview").put("title", "معاينة تذكيرات حق").put("body", "هذه معاينة لمظهر التذكير").put("route", "settings")
+                            ?: JSONObject().put("id", "preview").put("title", HaqReminders.ui(activity, "native.previewTitle", "معاينة تذكيرات حق")).put("body", HaqReminders.ui(activity, "native.previewBody", "هذه معاينة لمظهر التذكير")).put("route", "settings")
                         HaqReminders.show(activity, job); result.success(null)
                     }
                     else -> result.notImplemented()

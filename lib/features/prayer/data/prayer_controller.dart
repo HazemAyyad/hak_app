@@ -9,6 +9,7 @@ import '../../settings/data/reminder_plan.dart';
 import 'prayer_models.dart';
 import 'prayer_alert.dart';
 import 'place_catalog.dart';
+import '../../../core/localization/interface_messages.dart';
 
 class PrayerController extends ChangeNotifier {
   PrayerController(
@@ -54,6 +55,7 @@ class PrayerController extends ChangeNotifier {
   Future<void> _writes = Future.value();
   String? _day;
   String _appLanguage = 'ar';
+  InterfaceMessages messages = InterfaceMessages.bundled('ar');
   String get reminderVariant =>
       (config.reminderLanguage == 'auto'
               ? _appLanguage
@@ -62,11 +64,21 @@ class PrayerController extends ChangeNotifier {
       ? 'en'
       : config.reminderDialect.assetKey;
   void setAppLanguage(String language) {
-    final next = language.toLowerCase().split(RegExp('[-_]')).first == 'en'
-        ? 'en'
-        : 'ar';
-    if (_appLanguage == next || _disposed) return;
-    _appLanguage = next;
+    setInterfaceMessages(
+      InterfaceMessages.bundled(
+        language.toLowerCase().split(RegExp('[-_]')).first,
+      ),
+    );
+  }
+
+  void setInterfaceMessages(InterfaceMessages next) {
+    if (_disposed ||
+        (_appLanguage == next.code &&
+            mapEquals(messages.strings, next.strings))) {
+      return;
+    }
+    _appLanguage = next.code;
+    messages = next;
     notifyListeners();
     scheduleChanged.notifyListeners();
   }
@@ -448,15 +460,21 @@ class PrayerController extends ChangeNotifier {
           (m) => config.enabledPrayers.contains(m.name.name),
         )) {
           final actions = {
-            0: 'حان وقت ${m.name.label}',
+            0: messages.text(
+              'prayer.timeFor',
+              args: {'prayer': messages.text('prayer.name.${m.name.name}')},
+            ),
             if (config.beforeMinutes > 0)
               -config.beforeMinutes: m.name == PrayerName.sunrise
-                  ? 'اقترب وقت الشروق'
+                  ? messages.text('reminder.sunrise')
                   : reminderVariant == 'en'
                   ? 'It is almost time for ${m.name.name[0].toUpperCase()}${m.name.name.substring(1)} prayer'
                   : 'اقترب أذان ${m.name.label}',
             if (config.afterMinutes > 0)
-              config.afterMinutes: 'أذكار بعد صلاة ${m.name.label}',
+              config.afterMinutes: messages.text(
+                'reminder.afterPrayer',
+                args: {'prayer': messages.text('prayer.name.${m.name.name}')},
+              ),
           };
           for (final entry in actions.entries) {
             final at = m.time.add(Duration(minutes: entry.key));
@@ -465,8 +483,8 @@ class PrayerController extends ChangeNotifier {
                 id: '$scope:prayer:${m.name.name}:${at.toUtc().millisecondsSinceEpoch}:${entry.key}',
                 title: entry.value,
                 body: entry.key > 0
-                    ? 'تذكير بأذكار ما بعد الصلاة'
-                    : '${place.label} • ${m.label}',
+                    ? messages.text('reminder.afterBody')
+                    : '${place.label} • ${messages.formats.clock24(m.time)}',
                 route: entry.key > 0 ? 'adhkar' : 'prayer',
                 minute: 0,
                 at: at.toUtc().millisecondsSinceEpoch,

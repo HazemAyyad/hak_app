@@ -1,5 +1,6 @@
 import '../../religious_activity/data/activity_models.dart';
 import 'app_settings.dart';
+import '../../../core/localization/interface_messages.dart';
 
 class ReminderJob {
   const ReminderJob({
@@ -54,39 +55,44 @@ class ReminderJob {
 List<ReminderJob> reminderPlan(
   AppSettings settings,
   List<PersonalEntity> entities,
-  List<ReligiousActivityEvent> history,
-) {
+  List<ReligiousActivityEvent> history, {
+  InterfaceMessages? messages,
+}) {
   if (!settings.flag('enabled')) return [];
+  final labels = messages ?? InterfaceMessages.bundled('ar');
   final jobs = <ReminderJob>[];
-  const labels = {
-    'morning': 'أذكار الصباح',
-    'evening': 'أذكار المساء',
-    'sleep': 'أذكار النوم',
-    'dailyWird': 'ورد القرآن',
-    'friday': 'تذكير يوم الجمعة',
-    'messages': 'المحتوى الإيماني',
-  };
-  for (final entry in labels.entries) {
-    if (!settings.flag(entry.key)) continue;
-    final dhikr = const {'morning', 'evening', 'sleep'}.contains(entry.key);
+  const kinds = [
+    'morning',
+    'evening',
+    'sleep',
+    'dailyWird',
+    'friday',
+    'messages',
+  ];
+  for (final kind in kinds) {
+    if (!settings.flag(kind)) continue;
+    final dhikr = const {'morning', 'evening', 'sleep'}.contains(kind);
     jobs.add(
       ReminderJob(
-        id: '${settings.scope}:${entry.key}',
-        title: entry.value,
-        body: 'حان موعدك مع ${entry.value}',
+        id: '${settings.scope}:$kind',
+        title: labels.text('reminder.$kind'),
+        body: labels.text(
+          'reminder.timeFor',
+          args: {'name': labels.text('reminder.$kind')},
+        ),
         route: dhikr
-            ? 'adhkar-${entry.key}'
-            : entry.key == 'dailyWird'
+            ? 'adhkar-$kind'
+            : kind == 'dailyWird'
             ? 'quran'
-            : entry.key == 'messages'
+            : kind == 'messages'
             ? 'library'
-            : entry.key == 'friday'
+            : kind == 'friday'
             ? 'friday'
             : 'adhkar',
-        minute: settings.time(entry.key),
-        weekday: entry.key == 'friday' ? 5 : null,
+        minute: settings.time(kind),
+        weekday: kind == 'friday' ? 5 : null,
         alertMode: dhikr ? 'dhikr' : null,
-        voice: dhikr ? 'dhikr-${entry.key}' : null,
+        voice: dhikr ? 'dhikr-$kind' : null,
         volume: dhikr ? (settings.flag('sound') ? 100 : 0) : null,
         showAdhanScreen: dhikr ? true : null,
       ),
@@ -104,7 +110,7 @@ List<ReminderJob> reminderPlan(
     jobs.add(
       ReminderJob(
         id: '${settings.scope}:khatma:${k.id}:${k.activeEpoch}',
-        title: 'ورد الختمة',
+        title: labels.text('reminder.khatma'),
         body: k.title,
         route: 'khatma',
         minute: k.reminderMinutes!,
@@ -117,7 +123,7 @@ List<ReminderJob> reminderPlan(
     jobs.add(
       ReminderJob(
         id: '${settings.scope}:smart',
-        title: 'تذكير بالذكر',
+        title: labels.text('reminder.smart'),
         body: '',
         route: 'adhkar',
         minute: 0,

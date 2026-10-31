@@ -29,6 +29,7 @@ import 'features/account/presentation/account_hub.dart';
 import 'features/account/data/app_session.dart';
 import 'features/admin/presentation/admin_page.dart';
 import 'core/localization/app_localization.dart';
+import 'core/localization/interface_messages.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/community/data/community_controller.dart';
 import 'features/community/data/public_push.dart';
@@ -325,7 +326,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         LocalizationScope.maybeOf(context)?.installed['ar']?.content ??
         const <String, dynamic>{};
     _religious.setEditorialUpdates(publishedArabic);
-    _prayer?.setAppLanguage(Localizations.localeOf(context).languageCode);
+    final messages = _interfaceMessages;
+    _prayer?.setInterfaceMessages(messages);
+    _reminders?.setInterfaceMessages(messages);
     final next = AppExperienceScope.maybeOf(context);
     if (next != _experience) {
       if (_experience?.refreshCurrent == _refreshCurrent) {
@@ -411,6 +414,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         onOpen: _openReminder,
         prayer: _prayer,
       );
+      reminders.setInterfaceMessages(_interfaceMessages);
       setState(() => _reminders = reminders);
       await reminders.initialize();
       return mounted ? reminders : null;
@@ -579,7 +583,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           : 'account.${_quran.account.profile!['id']}',
       account: _quran.account,
     );
-    _prayer!.setAppLanguage(Localizations.localeOf(context).languageCode);
+    _prayer!.setInterfaceMessages(_interfaceMessages);
     if (mounted) setState(() {});
   }
 
@@ -587,6 +591,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     await _quran.audio.stop();
     await _religious.media.stop();
   }
+
+  InterfaceMessages get _interfaceMessages =>
+      LocalizationScope.maybeOf(context)?.messages ??
+      InterfaceMessages.bundled(Localizations.localeOf(context).languageCode);
 
   Future<bool> _enablePrayerReminders() async {
     final reminders = await _prepareReminders();

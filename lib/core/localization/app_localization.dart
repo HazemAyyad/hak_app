@@ -13,6 +13,7 @@ import '../../features/quran/data/haq_api.dart';
 import 'bundled_localization.dart';
 import 'quran_translation_source.dart';
 import 'locale_formats.dart';
+import 'interface_messages.dart';
 
 final _bundledInterface = jsonDecode(bundledUiJson) as Map;
 
@@ -197,6 +198,13 @@ class AppLocalization extends ChangeNotifier {
     orElse: () => languages.first,
   );
   LocaleFormats get formats => LocaleFormats(code);
+  InterfaceMessages get messages => InterfaceMessages(code, {
+    for (final entry in registry.entries)
+      entry.key:
+          installed[code]?.strings[entry.key] ??
+          entry.value[code] ??
+          entry.value['ar']!,
+  });
 
   String pluralText(String key, num count) {
     final category = formats.pluralCategory(count);

@@ -6,6 +6,36 @@ import java.util.TimeZone
 
 /** Runs the actual native calendar calculation on the JVM, without an app. */
 fun main() {
+    val oldPlan = JSONObject()
+    check(HaqNativeText.text(oldPlan, "native.stop", "إيقاف") == "إيقاف")
+    check(HaqNativeText.rtl(oldPlan))
+    val translated = JSONObject().put("ui", JSONObject().put("locale", "en").put("direction", "ltr")
+        .put("strings", JSONObject().put("native.stop", "Stop").put("native.iqama", "Iqama in\n{time}")
+            .put("blank", " ").put("large", "x".repeat(3001)).put("number", 42)))
+    check(!HaqNativeText.rtl(translated))
+    check(HaqNativeText.locale(translated).language == "en")
+    check(HaqNativeText.text(translated, "native.stop", "إيقاف") == "Stop")
+    check(HaqNativeText.text(translated, "native.iqama", "", "time" to "01:05") == "Iqama in\n01:05")
+    check(HaqNativeText.text(translated, "missing", "original") == "original")
+    check(HaqNativeText.text(translated, "blank", "original") == "original")
+    check(HaqNativeText.text(translated, "large", "original") == "original")
+    check(HaqNativeText.text(translated, "number", "original") == "original")
+    val arPlan = JSONObject().put("scope", "guest").put("signature", "old").put("revision", "one")
+        .put("ui", JSONObject().put("locale", "ar"))
+        .put("jobs", org.json.JSONArray().put(JSONObject().put("id", "guest:fajr").put("at", 1000)
+            .put("title", "الفجر").put("body", "الأصل").put("voice", "reminder-ar-fajr").put("volume", 100)))
+        .put("smartItems", org.json.JSONArray().put("نص الذكر الأصلي"))
+    val enPlan = JSONObject(arPlan.toString()).put("signature", "new").put("revision", "two").put("ui", JSONObject().put("locale", "en"))
+    enPlan.getJSONArray("jobs").getJSONObject(0).put("title", "Fajr").put("body", "Original").put("voice", "reminder-en-fajr")
+    check(HaqAdhanRules.retainPlayback(arPlan, enPlan))
+    check(!HaqAdhanRules.retainPlayback(arPlan, JSONObject(enPlan.toString()).put("scope", "account.2")))
+    fun changedJob(key: String, value: Any): JSONObject = JSONObject(enPlan.toString()).apply { getJSONArray("jobs").getJSONObject(0).put(key, value) }
+    check(!HaqAdhanRules.retainPlayback(arPlan, changedJob("at", 2000)))
+    check(!HaqAdhanRules.retainPlayback(arPlan, changedJob("volume", 0)))
+    check(!HaqAdhanRules.retainPlayback(arPlan, changedJob("alertMode", "silent")))
+    check(!HaqAdhanRules.retainPlayback(arPlan, JSONObject(enPlan.toString()).put("smartItems", org.json.JSONArray().put("another item"))))
+    check(!HaqAdhanRules.retainPlayback(arPlan, JSONObject(enPlan.toString()).put("jobs", org.json.JSONArray())))
+    check(!HaqAdhanRules.retainPlayback(arPlan, JSONObject(enPlan.toString()).put("ui", JSONObject().put("locale", "ar"))))
     TimeZone.setDefault(TimeZone.getTimeZone("Asia/Hebron"))
     fun instant(year: Int, month: Int, day: Int, hour: Int, minute: Int): Long = Calendar.getInstance().apply {
         clear(); set(year, month - 1, day, hour, minute)
@@ -103,5 +133,5 @@ fun main() {
     check(!HaqDhikrRules.stopOnKey(true, android.view.KeyEvent.KEYCODE_POWER))
     check(HaqDhikrRules.stopOnKey(true, android.view.KeyEvent.KEYCODE_VOLUME_DOWN))
     check(HaqDhikrRules.stopOnKey(false, android.view.KeyEvent.KEYCODE_POWER))
-    println("118 native checks passed (scheduling, daily occurrences, audio identifiers, ordered Hisn playlists, queue completion, screen-off playback, and face-down detection). No app built or run.")
+    println("136 native checks passed (interface messages, playback retention, scheduling, daily occurrences, audio identifiers, ordered Hisn playlists, queue completion, screen-off playback, and face-down detection). No app built or run.")
 }

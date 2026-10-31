@@ -100,15 +100,29 @@ private final class HaqReminderCenter {
   private var pendingRoute: String?
   private var dartReady = false
   private var failure: Error?
+  private var categoryRequest = 0
+
+  private func updateCategories() {
+    categoryRequest += 1
+    let request = categoryRequest
+    let ui = plan["ui"] as? [String: Any]
+    let strings = ui?["strings"] as? [String: String]
+    let value = strings?["native.snooze"] ?? "تأجيل"
+    let label = value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || value.count > 3000 ? "تأجيل" : value
+    let snooze = UNNotificationAction(identifier: "haq-snooze", title: label, options: [])
+    center.getNotificationCategories { categories in
+      DispatchQueue.main.async {
+        guard request == self.categoryRequest else { return }
+        var next = categories
+        next.update(with: UNNotificationCategory(identifier: "haq-reminder", actions: [snooze], intentIdentifiers: [], options: []))
+        self.center.setNotificationCategories(next)
+      }
+    }
+  }
   init(messenger: FlutterBinaryMessenger) {
     plan = UserDefaults.standard.dictionary(forKey: "haq.reminders.v1") ?? [:]
     channel = FlutterMethodChannel(name: "com.haqfoundation.haq_app/reminders", binaryMessenger: messenger)
-    let snooze = UNNotificationAction(identifier: "haq-snooze", title: "تأجيل", options: [])
-    center.getNotificationCategories { categories in
-      var next = categories
-      next.update(with: UNNotificationCategory(identifier: "haq-reminder", actions: [snooze], intentIdentifiers: [], options: []))
-      self.center.setNotificationCategories(next)
-    }
+    updateCategories()
     channel.setMethodCallHandler { [weak self] call, result in
       guard let self = self else { result(nil); return }
       switch call.method {
@@ -126,6 +140,7 @@ private final class HaqReminderCenter {
         }
         let unchanged = self.plan["signature"] as? String == data["signature"] as? String
         self.plan = data; self.defaults.set(data, forKey: "haq.reminders.v1")
+        self.updateCategories()
         self.replace(result, keepSnoozes: unchanged)
       case "status":
         self.center.getNotificationSettings { state in

@@ -9,6 +9,7 @@ import '../../religious_activity/data/activity_models.dart';
 import 'app_settings.dart';
 import 'reminder_plan.dart';
 import '../../prayer/data/prayer_controller.dart';
+import '../../../core/localization/interface_messages.dart';
 
 class ReminderDeviceState {
   const ReminderDeviceState({
@@ -77,6 +78,17 @@ class ReminderController extends ChangeNotifier {
   bool _disposed = false;
   Map<String, String> content = {};
   String? _fingerprint;
+  InterfaceMessages messages = InterfaceMessages.bundled('ar');
+
+  void setInterfaceMessages(InterfaceMessages next) {
+    if (_disposed ||
+        (messages.code == next.code &&
+            mapEquals(messages.strings, next.strings))) {
+      return;
+    }
+    messages = next;
+    _changed();
+  }
 
   Future<void> initialize() async {
     await reconcile();
@@ -168,12 +180,14 @@ class ReminderController extends ChangeNotifier {
             config,
             entities,
             history,
+            messages: messages,
           ).where((j) => j.interval == null || selected.isNotEmpty),
           if (config.flag('enabled') && prayer?.scope == scope)
             ...prayer!.reminderJobs(),
         ];
         final payload = <String, Object>{
           'scope': scope,
+          'ui': messages.nativePayload,
           'jobs': plan.map((j) => j.toJson()).toList(),
           'sound': config.flag('sound'),
           'snooze': config.number('snooze', 10),
@@ -205,13 +219,12 @@ class ReminderController extends ChangeNotifier {
         if (_disposed || activity.scope != scope) return;
         device = ReminderDeviceState.fromMap(state ?? {});
         error = state?['failed'] == true
-            ? 'تعذّر تنفيذ بعض التذكيرات على الجهاز. أعد تحديث الجدولة.'
+            ? messages.text('reminder.scheduleFailed')
             : null;
       } on MissingPluginException {
         device = const ReminderDeviceState();
       } catch (_) {
-        error =
-            'الإعدادات محفوظة، لكن تعذّر تحديث جدولة التذكيرات. أعد المحاولة.';
+        error = messages.text('reminder.replaceFailed');
       }
       if (!_disposed) notifyListeners();
     });
@@ -234,7 +247,7 @@ class ReminderController extends ChangeNotifier {
       }
     } catch (_) {
       if (!_disposed) {
-        error = 'تعذّر تنفيذ الطلب على الجهاز؛ تحقق من الصلاحيات.';
+        error = messages.text('reminder.actionFailed');
         notifyListeners();
       }
     }

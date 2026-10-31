@@ -3846,5 +3846,261 @@
   "prayer.iqamaPreview": {
     "en": "Iqama in\n{time}",
     "ar": "الإقامة بعد\n{time}"
+  },
+  "prayer.name.fajr": {
+    "ar": "الفجر",
+    "en": "Fajr"
+  },
+  "prayer.name.sunrise": {
+    "ar": "الشروق",
+    "en": "Sunrise"
+  },
+  "prayer.name.dhuhr": {
+    "ar": "الظهر",
+    "en": "Dhuhr"
+  },
+  "prayer.name.asr": {
+    "ar": "العصر",
+    "en": "Asr"
+  },
+  "prayer.name.maghrib": {
+    "ar": "المغرب",
+    "en": "Maghrib"
+  },
+  "prayer.name.isha": {
+    "ar": "العشاء",
+    "en": "Isha"
+  },
+  "reminder.morning": {
+    "ar": "أذكار الصباح",
+    "en": "Morning remembrances"
+  },
+  "reminder.evening": {
+    "ar": "أذكار المساء",
+    "en": "Evening remembrances"
+  },
+  "reminder.sleep": {
+    "ar": "أذكار النوم",
+    "en": "Bedtime remembrances"
+  },
+  "reminder.dailyWird": {
+    "ar": "ورد القرآن",
+    "en": "Daily Quran reading"
+  },
+  "reminder.friday": {
+    "ar": "تذكير يوم الجمعة",
+    "en": "Friday reminder"
+  },
+  "reminder.messages": {
+    "ar": "المحتوى الإيماني",
+    "en": "Faith content"
+  },
+  "reminder.khatma": {
+    "ar": "ورد الختمة",
+    "en": "Khatma reading"
+  },
+  "reminder.smart": {
+    "ar": "تذكير بالذكر",
+    "en": "Remembrance reminder"
+  },
+  "reminder.timeFor": {
+    "ar": "حان موعدك مع {name}",
+    "en": "It is time for {name}"
+  },
+  "reminder.afterPrayer": {
+    "ar": "أذكار بعد صلاة {prayer}",
+    "en": "Remembrance after {prayer}"
+  },
+  "reminder.afterBody": {
+    "ar": "تذكير بأذكار ما بعد الصلاة",
+    "en": "Reminder for remembrance after prayer"
+  },
+  "reminder.sunrise": {
+    "ar": "اقترب وقت الشروق",
+    "en": "Sunrise is approaching"
+  },
+  "native.channel.reminders": {
+    "ar": "تذكيرات حق",
+    "en": "Haq reminders"
+  },
+  "native.channel.silent": {
+    "ar": "تذكيرات حق الصامتة",
+    "en": "Silent Haq reminders"
+  },
+  "native.channel.overlay": {
+    "ar": "التنبيه العائم",
+    "en": "Floating reminders"
+  },
+  "native.channel.vibration": {
+    "ar": "تنبيه الصلاة بالاهتزاز",
+    "en": "Prayer vibration alerts"
+  },
+  "native.channel.adhan": {
+    "ar": "الأذان",
+    "en": "Adhan"
+  },
+  "native.channel.dhikr": {
+    "ar": "منبّه أذكار الصباح والمساء والنوم",
+    "en": "Morning, evening and bedtime remembrance alarms"
+  },
+  "native.channel.community": {
+    "ar": "رسائل حق العامة",
+    "en": "Haq public messages"
+  },
+  "native.snoozeMinutes": {
+    "ar": "تأجيل {count} د",
+    "en": "Snooze {count} min"
+  },
+  "native.snooze": {
+    "ar": "تأجيل",
+    "en": "Snooze"
+  },
+  "native.stop": {
+    "ar": "إيقاف",
+    "en": "Stop"
+  },
+  "native.hide": {
+    "ar": "إخفاء",
+    "en": "Hide"
+  },
+  "native.communityTitle": {
+    "ar": "رسائل حق",
+    "en": "Haq messages"
+  },
+  "native.communityBody": {
+    "ar": "وصل محتوى جديد إلى رسائل حق",
+    "en": "New content is available in Haq messages"
+  },
+  "native.recordingError": {
+    "ar": "تعذّر تشغيل تسجيلات الأذكار؛ افتح المجموعة للاستماع",
+    "en": "Could not play the remembrance recordings. Open the group to listen."
+  },
+  "native.stopHint": {
+    "ar": "المس للإيقاف، أو اقلب الهاتف على وجهه",
+    "en": "Tap to stop, or turn the phone face down"
+  },
+  "native.stopAudio": {
+    "ar": "إيقاف الصوت",
+    "en": "Stop audio"
+  },
+  "native.stopAdhan": {
+    "ar": "إيقاف الأذان",
+    "en": "Stop adhan"
+  },
+  "native.stopDhikr": {
+    "ar": "إيقاف التذكير",
+    "en": "Stop reminder"
+  },
+  "native.dhikrCue": {
+    "ar": "نداء التذكير",
+    "en": "Reminder cue"
+  },
+  "native.dhikrProgress": {
+    "ar": "القراءة الصوتية · المقطع {index} من {total}",
+    "en": "Audio reading · clip {index} of {total}"
+  },
+  "native.iqama": {
+    "ar": "الإقامة بعد\n{time}",
+    "en": "Iqama in\n{time}"
+  },
+  "native.prayerTime": {
+    "ar": "حان وقت الصلاة",
+    "en": "It is prayer time"
+  },
+  "native.headerDhikr": {
+    "ar": "حق · تذكير الأذكار",
+    "en": "Haq · remembrance reminder"
+  },
+  "native.headerPrayer": {
+    "ar": "حق · نداء الصلاة",
+    "en": "Haq · call to prayer"
+  },
+  "native.reminderSettings": {
+    "ar": "إعدادات التذكير",
+    "en": "Reminder settings"
+  },
+  "native.prayerSettings": {
+    "ar": "إعدادات الأذان",
+    "en": "Adhan settings"
+  },
+  "native.logo": {
+    "ar": "شعار حق",
+    "en": "Haq logo"
+  },
+  "native.dhikrTime": {
+    "ar": "حان وقت الذكر",
+    "en": "It is time for remembrance"
+  },
+  "native.iqamaPersonal": {
+    "ar": "مدة الإقامة حسب إعدادك",
+    "en": "Iqama delay from your settings"
+  },
+  "native.beginDhikr": {
+    "ar": "ابدأ الأذكار",
+    "en": "Start remembrance"
+  },
+  "native.afterPrayer": {
+    "ar": "أذكار بعد الصلاة",
+    "en": "Remembrance after prayer"
+  },
+  "native.quran": {
+    "ar": "القرآن",
+    "en": "Quran"
+  },
+  "native.qibla": {
+    "ar": "القبلة",
+    "en": "Qibla"
+  },
+  "native.deviceStop": {
+    "ar": "زر الجهاز أو قلب الهاتف يوقف الصوت",
+    "en": "Use a device button or turn the phone over to stop audio"
+  },
+  "native.overlayTitle": {
+    "ar": "تذكيرات حق العائمة تعمل",
+    "en": "Haq floating reminders are running"
+  },
+  "native.overlayBody": {
+    "ar": "اضغط إيقاف لإنهاء الظهور فوق التطبيقات",
+    "en": "Tap Stop to close floating reminders"
+  },
+  "native.previewTitle": {
+    "ar": "معاينة تذكيرات حق",
+    "en": "Haq reminder preview"
+  },
+  "native.previewBody": {
+    "ar": "هذه معاينة لمظهر التذكير",
+    "en": "This is a preview of the reminder appearance"
+  },
+  "native.testDhuhr": {
+    "ar": "اختبار • حان وقت صلاة الظهر",
+    "en": "Test · It is time for Dhuhr"
+  },
+  "native.testBeforeDhuhr": {
+    "ar": "اختبار • اقتربت صلاة الظهر",
+    "en": "Test · Dhuhr is approaching"
+  },
+  "native.testPrayerBody": {
+    "ar": "اختبار حق على الجهاز — ليس موعد صلاة فعليًا",
+    "en": "Haq device test — not an actual prayer time"
+  },
+  "native.testTitle": {
+    "ar": "اختبار • {name}",
+    "en": "Test · {name}"
+  },
+  "native.testBody": {
+    "ar": "اختبار حق على الجهاز — ليس موعدك المحفوظ",
+    "en": "Haq device test — not your saved reminder time"
+  },
+  "reminder.scheduleFailed": {
+    "ar": "تعذّر تنفيذ بعض التذكيرات على الجهاز. أعد تحديث الجدولة.",
+    "en": "Some reminders could not run on this device. Refresh the schedule."
+  },
+  "reminder.replaceFailed": {
+    "ar": "الإعدادات محفوظة، لكن تعذّر تحديث جدولة التذكيرات. أعد المحاولة.",
+    "en": "Settings are saved, but the reminder schedule could not be updated. Try again."
+  },
+  "reminder.actionFailed": {
+    "ar": "تعذّر تنفيذ الطلب على الجهاز؛ تحقق من الصلاحيات.",
+    "en": "Could not complete the device action. Check permissions."
   }
 }
