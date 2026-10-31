@@ -5666,5 +5666,357 @@
   "progress.confirmVerse": {
     "en": "{surah} • verse {ayah}\nThis records reading from the beginning of the khatma to this verse. Opening a page alone does not record reading.",
     "ar": "سورة {surah} • الآية {ayah}\nيُسجّل أنك قرأت من بداية الختمة حتى هذه الآية، وليس بمجرد فتح الصفحة."
+  },
+  "tasbih.label.1414c440efce": {
+    "ar": "أزرار",
+    "en": "Buttons"
+  },
+  "tasbih.label.8feab114eaea": {
+    "ar": "ملء الشاشة",
+    "en": "Full screen"
+  },
+  "tasbih.label.3e0018376041": {
+    "ar": "دائرية",
+    "en": "Circular"
+  },
+  "tasbih.label.9117a534184e": {
+    "ar": "أفقية",
+    "en": "Horizontal"
+  },
+  "tasbih.label.80a1242d510b": {
+    "ar": "تقليدية",
+    "en": "Classic"
+  },
+  "tasbih.label.50cee06735da": {
+    "ar": "خاتم رقمي",
+    "en": "Digital ring"
+  },
+  "tasbih.label.ff27a05115f0": {
+    "ar": "المسبحة",
+    "en": "Tasbih counter"
+  },
+  "tasbih.label.0393376e0e90": {
+    "ar": "تعذّر فتح المسبحة؛ إعادة المحاولة",
+    "en": "Could not open the tasbih counter. Try again."
+  },
+  "tasbih.label.4b2ad5e04665": {
+    "ar": "تعذّر فتح الذكر؛ حاول مجددًا",
+    "en": "Could not open this remembrance. Try again."
+  },
+  "tasbih.label.e74929867fdb": {
+    "ar": "تعذّر حفظ الذكر",
+    "en": "Could not save the remembrance"
+  },
+  "tasbih.label.5b96bd20bc1c": {
+    "ar": "حذف الذكر من المسبحة؟",
+    "en": "Delete this remembrance from the counter?"
+  },
+  "tasbih.label.0806b7703a7f": {
+    "ar": "تُحذف بطاقة الذكر وتبقى أحداث العدّ السابقة محفوظة.",
+    "en": "The remembrance card will be deleted. Previous counting events are kept."
+  },
+  "tasbih.label.9a30dc2a96b8": {
+    "ar": "إلغاء",
+    "en": "Cancel"
+  },
+  "tasbih.label.59ca629220a6": {
+    "ar": "حذف",
+    "en": "Delete"
+  },
+  "tasbih.label.4fc6baf86928": {
+    "ar": "تعذّر حذف الذكر؛ حاول مجددًا",
+    "en": "Could not delete the remembrance. Try again."
+  },
+  "tasbih.label.752ff0ea3b51": {
+    "ar": "فائدة الذكر / ملاحظتك",
+    "en": "Remembrance benefit / your note"
+  },
+  "tasbih.label.a54424db38ae": {
+    "ar": "لم تضف ملاحظة بعد.",
+    "en": "No note added yet."
+  },
+  "tasbih.label.ca90c297b099": {
+    "ar": "إغلاق",
+    "en": "Close"
+  },
+  "tasbih.label.10c7b2e661fb": {
+    "ar": "تعذّر حفظ التعديل؛ حاول مجددًا",
+    "en": "Could not save the change. Try again."
+  },
+  "tasbih.label.1cd9b665d765": {
+    "ar": "ذكر يدوم معك",
+    "en": "Keep remembrance with you"
+  },
+  "tasbih.label.cb822418a29d": {
+    "ar": "رجوع",
+    "en": "Back"
+  },
+  "tasbih.label.8993c758dbde": {
+    "ar": "اختر ذكرك",
+    "en": "Choose your remembrance"
+  },
+  "tasbih.label.d52453ac627d": {
+    "ar": "إضافة",
+    "en": "Add"
+  },
+  "tasbih.label.df13e25e7030": {
+    "ar": "أهداف العدّ قابلة للتعديل حسب اختيارك.",
+    "en": "You can adjust the counting targets to your preference."
+  },
+  "tasbih.label.14d5786f2e64": {
+    "ar": "إعادة المحاولة",
+    "en": "Try again"
+  },
+  "tasbih.label.02a221304273": {
+    "ar": "خيارات الذكر",
+    "en": "Remembrance options"
+  },
+  "tasbih.label.113d570d6555": {
+    "ar": "تعديل",
+    "en": "Edit"
+  },
+  "tasbih.label.6ede264a27ea": {
+    "ar": "الفائدة",
+    "en": "Benefit"
+  },
+  "tasbih.label.29a0e2739a92": {
+    "ar": "نسخ",
+    "en": "Copy"
+  },
+  "tasbih.label.ace24891cec1": {
+    "ar": "مشاركة",
+    "en": "Share"
+  },
+  "tasbih.label.95e64e41b89c": {
+    "ar": "تصفير الإجمالي؟",
+    "en": "Reset the total?"
+  },
+  "tasbih.label.40038b381c01": {
+    "ar": "تصفير الحالي؟",
+    "en": "Reset the current count?"
+  },
+  "tasbih.label.e6c73da14301": {
+    "ar": "يبدأ عدّ جديد من الصفر. يبقى سجل الجلسات السابقة محفوظًا في الإحصائيات.",
+    "en": "A new count starts from zero. Previous sessions remain in statistics."
+  },
+  "tasbih.label.b366a8c2201c": {
+    "ar": "يعود العدّ الحالي للصفر مع الاحتفاظ بالإجمالي والجولات المكتملة.",
+    "en": "The current count returns to zero. The total and completed rounds are kept."
+  },
+  "tasbih.label.0359805e6cec": {
+    "ar": "تصفير",
+    "en": "Reset"
+  },
+  "tasbih.label.aed1b671c465": {
+    "ar": "شكل المسبحة",
+    "en": "Counter style"
+  },
+  "tasbih.label.d7cb467f5aa8": {
+    "ar": "إعدادات المسبحة",
+    "en": "Counter settings"
+  },
+  "tasbih.label.3edc90ff802e": {
+    "ar": "اهتزاز عند العدّ",
+    "en": "Vibrate when counting"
+  },
+  "tasbih.label.04e67d2e8506": {
+    "ar": "عدّ تلقائي عند الضغط المطوّل",
+    "en": "Count automatically while holding"
+  },
+  "tasbih.label.e529017a04e2": {
+    "ar": "صوت عند كل ضغطة",
+    "en": "Sound on each tap"
+  },
+  "tasbih.label.589a2bd4e2af": {
+    "ar": "صوت عند اكتمال الجولة",
+    "en": "Sound when a round completes"
+  },
+  "tasbih.label.c6d554a51612": {
+    "ar": "يتطلب تفعيل الاهتزاز؛ يتوقف عند رفع إصبعك",
+    "en": "Requires vibration to be enabled. Stops when you lift your finger."
+  },
+  "tasbih.label.3ef541b90a31": {
+    "ar": "تم",
+    "en": "Done"
+  },
+  "tasbih.label.39f184c14302": {
+    "ar": "سجل المسبحة",
+    "en": "Counter history"
+  },
+  "tasbih.label.9eebbbc748fe": {
+    "ar": "ابدأ العدّ لعرض إحصائياتك",
+    "en": "Start counting to see your statistics"
+  },
+  "tasbih.label.2e4bfd9e2e5a": {
+    "ar": "افتح المسبحة مجددًا للحساب الحالي",
+    "en": "Reopen the counter for the current account"
+  },
+  "tasbih.label.84d8cbf3fb8d": {
+    "ar": "الشكل",
+    "en": "Style"
+  },
+  "tasbih.label.5fd9563e6846": {
+    "ar": "الإعدادات",
+    "en": "Settings"
+  },
+  "tasbih.label.e1c9274b865c": {
+    "ar": "اضغط للزيادة • اضغط مطوّلًا للنقصان",
+    "en": "Tap to increase • hold to decrease"
+  },
+  "tasbih.label.eec0e6368fef": {
+    "ar": "تراجع",
+    "en": "Undo"
+  },
+  "tasbih.label.bc8ee71d3151": {
+    "ar": "تصفير الحالي",
+    "en": "Reset current count"
+  },
+  "tasbih.label.bd4c478007a1": {
+    "ar": "اسحب لليمين للزيادة ولليسار للنقصان",
+    "en": "Swipe right to increase and left to decrease"
+  },
+  "tasbih.label.1c50b76dac7e": {
+    "ar": "اضغط للذكر",
+    "en": "Tap to count"
+  },
+  "tasbih.label.baed6e999960": {
+    "ar": "الإجمالي",
+    "en": "Total"
+  },
+  "tasbih.label.99eeb82b8855": {
+    "ar": "الجولات",
+    "en": "Rounds"
+  },
+  "tasbih.label.05e79ef21bf5": {
+    "ar": "عدد الحبات",
+    "en": "Round target"
+  },
+  "tasbih.label.b618dd87ad67": {
+    "ar": "الإحصائيات",
+    "en": "Statistics"
+  },
+  "tasbih.label.a8ac8a6fefd3": {
+    "ar": "لم تضف ملاحظة لهذا الذكر بعد.",
+    "en": "No note added for this remembrance yet."
+  },
+  "tasbih.label.6332a34de7cb": {
+    "ar": "تصفير الإجمالي",
+    "en": "Reset total"
+  },
+  "tasbih.label.a3eb2c662a56": {
+    "ar": "جارٍ تجهيز الميكروفون…",
+    "en": "Preparing the microphone…"
+  },
+  "tasbih.label.53f3b793044f": {
+    "ar": "إيقاف الاستماع",
+    "en": "Stop listening"
+  },
+  "tasbih.label.83cf415d8f46": {
+    "ar": "العدّ بالصوت",
+    "en": "Voice counting"
+  },
+  "tasbih.label.90cbd6b89b7b": {
+    "ar": "استماع قصير للذكر المختار. قد تعالج خدمة التعرف في جهازك الصوت عبر الإنترنت. لا نحفظ تسجيلًا أو نصًّا صوتيًا.",
+    "en": "Listen briefly for the selected remembrance. Your device's recognition service may process audio online. We do not save a recording or transcript."
+  },
+  "tasbih.label.c44373bcb619": {
+    "ar": "متابعة التسبيح",
+    "en": "Continue counting"
+  },
+  "tasbih.label.ef61847bc6e0": {
+    "ar": "ذكر جديد",
+    "en": "New remembrance"
+  },
+  "tasbih.label.0c5303ed23a7": {
+    "ar": "تعديل الذكر",
+    "en": "Edit remembrance"
+  },
+  "tasbih.label.73322bc991c4": {
+    "ar": "نص الذكر",
+    "en": "Remembrance text"
+  },
+  "tasbih.label.7413a952d793": {
+    "ar": "أدخل نص الذكر",
+    "en": "Enter the remembrance text"
+  },
+  "tasbih.label.09e8acf0eb1d": {
+    "ar": "فائدة أو ملاحظة شخصية (اختياري)",
+    "en": "Benefit or personal note (optional)"
+  },
+  "tasbih.label.797040b40626": {
+    "ar": "عدد الحبات في الجولة",
+    "en": "Round target"
+  },
+  "tasbih.label.02ed817837dc": {
+    "ar": "أدخل عددًا صحيحًا من 1 إلى 1000000",
+    "en": "Enter a whole number from 1 to 1000000"
+  },
+  "tasbih.label.f32a990f317a": {
+    "ar": "تغيير عدد الحبات يبدأ عدًّا حاليًا جديدًا ويحفظ الإجمالي والجولات المكتملة.",
+    "en": "Changing the round target starts a new current count and keeps the total and completed rounds."
+  },
+  "tasbih.label.ddfcaf9d0144": {
+    "ar": "حفظ",
+    "en": "Save"
+  },
+  "tasbih.label.45c1b4f42105": {
+    "ar": "نقصان",
+    "en": "Decrease"
+  },
+  "tasbih.label.0ad0b0e802b1": {
+    "ar": "زيادة",
+    "en": "Increase"
+  },
+  "tasbih.label.b9f4548a1652": {
+    "ar": "تعذّر حفظ العدّ؛ حاول مرة أخرى",
+    "en": "Could not save the count. Try again."
+  },
+  "tasbih.itemSummary": {
+    "ar": "عدد الحبات: {goal} • الإجمالي: {total}",
+    "en": "Round target: {goal} • Total: {total}"
+  },
+  "tasbih.allSessions": {
+    "ar": "كل الجلسات: {count}",
+    "en": "All sessions: {count}"
+  },
+  "tasbih.totals": {
+    "ar": "الإجمالي: {total}  •  الجولات: {rounds}  •  عدد الحبات: {goal}",
+    "en": "Total: {total}  •  Rounds: {rounds}  •  Round target: {goal}"
+  },
+  "tasbih.roundComplete": {
+    "ar": "اكتملت الجولة {round}",
+    "en": "Round {round} complete"
+  },
+  "tasbih.ofGoal": {
+    "ar": "من {goal}",
+    "en": "of {goal}"
+  },
+  "tasbih.semantics": {
+    "ar": "المسبحة، العدّ الحالي {count} من {goal}",
+    "en": "Tasbih counter, current count {count} of {goal}"
+  },
+  "tasbih.label.718db1c77b6e": {
+    "ar": "تعذّر التعرف على الصوت؛ جرّب مجددًا أو عدّ يدويًا",
+    "en": "Could not recognize speech. Try again or count manually."
+  },
+  "tasbih.label.39516d93830f": {
+    "ar": "الميكروفون غير متاح أو الإذن مرفوض؛ العدّ اليدوي متاح",
+    "en": "Microphone unavailable or permission denied. Manual counting is available."
+  },
+  "tasbih.label.0dbd369cffa9": {
+    "ar": "التعرف على العربية غير متاح على هذا الجهاز؛ استخدم العدّ اليدوي",
+    "en": "Arabic speech recognition is unavailable on this device. Count manually."
+  },
+  "tasbih.label.b9478734cc43": {
+    "ar": "التعرف الصوتي غير متاح؛ العدّ اليدوي متاح",
+    "en": "Speech recognition is unavailable. Manual counting is available."
+  },
+  "tasbih.label.489f26c6faf0": {
+    "ar": "لم أتعرف على الذكر المختار؛ اضغط الميكروفون للمحاولة",
+    "en": "The selected remembrance was not recognized. Tap the microphone to try again."
+  },
+  "tasbih.label.dfa50a7ceed4": {
+    "ar": "تم التعرف على الذكر؛ اضغط الميكروفون للاستماع مجددًا",
+    "en": "Remembrance recognized. Tap the microphone to listen again."
   }
 }

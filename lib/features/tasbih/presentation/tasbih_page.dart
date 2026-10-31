@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
+import '../../../core/localization/locale_formats.dart';
 import '../../sharing/share_card.dart';
 import '../../../app_appearance.dart';
 import '../../../navigation/more_page.dart';
@@ -14,6 +17,11 @@ import '../data/tasbih_preferences.dart';
 import '../data/tasbih_voice.dart';
 
 part 'tasbih_counter_face.dart';
+
+LocaleFormats _tasbihFormats(BuildContext context) =>
+    LocalizationScope.maybeOf(context)?.formats ?? const LocaleFormats('ar');
+String _tasbihNumber(BuildContext context, num value) =>
+    _tasbihFormats(context).number(value);
 
 const tasbihStyleNames = [
   'أزرار',
@@ -63,18 +71,24 @@ class _TasbihPageState extends State<TasbihPage> {
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: FutureBuilder<ReligiousActivityController>(
       future: _load,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Scaffold(
-            appBar: AppBar(title: const Text('المسبحة')),
+            appBar: AppBar(title: Text(context.tasbihLabel('المسبحة'))),
             body: Center(
               child: snapshot.hasError
                   ? TextButton(
                       onPressed: () => setState(() => _load = _prepare()),
-                      child: const Text('تعذّر فتح المسبحة؛ إعادة المحاولة'),
+                      child: Text(
+                        context.tasbihLabel(
+                          'تعذّر فتح المسبحة؛ إعادة المحاولة',
+                        ),
+                      ),
                     )
                   : const CircularProgressIndicator(),
             ),
@@ -183,7 +197,9 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تعذّر فتح الذكر؛ حاول مجددًا')),
+          SnackBar(
+            content: Text(context.tasbihLabel('تعذّر فتح الذكر؛ حاول مجددًا')),
+          ),
         );
       }
     } finally {
@@ -212,9 +228,9 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
       }
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('تعذّر حفظ الذكر')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.tasbihLabel('تعذّر حفظ الذكر'))),
+        );
       }
     }
   }
@@ -225,18 +241,20 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
       context: context,
       useRootNavigator: false,
       builder: (context) => AlertDialog(
-        title: const Text('حذف الذكر من المسبحة؟'),
-        content: const Text(
-          'تُحذف بطاقة الذكر وتبقى أحداث العدّ السابقة محفوظة.',
+        title: Text(context.tasbihLabel('حذف الذكر من المسبحة؟')),
+        content: Text(
+          context.tasbihLabel(
+            'تُحذف بطاقة الذكر وتبقى أحداث العدّ السابقة محفوظة.',
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text(context.tasbihLabel('إلغاء')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('حذف'),
+            child: Text(context.tasbihLabel('حذف')),
           ),
         ],
       ),
@@ -255,7 +273,9 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تعذّر حذف الذكر؛ حاول مجددًا')),
+          SnackBar(
+            content: Text(context.tasbihLabel('تعذّر حذف الذكر؛ حاول مجددًا')),
+          ),
         );
       }
     }
@@ -276,14 +296,19 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
         context: context,
         useRootNavigator: false,
         builder: (context) => AlertDialog(
-          title: const Text('فائدة الذكر / ملاحظتك'),
+          title: Text(context.tasbihLabel('فائدة الذكر / ملاحظتك')),
           content: Text(
-            item.benefit.isEmpty ? 'لم تضف ملاحظة بعد.' : item.benefit,
+            item.benefit.isEmpty
+                ? context.tasbihLabel('لم تضف ملاحظة بعد.')
+                : item.benefit,
+            textDirection: item.benefit.isEmpty
+                ? null
+                : contentTextDirection(item.benefit),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('إغلاق'),
+              child: Text(context.tasbihLabel('إغلاق')),
             ),
           ],
         ),
@@ -300,7 +325,11 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تعذّر حفظ التعديل؛ حاول مجددًا')),
+          SnackBar(
+            content: Text(
+              context.tasbihLabel('تعذّر حفظ التعديل؛ حاول مجددًا'),
+            ),
+          ),
         );
       }
     } finally {
@@ -321,9 +350,9 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
           SliverToBoxAdapter(
             child: Stack(
               children: [
-                const DirectoryHeader(
-                  title: 'المسبحة',
-                  subtitle: 'ذكر يدوم معك',
+                DirectoryHeader(
+                  title: context.tasbihLabel('المسبحة'),
+                  subtitle: context.tasbihLabel('ذكر يدوم معك'),
                 ),
                 Positioned(
                   top: MediaQuery.paddingOf(context).top + 12,
@@ -331,7 +360,7 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
                   child: IconButton.filledTonal(
                     onPressed: widget.onClose,
                     icon: const Icon(Icons.arrow_back),
-                    tooltip: 'رجوع',
+                    tooltip: context.tasbihLabel('رجوع'),
                   ),
                 ),
               ],
@@ -345,7 +374,7 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
                   children: [
                     Expanded(
                       child: Text(
-                        'اختر ذكرك',
+                        context.tasbihLabel('اختر ذكرك'),
                         style: TextStyle(
                           fontSize: 21,
                           fontWeight: FontWeight.bold,
@@ -357,13 +386,13 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
                       key: const ValueKey('tasbih-add'),
                       onPressed: _create,
                       icon: const Icon(Icons.add),
-                      label: const Text('إضافة'),
+                      label: Text(context.tasbihLabel('إضافة')),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'أهداف العدّ قابلة للتعديل حسب اختيارك.',
+                  context.tasbihLabel('أهداف العدّ قابلة للتعديل حسب اختيارك.'),
                   style: TextStyle(color: p.muted),
                 ),
                 const SizedBox(height: 12),
@@ -373,12 +402,12 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
                     if (snapshot.hasError) {
                       return TextButton(
                         onPressed: () => setState(() => _items = _loadItems()),
-                        child: const Text('إعادة المحاولة'),
+                        child: Text(context.tasbihLabel('إعادة المحاولة')),
                       );
                     }
                     if (!snapshot.hasData ||
                         snapshot.connectionState != ConnectionState.done) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Center(child: CircularProgressIndicator());
                     }
                     return Column(
                       children: [
@@ -395,36 +424,52 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
                                 ),
                                 title: Text(
                                   item.text,
+                                  textDirection: contentTextDirection(
+                                    item.text,
+                                  ),
                                   style: TextStyle(
                                     color: p.heading,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 subtitle: Text(
-                                  'عدد الحبات: ${item.goal} • الإجمالي: ${_totals[item.id] ?? 0}',
+                                  context.tr(
+                                    'tasbih.itemSummary',
+                                    args: {
+                                      'goal': _tasbihNumber(context, item.goal),
+                                      'total': _tasbihNumber(
+                                        context,
+                                        _totals[item.id] ?? 0,
+                                      ),
+                                    },
+                                  ),
                                 ),
                                 trailing: PopupMenuButton<String>(
-                                  tooltip: 'خيارات الذكر',
+                                  tooltip: context.tasbihLabel('خيارات الذكر'),
                                   itemBuilder: (_) => [
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'edit',
-                                      child: Text('تعديل'),
+                                      child: Text(context.tasbihLabel('تعديل')),
                                     ),
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'benefit',
-                                      child: Text('الفائدة'),
+                                      child: Text(
+                                        context.tasbihLabel('الفائدة'),
+                                      ),
                                     ),
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'copy',
-                                      child: Text('نسخ'),
+                                      child: Text(context.tasbihLabel('نسخ')),
                                     ),
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'share',
-                                      child: Text('مشاركة'),
+                                      child: Text(
+                                        context.tasbihLabel('مشاركة'),
+                                      ),
                                     ),
-                                    const PopupMenuItem(
+                                    PopupMenuItem(
                                       value: 'delete',
-                                      child: Text('حذف'),
+                                      child: Text(context.tasbihLabel('حذف')),
                                     ),
                                   ],
                                   onSelected: (action) => _menu(item, action),
@@ -569,20 +614,28 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
   Future<void> _reset(bool all) async {
     final approved = await _dialog<bool>(
       (context) => AlertDialog(
-        title: Text(all ? 'تصفير الإجمالي؟' : 'تصفير الحالي؟'),
+        title: Text(
+          all
+              ? context.tasbihLabel('تصفير الإجمالي؟')
+              : context.tasbihLabel('تصفير الحالي؟'),
+        ),
         content: Text(
           all
-              ? 'يبدأ عدّ جديد من الصفر. يبقى سجل الجلسات السابقة محفوظًا في الإحصائيات.'
-              : 'يعود العدّ الحالي للصفر مع الاحتفاظ بالإجمالي والجولات المكتملة.',
+              ? context.tasbihLabel(
+                  'يبدأ عدّ جديد من الصفر. يبقى سجل الجلسات السابقة محفوظًا في الإحصائيات.',
+                )
+              : context.tasbihLabel(
+                  'يعود العدّ الحالي للصفر مع الاحتفاظ بالإجمالي والجولات المكتملة.',
+                ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text(context.tasbihLabel('إلغاء')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('تصفير'),
+            child: Text(context.tasbihLabel('تصفير')),
           ),
         ],
       ),
@@ -599,7 +652,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
 
   Future<void> _styles() => _dialog<void>(
     (context) => SimpleDialog(
-      title: const Text('شكل المسبحة'),
+      title: Text(context.tasbihLabel('شكل المسبحة')),
       children: [
         RadioGroup<TasbihStyle>(
           groupValue: c.definition.style,
@@ -614,7 +667,9 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                 RadioListTile<TasbihStyle>(
                   key: ValueKey('style-${style.name}'),
                   value: style,
-                  title: Text(tasbihStyleNames[style.index]),
+                  title: Text(
+                    context.tasbihLabel(tasbihStyleNames[style.index]),
+                  ),
                 ),
             ],
           ),
@@ -625,7 +680,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
   Future<void> _settingsDialog() => _dialog<void>(
     (context) => StatefulBuilder(
       builder: (context, update) => AlertDialog(
-        title: const Text('إعدادات المسبحة'),
+        title: Text(context.tasbihLabel('إعدادات المسبحة')),
         content: SizedBox(
           width: 360,
           child: SingleChildScrollView(
@@ -633,18 +688,36 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
               mainAxisSize: MainAxisSize.min,
               children: [
                 for (final (key, label, value) in [
-                  ('haptic', 'اهتزاز عند العدّ', _settings.haptic),
-                  ('auto', 'عدّ تلقائي عند الضغط المطوّل', _settings.autoCount),
-                  ('countSound', 'صوت عند كل ضغطة', _settings.countSound),
-                  ('goalSound', 'صوت عند اكتمال الجولة', _settings.goalSound),
+                  (
+                    'haptic',
+                    context.tasbihLabel('اهتزاز عند العدّ'),
+                    _settings.haptic,
+                  ),
+                  (
+                    'auto',
+                    context.tasbihLabel('عدّ تلقائي عند الضغط المطوّل'),
+                    _settings.autoCount,
+                  ),
+                  (
+                    'countSound',
+                    context.tasbihLabel('صوت عند كل ضغطة'),
+                    _settings.countSound,
+                  ),
+                  (
+                    'goalSound',
+                    context.tasbihLabel('صوت عند اكتمال الجولة'),
+                    _settings.goalSound,
+                  ),
                 ])
                   SwitchListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(label),
                     value: value,
                     subtitle: key == 'auto'
-                        ? const Text(
-                            'يتطلب تفعيل الاهتزاز؛ يتوقف عند رفع إصبعك',
+                        ? Text(
+                            context.tasbihLabel(
+                              'يتطلب تفعيل الاهتزاز؛ يتوقف عند رفع إصبعك',
+                            ),
                           )
                         : null,
                     onChanged: key == 'auto' && !_settings.haptic
@@ -661,7 +734,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('تم'),
+            child: Text(context.tasbihLabel('تم')),
           ),
         ],
       ),
@@ -696,7 +769,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
     final list = days.entries.toList()..sort((a, b) => b.key.compareTo(a.key));
     await _dialog<void>(
       (context) => AlertDialog(
-        title: const Text('سجل المسبحة'),
+        title: Text(context.tasbihLabel('سجل المسبحة')),
         content: SizedBox(
           width: 340,
           child: SingleChildScrollView(
@@ -704,14 +777,27 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'كل الجلسات: ${days.values.fold<int>(0, (a, b) => a + b)}',
+                  context.tr(
+                    'tasbih.allSessions',
+                    args: {
+                      'count': _tasbihNumber(
+                        context,
+                        days.values.fold<int>(0, (a, b) => a + b),
+                      ),
+                    },
+                  ),
                 ),
                 const SizedBox(height: 12),
-                if (list.isEmpty) const Text('ابدأ العدّ لعرض إحصائياتك'),
+                if (list.isEmpty)
+                  Text(context.tasbihLabel('ابدأ العدّ لعرض إحصائياتك')),
                 for (final day in list)
                   ListTile(
-                    title: Text(day.key),
-                    trailing: Text('${day.value}'),
+                    title: Text(
+                      _tasbihFormats(
+                        context,
+                      ).gregorianDate(DateTime.parse(day.key)),
+                    ),
+                    trailing: Text(_tasbihNumber(context, day.value)),
                   ),
               ],
             ),
@@ -720,7 +806,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إغلاق'),
+            child: Text(context.tasbihLabel('إغلاق')),
           ),
         ],
       ),
@@ -760,7 +846,9 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
     if (!c.available) {
       return Scaffold(
         appBar: AppBar(),
-        body: const Center(child: Text('افتح المسبحة مجددًا للحساب الحالي')),
+        body: Center(
+          child: Text(context.tasbihLabel('افتح المسبحة مجددًا للحساب الحالي')),
+        ),
       );
     }
     if (c.definition.style == TasbihStyle.fullscreen &&
@@ -777,11 +865,11 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                     IconButton(
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.arrow_back),
-                      tooltip: 'رجوع',
+                      tooltip: context.tasbihLabel('رجوع'),
                     ),
                     Expanded(
                       child: Text(
-                        'المسبحة',
+                        context.tasbihLabel('المسبحة'),
                         style: TextStyle(
                           color: p.heading,
                           fontSize: 22,
@@ -792,12 +880,12 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                     IconButton(
                       onPressed: _styles,
                       icon: const Icon(Icons.palette_outlined),
-                      tooltip: 'الشكل',
+                      tooltip: context.tasbihLabel('الشكل'),
                     ),
                     IconButton(
                       onPressed: _settingsDialog,
                       icon: const Icon(Icons.settings_outlined),
-                      tooltip: 'الإعدادات',
+                      tooltip: context.tasbihLabel('الإعدادات'),
                     ),
                   ],
                 ),
@@ -806,6 +894,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                   child: SingleChildScrollView(
                     child: Text(
                       c.definition.text,
+                      textDirection: contentTextDirection(c.definition.text),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: p.tealHeading,
@@ -831,13 +920,20 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 14),
                   child: Text(
-                    'اضغط للزيادة • اضغط مطوّلًا للنقصان',
+                    context.tasbihLabel('اضغط للزيادة • اضغط مطوّلًا للنقصان'),
                     textAlign: TextAlign.center,
                     style: TextStyle(color: p.muted, fontSize: 12),
                   ),
                 ),
                 Text(
-                  'الإجمالي: ${c.total}  •  الجولات: ${c.rounds}  •  عدد الحبات: ${c.definition.goal}',
+                  context.tr(
+                    'tasbih.totals',
+                    args: {
+                      'total': _tasbihNumber(context, c.total),
+                      'rounds': _tasbihNumber(context, c.rounds),
+                      'goal': _tasbihNumber(context, c.definition.goal),
+                    },
+                  ),
                   textAlign: TextAlign.center,
                   style: TextStyle(color: p.tealHeading),
                 ),
@@ -847,18 +943,21 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                     TextButton.icon(
                       onPressed: c.canUndo ? () => c.undo() : null,
                       icon: const Icon(Icons.undo),
-                      label: const Text('تراجع'),
+                      label: Text(context.tasbihLabel('تراجع')),
                     ),
                     TextButton.icon(
                       onPressed: () => _reset(false),
                       icon: const Icon(Icons.restart_alt),
-                      label: const Text('تصفير الحالي'),
+                      label: Text(context.tasbihLabel('تصفير الحالي')),
                     ),
                   ],
                 ),
                 if (_completedRound != null) _completion(context),
                 if (c.error != null)
-                  Text(c.error!, style: const TextStyle(color: Colors.red)),
+                  Text(
+                    context.tasbihLabel(c.error!),
+                    style: const TextStyle(color: Colors.red),
+                  ),
               ],
             ),
           ),
@@ -872,9 +971,9 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
           SliverToBoxAdapter(
             child: Stack(
               children: [
-                const DirectoryHeader(
-                  title: 'المسبحة',
-                  subtitle: 'ذكر يدوم معك',
+                DirectoryHeader(
+                  title: context.tasbihLabel('المسبحة'),
+                  subtitle: context.tasbihLabel('ذكر يدوم معك'),
                 ),
                 Positioned(
                   top: MediaQuery.paddingOf(context).top + 12,
@@ -882,7 +981,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                   child: IconButton.filledTonal(
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.arrow_back),
-                    tooltip: 'رجوع',
+                    tooltip: context.tasbihLabel('رجوع'),
                   ),
                 ),
               ],
@@ -902,6 +1001,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                     child: Center(
                       child: Text(
                         c.definition.text,
+                        textDirection: contentTextDirection(c.definition.text),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: p.tealHeading,
@@ -929,14 +1029,21 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                 Text(
                   c.definition.style == TasbihStyle.circular ||
                           c.definition.style == TasbihStyle.horizontal
-                      ? 'اسحب لليمين للزيادة ولليسار للنقصان'
-                      : 'اضغط للزيادة • اضغط مطوّلًا للنقصان',
+                      ? context.tasbihLabel(
+                          'اسحب لليمين للزيادة ولليسار للنقصان',
+                        )
+                      : context.tasbihLabel(
+                          'اضغط للزيادة • اضغط مطوّلًا للنقصان',
+                        ),
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 12, color: p.muted),
                 ),
                 if (_completedRound != null) _completion(context),
                 if (c.error != null)
-                  Text(c.error!, style: const TextStyle(color: Colors.red)),
+                  Text(
+                    context.tasbihLabel(c.error!),
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 const SizedBox(height: 14),
                 FilledButton(
                   key: const ValueKey('tasbih-count'),
@@ -949,8 +1056,8 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                     ),
                     foregroundColor: Colors.white,
                   ),
-                  child: const Text(
-                    'اضغط للذكر',
+                  child: Text(
+                    context.tasbihLabel('اضغط للذكر'),
                     style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -963,17 +1070,17 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                     TextButton.icon(
                       onPressed: c.canUndo ? () => c.undo() : null,
                       icon: const Icon(Icons.undo),
-                      label: const Text('تراجع'),
+                      label: Text(context.tasbihLabel('تراجع')),
                     ),
                     TextButton.icon(
                       onPressed: () => _reset(false),
                       icon: const Icon(Icons.restart_alt),
-                      label: const Text('تصفير الحالي'),
+                      label: Text(context.tasbihLabel('تصفير الحالي')),
                     ),
                     TextButton.icon(
                       onPressed: _settingsDialog,
                       icon: const Icon(Icons.settings_outlined),
-                      label: const Text('الإعدادات'),
+                      label: Text(context.tasbihLabel('الإعدادات')),
                     ),
                   ],
                 ),
@@ -996,7 +1103,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                               children: [
                                 FittedBox(
                                   child: Text(
-                                    '$value',
+                                    _tasbihNumber(context, value),
                                     key: ValueKey('tasbih-stat-$label'),
                                     style: TextStyle(
                                       color: p.tealHeading,
@@ -1006,7 +1113,7 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                                   ),
                                 ),
                                 Text(
-                                  label,
+                                  context.tasbihLabel(label),
                                   style: TextStyle(
                                     color: p.muted,
                                     fontSize: 12,
@@ -1027,24 +1134,24 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                     OutlinedButton.icon(
                       onPressed: _styles,
                       icon: const Icon(Icons.palette_outlined),
-                      label: const Text('الشكل'),
+                      label: Text(context.tasbihLabel('الشكل')),
                     ),
                     OutlinedButton.icon(
                       onPressed: _edit,
                       icon: const Icon(Icons.edit_outlined),
-                      label: const Text('تعديل'),
+                      label: Text(context.tasbihLabel('تعديل')),
                     ),
                     OutlinedButton.icon(
                       onPressed: _stats,
                       icon: const Icon(Icons.query_stats),
-                      label: const Text('الإحصائيات'),
+                      label: Text(context.tasbihLabel('الإحصائيات')),
                     ),
                     OutlinedButton.icon(
                       onPressed: () => Clipboard.setData(
                         ClipboardData(text: c.definition.text),
                       ),
                       icon: const Icon(Icons.copy_outlined),
-                      label: const Text('نسخ'),
+                      label: Text(context.tasbihLabel('نسخ')),
                     ),
                     OutlinedButton.icon(
                       onPressed: () {
@@ -1052,33 +1159,40 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                         unawaited(_shareTasbih(context, c.definition.text));
                       },
                       icon: const Icon(Icons.share_outlined),
-                      label: const Text('مشاركة'),
+                      label: Text(context.tasbihLabel('مشاركة')),
                     ),
                     OutlinedButton.icon(
                       onPressed: () => _dialog<void>(
                         (context) => AlertDialog(
-                          title: const Text('فائدة الذكر / ملاحظتك'),
+                          title: Text(
+                            context.tasbihLabel('فائدة الذكر / ملاحظتك'),
+                          ),
                           content: SingleChildScrollView(
                             child: Text(
                               c.definition.benefit.isEmpty
-                                  ? 'لم تضف ملاحظة لهذا الذكر بعد.'
+                                  ? context.tasbihLabel(
+                                      'لم تضف ملاحظة لهذا الذكر بعد.',
+                                    )
                                   : c.definition.benefit,
+                              textDirection: c.definition.benefit.isEmpty
+                                  ? null
+                                  : contentTextDirection(c.definition.benefit),
                             ),
                           ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: const Text('إغلاق'),
+                              child: Text(context.tasbihLabel('إغلاق')),
                             ),
                           ],
                         ),
                       ),
                       icon: const Icon(Icons.info_outline),
-                      label: const Text('الفائدة'),
+                      label: Text(context.tasbihLabel('الفائدة')),
                     ),
                     TextButton(
                       onPressed: () => _reset(true),
-                      child: const Text('تصفير الإجمالي'),
+                      child: Text(context.tasbihLabel('تصفير الإجمالي')),
                     ),
                   ],
                 ),
@@ -1099,15 +1213,19 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                           ),
                           label: Text(
                             _voice.starting
-                                ? 'جارٍ تجهيز الميكروفون…'
+                                ? context.tasbihLabel('جارٍ تجهيز الميكروفون…')
                                 : _voice.active
-                                ? 'إيقاف الاستماع'
-                                : 'العدّ بالصوت',
+                                ? context.tasbihLabel('إيقاف الاستماع')
+                                : context.tasbihLabel('العدّ بالصوت'),
                           ),
                         ),
                         Text(
-                          _voice.message ??
-                              'استماع قصير للذكر المختار. قد تعالج خدمة التعرف في جهازك الصوت عبر الإنترنت. لا نحفظ تسجيلًا أو نصًّا صوتيًا.',
+                          (_voice.message == null
+                                  ? null
+                                  : context.tasbihLabel(_voice.message!)) ??
+                              context.tasbihLabel(
+                                'استماع قصير للذكر المختار. قد تعالج خدمة التعرف في جهازك الصوت عبر الإنترنت. لا نحفظ تسجيلًا أو نصًّا صوتيًا.',
+                              ),
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 12,
@@ -1140,7 +1258,10 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'اكتملت الجولة $_completedRound',
+            context.tr(
+              'tasbih.roundComplete',
+              args: {'round': _tasbihNumber(context, _completedRound!)},
+            ),
             style: TextStyle(
               color: AppPalette.of(context).heading,
               fontWeight: FontWeight.bold,
@@ -1151,14 +1272,14 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
             children: [
               TextButton(
                 onPressed: () => setState(() => _completedRound = null),
-                child: const Text('تم'),
+                child: Text(context.tasbihLabel('تم')),
               ),
               TextButton(
                 onPressed: () {
                   setState(() => _completedRound = null);
                   unawaited(_increment());
                 },
-                child: const Text('متابعة التسبيح'),
+                child: Text(context.tasbihLabel('متابعة التسبيح')),
               ),
             ],
           ),
@@ -1220,7 +1341,11 @@ Future<(String, String, int)?> _editTasbih(
       context: context,
       useRootNavigator: false,
       builder: (context) => AlertDialog(
-        title: Text(initial == null ? 'ذكر جديد' : 'تعديل الذكر'),
+        title: Text(
+          initial == null
+              ? context.tasbihLabel('ذكر جديد')
+              : context.tasbihLabel('تعديل الذكر'),
+        ),
         content: SizedBox(
           width: 360,
           child: SingleChildScrollView(
@@ -1229,39 +1354,56 @@ Future<(String, String, int)?> _editTasbih(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextFormField(
-                    controller: text,
-                    maxLength: 1000,
-                    minLines: 1,
-                    maxLines: 5,
-                    decoration: const InputDecoration(labelText: 'نص الذكر'),
-                    validator: (value) => value == null || value.trim().isEmpty
-                        ? 'أدخل نص الذكر'
-                        : null,
+                  ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: text,
+                    builder: (context, value, _) => TextFormField(
+                      controller: text,
+                      textDirection: contentTextDirection(value.text),
+                      maxLength: 1000,
+                      minLines: 1,
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        labelText: context.tasbihLabel('نص الذكر'),
+                      ),
+                      validator: (value) =>
+                          value == null || value.trim().isEmpty
+                          ? context.tasbihLabel('أدخل نص الذكر')
+                          : null,
+                    ),
                   ),
-                  TextFormField(
-                    controller: benefit,
-                    maxLength: 2000,
-                    minLines: 2,
-                    maxLines: 5,
-                    decoration: const InputDecoration(
-                      labelText: 'فائدة أو ملاحظة شخصية (اختياري)',
+                  ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: benefit,
+                    builder: (context, value, _) => TextFormField(
+                      controller: benefit,
+                      textDirection: contentTextDirection(value.text),
+                      maxLength: 2000,
+                      minLines: 2,
+                      maxLines: 5,
+                      decoration: InputDecoration(
+                        labelText: context.tasbihLabel(
+                          'فائدة أو ملاحظة شخصية (اختياري)',
+                        ),
+                      ),
                     ),
                   ),
                   TextFormField(
                     controller: goal,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'عدد الحبات في الجولة',
+                    decoration: InputDecoration(
+                      labelText: context.tasbihLabel('عدد الحبات في الجولة'),
                     ),
                     validator: (_) =>
                         parse() == null || parse()! < 1 || parse()! > 1000000
-                        ? 'أدخل عددًا صحيحًا من 1 إلى 1000000'
+                        ? context.tasbihLabel(
+                            'أدخل عددًا صحيحًا من 1 إلى 1000000',
+                          )
                         : null,
                   ),
                   if (initial != null)
-                    const Text(
-                      'تغيير عدد الحبات يبدأ عدًّا حاليًا جديدًا ويحفظ الإجمالي والجولات المكتملة.',
+                    Text(
+                      context.tasbihLabel(
+                        'تغيير عدد الحبات يبدأ عدًّا حاليًا جديدًا ويحفظ الإجمالي والجولات المكتملة.',
+                      ),
                       style: TextStyle(fontSize: 12),
                     ),
                 ],
@@ -1272,7 +1414,7 @@ Future<(String, String, int)?> _editTasbih(
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text(context.tasbihLabel('إلغاء')),
           ),
           FilledButton(
             onPressed: () {
@@ -1284,7 +1426,7 @@ Future<(String, String, int)?> _editTasbih(
                 ));
               }
             },
-            child: const Text('حفظ'),
+            child: Text(context.tasbihLabel('حفظ')),
           ),
         ],
       ),

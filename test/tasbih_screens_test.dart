@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/religious_activity/data/activity_controller.dart';
 import 'package:haq_app/features/religious_activity/data/activity_store.dart';
@@ -101,42 +102,45 @@ void main() {
     WidgetTester tester, {
     bool dark = false,
     double width = 426,
+    AppLocalization? localization,
   }) async {
     tester.view.physicalSize = visualSize(Size(width, 1100));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    await tester.pumpWidget(
-      RepaintBoundary(
-        key: boundary,
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: 'QuranUI',
+    final screen = RepaintBoundary(
+      key: boundary,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          fontFamily: 'QuranUI',
+          brightness: dark ? Brightness.dark : Brightness.light,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF2A8C82),
             brightness: dark ? Brightness.dark : Brightness.light,
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF2A8C82),
-              brightness: dark ? Brightness.dark : Brightness.light,
-            ),
-          ),
-          builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              textScaler: TextScaler.linear(
-                visualScale(width == 320 ? 1.2 : 1),
-              ),
-            ),
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: child!,
-            ),
-          ),
-          home: TasbihReaderPage(
-            counter: counter,
-            routes: RouteObserver<ModalRoute<dynamic>>(),
-            speech: speech,
           ),
         ),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(
+            textScaler: TextScaler.linear(visualScale(width == 320 ? 1.2 : 1)),
+          ),
+          child: Directionality(
+            textDirection:
+                localization?.language.direction ?? TextDirection.rtl,
+            child: child!,
+          ),
+        ),
+        home: TasbihReaderPage(
+          counter: counter,
+          routes: RouteObserver<ModalRoute<dynamic>>(),
+          speech: speech,
+        ),
       ),
+    );
+    await tester.pumpWidget(
+      localization == null
+          ? screen
+          : LocalizationScope(controller: localization, child: screen),
     );
     await settle(tester);
   }
@@ -155,6 +159,62 @@ void main() {
       await file.writeAsBytes(bytes!.buffer.asUint8List());
     });
   }
+
+  testWidgets(
+    'English narrow counter preserves Arabic remembrance, personal notes and counts across locales',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      final original = counter.definition.text;
+      await pump(tester, width: 320, localization: localization);
+      expect(find.text(original), findsOneWidget);
+      expect(
+        tester.widget<Text>(find.text(original)).textDirection,
+        TextDirection.rtl,
+      );
+      await tester.tap(find.byKey(const ValueKey('tasbih-face')));
+      await settle(tester);
+      expect(counter.total, 1);
+      await tester.scrollUntilVisible(
+        find.text('Edit'),
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await settle(tester);
+      await tester.tap(find.text('Edit'));
+      await settle(tester);
+      const personal = 'ذكري الشخصي {count}';
+      const note = 'ملاحظتي العربية';
+      await tester.enterText(find.byType(TextFormField).first, personal);
+      await tester.enterText(find.byType(TextFormField).at(1), note);
+      await tester.enterText(find.byType(TextFormField).last, '٢٥');
+      await tester.tap(find.text('Save'));
+      await settle(tester);
+      expect(counter.definition.text, personal);
+      expect(counter.definition.benefit, note);
+      expect(counter.definition.goal, 25);
+      expect(counter.total, 1);
+      final before = (await store.entities(
+        activity.scope,
+      )).map((entity) => entity.toJson()).toList();
+      await localization.select('ar');
+      await settle(tester);
+      expect(counter.definition.text, personal);
+      expect(counter.definition.benefit, note);
+      expect(counter.total, 1);
+      expect(
+        (await store.entities(
+          activity.scope,
+        )).map((entity) => entity.toJson()).toList(),
+        before,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   for (final dark in [false, true]) {
     testWidgets(

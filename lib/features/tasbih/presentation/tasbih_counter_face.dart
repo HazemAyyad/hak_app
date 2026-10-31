@@ -17,7 +17,7 @@ class _CounterFace extends StatelessWidget {
     final number = FittedBox(
       fit: BoxFit.scaleDown,
       child: Text(
-        '${counter.current}',
+        _tasbihNumber(context, counter.current),
         key: const ValueKey('tasbih-current'),
         style: TextStyle(
           fontSize: style == TasbihStyle.fullscreen ? 128 : 64,
@@ -45,7 +45,12 @@ class _CounterFace extends StatelessWidget {
             children: [
               SizedBox(height: 95, width: 130, child: number),
               Text(
-                'من ${counter.definition.goal}',
+                context.tr(
+                  'tasbih.ofGoal',
+                  args: {
+                    'goal': _tasbihNumber(context, counter.definition.goal),
+                  },
+                ),
                 style: TextStyle(color: p.muted),
               ),
             ],
@@ -72,7 +77,7 @@ class _CounterFace extends StatelessWidget {
           IconButton.filledTonal(
             onPressed: undo,
             icon: const Icon(Icons.remove),
-            tooltip: 'نقصان',
+            tooltip: context.tasbihLabel('نقصان'),
           ),
           const SizedBox(width: 12),
           Flexible(child: SizedBox(width: 130, height: 120, child: number)),
@@ -80,7 +85,7 @@ class _CounterFace extends StatelessWidget {
           IconButton.filled(
             onPressed: increment,
             icon: const Icon(Icons.add),
-            tooltip: 'زيادة',
+            tooltip: context.tasbihLabel('زيادة'),
           ),
         ],
       ),
@@ -135,7 +140,7 @@ class _CounterFace extends StatelessWidget {
                 IconButton(
                   onPressed: onReset,
                   icon: const Icon(Icons.restart_alt),
-                  tooltip: 'تصفير الحالي',
+                  tooltip: context.tasbihLabel('تصفير الحالي'),
                 ),
                 Container(
                   padding: const EdgeInsets.all(17),
@@ -158,8 +163,13 @@ class _CounterFace extends StatelessWidget {
     // One interaction surface for every skin. Child buttons win their gesture
     // arena, so pressing + or the digital reset cannot also increment the face.
     face = Semantics(
-      label:
-          'المسبحة، العدّ الحالي ${counter.current} من ${counter.definition.goal}',
+      label: context.tr(
+        'tasbih.semantics',
+        args: {
+          'count': _tasbihNumber(context, counter.current),
+          'goal': _tasbihNumber(context, counter.definition.goal),
+        },
+      ),
       button: true,
       child: Listener(
         onPointerUp: (_) => onRelease(),
