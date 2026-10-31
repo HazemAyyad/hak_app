@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart' show Bidi;
 import '../../../core/localization/app_localization.dart';
 import '../../../core/localization/ui_text.dart';
 import '../data/adhkar_repository.dart';
@@ -20,8 +19,7 @@ String adhkarRepetitions(BuildContext context, int count) =>
     )?.pluralText('adhkar.repetitions', count) ??
     '$count مرة';
 
-TextDirection adhkarTextDirection(String value) =>
-    Bidi.detectRtlDirectionality(value) ? TextDirection.rtl : TextDirection.ltr;
+TextDirection adhkarTextDirection(String value) => contentTextDirection(value);
 
 double adhkarTileExtent(
   BuildContext context,

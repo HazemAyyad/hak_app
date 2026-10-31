@@ -4838,5 +4838,297 @@
   "adhkar.repetitions.other": {
     "ar": "{count} مرة",
     "en": "{count} repetitions"
+  },
+  "assistant.label.42c7bdc29c65": {
+    "en": "Could not open the link",
+    "ar": "تعذّر فتح الرابط"
+  },
+  "assistant.label.8a59624ddb83": {
+    "en": "Stop retrying?",
+    "ar": "إيقاف إعادة المحاولة؟"
+  },
+  "assistant.label.0d7a99dabdf3": {
+    "en": "Your question may have reached the server. Its receipt and usage remain on your account; this only stops the local retry. Sending a new question may count as another request.",
+    "ar": "قد يكون السؤال وصل للخادم. سيبقى إيصال العملية واستهلاكها على حسابك؛ هذا الخيار يوقف المحاولة المحلية فقط. إرسال سؤال جديد قد يُحتسب طلبًا آخر."
+  },
+  "assistant.label.9a30dc2a96b8": {
+    "en": "Cancel",
+    "ar": "إلغاء"
+  },
+  "assistant.label.8f7d74ac0eac": {
+    "en": "Confirm",
+    "ar": "تأكيد"
+  },
+  "assistant.label.b5ce2fc2b00e": {
+    "en": "Haq package",
+    "ar": "باكج حق"
+  },
+  "assistant.label.abac32cf968a": {
+    "en": "Assistant",
+    "ar": "المساعد"
+  },
+  "assistant.label.4adc0d5c06e7": {
+    "en": "Documented sources • clear explanations",
+    "ar": "مصادر موثقة • شرح واضح"
+  },
+  "assistant.label.13f26e38bf78": {
+    "en": "Sign in to continue",
+    "ar": "سجّل الدخول للمتابعة"
+  },
+  "assistant.label.0141c6e08437": {
+    "en": "The assistant and package are linked to your Haq account. Other sections are available as a guest.",
+    "ar": "المساعد والباكج مرتبطان بحساب حق، ويمكنك متابعة الأقسام الأخرى كضيف."
+  },
+  "assistant.label.d58fabc5f51c": {
+    "en": "Sign in or create an account",
+    "ar": "تسجيل الدخول أو إنشاء حساب"
+  },
+  "assistant.label.91ff6d5773c5": {
+    "en": "The assistant is currently unavailable",
+    "ar": "المساعد غير متاح حاليًا"
+  },
+  "assistant.label.24cc3ba012a7": {
+    "en": "No purchase was made. Try again later.",
+    "ar": "لم تُنفّذ عملية شراء. أعد المحاولة لاحقًا."
+  },
+  "assistant.label.14d5786f2e64": {
+    "en": "Try again",
+    "ar": "إعادة المحاولة"
+  },
+  "assistant.label.e52342003dde": {
+    "en": "Your subscription is verified and active",
+    "ar": "اشتراكك موثّق وسارٍ"
+  },
+  "assistant.label.6cf128e851ad": {
+    "en": "Assistant package",
+    "ar": "باكج المساعد"
+  },
+  "assistant.label.84f722ae1159": {
+    "en": "Questions are independent and do not include personal fatwas. Your quota renews at the start of each service month. The assistant may pause when the overall usage limit is reached.",
+    "ar": "الأسئلة مستقلة ولا تشمل فتاوى شخصية. تتجدد الحصة مع بداية شهر الخدمة، وقد يتوقف المساعد مؤقتًا عند حد الاستهلاك العام."
+  },
+  "assistant.label.8062d63ebb0d": {
+    "en": "This subscription renews automatically at the store's price and billing cycle. Review the store's payment terms before confirming. You can cancel renewal in subscription settings.",
+    "ar": "اشتراك يتجدد تلقائيًا وفق دورة وسعر المتجر. راجع شروط الدفع في نافذة المتجر قبل التأكيد، ويمكنك إلغاء التجديد من إعدادات الاشتراكات."
+  },
+  "assistant.label.2823ea1c485e": {
+    "en": "Waiting for the store…",
+    "ar": "بانتظار المتجر…"
+  },
+  "assistant.label.057c6b7bcccf": {
+    "en": "Subscribe through the store",
+    "ar": "الاشتراك من المتجر"
+  },
+  "assistant.label.ab5d9695cd74": {
+    "en": "The package is currently unavailable from the store. Price and purchase options appear after it loads.",
+    "ar": "الباكج غير متاح من المتجر حاليًا؛ لن نعرض سعرًا أو شراءً غير محمّل."
+  },
+  "assistant.label.d8da425c7c47": {
+    "en": "Restore purchases",
+    "ar": "استعادة مشترياتي"
+  },
+  "assistant.label.432651e0ceb3": {
+    "en": "Manage subscription",
+    "ar": "إدارة الاشتراك"
+  },
+  "assistant.label.7598879d58a2": {
+    "en": "Terms of use",
+    "ar": "شروط الاستخدام"
+  },
+  "assistant.label.b2a0889b3131": {
+    "en": "Privacy",
+    "ar": "الخصوصية"
+  },
+  "assistant.label.63f9f08c2d62": {
+    "en": "Question quota",
+    "ar": "رصيد الأسئلة"
+  },
+  "assistant.label.407640b226dd": {
+    "en": "Usage includes processed requests and requests awaiting confirmation. Deleting history does not restore your quota.",
+    "ar": "يشمل الرصيد الطلبات التي عولجت أو التي ما زالت بانتظار التأكيد. حذف السجل لا يعيد الرصيد."
+  },
+  "assistant.label.2c32df4d4c37": {
+    "en": "How can I help?",
+    "ar": "بماذا أساعدك؟"
+  },
+  "assistant.label.744caff2abb6": {
+    "en": "Ask about remembrances or supplications in the library…",
+    "ar": "اسأل عن الأذكار أو الأدعية في المكتبة…"
+  },
+  "assistant.label.92259037ba89": {
+    "en": "I agree to send my question to an AI service for processing and will avoid entering personal information.",
+    "ar": "أوافق على إرسال سؤالي لخدمة ذكاء اصطناعي لمعالجته، وسأتجنب كتابة معلومات شخصية."
+  },
+  "assistant.label.b9480b17dd39": {
+    "en": "This automated explanation may contain mistakes. It is not a fatwa or a substitute for qualified guidance. Each question is independent.",
+    "ar": "الشرح آلي وقد يخطئ، وليس فتوى أو بديلًا عن أهل الاختصاص. كل سؤال مستقل."
+  },
+  "assistant.label.5a86c8378190": {
+    "en": "Checking…",
+    "ar": "جارٍ التحقق…"
+  },
+  "assistant.label.cdc10b83aaa6": {
+    "en": "Send question",
+    "ar": "إرسال السؤال"
+  },
+  "assistant.label.e921f36cf9ae": {
+    "en": "Question awaiting confirmation",
+    "ar": "سؤال بانتظار التأكيد"
+  },
+  "assistant.label.661d2bc4accc": {
+    "en": "The request may have reached the server. We will check the same receipt without repeating a paid request.",
+    "ar": "قد يكون الطلب وصل للخادم. سنفحص الإيصال نفسه دون تكرار طلب مدفوع."
+  },
+  "assistant.label.3e291aa168d2": {
+    "en": "Check question status",
+    "ar": "التحقق من حالة السؤال"
+  },
+  "assistant.label.e83183fb545a": {
+    "en": "Stop retrying",
+    "ar": "إيقاف إعادة المحاولة"
+  },
+  "assistant.label.0c98d916f7ae": {
+    "en": "Delete this question from history?",
+    "ar": "حذف السؤال من السجل؟"
+  },
+  "assistant.label.8bfb511d5c25": {
+    "en": "The question and answer are removed from your account. The usage receipt is kept to prevent duplicate processing. Deletion does not restore your quota.",
+    "ar": "يُحذف النص والجواب من حسابك، ويبقى إيصال الاستهلاك لمنع تكرار العملية. لا يعيد الحذف رصيد الأسئلة."
+  },
+  "assistant.label.105112922aef": {
+    "en": "Older questions",
+    "ar": "أسئلة أقدم"
+  },
+  "assistant.label.7a4e7222b002": {
+    "en": "Check purchase again",
+    "ar": "إعادة التحقق من الشراء"
+  },
+  "assistant.label.e4395761a8b4": {
+    "en": "Deleted question",
+    "ar": "سؤال محذوف"
+  },
+  "assistant.label.09d5a2be6915": {
+    "en": "Delete question",
+    "ar": "حذف السؤال"
+  },
+  "assistant.label.79a720fa168a": {
+    "en": "Automated explanation • may contain mistakes",
+    "ar": "شرح آلي • قد يخطئ"
+  },
+  "assistant.label.cd44844e6d2f": {
+    "en": "Copy explanation",
+    "ar": "نسخ الشرح"
+  },
+  "assistant.label.dae2f79103a8": {
+    "en": "Your question is being checked. Check its status before sending a replacement.",
+    "ar": "السؤال قيد التحقق؛ لا ترسل سؤالًا بديلًا قبل فحص الحالة."
+  },
+  "assistant.label.7c8393f2c3cc": {
+    "en": "The request outcome could not be confirmed. It is conservatively counted against your limit, and processing was not repeated.",
+    "ar": "تعذّر تأكيد نتيجة الطلب. احتُسب ضمن الحد احتياطيًا ولم نكرر المعالجة."
+  },
+  "assistant.label.cc98d42cba97": {
+    "en": "The answer could not be displayed because its structure or sources could not be verified. The request was processed and counted against your limit.",
+    "ar": "لم نعرض الجواب لتعذّر توثيق بنيته أو مصادره. عولج الطلب واحتُسب ضمن الحد."
+  },
+  "assistant.label.763f99d77947": {
+    "en": "The question was not sent for processing and did not count against your quota.",
+    "ar": "لم يُرسل السؤال للمعالجة ولم يُحتسب من الرصيد."
+  },
+  "assistant.label.db6365db8abb": {
+    "en": "Original texts and their sources",
+    "ar": "النصوص الأصلية ومصادرها"
+  },
+  "assistant.label.d0ad8f702291": {
+    "en": "Could not track store transactions. Reopen this section.",
+    "ar": "تعذّر متابعة عمليات المتجر؛ أعد فتح القسم"
+  },
+  "assistant.label.1d5a70adce7b": {
+    "en": "The account changed. Reopen this section.",
+    "ar": "تغير الحساب؛ أعد فتح القسم"
+  },
+  "assistant.label.a2bc338c3d6b": {
+    "en": "Your session expired. Sign in again.",
+    "ar": "انتهت الجلسة؛ جدّد تسجيل الدخول"
+  },
+  "assistant.label.87a1556c54ff": {
+    "en": "The assistant requires a verified active subscription",
+    "ar": "المساعد يحتاج اشتراكًا موثقًا وساريًا"
+  },
+  "assistant.label.b74fbefe4b07": {
+    "en": "This action is unavailable for this account. The purchase may be linked to another Haq account.",
+    "ar": "العملية غير متاحة لهذا الحساب؛ الشراء قد يكون مرتبطًا بحساب حق آخر"
+  },
+  "assistant.label.520db6aa58e2": {
+    "en": "A different question has the same request ID. Check your question history.",
+    "ar": "يوجد سؤال مختلف بالمعرّف نفسه؛ تحقق من سجل الأسئلة"
+  },
+  "assistant.label.2724a4d82884": {
+    "en": "You reached your usage limit. Check your quota and its renewal date.",
+    "ar": "وصلت حد الاستخدام؛ راجع رصيد الأسئلة وموعد تجديده"
+  },
+  "assistant.label.18637670f417": {
+    "en": "Could not verify the request or find an appropriate source. Check the question or purchase status.",
+    "ar": "تعذّر توثيق الطلب أو العثور على مصدر مناسب؛ راجع السؤال أو حالة الشراء"
+  },
+  "assistant.label.2d8d04f7991b": {
+    "en": "The service is currently unavailable. It may need configuration or have reached its overall usage limit.",
+    "ar": "الخدمة غير متاحة حاليًا؛ قد تحتاج إعدادًا أو بلغت حد الاستهلاك العام"
+  },
+  "assistant.label.f8e16e267c59": {
+    "en": "Could not connect. Check the request status before sending a new request.",
+    "ar": "تعذّر الاتصال. تحقق من حالة العملية قبل إرسال طلب جديد."
+  },
+  "assistant.label.87cbaaddf6e5": {
+    "en": "Could not load the package from the store. No purchase was made.",
+    "ar": "تعذّر تحميل الباكج من المتجر؛ لم يُنفّذ شراء"
+  },
+  "assistant.label.6f51a7802060": {
+    "en": "Could not load the store package",
+    "ar": "تعذّر تحميل باكج المتجر"
+  },
+  "assistant.label.9aa40047ee23": {
+    "en": "A question is awaiting confirmation. Check it first.",
+    "ar": "يوجد سؤال بانتظار التأكيد؛ تحقق منه أولًا"
+  },
+  "assistant.label.210b40bc0ad7": {
+    "en": "Waiting for the store. Payment grants assistant access after server verification.",
+    "ar": "بانتظار المتجر؛ الدفع لا يفتح المساعد قبل التحقق الخادمي"
+  },
+  "assistant.label.c15b3bdd56a5": {
+    "en": "The purchase did not start. Try again through the store.",
+    "ar": "لم يبدأ الشراء؛ أعد المحاولة من المتجر"
+  },
+  "assistant.label.e8ffe870552d": {
+    "en": "Checking store purchases. Access is granted after verification.",
+    "ar": "جارٍ التحقق من مشتريات المتجر؛ لا تظهر صلاحية قبل توثيقها"
+  },
+  "assistant.label.690e46fecff9": {
+    "en": "The purchase is pending in the store. A subscription has not been granted yet.",
+    "ar": "الشراء معلّق في المتجر؛ لم يُمنح اشتراك بعد"
+  },
+  "assistant.label.8d7954fa078f": {
+    "en": "The purchase was canceled. No subscription was activated.",
+    "ar": "أُلغي الشراء؛ لم يتفعّل اشتراك"
+  },
+  "assistant.label.2d52b73b997c": {
+    "en": "The store purchase failed",
+    "ar": "تعذّر الشراء في المتجر"
+  },
+  "assistant.label.6655845c24a6": {
+    "en": "The server verified your subscription",
+    "ar": "تم توثيق الاشتراك من الخادم"
+  },
+  "assistant.label.4bb1c70b5fbd": {
+    "en": "Purchase checked. There is no active subscription.",
+    "ar": "تم فحص الشراء؛ لا يوجد اشتراك سارٍ"
+  },
+  "assistant.quota": {
+    "en": "This month: {monthlyUsed} of {monthlyLimit} • Today: {dailyUsed} of {dailyLimit}",
+    "ar": "هذا الشهر: {monthlyUsed} من {monthlyLimit} • اليوم: {dailyUsed} من {dailyLimit}"
+  },
+  "assistant.packageQuota": {
+    "en": "{monthly} questions per service month, with a daily limit of {daily}. Answers are linked to Haq library sources, showing the original text and its source.",
+    "ar": "{monthly} سؤالًا كل شهر خدمة، وبحد {daily} أسئلة يوميًا. الإجابات مرتبطة بمصادر مكتبة حق، مع عرض النص الأصلي والمصدر."
   }
 }

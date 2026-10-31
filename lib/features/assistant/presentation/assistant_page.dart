@@ -2,12 +2,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import '../../../app_appearance.dart';
 import '../../../app_refresh.dart';
 import '../../../navigation/more_page.dart';
 import '../../account/presentation/account_hub.dart';
 import '../../religious_content/data/religious_controller.dart';
 import '../data/assistant_controller.dart';
+
+String assistantNumber(BuildContext context, Object? value) => value is num
+    ? LocalizationScope.maybeOf(context)?.formats.number(value) ?? '$value'
+    : value?.toString() ?? '—';
 
 class AssistantPage extends StatefulWidget {
   const AssistantPage({
@@ -55,7 +61,9 @@ class _AssistantPageState extends State<AssistantPage> {
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
@@ -137,7 +145,9 @@ class _AssistantBodyState extends State<_AssistantBody>
         throw StateError('link');
       }
     } catch (_) {
-      if (mounted) setState(() => localError = 'تعذّر فتح الرابط');
+      if (mounted) {
+        setState(() => localError = context.assistantLabel('تعذّر فتح الرابط'));
+      }
     }
   }
 
@@ -147,18 +157,20 @@ class _AssistantBodyState extends State<_AssistantBody>
       context: context,
       useRootNavigator: false,
       builder: (ctx) => AlertDialog(
-        title: const Text('إيقاف إعادة المحاولة؟'),
-        content: const Text(
-          'قد يكون السؤال وصل للخادم. سيبقى إيصال العملية واستهلاكها على حسابك؛ هذا الخيار يوقف المحاولة المحلية فقط. إرسال سؤال جديد قد يُحتسب طلبًا آخر.',
+        title: Text(context.assistantLabel('إيقاف إعادة المحاولة؟')),
+        content: Text(
+          context.assistantLabel(
+            'قد يكون السؤال وصل للخادم. سيبقى إيصال العملية واستهلاكها على حسابك؛ هذا الخيار يوقف المحاولة المحلية فقط. إرسال سؤال جديد قد يُحتسب طلبًا آخر.',
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('إلغاء'),
+            child: Text(context.assistantLabel('إلغاء')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('تأكيد'),
+            child: Text(context.assistantLabel('تأكيد')),
           ),
         ],
       ),
@@ -188,8 +200,10 @@ class _AssistantBodyState extends State<_AssistantBody>
               padding: const EdgeInsets.only(bottom: 32),
               children: [
                 DirectoryHeader(
-                  title: widget.subscription ? 'باكج حق' : 'المساعد',
-                  subtitle: 'مصادر موثقة • شرح واضح',
+                  title: widget.subscription
+                      ? context.assistantLabel('باكج حق')
+                      : context.assistantLabel('المساعد'),
+                  subtitle: context.assistantLabel('مصادر موثقة • شرح واضح'),
                   onBack: widget.onBack,
                 ),
                 Padding(
@@ -204,16 +218,18 @@ class _AssistantBodyState extends State<_AssistantBody>
                             children: [
                               Icon(Icons.lock_outline, size: 46, color: p.gold),
                               const SizedBox(height: 14),
-                              const Text(
-                                'سجّل الدخول للمتابعة',
+                              Text(
+                                context.assistantLabel('سجّل الدخول للمتابعة'),
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w800,
                                 ),
                               ),
                               const SizedBox(height: 10),
-                              const Text(
-                                'المساعد والباكج مرتبطان بحساب حق، ويمكنك متابعة الأقسام الأخرى كضيف.',
+                              Text(
+                                context.assistantLabel(
+                                  'المساعد والباكج مرتبطان بحساب حق، ويمكنك متابعة الأقسام الأخرى كضيف.',
+                                ),
                               ),
                               const SizedBox(height: 16),
                               FilledButton(
@@ -232,7 +248,11 @@ class _AssistantBodyState extends State<_AssistantBody>
                                         ),
                                       ),
                                     ),
-                                child: const Text('تسجيل الدخول أو إنشاء حساب'),
+                                child: Text(
+                                  context.assistantLabel(
+                                    'تسجيل الدخول أو إنشاء حساب',
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -248,22 +268,28 @@ class _AssistantBodyState extends State<_AssistantBody>
                                   size: 40,
                                 ),
                                 const SizedBox(height: 12),
-                                const Text(
-                                  'المساعد غير متاح حاليًا',
+                                Text(
+                                  context.assistantLabel(
+                                    'المساعد غير متاح حاليًا',
+                                  ),
                                   style: TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
-                                  'لم تُنفّذ عملية شراء. أعد المحاولة لاحقًا.',
+                                Text(
+                                  context.assistantLabel(
+                                    'لم تُنفّذ عملية شراء. أعد المحاولة لاحقًا.',
+                                  ),
                                 ),
                                 const SizedBox(height: 14),
                                 OutlinedButton.icon(
                                   onPressed: c.load,
                                   icon: const Icon(Icons.refresh),
-                                  label: const Text('إعادة المحاولة'),
+                                  label: Text(
+                                    context.assistantLabel('إعادة المحاولة'),
+                                  ),
                                 ),
                               ],
                             ),
@@ -283,8 +309,10 @@ class _AssistantBodyState extends State<_AssistantBody>
                                 const SizedBox(height: 12),
                                 Text(
                                   c.active
-                                      ? 'اشتراكك موثّق وسارٍ'
-                                      : 'باكج المساعد',
+                                      ? context.assistantLabel(
+                                          'اشتراكك موثّق وسارٍ',
+                                        )
+                                      : context.assistantLabel('باكج المساعد'),
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontSize: 24,
@@ -293,11 +321,25 @@ class _AssistantBodyState extends State<_AssistantBody>
                                 ),
                                 const SizedBox(height: 14),
                                 Text(
-                                  '${caps?['monthly_limit'] ?? '—'} سؤالًا كل شهر خدمة، وبحد ${caps?['daily_limit'] ?? '—'} أسئلة يوميًا. الإجابات مرتبطة بمصادر مكتبة حق، مع عرض النص الأصلي والمصدر.',
+                                  context.tr(
+                                    'assistant.packageQuota',
+                                    args: {
+                                      'monthly': assistantNumber(
+                                        context,
+                                        caps?['monthly_limit'],
+                                      ),
+                                      'daily': assistantNumber(
+                                        context,
+                                        caps?['daily_limit'],
+                                      ),
+                                    },
+                                  ),
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
-                                  'الأسئلة مستقلة ولا تشمل فتاوى شخصية. تتجدد الحصة مع بداية شهر الخدمة، وقد يتوقف المساعد مؤقتًا عند حد الاستهلاك العام.',
+                                Text(
+                                  context.assistantLabel(
+                                    'الأسئلة مستقلة ولا تشمل فتاوى شخصية. تتجدد الحصة مع بداية شهر الخدمة، وقد يتوقف المساعد مؤقتًا عند حد الاستهلاك العام.',
+                                  ),
                                 ),
                                 if (!c.active) ...[
                                   const SizedBox(height: 16),
@@ -320,8 +362,10 @@ class _AssistantBodyState extends State<_AssistantBody>
                                     ),
                                     if (c.product!.description.isNotEmpty)
                                       Text(c.product!.description),
-                                    const Text(
-                                      'اشتراك يتجدد تلقائيًا وفق دورة وسعر المتجر. راجع شروط الدفع في نافذة المتجر قبل التأكيد، ويمكنك إلغاء التجديد من إعدادات الاشتراكات.',
+                                    Text(
+                                      context.assistantLabel(
+                                        'اشتراك يتجدد تلقائيًا وفق دورة وسعر المتجر. راجع شروط الدفع في نافذة المتجر قبل التأكيد، ويمكنك إلغاء التجديد من إعدادات الاشتراكات.',
+                                      ),
                                     ),
                                     const SizedBox(height: 14),
                                     FilledButton.icon(
@@ -331,13 +375,19 @@ class _AssistantBodyState extends State<_AssistantBody>
                                       icon: const Icon(Icons.workspace_premium),
                                       label: Text(
                                         c.buying
-                                            ? 'بانتظار المتجر…'
-                                            : 'الاشتراك من المتجر',
+                                            ? context.assistantLabel(
+                                                'بانتظار المتجر…',
+                                              )
+                                            : context.assistantLabel(
+                                                'الاشتراك من المتجر',
+                                              ),
                                       ),
                                     ),
                                   ] else
-                                    const Text(
-                                      'الباكج غير متاح من المتجر حاليًا؛ لن نعرض سعرًا أو شراءً غير محمّل.',
+                                    Text(
+                                      context.assistantLabel(
+                                        'الباكج غير متاح من المتجر حاليًا؛ لن نعرض سعرًا أو شراءً غير محمّل.',
+                                      ),
                                     ),
                                 ],
                                 const SizedBox(height: 10),
@@ -349,7 +399,11 @@ class _AssistantBodyState extends State<_AssistantBody>
                                       onPressed: c.store.platform == null
                                           ? null
                                           : c.restore,
-                                      child: const Text('استعادة مشترياتي'),
+                                      child: Text(
+                                        context.assistantLabel(
+                                          'استعادة مشترياتي',
+                                        ),
+                                      ),
                                     ),
                                     TextButton(
                                       onPressed: () => external(
@@ -357,7 +411,11 @@ class _AssistantBodyState extends State<_AssistantBody>
                                             ? 'https://apps.apple.com/account/subscriptions'
                                             : 'https://play.google.com/store/account/subscriptions',
                                       ),
-                                      child: const Text('إدارة الاشتراك'),
+                                      child: Text(
+                                        context.assistantLabel(
+                                          'إدارة الاشتراك',
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -373,7 +431,11 @@ class _AssistantBodyState extends State<_AssistantBody>
                                           onPressed: () => external(
                                             policy['terms'] as String,
                                           ),
-                                          child: const Text('شروط الاستخدام'),
+                                          child: Text(
+                                            context.assistantLabel(
+                                              'شروط الاستخدام',
+                                            ),
+                                          ),
                                         ),
                                       if (policy['privacy'] is String &&
                                           (policy['privacy'] as String)
@@ -382,7 +444,9 @@ class _AssistantBodyState extends State<_AssistantBody>
                                           onPressed: () => external(
                                             policy['privacy'] as String,
                                           ),
-                                          child: const Text('الخصوصية'),
+                                          child: Text(
+                                            context.assistantLabel('الخصوصية'),
+                                          ),
                                         ),
                                     ],
                                   ),
@@ -396,18 +460,40 @@ class _AssistantBodyState extends State<_AssistantBody>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  const Text(
-                                    'رصيد الأسئلة',
+                                  Text(
+                                    context.assistantLabel('رصيد الأسئلة'),
                                     style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w800,
                                     ),
                                   ),
                                   Text(
-                                    'هذا الشهر: ${q['monthly_used']} من ${q['monthly_limit']} • اليوم: ${q['daily_used']} من ${q['daily_limit']}',
+                                    context.tr(
+                                      'assistant.quota',
+                                      args: {
+                                        'monthlyUsed': assistantNumber(
+                                          context,
+                                          q['monthly_used'],
+                                        ),
+                                        'monthlyLimit': assistantNumber(
+                                          context,
+                                          q['monthly_limit'],
+                                        ),
+                                        'dailyUsed': assistantNumber(
+                                          context,
+                                          q['daily_used'],
+                                        ),
+                                        'dailyLimit': assistantNumber(
+                                          context,
+                                          q['daily_limit'],
+                                        ),
+                                      },
+                                    ),
                                   ),
-                                  const Text(
-                                    'يشمل الرصيد الطلبات التي عولجت أو التي ما زالت بانتظار التأكيد. حذف السجل لا يعيد الرصيد.',
+                                  Text(
+                                    context.assistantLabel(
+                                      'يشمل الرصيد الطلبات التي عولجت أو التي ما زالت بانتظار التأكيد. حذف السجل لا يعيد الرصيد.',
+                                    ),
                                     style: TextStyle(fontSize: 12),
                                   ),
                                 ],
@@ -419,8 +505,8 @@ class _AssistantBodyState extends State<_AssistantBody>
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                const Text(
-                                  'بماذا أساعدك؟',
+                                Text(
+                                  context.assistantLabel('بماذا أساعدك؟'),
                                   style: TextStyle(
                                     fontSize: 22,
                                     fontWeight: FontWeight.w800,
@@ -429,13 +515,18 @@ class _AssistantBodyState extends State<_AssistantBody>
                                 const SizedBox(height: 12),
                                 TextField(
                                   controller: text,
+                                  textDirection: contentTextDirection(
+                                    text.text,
+                                  ),
+                                  onChanged: (_) => setState(() {}),
                                   maxLength: 600,
                                   minLines: 2,
                                   maxLines: 5,
                                   readOnly: c.sending || c.pending != null,
-                                  decoration: const InputDecoration(
-                                    hintText:
-                                        'اسأل عن الأذكار أو الأدعية في المكتبة…',
+                                  decoration: InputDecoration(
+                                    hintText: context.assistantLabel(
+                                      'اسأل عن الأذكار أو الأدعية في المكتبة…',
+                                    ),
                                     border: OutlineInputBorder(),
                                   ),
                                 ),
@@ -446,13 +537,17 @@ class _AssistantBodyState extends State<_AssistantBody>
                                       ? null
                                       : (v) =>
                                             setState(() => consent = v == true),
-                                  title: const Text(
-                                    'أوافق على إرسال سؤالي لخدمة ذكاء اصطناعي لمعالجته، وسأتجنب كتابة معلومات شخصية.',
+                                  title: Text(
+                                    context.assistantLabel(
+                                      'أوافق على إرسال سؤالي لخدمة ذكاء اصطناعي لمعالجته، وسأتجنب كتابة معلومات شخصية.',
+                                    ),
                                     style: TextStyle(fontSize: 13),
                                   ),
                                 ),
-                                const Text(
-                                  'الشرح آلي وقد يخطئ، وليس فتوى أو بديلًا عن أهل الاختصاص. كل سؤال مستقل.',
+                                Text(
+                                  context.assistantLabel(
+                                    'الشرح آلي وقد يخطئ، وليس فتوى أو بديلًا عن أهل الاختصاص. كل سؤال مستقل.',
+                                  ),
                                 ),
                                 const SizedBox(height: 14),
                                 FilledButton.icon(
@@ -462,7 +557,11 @@ class _AssistantBodyState extends State<_AssistantBody>
                                       : send,
                                   icon: const Icon(Icons.send_outlined),
                                   label: Text(
-                                    c.sending ? 'جارٍ التحقق…' : 'إرسال السؤال',
+                                    c.sending
+                                        ? context.assistantLabel('جارٍ التحقق…')
+                                        : context.assistantLabel(
+                                            'إرسال السؤال',
+                                          ),
                                   ),
                                 ),
                               ],
@@ -475,28 +574,45 @@ class _AssistantBodyState extends State<_AssistantBody>
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  const Text(
-                                    'سؤال بانتظار التأكيد',
+                                  Text(
+                                    context.assistantLabel(
+                                      'سؤال بانتظار التأكيد',
+                                    ),
                                     style: TextStyle(
                                       fontWeight: FontWeight.w800,
                                       fontSize: 19,
                                     ),
                                   ),
-                                  Text(c.pending!['question'] as String),
-                                  const Text(
-                                    'قد يكون الطلب وصل للخادم. سنفحص الإيصال نفسه دون تكرار طلب مدفوع.',
+                                  Text(
+                                    c.pending!['question'] as String,
+                                    textDirection: contentTextDirection(
+                                      c.pending!['question'] as String,
+                                    ),
+                                  ),
+                                  Text(
+                                    context.assistantLabel(
+                                      'قد يكون الطلب وصل للخادم. سنفحص الإيصال نفسه دون تكرار طلب مدفوع.',
+                                    ),
                                   ),
                                   OutlinedButton(
                                     onPressed: c.sending
                                         ? null
                                         : c.checkPending,
-                                    child: const Text('التحقق من حالة السؤال'),
+                                    child: Text(
+                                      context.assistantLabel(
+                                        'التحقق من حالة السؤال',
+                                      ),
+                                    ),
                                   ),
                                   TextButton(
                                     onPressed: c.sending
                                         ? null
                                         : abandonPending,
-                                    child: const Text('إيقاف إعادة المحاولة'),
+                                    child: Text(
+                                      context.assistantLabel(
+                                        'إيقاف إعادة المحاولة',
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -513,20 +629,30 @@ class _AssistantBodyState extends State<_AssistantBody>
                                   context: context,
                                   useRootNavigator: false,
                                   builder: (ctx) => AlertDialog(
-                                    title: const Text('حذف السؤال من السجل؟'),
-                                    content: const Text(
-                                      'يُحذف النص والجواب من حسابك، ويبقى إيصال الاستهلاك لمنع تكرار العملية. لا يعيد الحذف رصيد الأسئلة.',
+                                    title: Text(
+                                      context.assistantLabel(
+                                        'حذف السؤال من السجل؟',
+                                      ),
+                                    ),
+                                    content: Text(
+                                      context.assistantLabel(
+                                        'يُحذف النص والجواب من حسابك، ويبقى إيصال الاستهلاك لمنع تكرار العملية. لا يعيد الحذف رصيد الأسئلة.',
+                                      ),
                                     ),
                                     actions: [
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(ctx, false),
-                                        child: const Text('إلغاء'),
+                                        child: Text(
+                                          context.assistantLabel('إلغاء'),
+                                        ),
                                       ),
                                       FilledButton(
                                         onPressed: () =>
                                             Navigator.pop(ctx, true),
-                                        child: const Text('تأكيد'),
+                                        child: Text(
+                                          context.assistantLabel('تأكيد'),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -554,7 +680,7 @@ class _AssistantBodyState extends State<_AssistantBody>
                                 }
                               }
                             },
-                            child: const Text('أسئلة أقدم'),
+                            child: Text(context.assistantLabel('أسئلة أقدم')),
                           ),
                       ],
                       if (c.error != null ||
@@ -572,11 +698,16 @@ class _AssistantBodyState extends State<_AssistantBody>
                                   c.notice,
                                   localError,
                                 ])
-                                  if (value != null) Text(value),
+                                  if (value != null)
+                                    Text(context.assistantLabel(value)),
                                 if (c.purchaseError != null)
                                   TextButton(
                                     onPressed: c.retryPurchases,
-                                    child: const Text('إعادة التحقق من الشراء'),
+                                    child: Text(
+                                      context.assistantLabel(
+                                        'إعادة التحقق من الشراء',
+                                      ),
+                                    ),
                                   ),
                               ],
                             ),
@@ -633,7 +764,10 @@ class _ReplyCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  reply.question ?? 'سؤال محذوف',
+                  reply.question ?? context.assistantLabel('سؤال محذوف'),
+                  textDirection: contentTextDirection(
+                    reply.question ?? context.assistantLabel('سؤال محذوف'),
+                  ),
                   style: const TextStyle(
                     fontSize: 19,
                     fontWeight: FontWeight.w800,
@@ -641,7 +775,7 @@ class _ReplyCard extends StatelessWidget {
                 ),
               ),
               IconButton(
-                tooltip: 'حذف السؤال',
+                tooltip: context.assistantLabel('حذف السؤال'),
                 onPressed: onDelete,
                 icon: const Icon(Icons.delete_outline),
               ),
@@ -649,9 +783,13 @@ class _ReplyCard extends StatelessWidget {
           ),
           if (reply.answer != null) ...[
             const Divider(height: 28),
-            const Text('شرح آلي • قد يخطئ', style: TextStyle(fontSize: 12)),
+            Text(
+              context.assistantLabel('شرح آلي • قد يخطئ'),
+              style: TextStyle(fontSize: 12),
+            ),
             SelectableText(
               reply.answer!,
+              textDirection: contentTextDirection(reply.answer!),
               style: TextStyle(color: p.tealHeading, fontSize: 18, height: 1.9),
             ),
             Align(
@@ -660,24 +798,29 @@ class _ReplyCard extends StatelessWidget {
                 onPressed: () =>
                     Clipboard.setData(ClipboardData(text: reply.answer!)),
                 icon: const Icon(Icons.copy_outlined),
-                label: const Text('نسخ الشرح'),
+                label: Text(context.assistantLabel('نسخ الشرح')),
               ),
             ),
           ],
           if (reply.status != 'completed')
             Text(switch (reply.status) {
-              'reserved' =>
+              'reserved' => context.assistantLabel(
                 'السؤال قيد التحقق؛ لا ترسل سؤالًا بديلًا قبل فحص الحالة.',
-              'uncertain' =>
+              ),
+              'uncertain' => context.assistantLabel(
                 'تعذّر تأكيد نتيجة الطلب. احتُسب ضمن الحد احتياطيًا ولم نكرر المعالجة.',
-              'failed_billed' =>
+              ),
+              'failed_billed' => context.assistantLabel(
                 'لم نعرض الجواب لتعذّر توثيق بنيته أو مصادره. عولج الطلب واحتُسب ضمن الحد.',
-              _ => 'لم يُرسل السؤال للمعالجة ولم يُحتسب من الرصيد.',
+              ),
+              _ => context.assistantLabel(
+                'لم يُرسل السؤال للمعالجة ولم يُحتسب من الرصيد.',
+              ),
             }),
           if (reply.answer != null && reply.sources.isNotEmpty) ...[
             const Divider(height: 28),
-            const Text(
-              'النصوص الأصلية ومصادرها',
+            Text(
+              context.assistantLabel('النصوص الأصلية ومصادرها'),
               style: TextStyle(fontWeight: FontWeight.w800),
             ),
             for (final source in reply.sources)
@@ -688,6 +831,9 @@ class _ReplyCard extends StatelessWidget {
                   children: [
                     SelectableText(
                       source['text'] as String,
+                      textDirection: contentTextDirection(
+                        source['text'] as String,
+                      ),
                       style: TextStyle(
                         color: p.tealHeading,
                         fontSize: 19,
@@ -697,6 +843,9 @@ class _ReplyCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       source['source'] as String,
+                      textDirection: contentTextDirection(
+                        source['source'] as String,
+                      ),
                       style: TextStyle(fontSize: 12, color: p.muted),
                     ),
                   ],

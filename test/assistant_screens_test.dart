@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/features/assistant/data/assistant_controller.dart';
 import 'package:haq_app/features/assistant/data/billing_store.dart';
 import 'package:haq_app/features/assistant/presentation/assistant_page.dart';
@@ -110,36 +111,40 @@ void main() {
     bool subscription = false,
     double scale = 1,
     Size size = const Size(360, 1100),
+    AppLocalization? localization,
   }) async {
     await tester.binding.setSurfaceSize(visualSize(size));
-    await tester.pumpWidget(
-      AppearanceScope(
-        controller: appearance,
-        child: MaterialApp(
-          theme: ThemeData(
+    final screen = AppearanceScope(
+      controller: appearance,
+      child: MaterialApp(
+        theme: ThemeData(
+          brightness: dark ? Brightness.dark : Brightness.light,
+          fontFamily: 'QuranUI',
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFF2A8C82),
             brightness: dark ? Brightness.dark : Brightness.light,
-            fontFamily: 'QuranUI',
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF2A8C82),
-              brightness: dark ? Brightness.dark : Brightness.light,
-            ),
           ),
-          home: MediaQuery(
-            data: MediaQueryData(
-              size: visualSize(size),
-              textScaler: TextScaler.linear(visualScale(scale)),
-            ),
-            child: RepaintBoundary(
-              key: capture,
-              child: AssistantPage(
-                religious: religious,
-                controller: c,
-                subscription: subscription,
-              ),
+        ),
+        home: MediaQuery(
+          data: MediaQueryData(
+            size: visualSize(size),
+            textScaler: TextScaler.linear(visualScale(scale)),
+          ),
+          child: RepaintBoundary(
+            key: capture,
+            child: AssistantPage(
+              religious: religious,
+              controller: c,
+              subscription: subscription,
             ),
           ),
         ),
       ),
+    );
+    await tester.pumpWidget(
+      localization == null
+          ? screen
+          : LocalizationScope(controller: localization, child: screen),
     );
     await pump(tester);
   }
@@ -156,6 +161,91 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     await pump(tester);
   }
+
+  testWidgets(
+    'English assistant preserves the question and source text while localizing quota and consent',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await mount(
+        tester,
+        size: const Size(320, 780),
+        scale: 1.3,
+        localization: localization,
+      );
+      expect(find.text('Assistant'), findsOneWidget);
+      expect(find.textContaining('This month:'), findsOneWidget);
+      final field = find.byType(TextField);
+      await tester.ensureVisible(field);
+      const question = 'سؤال اختبار';
+      await tester.enterText(field, question);
+      await pump(tester);
+      final editable = find.descendant(
+        of: field,
+        matching: find.byType(EditableText),
+      );
+      expect(
+        tester.widget<EditableText>(editable).textDirection,
+        TextDirection.rtl,
+      );
+      final send = find.widgetWithText(FilledButton, 'Send question');
+      expect(tester.widget<FilledButton>(send).onPressed, isNull);
+      final consent = find.byType(CheckboxListTile);
+      await tester.ensureVisible(consent);
+      await tester.pumpAndSettle();
+      await tester.tap(consent);
+      await pump(tester);
+      await tap(tester, 'Send question');
+      expect(cloud.generations, 1);
+      final request = cloud.requests.singleWhere(
+        (request) => request.path == '/assistant/requests',
+      );
+      expect((request.data as Map)['question'], question);
+      expect(find.text('Original texts and their sources'), findsOneWidget);
+      expect(find.text('مصدر الاختبار'), findsOneWidget);
+      expect(
+        tester.widget<Text>(find.text('مصدر الاختبار')).textDirection,
+        TextDirection.rtl,
+      );
+      expect(store.bought, 0);
+      expect(tester.takeException(), isNull);
+      await unmount(tester);
+    },
+  );
+
+  testWidgets(
+    'English paywall keeps actual store price and canceled purchase state',
+    (tester) async {
+      cloud.active = false;
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await mount(
+        tester,
+        size: const Size(320, 780),
+        scale: 1.5,
+        subscription: true,
+        localization: localization,
+      );
+      expect(find.text(r'$5.00'), findsOneWidget);
+      await tap(tester, 'Subscribe through the store');
+      store.emit(BillingState.canceled, owner: cloud.token(1));
+      await pump(tester);
+      expect(c.active, isFalse);
+      expect(
+        find.text('The purchase was canceled. No subscription was activated.'),
+        findsOneWidget,
+      );
+      expect(find.byType(TextField), findsNothing);
+      expect(tester.takeException(), isNull);
+      await unmount(tester);
+    },
+  );
 
   testWidgets('guest cannot buy or see a private conversation', (tester) async {
     await tester.runAsync(() => quran.account.logout());
