@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/features/progress/data/progress_controller.dart';
 import 'package:haq_app/features/progress/presentation/progress_page.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
@@ -133,41 +134,45 @@ void main() {
     ProgressSection section, {
     bool dark = false,
     bool app = false,
+    AppLocalization? localization,
   }) async {
     tester.view.physicalSize = visualSize(const Size(320, 1000));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await appearance.setMode(dark ? ThemeMode.dark : ThemeMode.light);
-    await tester.pumpWidget(
-      AppearanceScope(
-        controller: appearance,
-        child: RepaintBoundary(
-          key: preview,
-          child: app
-              ? HaqApp(
-                  showStartup: false,
-                  appearance: appearance,
-                  quranController: quran,
-                  religiousController: religious,
-                )
-              : MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  theme: ThemeData(
-                    fontFamily: 'QuranUI',
-                    brightness: dark ? Brightness.dark : Brightness.light,
-                    colorSchemeSeed: const Color(0xFF2A8C82),
-                  ),
-                  builder: (context, child) => MediaQuery(
-                    data: MediaQuery.of(
-                      context,
-                    ).copyWith(textScaler: TextScaler.linear(visualScale(1.3))),
-                    child: child!,
-                  ),
-                  home: ProgressPage(controller: religious, section: section),
+    final screen = AppearanceScope(
+      controller: appearance,
+      child: RepaintBoundary(
+        key: preview,
+        child: app
+            ? HaqApp(
+                showStartup: false,
+                appearance: appearance,
+                quranController: quran,
+                religiousController: religious,
+              )
+            : MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  fontFamily: 'QuranUI',
+                  brightness: dark ? Brightness.dark : Brightness.light,
+                  colorSchemeSeed: const Color(0xFF2A8C82),
                 ),
-        ),
+                builder: (context, child) => MediaQuery(
+                  data: MediaQuery.of(
+                    context,
+                  ).copyWith(textScaler: TextScaler.linear(visualScale(1.3))),
+                  child: child!,
+                ),
+                home: ProgressPage(controller: religious, section: section),
+              ),
       ),
+    );
+    await tester.pumpWidget(
+      localization == null
+          ? screen
+          : LocalizationScope(controller: localization, child: screen),
     );
     await settle(tester);
   }
@@ -191,6 +196,103 @@ void main() {
       visualPath('build/progress-preview/$name.png'),
     );
   }
+
+  testWidgets(
+    'English habit interface preserves a personal Arabic title and progress through language changes',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await pump(tester, ProgressSection.habits, localization: localization);
+      expect(find.text('My habits'), findsOneWidget);
+      expect(find.text(habit.title), findsOneWidget);
+      final counter = find.byKey(ValueKey('habit-count-${habit.id}'));
+      await tester.ensureVisible(counter);
+      await settle(tester);
+      await tester.tap(counter);
+      await settle(tester);
+      await tester.runAsync(c.refresh);
+      expect(c.habitCount(habit), 1);
+      final before = (await store.entities(
+        activity.scope,
+      )).map((entity) => entity.toJson()).toList();
+      await localization.select('ar');
+      await settle(tester);
+      expect(c.habitCount(habit), 1);
+      expect(find.text(habit.title), findsOneWidget);
+      expect(
+        (await store.entities(
+          activity.scope,
+        )).map((entity) => entity.toJson()).toList(),
+        before,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'English khatma form stores the Arabic plan name and selected duration without marking pages read',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await pump(tester, ProgressSection.khatma, localization: localization);
+      await tester.tap(find.text('Create a new khatma'));
+      await settle(tester);
+      await tester.enterText(find.byType(TextFormField).first, 'حفظ');
+      await tester.ensureVisible(find.text('Ten days'));
+      await settle(tester);
+      await tester.tap(find.text('Ten days'));
+      await settle(tester);
+      await tester.ensureVisible(find.text('Save plan'));
+      await settle(tester);
+      await tester.tap(find.text('Save plan'));
+      await settle(tester);
+      await tester.runAsync(c.refresh);
+      final created = c.khatmas.singleWhere((value) => value.title == 'حفظ');
+      expect(khatmaPlan(created).length, 10);
+      expect(c.readPages(created), isEmpty);
+      await tester.ensureVisible(find.text('حفظ'));
+      await settle(tester);
+      await tester.tap(find.text('حفظ'));
+      await settle(tester);
+      expect(find.text('حفظ'), findsOneWidget);
+      expect(find.text('Current khatma'), findsOneWidget);
+      expect(find.textContaining('of 604 pages'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'English statistics opens remembrance details by its stable category',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await pump(
+        tester,
+        ProgressSection.statistics,
+        localization: localization,
+      );
+      expect(find.text('My statistics'), findsOneWidget);
+      await tester.ensureVisible(find.text('Remembrances'));
+      await settle(tester);
+      await tester.tap(find.text('Remembrances'));
+      await settle(tester);
+      expect(find.text('Remembrance details'), findsOneWidget);
+      expect(find.textContaining('Morning remembrances:'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   for (final dark in [false, true]) {
     testWidgets(

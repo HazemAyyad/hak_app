@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
+import '../../../core/localization/locale_formats.dart';
 import '../../../app_appearance.dart';
 import '../../../navigation/more_page.dart';
 import '../../quran/data/quran_repository.dart';
@@ -9,9 +12,18 @@ import '../../religious_activity/data/activity_controller.dart';
 import '../../religious_activity/data/activity_models.dart';
 import '../../religious_content/data/religious_controller.dart';
 import '../data/progress_controller.dart';
+import '../../quran/presentation/quran_widgets.dart'
+    show QuranSurahInterfaceLabels;
 
 part 'progress_forms.dart';
 part 'khatma_reader.dart';
+
+LocaleFormats _progressFormats(BuildContext context) =>
+    LocalizationScope.maybeOf(context)?.formats ?? const LocaleFormats('ar');
+String _progressNumber(BuildContext context, num value) =>
+    _progressFormats(context).number(value);
+String _progressDate(BuildContext context, String value) =>
+    _progressFormats(context).gregorianDate(civilDate(value));
 
 enum ProgressSection { khatma, habits, statistics }
 
@@ -101,7 +113,9 @@ class _ProgressPageState extends State<ProgressPage>
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: FutureBuilder<ProgressController>(
       key: ValueKey(_navigation),
       future: _load,
@@ -109,12 +123,14 @@ class _ProgressPageState extends State<ProgressPage>
         final c = snapshot.data;
         if (c == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('رحلتك مع حق')),
+            appBar: AppBar(title: Text(context.progressLabel('رحلتك مع حق'))),
             body: Center(
               child: snapshot.hasError
                   ? TextButton(
                       onPressed: () => setState(() => _load = _prepare()),
-                      child: const Text('تعذّر فتح التقدم؛ أعد المحاولة'),
+                      child: Text(
+                        context.progressLabel('تعذّر فتح التقدم؛ أعد المحاولة'),
+                      ),
                     )
                   : const CircularProgressIndicator(),
             ),
@@ -175,7 +191,7 @@ class _ProgressShell extends StatelessWidget {
                 top: 12,
                 left: 16,
                 child: IconButton.filledTonal(
-                  tooltip: 'رجوع',
+                  tooltip: context.progressLabel('رجوع'),
                   onPressed: onBack ?? () => Navigator.pop(context),
                   icon: const Icon(Icons.arrow_forward),
                 ),
@@ -186,7 +202,10 @@ class _ProgressShell extends StatelessWidget {
           if (c.error != null)
             Padding(
               padding: const EdgeInsets.all(24),
-              child: Text(c.error!, style: TextStyle(color: p.heading)),
+              child: Text(
+                context.progressLabel(c.error!),
+                style: TextStyle(color: p.heading),
+              ),
             ),
           for (final child in children)
             Padding(
@@ -244,14 +263,14 @@ class _ProgressHomeState extends State<_ProgressHome> {
     listenable: c,
     builder: (context, _) {
       final title = switch (widget.section) {
-        ProgressSection.khatma => 'الختمة',
-        ProgressSection.habits => 'عاداتي',
-        ProgressSection.statistics => 'إحصائياتي',
+        ProgressSection.khatma => context.progressLabel('الختمة'),
+        ProgressSection.habits => context.progressLabel('عاداتي'),
+        ProgressSection.statistics => context.progressLabel('إحصائياتي'),
       };
       return _ProgressShell(
         c: c,
         title: title,
-        subtitle: 'خطوات صغيرة، وأثر طيب',
+        subtitle: context.progressLabel('خطوات صغيرة، وأثر طيب'),
         onBack: widget.onClose,
         children: switch (widget.section) {
           ProgressSection.khatma => _khatmas(context),
@@ -267,14 +286,16 @@ class _ProgressHomeState extends State<_ProgressHome> {
     FilledButton.icon(
       onPressed: () => _push(_KhatmaForm(c: c)),
       icon: const Icon(Icons.add),
-      label: const Text('إنشاء ختمة جديدة'),
+      label: Text(context.progressLabel('إنشاء ختمة جديدة')),
     ),
     const SizedBox(height: 16),
     if (c.khatmas.isEmpty)
       _panel(
         context,
-        const Text(
-          'لا توجد ختمة بعد. أنشئ خطة تناسب وقتك، ثم تابع وردك في قارئ القرآن.',
+        Text(
+          context.progressLabel(
+            'لا توجد ختمة بعد. أنشئ خطة تناسب وقتك، ثم تابع وردك في قارئ القرآن.',
+          ),
         ),
       ),
     for (final k in c.khatmas)
@@ -295,6 +316,7 @@ class _ProgressHomeState extends State<_ProgressHome> {
                   Expanded(
                     child: Text(
                       k.title,
+                      textDirection: contentTextDirection(k.title),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -312,14 +334,24 @@ class _ProgressHomeState extends State<_ProgressHome> {
               ),
               const SizedBox(height: 10),
               Text(
-                '${c.readPages(k).length} من ${k.lastPage - k.firstPage + 1} صفحة • ${c.completed(k)
-                    ? 'مكتملة'
-                    : k.archived == true
-                    ? 'متوقفة'
-                    : 'جارية'}',
+                context.tr(
+                  'progress.khatmaProgress',
+                  args: {
+                    'count': _progressNumber(context, c.readPages(k).length),
+                    'total': _progressNumber(
+                      context,
+                      k.lastPage - k.firstPage + 1,
+                    ),
+                    'status': c.completed(k)
+                        ? context.progressLabel('مكتملة')
+                        : k.archived == true
+                        ? context.progressLabel('متوقفة')
+                        : context.progressLabel('جارية'),
+                  },
+                ),
               ),
               Text(
-                '${k.startDate}  ←  ${k.endDate}',
+                '${_progressDate(context, k.startDate)}  –  ${_progressDate(context, k.endDate)}',
                 style: TextStyle(
                   color: AppPalette.of(context).muted,
                   fontSize: 12,
@@ -331,8 +363,10 @@ class _ProgressHomeState extends State<_ProgressHome> {
         tinted: k.archived != true && !c.completed(k),
       ),
     const SizedBox(height: 8),
-    const Text(
-      'سجل الختمات يحتفظ بالخطط المكتملة والمتوقفة. إعادة البدء تحفظ تاريخ القراءة السابق.',
+    Text(
+      context.progressLabel(
+        'سجل الختمات يحتفظ بالخطط المكتملة والمتوقفة. إعادة البدء تحفظ تاريخ القراءة السابق.',
+      ),
     ),
   ];
   List<Widget> _habits(BuildContext context) {
@@ -342,18 +376,23 @@ class _ProgressHomeState extends State<_ProgressHome> {
       Row(
         children: [
           IconButton(
-            tooltip: 'اليوم السابق',
+            tooltip: context.progressLabel('اليوم السابق'),
             onPressed: () => setState(() => _offset--),
             icon: const Icon(Icons.chevron_right),
           ),
           Expanded(
             child: Text(
-              _offset == 0 ? 'اليوم • $date' : date,
+              _offset == 0
+                  ? context.tr(
+                      'progress.today',
+                      args: {'date': _progressDate(context, date)},
+                    )
+                  : _progressDate(context, date),
               textAlign: TextAlign.center,
             ),
           ),
           IconButton(
-            tooltip: 'اليوم التالي',
+            tooltip: context.progressLabel('اليوم التالي'),
             onPressed: _offset == 0 ? null : () => setState(() => _offset++),
             icon: const Icon(Icons.chevron_left),
           ),
@@ -364,7 +403,7 @@ class _ProgressHomeState extends State<_ProgressHome> {
         children: [
           for (final i in [7, 1, 2, 3, 4, 5, 6])
             ChoiceChip(
-              label: Text(_weekday(i)),
+              label: Text(context.progressLabel(_weekday(i))),
               selected: civilDate(date).weekday == i,
               onSelected: (_) {
                 final sunday = civilDate(
@@ -379,7 +418,10 @@ class _ProgressHomeState extends State<_ProgressHome> {
       ),
       const SizedBox(height: 8),
       if (list.isEmpty)
-        _panel(context, const Text('لا توجد عادات مجدولة لهذا اليوم.')),
+        _panel(
+          context,
+          Text(context.progressLabel('لا توجد عادات مجدولة لهذا اليوم.')),
+        ),
       for (final h in list)
         _panel(
           context,
@@ -402,7 +444,7 @@ class _ProgressHomeState extends State<_ProgressHome> {
                     ),
                   ),
                   IconButton(
-                    tooltip: 'تعديل العادة',
+                    tooltip: context.progressLabel('تعديل العادة'),
                     onPressed: () => _push(_HabitForm(c: c, value: h)),
                     icon: const Icon(Icons.more_horiz),
                   ),
@@ -421,7 +463,9 @@ class _ProgressHomeState extends State<_ProgressHome> {
                 children: [
                   Directionality(
                     textDirection: TextDirection.ltr,
-                    child: Text('${c.habitCount(h, date)} / ${h.target}'),
+                    child: Text(
+                      '${_progressNumber(context, c.habitCount(h, date))} / ${_progressNumber(context, h.target)}',
+                    ),
                   ),
                   FilledButton.tonalIcon(
                     key: ValueKey('habit-count-${h.id}'),
@@ -435,12 +479,12 @@ class _ProgressHomeState extends State<_ProgressHome> {
                     ),
                     label: Text(
                       c.habitCount(h, date) >= h.target
-                          ? 'مكتملة'
-                          : 'تسجيل مرة',
+                          ? context.progressLabel('مكتملة')
+                          : context.progressLabel('تسجيل مرة'),
                     ),
                   ),
                   IconButton(
-                    tooltip: 'تراجع',
+                    tooltip: context.progressLabel('تراجع'),
                     onPressed: _offset == 0 && c.habitCount(h) > 0
                         ? () => c.undoHabit(h.id)
                         : null,
@@ -454,21 +498,27 @@ class _ProgressHomeState extends State<_ProgressHome> {
       FilledButton.icon(
         onPressed: () => _push(_HabitForm(c: c)),
         icon: const Icon(Icons.add),
-        label: const Text('إضافة عادة'),
+        label: Text(context.progressLabel('إضافة عادة')),
       ),
       for (final h in c.habits.where((h) => !c.due(h, date)))
         ListTile(
-          title: Text(h.title),
-          subtitle: Text(h.enabled ? 'غير مجدولة لهذا اليوم' : 'متوقفة'),
+          title: Text(h.title, textDirection: contentTextDirection(h.title)),
+          subtitle: Text(
+            h.enabled
+                ? context.progressLabel('غير مجدولة لهذا اليوم')
+                : context.progressLabel('متوقفة'),
+          ),
           trailing: IconButton(
-            tooltip: 'تعديل العادة',
+            tooltip: context.progressLabel('تعديل العادة'),
             icon: const Icon(Icons.edit_outlined),
             onPressed: () => _push(_HabitForm(c: c, value: h)),
           ),
         ),
       const SizedBox(height: 8),
-      const Text(
-        'الأيام حسب التاريخ المحلي عند التسجيل. الأيام الماضية للعرض؛ لا تُضاف لها إنجازات بأثر رجعي.',
+      Text(
+        context.progressLabel(
+          'الأيام حسب التاريخ المحلي عند التسجيل. الأيام الماضية للعرض؛ لا تُضاف لها إنجازات بأثر رجعي.',
+        ),
       ),
     ];
   }
@@ -477,9 +527,15 @@ class _ProgressHomeState extends State<_ProgressHome> {
     final totals = c.totals(date: _allStats ? null : c.day);
     return [
       SegmentedButton<bool>(
-        segments: const [
-          ButtonSegment(value: false, label: Text('اليوم')),
-          ButtonSegment(value: true, label: Text('كل الوقت')),
+        segments: [
+          ButtonSegment(
+            value: false,
+            label: Text(context.progressLabel('اليوم')),
+          ),
+          ButtonSegment(
+            value: true,
+            label: Text(context.progressLabel('كل الوقت')),
+          ),
         ],
         selected: {_allStats},
         onSelectionChanged: (v) => setState(() => _allStats = v.first),
@@ -491,16 +547,18 @@ class _ProgressHomeState extends State<_ProgressHome> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              _allStats ? 'رحلتك مع حق' : 'رحلتك اليوم',
+              _allStats
+                  ? context.progressLabel('رحلتك مع حق')
+                  : context.progressLabel('رحلتك اليوم'),
               style: TextStyle(color: AppPalette.of(context).tealHeading),
             ),
             const SizedBox(height: 14),
             Row(
               children: [
                 for (final (label, count) in [
-                  ('قراءة ذكر', totals.adhkar),
-                  ('تسبيحة', totals.tasbih),
-                  ('صفحة قرآن', totals.pages),
+                  (context.progressLabel('قراءة ذكر'), totals.adhkar),
+                  (context.progressLabel('تسبيحة'), totals.tasbih),
+                  (context.progressLabel('صفحة قرآن'), totals.pages),
                 ])
                   Expanded(
                     child: Column(
@@ -508,7 +566,7 @@ class _ProgressHomeState extends State<_ProgressHome> {
                         FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            '$count',
+                            _progressNumber(context, count),
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w800,
@@ -534,12 +592,42 @@ class _ProgressHomeState extends State<_ProgressHome> {
         ),
         tinted: true,
       ),
-      for (final (title, value, unit, icon) in [
-        ('الأذكار', totals.adhkar, 'قراءة مسجلة', Icons.eco_outlined),
-        ('التسبيح', totals.tasbih, 'تسبيحة', Icons.radio_button_checked),
-        ('قراءة القرآن', totals.pages, 'صفحة مؤكدة', Icons.menu_book_outlined),
-        ('العادات', totals.habits, 'مرة مسجلة', Icons.fact_check_outlined),
-        ('سكينة', totals.breathingSeconds, 'ثانية مسجلة', Icons.air),
+      for (final (kind, title, value, unit, icon) in [
+        (
+          'adhkar',
+          context.progressLabel('الأذكار'),
+          totals.adhkar,
+          context.progressLabel('قراءة مسجلة'),
+          Icons.eco_outlined,
+        ),
+        (
+          'tasbih',
+          context.progressLabel('التسبيح'),
+          totals.tasbih,
+          context.progressLabel('تسبيحة'),
+          Icons.radio_button_checked,
+        ),
+        (
+          'quran',
+          context.progressLabel('قراءة القرآن'),
+          totals.pages,
+          context.progressLabel('صفحة مؤكدة'),
+          Icons.menu_book_outlined,
+        ),
+        (
+          'habits',
+          context.progressLabel('العادات'),
+          totals.habits,
+          context.progressLabel('مرة مسجلة'),
+          Icons.fact_check_outlined,
+        ),
+        (
+          'sakinah',
+          context.progressLabel('سكينة'),
+          totals.breathingSeconds,
+          context.progressLabel('ثانية مسجلة'),
+          Icons.air,
+        ),
       ])
         _panel(
           context,
@@ -555,44 +643,56 @@ class _ProgressHomeState extends State<_ProgressHome> {
               title,
               style: const TextStyle(fontWeight: FontWeight.w700),
             ),
-            subtitle: Text('$value $unit'),
-            trailing: title == 'الأذكار'
-                ? const Icon(Icons.chevron_left)
-                : null,
-            onTap: title != 'الأذكار'
+            subtitle: Text('${_progressNumber(context, value)} $unit'),
+            trailing: kind == 'adhkar' ? const Icon(Icons.chevron_left) : null,
+            onTap: kind != 'adhkar'
                 ? null
                 : () => showDialog<void>(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text('تفاصيل الأذكار'),
+                      title: Text(context.progressLabel('تفاصيل الأذكار')),
                       content: Text(
-                        'أذكار الصباح: ${totals.morning}\nأذكار المساء: ${totals.evening}\nالأذكار الأخرى: ${totals.otherAdhkar}',
+                        context.tr(
+                          'progress.adhkarDetails',
+                          args: {
+                            'morning': _progressNumber(context, totals.morning),
+                            'evening': _progressNumber(context, totals.evening),
+                            'other': _progressNumber(
+                              context,
+                              totals.otherAdhkar,
+                            ),
+                          },
+                        ),
                       ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text('تم'),
+                          child: Text(context.progressLabel('تم')),
                         ),
                       ],
                     ),
                   ),
           ),
         ),
-      const Text(
-        'القرآن يحتسب الصفحات التي أكّدت قراءتها في الختمة. لا تُحتسب مدة القراءة من فتح الشاشة، ولا يظهر وقت تقديري كأنه وقت مسجّل.',
+      Text(
+        context.progressLabel(
+          'القرآن يحتسب الصفحات التي أكّدت قراءتها في الختمة. لا تُحتسب مدة القراءة من فتح الشاشة، ولا يظهر وقت تقديري كأنه وقت مسجّل.',
+        ),
       ),
       TextButton.icon(
         onPressed: () async {
           if (await _confirm(
             context,
-            'تصفير عرض الإحصائيات؟',
-            'يبدأ عرض الإحصائيات من الآن. يبقى تقدم العادات والختمات وتاريخ النشاط محفوظًا.',
+            context.progressLabel('تصفير عرض الإحصائيات؟'),
+            context.progressLabel(
+              'يبدأ عرض الإحصائيات من الآن. يبقى تقدم العادات والختمات وتاريخ النشاط محفوظًا.',
+            ),
           )) {
             await c.resetStatistics();
           }
         },
         icon: const Icon(Icons.restart_alt),
-        label: const Text('تصفير الإحصائيات'),
+        label: Text(context.progressLabel('تصفير الإحصائيات')),
       ),
     ];
   }
@@ -607,16 +707,16 @@ Future<bool> _confirm(
       context: context,
       useRootNavigator: false,
       builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(message),
+        title: Text(context.progressLabel(title)),
+        content: Text(context.progressLabel(message)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text(context.progressLabel('إلغاء')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('تأكيد'),
+            child: Text(context.progressLabel('تأكيد')),
           ),
         ],
       ),

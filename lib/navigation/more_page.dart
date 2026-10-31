@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app_appearance.dart';
 import '../core/localization/app_localization.dart';
+import '../core/localization/ui_text.dart';
 import 'feature_routes.dart';
 import 'more_service_grid.dart';
 import 'more_service_list.dart';
@@ -311,7 +312,7 @@ class DirectoryHeader extends StatelessWidget {
           text: value,
           style: DefaultTextStyle.of(context).style.merge(style),
         ),
-        textDirection: Directionality.of(context),
+        textDirection: contentTextDirection(value),
         textScaler: MediaQuery.textScalerOf(context),
         maxLines: maxLines,
       )..layout(maxWidth: textWidth);
@@ -384,6 +385,7 @@ class DirectoryHeader extends StatelessWidget {
                   children: [
                     Text(
                       title,
+                      textDirection: contentTextDirection(title),
                       maxLines: maxTitleLines,
                       overflow: maxTitleLines == null
                           ? null

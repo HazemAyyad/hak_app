@@ -57,8 +57,10 @@ class _HabitFormState extends State<_HabitForm> {
     listenable: widget.c,
     builder: (context, _) => _ProgressShell(
       c: widget.c,
-      title: widget.value == null ? 'إضافة عادة' : 'تعديل العادة',
-      subtitle: 'خطوة تناسب يومك',
+      title: widget.value == null
+          ? context.progressLabel('إضافة عادة')
+          : context.progressLabel('تعديل العادة'),
+      subtitle: context.progressLabel('خطوة تناسب يومك'),
       children: [
         Form(
           key: _form,
@@ -77,22 +79,25 @@ class _HabitFormState extends State<_HabitForm> {
                     TextFormField(
                       key: const ValueKey('habit-title'),
                       controller: _title,
+                      textDirection: contentTextDirection(_title.text),
+                      onChanged: (_) => setState(() {}),
                       maxLength: 160,
-                      decoration: const InputDecoration(
-                        labelText: 'اسم العادة',
+                      decoration: InputDecoration(
+                        labelText: context.progressLabel('اسم العادة'),
                       ),
-                      validator: (v) =>
-                          v!.trim().isEmpty ? 'اكتب اسم العادة' : null,
+                      validator: (v) => v!.trim().isEmpty
+                          ? context.progressLabel('اكتب اسم العادة')
+                          : null,
                     ),
                     TextFormField(
                       key: const ValueKey('habit-target'),
                       controller: _target,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'الهدف اليومي',
+                      decoration: InputDecoration(
+                        labelText: context.progressLabel('الهدف اليومي'),
                       ),
                       validator: (v) => _positive(v!) == null
-                          ? 'اختر عددًا من 1 إلى 1000000'
+                          ? context.progressLabel('اختر عددًا من 1 إلى 1000000')
                           : null,
                     ),
                     const SizedBox(height: 10),
@@ -101,7 +106,7 @@ class _HabitFormState extends State<_HabitForm> {
                       children: [
                         for (final n in [1, 2, 3, 5, 10, 33, 100])
                           ActionChip(
-                            label: Text('$n'),
+                            label: Text(_progressNumber(context, n)),
                             onPressed: () =>
                                 setState(() => _target.text = '$n'),
                           ),
@@ -115,25 +120,25 @@ class _HabitFormState extends State<_HabitForm> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'التكرار',
+                    Text(
+                      context.progressLabel('التكرار'),
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Wrap(
                       spacing: 8,
                       children: [
                         ActionChip(
-                          label: const Text('كل يوم'),
+                          label: Text(context.progressLabel('كل يوم')),
                           onPressed: () =>
                               setState(() => _days = {1, 2, 3, 4, 5, 6, 7}),
                         ),
                         ActionChip(
-                          label: const Text('أيام العمل'),
+                          label: Text(context.progressLabel('أيام العمل')),
                           onPressed: () =>
                               setState(() => _days = {7, 1, 2, 3, 4}),
                         ),
                         ActionChip(
-                          label: const Text('نهاية الأسبوع'),
+                          label: Text(context.progressLabel('نهاية الأسبوع')),
                           onPressed: () => setState(() => _days = {5, 6}),
                         ),
                       ],
@@ -143,7 +148,7 @@ class _HabitFormState extends State<_HabitForm> {
                       children: [
                         for (final day in [7, 1, 2, 3, 4, 5, 6])
                           FilterChip(
-                            label: Text(_weekday(day)),
+                            label: Text(context.progressLabel(_weekday(day))),
                             selected: _days.contains(day),
                             onSelected: (_) => setState(() {
                               if (_days.contains(day)) {
@@ -155,8 +160,10 @@ class _HabitFormState extends State<_HabitForm> {
                           ),
                       ],
                     ),
-                    const Text(
-                      'يمكن تخصيص الأيام مباشرة. أيام العمل الافتراضية من الأحد إلى الخميس.',
+                    Text(
+                      context.progressLabel(
+                        'يمكن تخصيص الأيام مباشرة. أيام العمل الافتراضية من الأحد إلى الخميس.',
+                      ),
                     ),
                   ],
                 ),
@@ -170,7 +177,7 @@ class _HabitFormState extends State<_HabitForm> {
                     for (final icon in ReligiousHabit.habitIcons)
                       ChoiceChip(
                         avatar: Icon(_habitIcon(icon)),
-                        label: Text(_iconName(icon)),
+                        label: Text(context.progressLabel(_iconName(icon))),
                         selected: _icon == icon,
                         onSelected: (_) => setState(() => _icon = icon),
                       ),
@@ -178,17 +185,23 @@ class _HabitFormState extends State<_HabitForm> {
                 ),
               ),
               SwitchListTile(
-                title: const Text('العادة مفعّلة'),
+                title: Text(context.progressLabel('العادة مفعّلة')),
                 value: _enabled,
                 onChanged: (v) => setState(() => _enabled = v),
               ),
               if (widget.value != null)
-                const Text(
-                  'تغيير الهدف يبدأ دورة جديدة لعدّ هذه العادة ويحفظ السجل السابق.',
+                Text(
+                  context.progressLabel(
+                    'تغيير الهدف يبدأ دورة جديدة لعدّ هذه العادة ويحفظ السجل السابق.',
+                  ),
                 ),
               FilledButton(
                 onPressed: _busy ? null : _save,
-                child: Text(_busy ? 'جارٍ الحفظ…' : 'حفظ العادة'),
+                child: Text(
+                  _busy
+                      ? context.progressLabel('جارٍ الحفظ…')
+                      : context.progressLabel('حفظ العادة'),
+                ),
               ),
               if (widget.value != null)
                 TextButton(
@@ -197,8 +210,10 @@ class _HabitFormState extends State<_HabitForm> {
                       : () async {
                           if (await _confirm(
                             context,
-                            'حذف العادة؟',
-                            'ستُزال من القائمة ويبقى سجل النشاط محفوظًا.',
+                            context.progressLabel('حذف العادة؟'),
+                            context.progressLabel(
+                              'ستُزال من القائمة ويبقى سجل النشاط محفوظًا.',
+                            ),
                           )) {
                             await widget.c.deleteHabit(widget.value!);
                             if (context.mounted &&
@@ -208,7 +223,7 @@ class _HabitFormState extends State<_HabitForm> {
                             }
                           }
                         },
-                  child: const Text('حذف العادة'),
+                  child: Text(context.progressLabel('حذف العادة')),
                 ),
             ],
           ),
@@ -295,8 +310,10 @@ class _KhatmaFormState extends State<_KhatmaForm> {
     listenable: widget.c,
     builder: (context, _) => _ProgressShell(
       c: widget.c,
-      title: widget.value == null ? 'إنشاء ختمة جديدة' : 'تعديل خطة الختمة',
-      subtitle: 'ورد ثابت يناسب وقتك',
+      title: widget.value == null
+          ? context.progressLabel('إنشاء ختمة جديدة')
+          : context.progressLabel('تعديل خطة الختمة'),
+      subtitle: context.progressLabel('ورد ثابت يناسب وقتك'),
       children: [
         Form(
           key: _form,
@@ -309,22 +326,27 @@ class _KhatmaFormState extends State<_KhatmaForm> {
                   children: [
                     TextFormField(
                       controller: _title,
+                      textDirection: contentTextDirection(_title.text),
+                      onChanged: (_) => setState(() {}),
                       maxLength: 160,
-                      decoration: const InputDecoration(
-                        labelText: 'اسم الختمة',
+                      decoration: InputDecoration(
+                        labelText: context.progressLabel('اسم الختمة'),
                       ),
-                      validator: (v) =>
-                          v!.trim().isEmpty ? 'اكتب اسم الختمة' : null,
+                      validator: (v) => v!.trim().isEmpty
+                          ? context.progressLabel('اكتب اسم الختمة')
+                          : null,
                     ),
                     TextFormField(
                       controller: _duration,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'مدة الختمة بالأيام',
+                      decoration: InputDecoration(
+                        labelText: context.progressLabel('مدة الختمة بالأيام'),
                       ),
                       onChanged: (_) => setState(() {}),
                       validator: (v) => (_positive(v!) ?? 4000) > 3650
-                          ? 'اختر مدة من 1 إلى 3650 يومًا'
+                          ? context.progressLabel(
+                              'اختر مدة من 1 إلى 3650 يومًا',
+                            )
                           : null,
                     ),
                     const SizedBox(height: 12),
@@ -332,12 +354,12 @@ class _KhatmaFormState extends State<_KhatmaForm> {
                       spacing: 6,
                       children: [
                         for (final (days, title) in [
-                          (10, 'عشرة أيام'),
-                          (15, 'أسبوعان ويوم'),
-                          (30, 'شهر'),
-                          (40, 'أربعون يومًا'),
-                          (60, 'شهران'),
-                          (120, 'أربعة أشهر'),
+                          (10, context.progressLabel('عشرة أيام')),
+                          (15, context.progressLabel('أسبوعان ويوم')),
+                          (30, context.progressLabel('شهر')),
+                          (40, context.progressLabel('أربعون يومًا')),
+                          (60, context.progressLabel('شهران')),
+                          (120, context.progressLabel('أربعة أشهر')),
                         ])
                           ActionChip(
                             label: Text(title),
@@ -348,8 +370,8 @@ class _KhatmaFormState extends State<_KhatmaForm> {
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('تاريخ البدء'),
-                      subtitle: Text(_start),
+                      title: Text(context.progressLabel('تاريخ البدء')),
+                      subtitle: Text(_progressDate(context, _start)),
                       trailing: const Icon(Icons.calendar_month),
                       onTap: () async {
                         final picked = await showDatePicker(
@@ -370,17 +392,39 @@ class _KhatmaFormState extends State<_KhatmaForm> {
               _panel(
                 context,
                 Text(
-                  'الورد اليومي نحو ${((widget.value == null ? 604 : widget.value!.lastPage - widget.value!.firstPage + 1) / (_positive(_duration.text) ?? 30)).toStringAsFixed(1)} صفحة. تُوزع الصفحات كاملة حتى نهاية القرآن، وقد تختلف حصة يوم عن آخر بصفحة واحدة.',
+                  context.tr(
+                    'progress.dailyPages',
+                    args: {
+                      'pages': _progressNumber(
+                        context,
+                        double.parse(
+                          ((widget.value == null
+                                      ? 604
+                                      : widget.value!.lastPage -
+                                            widget.value!.firstPage +
+                                            1) /
+                                  (_positive(_duration.text) ?? 30))
+                              .toStringAsFixed(1),
+                        ),
+                      ),
+                    },
+                  ),
                 ),
                 tinted: true,
               ),
               if (widget.value != null)
-                const Text(
-                  'تعديل المدة وتاريخ البدء يحتفظان بآخر آية مؤكدة. لإعادة القراءة من البداية استخدم إعادة الضبط.',
+                Text(
+                  context.progressLabel(
+                    'تعديل المدة وتاريخ البدء يحتفظان بآخر آية مؤكدة. لإعادة القراءة من البداية استخدم إعادة الضبط.',
+                  ),
                 ),
               FilledButton(
                 onPressed: _busy ? null : _save,
-                child: Text(_busy ? 'جارٍ الحفظ…' : 'حفظ الخطة'),
+                child: Text(
+                  _busy
+                      ? context.progressLabel('جارٍ الحفظ…')
+                      : context.progressLabel('حفظ الخطة'),
+                ),
               ),
             ],
           ),
@@ -410,7 +454,7 @@ class _KhatmaDetails extends StatelessWidget {
       return _ProgressShell(
         c: c,
         title: k.title,
-        subtitle: 'رحلة اليوم مع القرآن',
+        subtitle: context.progressLabel('رحلة اليوم مع القرآن'),
         children: [
           _panel(
             context,
@@ -419,10 +463,10 @@ class _KhatmaDetails extends StatelessWidget {
               children: [
                 Text(
                   c.completed(k)
-                      ? 'اكتملت الختمة، تقبّل الله منك'
+                      ? context.progressLabel('اكتملت الختمة، تقبّل الله منك')
                       : k.archived == true
-                      ? 'ختمة متوقفة'
-                      : 'الختمة الحالية',
+                      ? context.progressLabel('ختمة متوقفة')
+                      : context.progressLabel('الختمة الحالية'),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -436,15 +480,40 @@ class _KhatmaDetails extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  '${pages.length} من ${k.lastPage - k.firstPage + 1} صفحة • ${(100 * c.fraction(k)).toStringAsFixed(0)}%',
+                  context.tr(
+                    'progress.pagesPercent',
+                    args: {
+                      'count': _progressNumber(context, pages.length),
+                      'total': _progressNumber(
+                        context,
+                        k.lastPage - k.firstPage + 1,
+                      ),
+                      'percent': _progressFormats(
+                        context,
+                      ).percent(c.fraction(k)),
+                    },
+                  ),
                 ),
                 Text(
                   read == null
-                      ? 'لم تحدد آخر آية بعد'
-                      : 'آخر قراءة: سورة ${c.repository.surah(read.surah).name} • الآية ${read.ayah}',
+                      ? context.progressLabel('لم تحدد آخر آية بعد')
+                      : context.tr(
+                          'progress.lastRead',
+                          args: {
+                            'surah': c.repository
+                                .surah(read.surah)
+                                .localizedName(context),
+                            'ayah': _progressNumber(context, read.ayah),
+                          },
+                        ),
                 ),
                 if (k.startDate.compareTo(c.day) > 0)
-                  Text('تبدأ الخطة في ${k.startDate}'),
+                  Text(
+                    context.tr(
+                      'progress.starts',
+                      args: {'date': _progressDate(context, k.startDate)},
+                    ),
+                  ),
                 const SizedBox(height: 12),
                 FilledButton.icon(
                   onPressed: stopped || k.startDate.compareTo(c.day) > 0
@@ -452,7 +521,7 @@ class _KhatmaDetails extends StatelessWidget {
                       : () =>
                             push(_KhatmaReader(c: c, k: k, verse: c.resume(k))),
                   icon: const Icon(Icons.menu_book),
-                  label: const Text('متابعة وردي'),
+                  label: Text(context.progressLabel('متابعة وردي')),
                 ),
               ],
             ),
@@ -464,7 +533,7 @@ class _KhatmaDetails extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: () => push(_KhatmaForm(c: c, value: k)),
                 icon: const Icon(Icons.edit_outlined),
-                label: const Text('تعديل الخطة'),
+                label: Text(context.progressLabel('تعديل الخطة')),
               ),
               OutlinedButton.icon(
                 onPressed: () async {
@@ -493,7 +562,7 @@ class _KhatmaDetails extends StatelessWidget {
                   }
                 },
                 icon: const Icon(Icons.notifications_outlined),
-                label: const Text('موعد التذكير'),
+                label: Text(context.progressLabel('موعد التذكير')),
               ),
               if (k.reminderMinutes != null)
                 TextButton(
@@ -509,14 +578,27 @@ class _KhatmaDetails extends StatelessWidget {
                       archived: k.archived,
                     ),
                   ),
-                  child: const Text('إلغاء تذكير الختمة'),
+                  child: Text(context.progressLabel('إلغاء تذكير الختمة')),
                 ),
             ],
           ),
           Text(
             k.reminderMinutes == null
-                ? 'لم تحدد موعداً لتذكير هذه الختمة.'
-                : 'موعد محفوظ: ${(k.reminderMinutes! ~/ 60).toString().padLeft(2, '0')}:${(k.reminderMinutes! % 60).toString().padLeft(2, '0')} • يعتمد التنبيه على تفعيل التذكيرات وإذن الإشعارات في إعدادات التطبيق.',
+                ? context.progressLabel('لم تحدد موعداً لتذكير هذه الختمة.')
+                : context.tr(
+                    'progress.reminder',
+                    args: {
+                      'time': _progressFormats(context).clock24(
+                        DateTime(
+                          2000,
+                          1,
+                          1,
+                          k.reminderMinutes! ~/ 60,
+                          k.reminderMinutes! % 60,
+                        ),
+                      ),
+                    },
+                  ),
           ),
           const SizedBox(height: 14),
           for (var i = 0; i < plan.length; i++)
@@ -534,9 +616,14 @@ class _KhatmaDetails extends StatelessWidget {
                       : Icons.menu_book_outlined,
                   color: appAccent(context, const Color(0xFF2A8C82)),
                 ),
-                title: Text('ورد اليوم ${i + 1}'),
+                title: Text(
+                  context.tr(
+                    'progress.dayReading',
+                    args: {'day': _progressNumber(context, i + 1)},
+                  ),
+                ),
                 subtitle: Text(
-                  '${plan[i].day}\n${plan[i].pages == 0 ? 'يوم راحة' : 'الصفحات ${plan[i].first}–${plan[i].last} • ${plan[i].pages} صفحة'}',
+                  '${_progressDate(context, plan[i].day)}\n${plan[i].pages == 0 ? context.progressLabel('يوم راحة') : context.tr('progress.pageRange', args: {'first': _progressNumber(context, plan[i].first), 'last': _progressNumber(context, plan[i].last), 'count': _progressNumber(context, plan[i].pages)})}',
                 ),
                 trailing: const Icon(Icons.chevron_left),
                 onTap:
@@ -554,7 +641,7 @@ class _KhatmaDetails extends StatelessWidget {
             ),
           if (c.previousCycles(k).isNotEmpty)
             ExpansionTile(
-              title: const Text('سجل الدورات السابقة'),
+              title: Text(context.progressLabel('سجل الدورات السابقة')),
               children: [
                 for (final cycle in c.previousCycles(k))
                   ListTile(
@@ -564,9 +651,17 @@ class _KhatmaDetails extends StatelessWidget {
                           : Icons.history,
                     ),
                     title: Text(
-                      '${cycle.pages} صفحة • ${cycle.complete ? 'مكتملة' : 'قراءة سابقة'}',
+                      context.tr(
+                        'progress.previousCycle',
+                        args: {
+                          'count': _progressNumber(context, cycle.pages),
+                          'status': cycle.complete
+                              ? context.progressLabel('مكتملة')
+                              : context.progressLabel('قراءة سابقة'),
+                        },
+                      ),
                     ),
-                    subtitle: Text(cycle.day),
+                    subtitle: Text(_progressDate(context, cycle.day)),
                   ),
               ],
             ),
@@ -574,21 +669,25 @@ class _KhatmaDetails extends StatelessWidget {
             onPressed: () async {
               if (await _confirm(
                 context,
-                'إعادة ضبط الختمة؟',
-                'تبدأ دورة جديدة من اليوم وتبقى القراءة السابقة محفوظة في التاريخ.',
+                context.progressLabel('إعادة ضبط الختمة؟'),
+                context.progressLabel(
+                  'تبدأ دورة جديدة من اليوم وتبقى القراءة السابقة محفوظة في التاريخ.',
+                ),
               )) {
                 await c.resetKhatma(k);
               }
             },
-            child: const Text('إعادة الضبط'),
+            child: Text(context.progressLabel('إعادة الضبط')),
           ),
           if (!stopped)
             TextButton(
               onPressed: () async {
                 if (await _confirm(
                   context,
-                  'إيقاف هذه الختمة؟',
-                  'تُنقل الخطة إلى سجل الختمات المتوقفة دون اعتبار الصفحات غير المقروءة مكتملة.',
+                  context.progressLabel('إيقاف هذه الختمة؟'),
+                  context.progressLabel(
+                    'تُنقل الخطة إلى سجل الختمات المتوقفة دون اعتبار الصفحات غير المقروءة مكتملة.',
+                  ),
                 )) {
                   await c.saveKhatma(
                     QuranKhatma(
@@ -605,7 +704,7 @@ class _KhatmaDetails extends StatelessWidget {
                   );
                 }
               },
-              child: const Text('إيقاف الختمة'),
+              child: Text(context.progressLabel('إيقاف الختمة')),
             ),
         ],
       );

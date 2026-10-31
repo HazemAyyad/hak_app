@@ -18,8 +18,16 @@ class _KhatmaReaderState extends State<_KhatmaReader> {
     final verse = _selected;
     if (!await _confirm(
       context,
-      'قرأت حتى هذه الآية؟',
-      'سورة ${widget.c.repository.surah(verse.surah).name} • الآية ${verse.ayah}\nيُسجّل أنك قرأت من بداية الختمة حتى هذه الآية، وليس بمجرد فتح الصفحة.',
+      context.progressLabel('قرأت حتى هذه الآية؟'),
+      context.tr(
+        'progress.confirmVerse',
+        args: {
+          'surah': widget.c.repository
+              .surah(verse.surah)
+              .localizedName(context),
+          'ayah': _progressNumber(context, verse.ayah),
+        },
+      ),
     )) {
       return;
     }
@@ -50,8 +58,10 @@ class _KhatmaReaderState extends State<_KhatmaReader> {
     if (_saved != _selected.key &&
         !await _confirm(
           context,
-          'قبل مغادرة الورد',
-          'لتسجيل القراءة اضغط «تحديد آخر آية قرأتها». هل تريد الخروج دون تحديد جديد؟',
+          context.progressLabel('قبل مغادرة الورد'),
+          context.progressLabel(
+            'لتسجيل القراءة اضغط «تحديد آخر آية قرأتها». هل تريد الخروج دون تحديد جديد؟',
+          ),
         )) {
       _leaving = false;
       return;
@@ -80,9 +90,9 @@ class _KhatmaReaderState extends State<_KhatmaReader> {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('ورد الختمة'),
+            title: Text(context.progressLabel('ورد الختمة')),
             leading: IconButton(
-              tooltip: 'رجوع',
+              tooltip: context.progressLabel('رجوع'),
               onPressed: _leave,
               icon: const Icon(Icons.arrow_back),
             ),
@@ -107,16 +117,22 @@ class _KhatmaReaderState extends State<_KhatmaReader> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      if (widget.c.error != null) Text(widget.c.error!),
+                      if (widget.c.error != null)
+                        Text(context.progressLabel(widget.c.error!)),
                       FilledButton.icon(
                         onPressed: _busy || !valid ? null : _confirmProgress,
                         icon: const Icon(Icons.bookmark_add_outlined),
                         label: Text(
-                          _busy ? 'جارٍ الحفظ…' : 'تحديد آخر آية قرأتها',
+                          _busy
+                              ? context.progressLabel('جارٍ الحفظ…')
+                              : context.progressLabel('تحديد آخر آية قرأتها'),
                         ),
                       ),
                       if (_saved != null)
-                        const Text('حُفظ تقدمك', textAlign: TextAlign.center),
+                        Text(
+                          context.progressLabel('حُفظ تقدمك'),
+                          textAlign: TextAlign.center,
+                        ),
                     ],
                   ),
                 ),

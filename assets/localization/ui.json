@@ -5130,5 +5130,541 @@
   "assistant.packageQuota": {
     "en": "{monthly} questions per service month, with a daily limit of {daily}. Answers are linked to Haq library sources, showing the original text and its source.",
     "ar": "{monthly} سؤالًا كل شهر خدمة، وبحد {daily} أسئلة يوميًا. الإجابات مرتبطة بمصادر مكتبة حق، مع عرض النص الأصلي والمصدر."
+  },
+  "progress.label.d43b963b9b85": {
+    "en": "Your journey with Haq",
+    "ar": "رحلتك مع حق"
+  },
+  "progress.label.077408a44cc2": {
+    "en": "Could not open your progress. Try again.",
+    "ar": "تعذّر فتح التقدم؛ أعد المحاولة"
+  },
+  "progress.label.cb822418a29d": {
+    "en": "Back",
+    "ar": "رجوع"
+  },
+  "progress.label.5b17705034c3": {
+    "en": "Khatma",
+    "ar": "الختمة"
+  },
+  "progress.label.6a0b20209a19": {
+    "en": "My habits",
+    "ar": "عاداتي"
+  },
+  "progress.label.a31a3e903eb7": {
+    "en": "My statistics",
+    "ar": "إحصائياتي"
+  },
+  "progress.label.7c636f2e1e02": {
+    "en": "Small steps, lasting good",
+    "ar": "خطوات صغيرة، وأثر طيب"
+  },
+  "progress.label.220d3dca2160": {
+    "en": "Create a new khatma",
+    "ar": "إنشاء ختمة جديدة"
+  },
+  "progress.label.a53f2a190ec2": {
+    "en": "You have no khatma yet. Create a plan that fits your time, then follow your reading in the Quran reader.",
+    "ar": "لا توجد ختمة بعد. أنشئ خطة تناسب وقتك، ثم تابع وردك في قارئ القرآن."
+  },
+  "progress.label.f1d6d15f76da": {
+    "en": "Complete",
+    "ar": "مكتملة"
+  },
+  "progress.label.551d5f98cb6b": {
+    "en": "Paused",
+    "ar": "متوقفة"
+  },
+  "progress.label.c20f27ab52b6": {
+    "en": "In progress",
+    "ar": "جارية"
+  },
+  "progress.label.1881a8afab66": {
+    "en": "Khatma history keeps completed and paused plans. Restarting preserves your previous reading history.",
+    "ar": "سجل الختمات يحتفظ بالخطط المكتملة والمتوقفة. إعادة البدء تحفظ تاريخ القراءة السابق."
+  },
+  "progress.label.17aed60fec6d": {
+    "en": "Previous day",
+    "ar": "اليوم السابق"
+  },
+  "progress.label.5c89e28d6925": {
+    "en": "Next day",
+    "ar": "اليوم التالي"
+  },
+  "progress.label.85c484ce4a27": {
+    "en": "No habits are scheduled for this day.",
+    "ar": "لا توجد عادات مجدولة لهذا اليوم."
+  },
+  "progress.label.d785cfab55e7": {
+    "en": "Edit habit",
+    "ar": "تعديل العادة"
+  },
+  "progress.label.776b06184933": {
+    "en": "Record once",
+    "ar": "تسجيل مرة"
+  },
+  "progress.label.eec0e6368fef": {
+    "en": "Undo",
+    "ar": "تراجع"
+  },
+  "progress.label.fbd2dc19fa17": {
+    "en": "Add habit",
+    "ar": "إضافة عادة"
+  },
+  "progress.label.70e059cd6c86": {
+    "en": "Not scheduled for this day",
+    "ar": "غير مجدولة لهذا اليوم"
+  },
+  "progress.label.5ce0b4c8c1c7": {
+    "en": "Days use your local date when recorded. Past days are for viewing; achievements cannot be added retroactively.",
+    "ar": "الأيام حسب التاريخ المحلي عند التسجيل. الأيام الماضية للعرض؛ لا تُضاف لها إنجازات بأثر رجعي."
+  },
+  "progress.label.2422f71e7f4e": {
+    "en": "Today",
+    "ar": "اليوم"
+  },
+  "progress.label.caa3364e6081": {
+    "en": "All time",
+    "ar": "كل الوقت"
+  },
+  "progress.label.e97e585ae2df": {
+    "en": "Your journey today",
+    "ar": "رحلتك اليوم"
+  },
+  "progress.label.a10302434d50": {
+    "en": "Remembrance reading",
+    "ar": "قراءة ذكر"
+  },
+  "progress.label.7f2fe74a2e8d": {
+    "en": "Tasbih",
+    "ar": "تسبيحة"
+  },
+  "progress.label.9e6730bce4a1": {
+    "en": "Quran page",
+    "ar": "صفحة قرآن"
+  },
+  "progress.label.0cde29a629c5": {
+    "en": "Remembrances",
+    "ar": "الأذكار"
+  },
+  "progress.label.d61dfb7070ec": {
+    "en": "Recorded reading",
+    "ar": "قراءة مسجلة"
+  },
+  "progress.label.94d339cfe31a": {
+    "en": "Tasbih",
+    "ar": "التسبيح"
+  },
+  "progress.label.366146c60b93": {
+    "en": "Quran reading",
+    "ar": "قراءة القرآن"
+  },
+  "progress.label.a04b28848f54": {
+    "en": "Confirmed page",
+    "ar": "صفحة مؤكدة"
+  },
+  "progress.label.41595fce1b1b": {
+    "en": "Habits",
+    "ar": "العادات"
+  },
+  "progress.label.87f48c2045b1": {
+    "en": "Recorded occurrence",
+    "ar": "مرة مسجلة"
+  },
+  "progress.label.5cd94a985c2b": {
+    "en": "Sakinah",
+    "ar": "سكينة"
+  },
+  "progress.label.c429093b63f7": {
+    "en": "Recorded second",
+    "ar": "ثانية مسجلة"
+  },
+  "progress.label.afbaa97236af": {
+    "en": "Remembrance details",
+    "ar": "تفاصيل الأذكار"
+  },
+  "progress.label.3ef541b90a31": {
+    "en": "Done",
+    "ar": "تم"
+  },
+  "progress.label.c6b988c117ac": {
+    "en": "Quran progress counts pages you confirm reading in a khatma. Opening the screen does not record reading time, and estimated time is not shown as recorded time.",
+    "ar": "القرآن يحتسب الصفحات التي أكّدت قراءتها في الختمة. لا تُحتسب مدة القراءة من فتح الشاشة، ولا يظهر وقت تقديري كأنه وقت مسجّل."
+  },
+  "progress.label.e05a2d2790c4": {
+    "en": "Reset the statistics view?",
+    "ar": "تصفير عرض الإحصائيات؟"
+  },
+  "progress.label.395462b6d862": {
+    "en": "Statistics will be shown from now on. Habit progress, khatmas and activity history are kept.",
+    "ar": "يبدأ عرض الإحصائيات من الآن. يبقى تقدم العادات والختمات وتاريخ النشاط محفوظًا."
+  },
+  "progress.label.430f3967bb1e": {
+    "en": "Reset statistics",
+    "ar": "تصفير الإحصائيات"
+  },
+  "progress.label.9a30dc2a96b8": {
+    "en": "Cancel",
+    "ar": "إلغاء"
+  },
+  "progress.label.8f7d74ac0eac": {
+    "en": "Confirm",
+    "ar": "تأكيد"
+  },
+  "progress.label.452434da4762": {
+    "en": "Monday",
+    "ar": "الاثنين"
+  },
+  "progress.label.3e1154b18e8a": {
+    "en": "Tuesday",
+    "ar": "الثلاثاء"
+  },
+  "progress.label.05ae1ca23dcb": {
+    "en": "Wednesday",
+    "ar": "الأربعاء"
+  },
+  "progress.label.74c564a4b5a6": {
+    "en": "Thursday",
+    "ar": "الخميس"
+  },
+  "progress.label.fa35e221b844": {
+    "en": "Friday",
+    "ar": "الجمعة"
+  },
+  "progress.label.a49412504fd0": {
+    "en": "Saturday",
+    "ar": "السبت"
+  },
+  "progress.label.b74290ce11de": {
+    "en": "Sunday",
+    "ar": "الأحد"
+  },
+  "progress.label.c0ba243c7f49": {
+    "en": "A step that fits your day",
+    "ar": "خطوة تناسب يومك"
+  },
+  "progress.label.0dc5ea4e8836": {
+    "en": "Habit name",
+    "ar": "اسم العادة"
+  },
+  "progress.label.63bea6dc3f2d": {
+    "en": "Enter a habit name",
+    "ar": "اكتب اسم العادة"
+  },
+  "progress.label.1232464763b7": {
+    "en": "Daily target",
+    "ar": "الهدف اليومي"
+  },
+  "progress.label.ba52c63c3253": {
+    "en": "Choose a number from 1 to 1000000",
+    "ar": "اختر عددًا من 1 إلى 1000000"
+  },
+  "progress.label.b308d640bc25": {
+    "en": "Repeat",
+    "ar": "التكرار"
+  },
+  "progress.label.6e59f0b83cb1": {
+    "en": "Every day",
+    "ar": "كل يوم"
+  },
+  "progress.label.393ffb37b3a9": {
+    "en": "Weekdays",
+    "ar": "أيام العمل"
+  },
+  "progress.label.731c236f6834": {
+    "en": "Weekend",
+    "ar": "نهاية الأسبوع"
+  },
+  "progress.label.f09909f154dc": {
+    "en": "You can choose individual days. Default weekdays run from Sunday to Thursday.",
+    "ar": "يمكن تخصيص الأيام مباشرة. أيام العمل الافتراضية من الأحد إلى الخميس."
+  },
+  "progress.label.add5d3acd0a8": {
+    "en": "Habit enabled",
+    "ar": "العادة مفعّلة"
+  },
+  "progress.label.3852151cdbaf": {
+    "en": "Changing the target starts a new counting cycle for this habit and keeps its previous history.",
+    "ar": "تغيير الهدف يبدأ دورة جديدة لعدّ هذه العادة ويحفظ السجل السابق."
+  },
+  "progress.label.47d263ad0ba4": {
+    "en": "Saving…",
+    "ar": "جارٍ الحفظ…"
+  },
+  "progress.label.71df0d03fbe9": {
+    "en": "Save habit",
+    "ar": "حفظ العادة"
+  },
+  "progress.label.6e44c41c18d5": {
+    "en": "Delete this habit?",
+    "ar": "حذف العادة؟"
+  },
+  "progress.label.ea0318b0a7dd": {
+    "en": "It will be removed from the list. Its activity history is kept.",
+    "ar": "ستُزال من القائمة ويبقى سجل النشاط محفوظًا."
+  },
+  "progress.label.0b1b71f6c2e2": {
+    "en": "Delete habit",
+    "ar": "حذف العادة"
+  },
+  "progress.label.5eabb60f203c": {
+    "en": "Book",
+    "ar": "كتاب"
+  },
+  "progress.label.909f372aaf9e": {
+    "en": "Prayer beads",
+    "ar": "مسبحة"
+  },
+  "progress.label.83e1440a4e06": {
+    "en": "Moon",
+    "ar": "قمر"
+  },
+  "progress.label.91db13c0ed64": {
+    "en": "Sun",
+    "ar": "شمس"
+  },
+  "progress.label.45da83176920": {
+    "en": "Heart",
+    "ar": "قلب"
+  },
+  "progress.label.efb918755548": {
+    "en": "Water",
+    "ar": "ماء"
+  },
+  "progress.label.60495f473264": {
+    "en": "Learning",
+    "ar": "تعلم"
+  },
+  "progress.label.c4e9b0c95938": {
+    "en": "Giving",
+    "ar": "عطاء"
+  },
+  "progress.label.0c07fbe90d22": {
+    "en": "Prayer",
+    "ar": "صلاة"
+  },
+  "progress.label.91884a59c696": {
+    "en": "Activity",
+    "ar": "نشاط"
+  },
+  "progress.label.a02ed3ab3b90": {
+    "en": "Sleep",
+    "ar": "نوم"
+  },
+  "progress.label.5aaf1075a947": {
+    "en": "Reading",
+    "ar": "قراءة"
+  },
+  "progress.label.78c16418cbce": {
+    "en": "Edit khatma plan",
+    "ar": "تعديل خطة الختمة"
+  },
+  "progress.label.b34ecfb7e03d": {
+    "en": "A steady reading plan that fits your time",
+    "ar": "ورد ثابت يناسب وقتك"
+  },
+  "progress.label.8cdda9c7c132": {
+    "en": "Khatma name",
+    "ar": "اسم الختمة"
+  },
+  "progress.label.5e4d443d020e": {
+    "en": "Enter a khatma name",
+    "ar": "اكتب اسم الختمة"
+  },
+  "progress.label.935cad2b323c": {
+    "en": "Khatma duration in days",
+    "ar": "مدة الختمة بالأيام"
+  },
+  "progress.label.ae7f0fb595e6": {
+    "en": "Choose a duration from 1 to 3650 days",
+    "ar": "اختر مدة من 1 إلى 3650 يومًا"
+  },
+  "progress.label.067218792c4c": {
+    "en": "Ten days",
+    "ar": "عشرة أيام"
+  },
+  "progress.label.b9e17274ae05": {
+    "en": "Two weeks and a day",
+    "ar": "أسبوعان ويوم"
+  },
+  "progress.label.418e78e480bd": {
+    "en": "One month",
+    "ar": "شهر"
+  },
+  "progress.label.502d1e1afcf6": {
+    "en": "Forty days",
+    "ar": "أربعون يومًا"
+  },
+  "progress.label.dbab24848c19": {
+    "en": "Two months",
+    "ar": "شهران"
+  },
+  "progress.label.7bf8bbea1b38": {
+    "en": "Four months",
+    "ar": "أربعة أشهر"
+  },
+  "progress.label.90f719b91522": {
+    "en": "Start date",
+    "ar": "تاريخ البدء"
+  },
+  "progress.label.c8eb3d798ca2": {
+    "en": "Changing the duration or start date keeps your last confirmed verse. Use Reset to read again from the beginning.",
+    "ar": "تعديل المدة وتاريخ البدء يحتفظان بآخر آية مؤكدة. لإعادة القراءة من البداية استخدم إعادة الضبط."
+  },
+  "progress.label.0614e8f72d3b": {
+    "en": "Save plan",
+    "ar": "حفظ الخطة"
+  },
+  "progress.label.24df9ebf0521": {
+    "en": "Today's Quran journey",
+    "ar": "رحلة اليوم مع القرآن"
+  },
+  "progress.label.469ea22cdd05": {
+    "en": "Khatma complete. May Allah accept your deeds.",
+    "ar": "اكتملت الختمة، تقبّل الله منك"
+  },
+  "progress.label.09bf97b3bf0a": {
+    "en": "Paused khatma",
+    "ar": "ختمة متوقفة"
+  },
+  "progress.label.2cccee95bdd2": {
+    "en": "Current khatma",
+    "ar": "الختمة الحالية"
+  },
+  "progress.label.3175c0f750ef": {
+    "en": "No last-read verse selected yet",
+    "ar": "لم تحدد آخر آية بعد"
+  },
+  "progress.label.72ceb34dae00": {
+    "en": "Continue my reading",
+    "ar": "متابعة وردي"
+  },
+  "progress.label.c114f092b11a": {
+    "en": "Edit plan",
+    "ar": "تعديل الخطة"
+  },
+  "progress.label.126f07301846": {
+    "en": "Reminder time",
+    "ar": "موعد التذكير"
+  },
+  "progress.label.cd45c06fc59f": {
+    "en": "Cancel khatma reminder",
+    "ar": "إلغاء تذكير الختمة"
+  },
+  "progress.label.b2e5a5b7faf7": {
+    "en": "No reminder time is set for this khatma.",
+    "ar": "لم تحدد موعداً لتذكير هذه الختمة."
+  },
+  "progress.label.05912105c673": {
+    "en": "Rest day",
+    "ar": "يوم راحة"
+  },
+  "progress.label.bab643fbeca0": {
+    "en": "Previous reading cycles",
+    "ar": "سجل الدورات السابقة"
+  },
+  "progress.label.0961d8345ddf": {
+    "en": "Previous reading",
+    "ar": "قراءة سابقة"
+  },
+  "progress.label.decca71999b7": {
+    "en": "Reset this khatma?",
+    "ar": "إعادة ضبط الختمة؟"
+  },
+  "progress.label.c0c45e512db7": {
+    "en": "A new cycle starts today. Your previous reading remains in history.",
+    "ar": "تبدأ دورة جديدة من اليوم وتبقى القراءة السابقة محفوظة في التاريخ."
+  },
+  "progress.label.a4df1d03d650": {
+    "en": "Reset",
+    "ar": "إعادة الضبط"
+  },
+  "progress.label.33084092794b": {
+    "en": "Pause this khatma?",
+    "ar": "إيقاف هذه الختمة؟"
+  },
+  "progress.label.d09466742b6f": {
+    "en": "The plan moves to paused khatmas. Unread pages are not marked complete.",
+    "ar": "تُنقل الخطة إلى سجل الختمات المتوقفة دون اعتبار الصفحات غير المقروءة مكتملة."
+  },
+  "progress.label.a5877a0c2ea0": {
+    "en": "Pause khatma",
+    "ar": "إيقاف الختمة"
+  },
+  "progress.label.86eff3c55e28": {
+    "en": "Have you read up to this verse?",
+    "ar": "قرأت حتى هذه الآية؟"
+  },
+  "progress.label.f1b7a743513b": {
+    "en": "Before leaving your reading",
+    "ar": "قبل مغادرة الورد"
+  },
+  "progress.label.a92a3d4d9ccb": {
+    "en": "To record your reading, tap Mark my last-read verse. Leave without selecting a new verse?",
+    "ar": "لتسجيل القراءة اضغط «تحديد آخر آية قرأتها». هل تريد الخروج دون تحديد جديد؟"
+  },
+  "progress.label.b38023b5c36d": {
+    "en": "Khatma reading",
+    "ar": "ورد الختمة"
+  },
+  "progress.label.c6043f9e1cbf": {
+    "en": "Mark my last-read verse",
+    "ar": "تحديد آخر آية قرأتها"
+  },
+  "progress.label.b2b38425e5d2": {
+    "en": "Your progress is saved",
+    "ar": "حُفظ تقدمك"
+  },
+  "progress.label.e487c9d5d9f2": {
+    "en": "Could not save the change. Try again.",
+    "ar": "تعذّر حفظ التغيير؛ حاول مرة أخرى"
+  },
+  "progress.khatmaProgress": {
+    "en": "{count} of {total} pages • {status}",
+    "ar": "{count} من {total} صفحة • {status}"
+  },
+  "progress.today": {
+    "en": "Today • {date}",
+    "ar": "اليوم • {date}"
+  },
+  "progress.adhkarDetails": {
+    "en": "Morning remembrances: {morning}\nEvening remembrances: {evening}\nOther remembrances: {other}",
+    "ar": "أذكار الصباح: {morning}\nأذكار المساء: {evening}\nالأذكار الأخرى: {other}"
+  },
+  "progress.dailyPages": {
+    "en": "Your daily reading is about {pages} pages. Whole pages are distributed to the end of the Quran; daily allocations may differ by one page.",
+    "ar": "الورد اليومي نحو {pages} صفحة. تُوزع الصفحات كاملة حتى نهاية القرآن، وقد تختلف حصة يوم عن آخر بصفحة واحدة."
+  },
+  "progress.pagesPercent": {
+    "en": "{count} of {total} pages • {percent}",
+    "ar": "{count} من {total} صفحة • {percent}"
+  },
+  "progress.lastRead": {
+    "en": "Last read: {surah} • verse {ayah}",
+    "ar": "آخر قراءة: سورة {surah} • الآية {ayah}"
+  },
+  "progress.starts": {
+    "en": "The plan starts on {date}",
+    "ar": "تبدأ الخطة في {date}"
+  },
+  "progress.reminder": {
+    "en": "Saved time: {time} • Alerts require enabled reminders and notification permission in app settings.",
+    "ar": "موعد محفوظ: {time} • يعتمد التنبيه على تفعيل التذكيرات وإذن الإشعارات في إعدادات التطبيق."
+  },
+  "progress.dayReading": {
+    "en": "Day {day} reading",
+    "ar": "ورد اليوم {day}"
+  },
+  "progress.pageRange": {
+    "en": "Pages {first}–{last} • {count} pages",
+    "ar": "الصفحات {first}–{last} • {count} صفحة"
+  },
+  "progress.previousCycle": {
+    "en": "{count} pages • {status}",
+    "ar": "{count} صفحة • {status}"
+  },
+  "progress.confirmVerse": {
+    "en": "{surah} • verse {ayah}\nThis records reading from the beginning of the khatma to this verse. Opening a page alone does not record reading.",
+    "ar": "سورة {surah} • الآية {ayah}\nيُسجّل أنك قرأت من بداية الختمة حتى هذه الآية، وليس بمجرد فتح الصفحة."
   }
 }
