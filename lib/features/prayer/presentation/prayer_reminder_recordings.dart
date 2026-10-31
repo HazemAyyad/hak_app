@@ -95,7 +95,11 @@ class _PrayerReminderRecordingsPageState
       await audio.play(file.uri);
     } catch (_) {
       if (mounted && attempt == generation) {
-        setState(() => error = 'تعذّر تشغيل المعاينة على هذا الجهاز');
+        setState(
+          () => error = context.prayerLabel(
+            'تعذّر تشغيل المعاينة على هذا الجهاز',
+          ),
+        );
       }
     } finally {
       if (mounted && attempt == generation) setState(() => playing = null);
@@ -114,7 +118,11 @@ class _PrayerReminderRecordingsPageState
       await widget.controller.save(widget.controller.config);
     } catch (_) {
       if (mounted) {
-        setState(() => error = 'تعذّرت استعادة الصوت المضمّن؛ أعد المحاولة');
+        setState(
+          () => error = context.prayerLabel(
+            'تعذّرت استعادة الصوت المضمّن؛ أعد المحاولة',
+          ),
+        );
       }
     }
   }
@@ -199,8 +207,9 @@ class _PrayerReminderRecordingsPageState
     } catch (_) {
       if (mounted) {
         setState(
-          () => error =
-              'تعذّر إضافة التسجيل. استخدم MP3 صالحًا لا يتجاوز 30 ثانية و4 ميغابايت.',
+          () => error = context.prayerLabel(
+            'تعذّر إضافة التسجيل. استخدم MP3 صالحًا لا يتجاوز 30 ثانية و4 ميغابايت.',
+          ),
         );
       }
     } finally {
@@ -213,14 +222,18 @@ class _PrayerReminderRecordingsPageState
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: Scaffold(
       backgroundColor: AppPalette.of(context).background,
       body: ListView(
         children: [
           DirectoryHeader(
-            title: 'أصوات التذكير قبل الصلاة',
-            subtitle: 'صوت مضمّن لكل صلاة، أو تسجيلك الخاص',
+            title: context.prayerLabel('أصوات التذكير قبل الصلاة'),
+            subtitle: context.prayerLabel(
+              'صوت مضمّن لكل صلاة، أو تسجيلك الخاص',
+            ),
             onBack: () => Navigator.maybePop(context),
           ),
           Padding(
@@ -229,7 +242,9 @@ class _PrayerReminderRecordingsPageState
               children: [
                 _notice(
                   context,
-                  'الصوت الافتراضي عربي مولّد اصطناعيًا، ومضمّن للعمل دون إنترنت. أضف تسجيلك البشري إذا رغبت؛ له الأولوية على الصوت المضمّن.',
+                  context.prayerLabel(
+                    'الصوت الافتراضي عربي مولّد اصطناعيًا، ومضمّن للعمل دون إنترنت. أضف تسجيلك البشري إذا رغبت؛ له الأولوية على الصوت المضمّن.',
+                  ),
                 ),
                 if (error != null) _notice(context, error!),
                 _panel(
@@ -241,15 +256,22 @@ class _PrayerReminderRecordingsPageState
                           'reminder-language-${widget.controller.config.reminderLanguage}',
                         ),
                         initialValue: widget.controller.config.reminderLanguage,
-                        decoration: const InputDecoration(
-                          labelText: 'لغة التذكير / Reminder language',
+                        decoration: InputDecoration(
+                          labelText: context.prayerLabel(
+                            'لغة التذكير / Reminder language',
+                          ),
                         ),
-                        items: const [
+                        items: [
                           DropdownMenuItem(
                             value: 'auto',
-                            child: Text('تلقائي حسب لغة التطبيق'),
+                            child: Text(
+                              context.prayerLabel('تلقائي حسب لغة التطبيق'),
+                            ),
                           ),
-                          DropdownMenuItem(value: 'ar', child: Text('العربية')),
+                          DropdownMenuItem(
+                            value: 'ar',
+                            child: Text(context.prayerLabel('العربية')),
+                          ),
                           DropdownMenuItem(value: 'en', child: Text('English')),
                         ],
                         onChanged: saving || busy != null
@@ -272,12 +294,15 @@ class _PrayerReminderRecordingsPageState
                           ),
                           initialValue:
                               widget.controller.config.reminderDialect,
-                          decoration: const InputDecoration(
-                            labelText: 'اللهجة العربية',
+                          decoration: InputDecoration(
+                            labelText: context.prayerLabel('اللهجة العربية'),
                           ),
                           items: [
                             for (final d in PrayerReminderDialect.values)
-                              DropdownMenuItem(value: d, child: Text(d.label)),
+                              DropdownMenuItem(
+                                value: d,
+                                child: Text(d.displayLabel(context)),
+                              ),
                           ],
                           onChanged: saving || busy != null
                               ? null
@@ -292,7 +317,7 @@ class _PrayerReminderRecordingsPageState
                                 },
                         ),
                       ] else
-                        const Padding(
+                        Padding(
                           padding: EdgeInsets.only(top: 12),
                           child: Text('English uses one voice.'),
                         ),
@@ -328,10 +353,14 @@ class _PrayerReminderRecordingsPageState
                               )
                               ? (variant == 'en'
                                     ? 'Your custom recording is ready'
-                                    : 'تسجيلك الخاص جاهز على هذا الجهاز')
+                                    : context.prayerLabel(
+                                        'تسجيلك الخاص جاهز على هذا الجهاز',
+                                      ))
                               : (variant == 'en'
                                     ? 'Synthetic voice • available offline'
-                                    : 'صوت مولّد مضمّن • جاهز دون إنترنت'),
+                                    : context.prayerLabel(
+                                        'صوت مولّد مضمّن • جاهز دون إنترنت',
+                                      )),
                         ),
                         const SizedBox(height: 8),
                         Wrap(
@@ -347,8 +376,8 @@ class _PrayerReminderRecordingsPageState
                               ),
                               label: Text(
                                 playing == prayer
-                                    ? 'إيقاف / Stop'
-                                    : 'معاينة / Preview',
+                                    ? context.prayerLabel('إيقاف / Stop')
+                                    : context.prayerLabel('معاينة / Preview'),
                               ),
                             ),
                             if (available.contains(
@@ -359,8 +388,12 @@ class _PrayerReminderRecordingsPageState
                               ),
                             ))
                               IconButton(
-                                tooltip:
-                                    'استعادة الصوت المضمّن ${prayer.label}',
+                                tooltip: context.tr(
+                                  'prayer.restoreVoice',
+                                  args: {
+                                    'prayer': prayer.displayLabel(context),
+                                  },
+                                ),
                                 icon: const Icon(Icons.restore),
                                 onPressed: () => _restore(prayer),
                               ),
@@ -371,7 +404,12 @@ class _PrayerReminderRecordingsPageState
                                     child: CircularProgressIndicator(),
                                   )
                                 : IconButton(
-                                    tooltip: 'إضافة تسجيل ${prayer.label}',
+                                    tooltip: context.tr(
+                                      'prayer.addRecording',
+                                      args: {
+                                        'prayer': prayer.displayLabel(context),
+                                      },
+                                    ),
                                     icon: const Icon(Icons.audio_file_outlined),
                                     onPressed: busy != null || saving
                                         ? null

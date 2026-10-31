@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/features/prayer/data/place_catalog.dart';
 import 'package:haq_app/features/prayer/data/prayer_controller.dart';
 import 'package:haq_app/features/prayer/data/prayer_models.dart';
@@ -123,59 +124,63 @@ void main() {
     double scale = 1.5,
     Future<String?> Function(double, double)? zoneAt,
     Future<PlaceCatalog> Function()? loader,
+    AppLocalization? localization,
   }) async {
     previewScale.value = scale;
     tester.view.physicalSize = const Size(320, 920);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    await tester.pumpWidget(
-      AppearanceScope(
-        controller: appearance,
-        child: RepaintBoundary(
-          key: preview,
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              fontFamily: 'QuranUI',
-              brightness: dark ? Brightness.dark : Brightness.light,
-              colorSchemeSeed: const Color(0xFF2A8C82),
+    final screen = AppearanceScope(
+      controller: appearance,
+      child: RepaintBoundary(
+        key: preview,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            fontFamily: 'QuranUI',
+            brightness: dark ? Brightness.dark : Brightness.light,
+            colorSchemeSeed: const Color(0xFF2A8C82),
+          ),
+          builder: (context, child) => ValueListenableBuilder<double>(
+            valueListenable: previewScale,
+            builder: (context, factor, _) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(factor)),
+              child: child!,
             ),
-            builder: (context, child) => ValueListenableBuilder<double>(
-              valueListenable: previewScale,
-              builder: (context, factor, _) => MediaQuery(
-                data: MediaQuery.of(
-                  context,
-                ).copyWith(textScaler: TextScaler.linear(factor)),
-                child: child!,
-              ),
-            ),
-            home: Builder(
-              builder: (context) => Scaffold(
-                body: Center(
-                  child: FilledButton(
-                    onPressed: () async {
-                      result = await Navigator.push<PrayerLocation>(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => PrayerLocationPicker(
-                            controller: controller,
-                            showMap: map,
-                            catalogLoader: loader ?? () async => catalog,
-                            zoneAt: zoneAt ?? (_, _) async => 'Asia/Hebron',
-                            tileProvider: _Tiles(),
-                          ),
+          ),
+          home: Builder(
+            builder: (context) => Scaffold(
+              body: Center(
+                child: FilledButton(
+                  onPressed: () async {
+                    result = await Navigator.push<PrayerLocation>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PrayerLocationPicker(
+                          controller: controller,
+                          showMap: map,
+                          catalogLoader: loader ?? () async => catalog,
+                          zoneAt: zoneAt ?? (_, _) async => 'Asia/Hebron',
+                          tileProvider: _Tiles(),
                         ),
-                      );
-                    },
-                    child: const Text('فتح الاختيار'),
-                  ),
+                      ),
+                    );
+                  },
+                  child: const Text('فتح الاختيار'),
                 ),
               ),
             ),
           ),
         ),
       ),
+    );
+    await tester.pumpWidget(
+      localization == null
+          ? screen
+          : LocalizationScope(controller: localization, child: screen),
     );
     await tester.tap(find.text('فتح الاختيار'));
     await tester.pumpAndSettle();
@@ -184,6 +189,7 @@ void main() {
   FilledButton confirm(WidgetTester tester) => tester.widget<FilledButton>(
     find.byKey(const ValueKey('confirm-prayer-location')),
   );
+
   Future<void> query(WidgetTester tester, String text) async {
     await tester.enterText(
       find.byKey(const ValueKey('prayer-place-query')),
@@ -192,6 +198,41 @@ void main() {
     await tester.pump();
   }
 
+  testWidgets(
+    'English city selection preserves canonical location without GPS access',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await pump(tester, localization: localization);
+      expect(find.text('Choose prayer location'), findsOneWidget);
+      expect(
+        Directionality.of(
+          tester.element(find.byKey(const ValueKey('prayer-place-query'))),
+        ),
+        TextDirection.ltr,
+      );
+      await query(tester, 'Hebron');
+      final city = find.descendant(
+        of: find.byType(ListTile),
+        matching: find.text('Hebron'),
+      );
+      expect(city, findsOneWidget);
+      expect(find.text('Palestine'), findsOneWidget);
+      await tester.tap(city);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Use this location'));
+      await tester.tap(find.text('Use this location'));
+      await tester.pumpAndSettle();
+      expect(result?.latitude, 31.52935);
+      expect(result?.longitude, 35.0938);
+      expect(result?.zone, 'Asia/Hebron');
+      expect(result?.label, 'الخليل، فلسطين');
+      expect(tester.takeException(), isNull);
+    },
+  );
   Future<void> capture(WidgetTester tester, String name) async {
     await tester.runAsync(() async {
       final image =

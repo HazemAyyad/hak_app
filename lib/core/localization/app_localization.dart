@@ -14,6 +14,20 @@ import 'bundled_localization.dart';
 import 'quran_translation_source.dart';
 import 'locale_formats.dart';
 
+final _bundledInterface = jsonDecode(bundledUiJson) as Map;
+
+String _bundledArabicText(
+  String key,
+  String? fallback,
+  Map<String, Object> args,
+) {
+  var value = fallback ?? _bundledInterface[key]?['ar'] as String? ?? key;
+  for (final entry in args.entries) {
+    value = value.replaceAll('{${entry.key}}', entry.value.toString());
+  }
+  return value;
+}
+
 class AppLanguage {
   const AppLanguage(this.code, this.name, this.direction);
   factory AppLanguage.fromJson(Map value) => AppLanguage(
@@ -516,6 +530,5 @@ extension HaqTranslation on BuildContext {
       LocalizationScope.maybeOf(
         this,
       )?.text(key, fallback: fallback, args: args) ??
-      fallback ??
-      key;
+      _bundledArabicText(key, fallback, args);
 }

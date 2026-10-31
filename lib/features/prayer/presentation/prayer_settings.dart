@@ -83,15 +83,15 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                 .where((z) => z.toLowerCase().contains(filter.toLowerCase()))
                 .toList();
             return AlertDialog(
-              title: const Text('المنطقة الزمنية'),
+              title: Text(context.prayerLabel('المنطقة الزمنية')),
               content: SizedBox(
                 width: 420,
                 height: 420,
                 child: Column(
                   children: [
                     TextField(
-                      decoration: const InputDecoration(
-                        labelText: 'بحث مثل Asia/Hebron',
+                      decoration: InputDecoration(
+                        labelText: context.prayerLabel('بحث مثل Asia/Hebron'),
                       ),
                       onChanged: (v) => setDialog(() => filter = v),
                     ),
@@ -113,7 +113,7 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('إلغاء'),
+                  child: Text(context.prayerLabel('إلغاء')),
                 ),
               ],
             );
@@ -132,8 +132,12 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
     if (_saving || !_form.currentState!.validate()) return;
     if (_lat.text.isEmpty || _lng.text.isEmpty || _label.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('ابحث عن مدينة أو اختر موقعك على الخريطة أولًا'),
+        SnackBar(
+          content: Text(
+            context.prayerLabel(
+              'ابحث عن مدينة أو اختر موقعك على الخريطة أولًا',
+            ),
+          ),
         ),
       );
       return;
@@ -158,14 +162,18 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
         _draft.copyWith(location: keepGps ? old : place),
       );
       if (mounted && owner == _scope && saved) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('حُفظت إعدادات الصلاة')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(context.prayerLabel('حُفظت إعدادات الصلاة'))),
+        );
       }
     } catch (_) {
       if (mounted && owner == _scope) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تحقق من الإحداثيات والمنطقة الزمنية')),
+          SnackBar(
+            content: Text(
+              context.prayerLabel('تحقق من الإحداثيات والمنطقة الزمنية'),
+            ),
+          ),
         );
       }
     } finally {
@@ -184,7 +192,9 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: Scaffold(
       backgroundColor: AppPalette.of(context).background,
       body: ListenableBuilder(
@@ -193,8 +203,8 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
           slivers: [
             SliverToBoxAdapter(
               child: DirectoryHeader(
-                title: 'الموقع وحساب المواقيت',
-                subtitle: 'المدينة والدولة وطريقة الحساب',
+                title: context.prayerLabel('الموقع وحساب المواقيت'),
+                subtitle: context.prayerLabel('المدينة والدولة وطريقة الحساب'),
                 onBack: () => Navigator.maybePop(context),
               ),
             ),
@@ -212,8 +222,8 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            const Text(
-                              'الموقع المعتمد',
+                            Text(
+                              context.prayerLabel('الموقع المعتمد'),
                               style: TextStyle(
                                 fontSize: 21,
                                 fontWeight: FontWeight.bold,
@@ -258,10 +268,12 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                     ),
                               label: Text(
                                 widget.controller.locating
-                                    ? 'جارٍ تحديد الموقع…'
+                                    ? context.prayerLabel('جارٍ تحديد الموقع…')
                                     : widget.controller.config.location == null
-                                    ? 'تحديد موقع الجهاز بإذن منك'
-                                    : 'تحديث موقع الجهاز',
+                                    ? context.prayerLabel(
+                                        'تحديد موقع الجهاز بإذن منك',
+                                      )
+                                    : context.prayerLabel('تحديث موقع الجهاز'),
                               ),
                             ),
                             if (widget.controller.locationNotice
@@ -274,7 +286,9 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                 ),
                               ),
                             Text(
-                              'لتسمية المدينة والدولة نستخدم خدمة الأماكن في نظام الجهاز. قد تحتاج إلى الإنترنت.',
+                              context.prayerLabel(
+                                'لتسمية المدينة والدولة نستخدم خدمة الأماكن في نظام الجهاز. قد تحتاج إلى الإنترنت.',
+                              ),
                               style: TextStyle(
                                 color: AppPalette.of(context).muted,
                                 fontSize: 11,
@@ -282,13 +296,40 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                             ),
                             TextButton(
                               onPressed: widget.controller.openSettings,
-                              child: const Text('فتح أذونات الموقع في الجهاز'),
+                              child: Text(
+                                context.prayerLabel(
+                                  'فتح أذونات الموقع في الجهاز',
+                                ),
+                              ),
                             ),
                             if (widget.controller.config.location
                                 case final place?)
                               if (place.fromDevice)
                                 Text(
-                                  'آخر قياس محفوظ: ${place.measuredAt?.toLocal().toString().split('.').first ?? 'غير متاح'} • دقة تقريبية ${place.accuracy?.round() ?? 0} متر',
+                                  context.tr(
+                                    'prayer.lastMeasurement',
+                                    args: {
+                                      'date': place.measuredAt == null
+                                          ? context.prayerLabel('غير متاح')
+                                          : LocalizationScope.maybeOf(
+                                                  context,
+                                                )?.formats.gregorianDateTime(
+                                                  place.measuredAt!.toLocal(),
+                                                ) ??
+                                                place.measuredAt!
+                                                    .toLocal()
+                                                    .toString()
+                                                    .split('.')
+                                                    .first,
+                                      'accuracy':
+                                          LocalizationScope.maybeOf(
+                                            context,
+                                          )?.formats.number(
+                                            place.accuracy?.round() ?? 0,
+                                          ) ??
+                                          '${place.accuracy?.round() ?? 0}',
+                                    },
+                                  ),
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: AppPalette.of(context).muted,
@@ -308,23 +349,29 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                   textDirection: TextDirection.ltr,
                                 ),
                               ),
-                            const Text(
-                              'الاختيار اليدوي',
+                            Text(
+                              context.prayerLabel('الاختيار اليدوي'),
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
                             OutlinedButton.icon(
                               onPressed: () => _pickLocation(map: false),
                               icon: const Icon(Icons.search),
-                              label: const Text('بحث عن دولة أو مدينة'),
+                              label: Text(
+                                context.prayerLabel('بحث عن دولة أو مدينة'),
+                              ),
                             ),
                             OutlinedButton.icon(
                               onPressed: () => _pickLocation(map: true),
                               icon: const Icon(Icons.map_outlined),
-                              label: const Text('تحديد نقطة على الخريطة'),
+                              label: Text(
+                                context.prayerLabel('تحديد نقطة على الخريطة'),
+                              ),
                             ),
                             Text(
-                              'بعد اختيار الموقع اضغط «حفظ إعدادات الصلاة».',
+                              context.prayerLabel(
+                                'بعد اختيار الموقع اضغط «حفظ إعدادات الصلاة».',
+                              ),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: AppPalette.of(context).muted,
@@ -332,25 +379,41 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                             ),
                             ExpansionTile(
                               tilePadding: EdgeInsets.zero,
-                              title: const Text(
-                                'ضبط الإحداثيات والمنطقة الزمنية يدويًا',
+                              title: Text(
+                                context.prayerLabel(
+                                  'ضبط الإحداثيات والمنطقة الزمنية يدويًا',
+                                ),
                                 style: TextStyle(fontSize: 12),
                               ),
                               children: [
                                 TextFormField(
                                   controller: _label,
-                                  decoration: const InputDecoration(
-                                    labelText: 'اسم الموقع اليدوي',
+                                  decoration: InputDecoration(
+                                    labelText: context.prayerLabel(
+                                      'اسم الموقع اليدوي',
+                                    ),
                                   ),
                                   maxLength: 100,
                                   validator: (v) =>
                                       v == null || v.trim().isEmpty
-                                      ? 'اكتب اسماً للموقع'
+                                      ? context.prayerLabel('اكتب اسماً للموقع')
                                       : null,
                                 ),
                                 for (final entry in [
-                                  (_lat, 'خط العرض (-90 إلى 90)', 90),
-                                  (_lng, 'خط الطول (-180 إلى 180)', 180),
+                                  (
+                                    _lat,
+                                    context.prayerLabel(
+                                      'خط العرض (-90 إلى 90)',
+                                    ),
+                                    90,
+                                  ),
+                                  (
+                                    _lng,
+                                    context.prayerLabel(
+                                      'خط الطول (-180 إلى 180)',
+                                    ),
+                                    180,
+                                  ),
                                 ])
                                   TextFormField(
                                     controller: entry.$1,
@@ -361,7 +424,7 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                           signed: true,
                                         ),
                                     decoration: InputDecoration(
-                                      labelText: entry.$2,
+                                      labelText: context.prayerLabel(entry.$2),
                                     ),
                                     validator: (value) {
                                       final n = double.tryParse(
@@ -370,13 +433,19 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                       return n == null ||
                                               !n.isFinite ||
                                               n.abs() > entry.$3
-                                          ? 'أدخل إحداثية صحيحة'
+                                          ? context.prayerLabel(
+                                              'أدخل إحداثية صحيحة',
+                                            )
                                           : null;
                                     },
                                   ),
                                 ListTile(
                                   contentPadding: EdgeInsets.zero,
-                                  title: const Text('المنطقة الزمنية للموقع'),
+                                  title: Text(
+                                    context.prayerLabel(
+                                      'المنطقة الزمنية للموقع',
+                                    ),
+                                  ),
                                   subtitle: Text(
                                     _zone,
                                     textDirection: TextDirection.ltr,
@@ -398,8 +467,10 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                       setState(() => _zone = zone);
                                     }
                                   },
-                                  child: const Text(
-                                    'استخدام المنطقة الزمنية الحالية للجهاز',
+                                  child: Text(
+                                    context.prayerLabel(
+                                      'استخدام المنطقة الزمنية الحالية للجهاز',
+                                    ),
                                   ),
                                 ),
                               ],
@@ -414,14 +485,14 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                             DropdownButtonFormField<PrayerMethod>(
                               initialValue: _draft.method,
                               isExpanded: true,
-                              decoration: const InputDecoration(
-                                labelText: 'طريقة الحساب',
+                              decoration: InputDecoration(
+                                labelText: context.prayerLabel('طريقة الحساب'),
                               ),
                               items: [
                                 for (final method in PrayerMethod.values)
                                   DropdownMenuItem(
                                     value: method,
-                                    child: Text(method.label),
+                                    child: Text(method.displayLabel(context)),
                                   ),
                               ],
                               onChanged: (value) {
@@ -435,9 +506,13 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                             ),
                             SwitchListTile(
                               contentPadding: EdgeInsets.zero,
-                              title: const Text('حساب العصر الحنفي'),
-                              subtitle: const Text(
-                                'عند الإيقاف يستخدم حساب العصر الشافعي',
+                              title: Text(
+                                context.prayerLabel('حساب العصر الحنفي'),
+                              ),
+                              subtitle: Text(
+                                context.prayerLabel(
+                                  'عند الإيقاف يستخدم حساب العصر الشافعي',
+                                ),
                               ),
                               value: _draft.hanafi,
                               onChanged: (v) => setState(
@@ -447,15 +522,21 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                             DropdownButtonFormField<String>(
                               initialValue: _draft.highLatitude,
                               isExpanded: true,
-                              decoration: const InputDecoration(
-                                labelText: 'خطوط العرض العالية',
+                              decoration: InputDecoration(
+                                labelText: context.prayerLabel(
+                                  'خطوط العرض العالية',
+                                ),
                               ),
                               items: [
-                                for (final e in const {
-                                  'recommended': 'القاعدة الموصى بها للموقع',
-                                  'middle': 'منتصف الليل',
-                                  'seventh': 'سُبع الليل',
-                                  'angle': 'حسب زاوية الشفق',
+                                for (final e in {
+                                  'recommended': context.prayerLabel(
+                                    'القاعدة الموصى بها للموقع',
+                                  ),
+                                  'middle': context.prayerLabel('منتصف الليل'),
+                                  'seventh': context.prayerLabel('سُبع الليل'),
+                                  'angle': context.prayerLabel(
+                                    'حسب زاوية الشفق',
+                                  ),
                                 }.entries)
                                   DropdownMenuItem(
                                     value: e.key,
@@ -473,8 +554,10 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                               },
                             ),
                             const SizedBox(height: 12),
-                            const Text(
-                              'الطرق حسابية وقد تختلف عن التوقيت الرسمي. أم القرى: يمكن زيادة تصحيح العشاء 30 دقيقة في رمضان حسب اعتمادك المحلي.',
+                            Text(
+                              context.prayerLabel(
+                                'الطرق حسابية وقد تختلف عن التوقيت الرسمي. أم القرى: يمكن زيادة تصحيح العشاء 30 دقيقة في رمضان حسب اعتمادك المحلي.',
+                              ),
                               style: TextStyle(fontSize: 12),
                             ),
                           ],
@@ -484,8 +567,8 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                         context,
                         Column(
                           children: [
-                            const Text(
-                              'تصحيح المواقيت بالدقائق',
+                            Text(
+                              context.prayerLabel('تصحيح المواقيت بالدقائق'),
                               style: TextStyle(
                                 fontSize: 19,
                                 fontWeight: FontWeight.bold,
@@ -494,9 +577,16 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                             for (final prayer in PrayerName.values)
                               Row(
                                 children: [
-                                  Expanded(child: Text(prayer.label)),
+                                  Expanded(
+                                    child: Text(prayer.displayLabel(context)),
+                                  ),
                                   IconButton(
-                                    tooltip: 'نقص دقيقة ${prayer.label}',
+                                    tooltip: context.tr(
+                                      'prayer.subtractMinute',
+                                      args: {
+                                        'prayer': prayer.displayLabel(context),
+                                      },
+                                    ),
                                     onPressed: () => setState(
                                       () => _draft = _draft.copyWith(
                                         adjustments: {
@@ -522,7 +612,12 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                                     ),
                                   ),
                                   IconButton(
-                                    tooltip: 'زيادة دقيقة ${prayer.label}',
+                                    tooltip: context.tr(
+                                      'prayer.addMinute',
+                                      args: {
+                                        'prayer': prayer.displayLabel(context),
+                                      },
+                                    ),
                                     onPressed: () => setState(
                                       () => _draft = _draft.copyWith(
                                         adjustments: {
@@ -547,7 +642,9 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                         onPressed: _saving ? null : _save,
                         icon: const Icon(Icons.check),
                         label: Text(
-                          _saving ? 'جارٍ الحفظ…' : 'حفظ إعدادات الصلاة',
+                          _saving
+                              ? context.prayerLabel('جارٍ الحفظ…')
+                              : context.prayerLabel('حفظ إعدادات الصلاة'),
                         ),
                       ),
                       TextButton(
@@ -556,19 +653,25 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                           final yes = await showDialog<bool>(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: const Text('مسح الموقع وإعدادات الصلاة؟'),
-                              content: const Text(
-                                'تلغي تذكيرات الصلاة لهذا الحساب وتبقى بقية بياناتك محفوظة.',
+                              title: Text(
+                                context.prayerLabel(
+                                  'مسح الموقع وإعدادات الصلاة؟',
+                                ),
+                              ),
+                              content: Text(
+                                context.prayerLabel(
+                                  'تلغي تذكيرات الصلاة لهذا الحساب وتبقى بقية بياناتك محفوظة.',
+                                ),
                               ),
                               actions: [
                                 TextButton(
                                   onPressed: () =>
                                       Navigator.pop(context, false),
-                                  child: const Text('إلغاء'),
+                                  child: Text(context.prayerLabel('إلغاء')),
                                 ),
                                 FilledButton(
                                   onPressed: () => Navigator.pop(context, true),
-                                  child: const Text('مسح'),
+                                  child: Text(context.prayerLabel('مسح')),
                                 ),
                               ],
                             ),
@@ -578,7 +681,9 @@ class _PrayerSettingsPageState extends State<PrayerSettingsPage> {
                             if (mounted) setState(_fill);
                           }
                         },
-                        child: const Text('مسح الموقع وإعدادات هذا القسم'),
+                        child: Text(
+                          context.prayerLabel('مسح الموقع وإعدادات هذا القسم'),
+                        ),
                       ),
                     ],
                   ),

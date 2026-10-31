@@ -53,7 +53,9 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
   void open(String route) => Navigator.pop(context, route);
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: Scaffold(
       backgroundColor: const Color(0xFF0B1722),
       body: Stack(
@@ -97,18 +99,20 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                         child: Row(
                           children: [
                             IconButton(
-                              tooltip: 'إغلاق المعاينة',
+                              tooltip: context.prayerLabel('إغلاق المعاينة'),
                               onPressed: () => Navigator.pop(context),
                               icon: const Icon(
                                 Icons.close,
                                 color: Colors.white,
                               ),
                             ),
-                            const Expanded(
+                            Expanded(
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
-                                  'حق · معاينة شاشة الأذان',
+                                  context.prayerLabel(
+                                    'حق · معاينة شاشة الأذان',
+                                  ),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -129,7 +133,15 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            'حان وقت ${widget.controller.upcoming?.name.label ?? 'الصلاة'}',
+                            context.tr(
+                              'prayer.timeFor',
+                              args: {
+                                'prayer':
+                                    widget.controller.upcoming?.name
+                                        .displayLabel(context) ??
+                                    context.prayerLabel('الصلاة'),
+                              },
+                            ),
                             style: const TextStyle(
                               color: Color(0xFFC7A45A),
                               fontSize: 24,
@@ -164,7 +176,7 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                                     height: compact ? 80 : 110,
                                     child: AnimatedBuilder(
                                       animation: pulse,
-                                      child: const FittedBox(
+                                      child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
                                           'الله أكبر',
@@ -204,7 +216,13 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
-                                          'الإقامة بعد\n${widget.controller.config.iqamaMinutes.toString().padLeft(2, '0')}:00',
+                                          context.tr(
+                                            'prayer.iqamaPreview',
+                                            args: {
+                                              'time':
+                                                  '${widget.controller.config.iqamaMinutes.toString().padLeft(2, '0')}:00',
+                                            },
+                                          ),
                                           textAlign: TextAlign.center,
                                           style: const TextStyle(
                                             color: Colors.white,
@@ -214,8 +232,10 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                                       ),
                                     ),
                                     const SizedBox(height: 6),
-                                    const Text(
-                                      'مدة الإقامة حسب إعدادك',
+                                    Text(
+                                      context.prayerLabel(
+                                        'مدة الإقامة حسب إعدادك',
+                                      ),
                                       style: TextStyle(
                                         color: Colors.white70,
                                         fontSize: 11,
@@ -241,7 +261,7 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                             ),
                             foregroundColor: Colors.white,
                           ),
-                          child: const FittedBox(
+                          child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text('أذكار بعد الصلاة'),
                           ),
@@ -251,8 +271,8 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                       Row(
                         children: [
                           for (final item in [
-                            ('القرآن', 'quran'),
-                            ('القبلة', 'qibla'),
+                            (context.prayerLabel('القرآن'), 'quran'),
+                            (context.prayerLabel('القبلة'), 'qibla'),
                           ])
                             Expanded(
                               child: Padding(
@@ -271,7 +291,7 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                                     ),
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
-                                      child: Text(item.$1),
+                                      child: Text(context.prayerLabel(item.$1)),
                                     ),
                                   ),
                                 ),
@@ -289,14 +309,14 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                             foregroundColor: Colors.white,
                             side: const BorderSide(color: Color(0xFFC7A45A)),
                           ),
-                          child: const FittedBox(
+                          child: FittedBox(
                             fit: BoxFit.scaleDown,
-                            child: Text('إغلاق المعاينة'),
+                            child: Text(context.prayerLabel('إغلاق المعاينة')),
                           ),
                         ),
                       ),
                       const SizedBox(height: 6),
-                      const FittedBox(
+                      FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
                           'المعاينة بدون صوت',

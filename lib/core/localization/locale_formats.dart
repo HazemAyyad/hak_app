@@ -20,6 +20,9 @@ class LocaleFormats {
   String number(num value) => NumberFormat.decimalPattern(
     _supported(NumberFormat.localeExists),
   ).format(value);
+  String integer(int value) =>
+      NumberFormat('0', _supported(NumberFormat.localeExists)).format(value);
+  String clock24(DateTime value) => DateFormat.Hm(_dateLocale).format(value);
 
   // Gregorian dates only. Hijri dates retain the app's separate verified calendar.
   String gregorianDate(DateTime value) =>

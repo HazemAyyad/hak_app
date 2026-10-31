@@ -458,6 +458,16 @@ String prayerHijriDate(DateTime date, {int correction = 0}) {
     'ذو القعدة',
     'ذو الحجة',
   ];
+  final parts = prayerHijriParts(date, correction: correction);
+  return parts == null
+      ? '${date.year}/${date.month}/${date.day}'
+      : '${parts.day} ${months[parts.month - 1]} ${parts.year} هـ';
+}
+
+({int day, int month, int year})? prayerHijriParts(
+  DateTime date, {
+  int correction = 0,
+}) {
   try {
     final civil = DateTime.utc(
       date.year,
@@ -465,8 +475,11 @@ String prayerHijriDate(DateTime date, {int correction = 0}) {
       date.day + correction.clamp(-3, 3),
     );
     final h = HijriCalendar.fromDate(civil);
-    return '${h.hDay} ${months[h.hMonth - 1]} ${h.hYear} هـ';
+    if (h.hMonth < 1 || h.hMonth > 12 || h.hDay < 1 || h.hDay > 30) {
+      return null;
+    }
+    return (day: h.hDay, month: h.hMonth, year: h.hYear);
   } catch (_) {
-    return '${date.year}/${date.month}/${date.day}';
+    return null;
   }
 }

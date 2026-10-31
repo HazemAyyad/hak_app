@@ -135,7 +135,9 @@ class _QiblaPageState extends State<QiblaPage>
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: Material(
       color: AppPalette.of(context).background,
       child: ListenableBuilder(
@@ -166,8 +168,8 @@ class _QiblaPageState extends State<QiblaPage>
                 child: Stack(
                   children: [
                     DirectoryHeader(
-                      title: 'بوصلة القبلة',
-                      subtitle: 'حيث يتّجه قلبك',
+                      title: context.prayerLabel('بوصلة القبلة'),
+                      subtitle: context.prayerLabel('حيث يتّجه قلبك'),
                       onBack: () => Navigator.maybePop(context),
                     ),
                     Positioned(
@@ -206,7 +208,8 @@ class _QiblaPageState extends State<QiblaPage>
                               const SizedBox(width: 5),
                               Flexible(
                                 child: Text(
-                                  place?.label ?? 'الموقع غير متاح',
+                                  place?.label ??
+                                      context.prayerLabel('الموقع غير متاح'),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 20,
@@ -219,7 +222,7 @@ class _QiblaPageState extends State<QiblaPage>
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            c.config.method.label,
+                            c.config.method.displayLabel(context),
                             style: TextStyle(color: p.muted, fontSize: 12),
                           ),
                           const SizedBox(height: 18),
@@ -245,16 +248,40 @@ class _QiblaPageState extends State<QiblaPage>
                             child: Text(
                               show
                                   ? _aligned
-                                        ? 'استقبل القبلة'
-                                        : 'اتجه ${difference! > 0 ? 'يمينًا' : 'يسارًا'} ${difference.abs().round()}°'
+                                        ? context.prayerLabel('استقبل القبلة')
+                                        : context.tr(
+                                            'prayer.turn',
+                                            args: {
+                                              'direction': context.tr(
+                                                difference! > 0
+                                                    ? 'prayer.right'
+                                                    : 'prayer.left',
+                                              ),
+                                              'degrees': difference
+                                                  .abs()
+                                                  .round(),
+                                            },
+                                          )
                                   : place == null
-                                  ? 'اختر موقعك أو اسمح بتحديده لعرض زاوية القبلة.'
+                                  ? context.prayerLabel(
+                                      'اختر موقعك أو اسمح بتحديده لعرض زاوية القبلة.',
+                                    )
                                   : bearing == null
-                                  ? 'الاتجاه غير محدد قرب الكعبة'
-                                  : _heading.error ??
+                                  ? context.prayerLabel(
+                                      'الاتجاه غير محدد قرب الكعبة',
+                                    )
+                                  : (_heading.error == null
+                                            ? null
+                                            : context.prayerLabel(
+                                                _heading.error!,
+                                              )) ??
                                         (!_heading.trueNorth
-                                            ? 'نحتاج قراءة الشمال الحقيقي. تحقق من إذن الموقع وتوفر الحساس.'
-                                            : 'الدقة منخفضة — حرّك الجهاز بشكل 8 بعيداً عن المعادن.'),
+                                            ? context.prayerLabel(
+                                                'نحتاج قراءة الشمال الحقيقي. تحقق من إذن الموقع وتوفر الحساس.',
+                                              )
+                                            : context.prayerLabel(
+                                                'الدقة منخفضة — حرّك الجهاز بشكل 8 بعيداً عن المعادن.',
+                                              )),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: show && _aligned
@@ -272,7 +299,20 @@ class _QiblaPageState extends State<QiblaPage>
                               runSpacing: 8,
                               children: [
                                 Text(
-                                  'إلى الكعبة ${(distanceMetres(place.latitude, place.longitude, 21.4225241, 39.8261818) / 1000).toStringAsFixed(1)} كم',
+                                  context.tr(
+                                    'prayer.kaabaDistance',
+                                    args: {
+                                      'distance':
+                                          (distanceMetres(
+                                                    place.latitude,
+                                                    place.longitude,
+                                                    21.4225241,
+                                                    39.8261818,
+                                                  ) /
+                                                  1000)
+                                              .toStringAsFixed(1),
+                                    },
+                                  ),
                                   style: TextStyle(
                                     color: p.muted,
                                     fontSize: 12,
@@ -280,7 +320,12 @@ class _QiblaPageState extends State<QiblaPage>
                                 ),
                                 if (bearing != null)
                                   Text(
-                                    'القبلة ${bearing.toStringAsFixed(1)}° من الشمال الحقيقي',
+                                    context.tr(
+                                      'prayer.bearing',
+                                      args: {
+                                        'degrees': bearing.toStringAsFixed(1),
+                                      },
+                                    ),
                                     style: TextStyle(
                                       color: p.muted,
                                       fontSize: 12,
@@ -291,8 +336,12 @@ class _QiblaPageState extends State<QiblaPage>
                             const SizedBox(height: 8),
                             Text(
                               show
-                                  ? 'قراءة الحساس متاحة — تحقق من المعايرة'
-                                  : 'لا يوجد اتجاه حي موثوق حاليًا',
+                                  ? context.prayerLabel(
+                                      'قراءة الحساس متاحة — تحقق من المعايرة',
+                                    )
+                                  : context.prayerLabel(
+                                      'لا يوجد اتجاه حي موثوق حاليًا',
+                                    ),
                               style: TextStyle(color: p.muted, fontSize: 11),
                             ),
                           ],
@@ -304,14 +353,20 @@ class _QiblaPageState extends State<QiblaPage>
                       Column(
                         children: [
                           Text(
-                            prayerGregorianDate(local),
+                            LocalizationScope.maybeOf(
+                                  context,
+                                )?.formats.gregorianDate(local) ??
+                                prayerGregorianDate(local),
                             style: TextStyle(
                               color: p.heading,
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          Text(c.hijriLabel, style: TextStyle(color: p.muted)),
+                          Text(
+                            prayerHijriInterfaceLabel(context, c),
+                            style: TextStyle(color: p.muted),
+                          ),
                           if (c.today case final day?) ...[
                             const SizedBox(height: 16),
                             for (final moment in day.moments)
@@ -326,7 +381,7 @@ class _QiblaPageState extends State<QiblaPage>
                               icon: Icon(
                                 _extra ? Icons.expand_less : Icons.expand_more,
                               ),
-                              label: const Text('أوقات أخرى'),
+                              label: Text(context.prayerLabel('أوقات أخرى')),
                             ),
                             if (_extra) ...[
                               for (final item in additionalPrayerTimes(
@@ -347,8 +402,10 @@ class _QiblaPageState extends State<QiblaPage>
                                     ],
                                   ),
                                 ),
-                              const Text(
-                                'الضحى تقدير بعد الشروق بـ20 دقيقة. منتصف الليل والثلث الأخير من المغرب إلى الفجر التالي.',
+                              Text(
+                                context.prayerLabel(
+                                  'الضحى تقدير بعد الشروق بـ20 دقيقة. منتصف الليل والثلث الأخير من المغرب إلى الفجر التالي.',
+                                ),
                                 style: TextStyle(fontSize: 11),
                                 textAlign: TextAlign.center,
                               ),
@@ -356,7 +413,14 @@ class _QiblaPageState extends State<QiblaPage>
                             if (c.upcoming != null) ...[
                               const Divider(),
                               Text(
-                                'الصلاة القادمة: ${c.upcoming!.name.label}',
+                                context.tr(
+                                  'prayer.next',
+                                  args: {
+                                    'prayer': c.upcoming!.name.displayLabel(
+                                      context,
+                                    ),
+                                  },
+                                ),
                                 style: TextStyle(color: p.tealHeading),
                               ),
                               Text(
@@ -370,9 +434,13 @@ class _QiblaPageState extends State<QiblaPage>
                               ),
                             ],
                           ] else
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.all(16),
-                              child: Text('حدّد الموقع لعرض مواقيت الصلاة'),
+                              child: Text(
+                                context.prayerLabel(
+                                  'حدّد الموقع لعرض مواقيت الصلاة',
+                                ),
+                              ),
                             ),
                         ],
                       ),
@@ -394,16 +462,18 @@ class _QiblaPageState extends State<QiblaPage>
                             ),
                       label: Text(
                         c.locating
-                            ? 'جارٍ تحديد الموقع…'
+                            ? context.prayerLabel('جارٍ تحديد الموقع…')
                             : place == null
-                            ? 'السماح بالموقع / إعادة المحاولة'
-                            : 'تحديث الموقع',
+                            ? context.prayerLabel(
+                                'السماح بالموقع / إعادة المحاولة',
+                              )
+                            : context.prayerLabel('تحديث الموقع'),
                       ),
                     ),
                     const SizedBox(height: 10),
                     OutlinedButton(
                       onPressed: _openAdhanSettings,
-                      child: const Text('إعدادات الأذان'),
+                      child: Text('إعدادات الأذان'),
                     ),
                     if (place != null)
                       TextButton(
@@ -412,11 +482,13 @@ class _QiblaPageState extends State<QiblaPage>
                           _sync();
                           setState(() {});
                         },
-                        child: const Text('إعادة قراءة الحساس'),
+                        child: Text(context.prayerLabel('إعادة قراءة الحساس')),
                       ),
                     _notice(
                       context,
-                      'ضع الهاتف مستوياً بعيداً عن المغناطيس والمعادن. حرّكه بشكل 8 للمعايرة. المواقيت محسوبة حسب الموقع والطريقة؛ راجعها مع الجهة المحلية.',
+                      context.prayerLabel(
+                        'ضع الهاتف مستوياً بعيداً عن المغناطيس والمعادن. حرّكه بشكل 8 للمعايرة. المواقيت محسوبة حسب الموقع والطريقة؛ راجعها مع الجهة المحلية.',
+                      ),
                     ),
                   ]),
                 ),
@@ -459,7 +531,7 @@ class _PrayerTimeRow extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              moment.name.label,
+              moment.name.displayLabel(context),
               style: TextStyle(
                 fontWeight: next ? FontWeight.bold : FontWeight.normal,
                 color: p.heading,
@@ -467,7 +539,11 @@ class _PrayerTimeRow extends StatelessWidget {
             ),
           ),
           IconButton(
-            tooltip: 'إعدادات ${moment.name.label}',
+            tooltip: context.tr(
+              'prayer.alertFor',
+              fallback: 'إعدادات ${moment.name.label}',
+              args: {'prayer': moment.name.displayLabel(context)},
+            ),
             onPressed: () => Navigator.push(
               context,
               MaterialPageRoute<void>(
@@ -495,7 +571,10 @@ class _PrayerTimeRow extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              prayerClockLabel(moment.time),
+              LocalizationScope.maybeOf(
+                    context,
+                  )?.formats.clock24(moment.time) ??
+                  prayerClockLabel(moment.time),
               textAlign: TextAlign.end,
               textDirection: TextDirection.ltr,
               style: TextStyle(

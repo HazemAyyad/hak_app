@@ -120,27 +120,29 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                 size: 38,
               ),
               const SizedBox(height: 16),
-              const Text(
-                'التغييرات غير محفوظة',
+              Text(
+                context.prayerLabel('التغييرات غير محفوظة'),
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              const Text(
-                'احفظ إعدادات هذا الوقت أو اخرج دون تطبيق التعديلات.',
+              Text(
+                context.prayerLabel(
+                  'احفظ إعدادات هذا الوقت أو اخرج دون تطبيق التعديلات.',
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
               FilledButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: const Text('احفظ التغييرات'),
+                child: Text(context.prayerLabel('احفظ التغييرات')),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('تجاهل التغييرات'),
+                child: Text(context.prayerLabel('تجاهل التغييرات')),
               ),
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('متابعة التعديل'),
+                child: Text(context.prayerLabel('متابعة التعديل')),
               ),
             ],
           ),
@@ -165,9 +167,11 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
       if (device['platform'] == 'android' && device['exact'] != true) {
         setState(() => _saving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'امنح إذن التنبيه الدقيق لتشغيل الأذان بالخلفية، أو اختر نغمة التنبيه.',
+              context.prayerLabel(
+                'امنح إذن التنبيه الدقيق لتشغيل الأذان بالخلفية، أو اختر نغمة التنبيه.',
+              ),
             ),
           ),
         );
@@ -188,9 +192,11 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
       if (!ready) {
         setState(() => _saving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'تعذّر تفعيل التذكيرات. أعد المحاولة قبل حفظ تنبيه الصلاة.',
+              context.prayerLabel(
+                'تعذّر تفعيل التذكيرات. أعد المحاولة قبل حفظ تنبيه الصلاة.',
+              ),
             ),
           ),
         );
@@ -257,13 +263,18 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
       Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            'صوتان مرفقان بدون إنترنت، وباقي الأصوات تُنزّل عند الطلب.',
+          Text(
+            context.prayerLabel(
+              'صوتان مرفقان بدون إنترنت، وباقي الأصوات تُنزّل عند الطلب.',
+            ),
             style: TextStyle(fontSize: 12),
           ),
           const SizedBox(height: 8),
           Text(
-            'المختار: ${selected.name}',
+            context.tr(
+              'prayer.selectedVoice',
+              args: {'voice': selected.displayLabel(context)},
+            ),
             style: TextStyle(
               color: p.tealHeading,
               fontWeight: FontWeight.bold,
@@ -272,7 +283,7 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
           ),
           const SizedBox(height: 4),
           Text(
-            '${shown.length} تسجيل • اسحب القائمة للمزيد',
+            context.tr('prayer.recordingCount', args: {'count': shown.length}),
             style: TextStyle(color: p.muted, fontSize: 11),
           ),
           const SizedBox(height: 8),
@@ -317,7 +328,7 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  voice.name,
+                                  voice.displayLabel(context),
                                   style: TextStyle(
                                     color: p.heading,
                                     fontSize: 13,
@@ -326,10 +337,19 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                                 ),
                                 Text(
                                   voice.bundled
-                                      ? 'مرفق مع التطبيق • بدون إنترنت'
+                                      ? context.prayerLabel(
+                                          'مرفق مع التطبيق • بدون إنترنت',
+                                        )
                                       : library.downloaded.contains(voice.id)
-                                      ? 'محفوظ على الجهاز'
-                                      : 'تنزيل من المكتبة • ${(voice.downloadBytes / 1048576).toStringAsFixed(1)} م.ب',
+                                      ? context.prayerLabel('محفوظ على الجهاز')
+                                      : context.tr(
+                                          'prayer.downloadSize',
+                                          args: {
+                                            'size':
+                                                (voice.downloadBytes / 1048576)
+                                                    .toStringAsFixed(1),
+                                          },
+                                        ),
                                   style: TextStyle(
                                     color: p.muted,
                                     fontSize: 10,
@@ -340,8 +360,13 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                           ),
                           IconButton(
                             tooltip: library.playing == voice.id
-                                ? 'إيقاف المعاينة'
-                                : 'معاينة ${voice.name}',
+                                ? context.prayerLabel('إيقاف المعاينة')
+                                : context.tr(
+                                    'prayer.previewVoice',
+                                    args: {
+                                      'voice': voice.displayLabel(context),
+                                    },
+                                  ),
                             onPressed: _saving
                                 ? null
                                 : () => library.preview(voice),
@@ -354,7 +379,10 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                             visualDensity: VisualDensity.compact,
                           ),
                           IconButton(
-                            tooltip: 'تنزيل ${voice.name}',
+                            tooltip: context.tr(
+                              'prayer.downloadVoice',
+                              args: {'voice': voice.displayLabel(context)},
+                            ),
                             onPressed:
                                 _saving ||
                                     library.downloading != null ||
@@ -388,7 +416,7 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
               Uri.parse(selected.sourceUrl),
               mode: LaunchMode.externalApplication,
             ),
-            child: const Text('مصدر التسجيل المختار'),
+            child: Text(context.prayerLabel('مصدر التسجيل المختار')),
           ),
         ],
       ),
@@ -399,7 +427,9 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection:
+          LocalizationScope.maybeOf(context)?.language.direction ??
+          TextDirection.rtl,
       child: PopScope(
         canPop: _mayPop || !dirty,
         onPopInvokedWithResult: (didPop, _) {
@@ -414,9 +444,16 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                 SliverToBoxAdapter(
                   child: DirectoryHeader(
                     title: widget.general
-                        ? 'المؤذّن ونمط الأذان العام'
-                        : 'إعدادات ${widget.prayer.label}',
-                    subtitle: 'نداء الصلاة… بالصوت الذي تختاره',
+                        ? context.prayerLabel('المؤذّن ونمط الأذان العام')
+                        : context.tr(
+                            'prayer.alertFor',
+                            args: {
+                              'prayer': widget.prayer.displayLabel(context),
+                            },
+                          ),
+                    subtitle: context.prayerLabel(
+                      'نداء الصلاة… بالصوت الذي تختاره',
+                    ),
                     onBack: _leave,
                   ),
                 ),
@@ -429,8 +466,17 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                           context,
                           SwitchListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: Text('إشعارات ${widget.prayer.label}'),
-                            subtitle: const Text('تفعيل التنبيه لهذا الوقت'),
+                            title: Text(
+                              context.tr(
+                                'prayer.notificationsFor',
+                                args: {
+                                  'prayer': widget.prayer.displayLabel(context),
+                                },
+                              ),
+                            ),
+                            subtitle: Text(
+                              context.prayerLabel('تفعيل التنبيه لهذا الوقت'),
+                            ),
                             value: enabled,
                             onChanged: _saving
                                 ? null
@@ -443,8 +489,8 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                const Text(
-                                  'تفضيلات الإشعارات',
+                                Text(
+                                  context.prayerLabel('تفضيلات الإشعارات'),
                                   style: TextStyle(
                                     fontSize: 19,
                                     fontWeight: FontWeight.bold,
@@ -458,16 +504,24 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                                 ))
                                   ListTile(
                                     contentPadding: EdgeInsets.zero,
-                                    title: Text(mode.label),
+                                    title: Text(mode.displayLabel(context)),
                                     subtitle: Text(switch (mode) {
                                       PrayerAlertMode.chime =>
-                                        'صوت تنبيه الجهاز عند حلول الوقت',
+                                        context.prayerLabel(
+                                          'صوت تنبيه الجهاز عند حلول الوقت',
+                                        ),
                                       PrayerAlertMode.adhan =>
-                                        'اختر المؤذن وعاين صوته قبل الحفظ',
+                                        context.prayerLabel(
+                                          'اختر المؤذن وعاين صوته قبل الحفظ',
+                                        ),
                                       PrayerAlertMode.vibration =>
-                                        'يهتز الجهاز دون صوت، بحسب إعداداته',
+                                        context.prayerLabel(
+                                          'يهتز الجهاز دون صوت، بحسب إعداداته',
+                                        ),
                                       PrayerAlertMode.silent =>
-                                        'إشعار مرئي دون صوت أو اهتزاز',
+                                        context.prayerLabel(
+                                          'إشعار مرئي دون صوت أو اهتزاز',
+                                        ),
                                     }),
                                     leading: Icon(
                                       draft.mode == mode
@@ -497,11 +551,17 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                                   const Divider(),
                                   SwitchListTile(
                                     contentPadding: EdgeInsets.zero,
-                                    title: const Text('الأذان الكامل'),
+                                    title: Text(
+                                      context.prayerLabel('الأذان الكامل'),
+                                    ),
                                     subtitle: Text(
                                       device['platform'] == 'ios'
-                                          ? 'iPhone: التنبيه مقطع قصير؛ المعاينة كاملة داخل التطبيق'
-                                          : 'Android: يحتاج التنبيه الدقيق والصوت المنزّل',
+                                          ? context.prayerLabel(
+                                              'iPhone: التنبيه مقطع قصير؛ المعاينة كاملة داخل التطبيق',
+                                            )
+                                          : context.prayerLabel(
+                                              'Android: يحتاج التنبيه الدقيق والصوت المنزّل',
+                                            ),
                                     ),
                                     value: draft.full,
                                     onChanged:
@@ -524,15 +584,21 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                                             );
                                       },
                                       icon: const Icon(Icons.alarm),
-                                      label: const Text(
-                                        'إعداد إذن التنبيه الدقيق',
+                                      label: Text(
+                                        context.prayerLabel(
+                                          'إعداد إذن التنبيه الدقيق',
+                                        ),
                                       ),
                                     ),
                                   if (device['platform'] == 'android') ...[
                                     Text(
                                       device['fullScreen'] == true
-                                          ? 'عند الموعد تظهر شاشة الأذان حسب حالة الجهاز. أوقفه بلمسها أو بأزرارها أو بقلب الهاتف.'
-                                          : 'لظهور شاشة الأذان فوق القفل، اسمح بإشعارات ملء الشاشة. يبقى التنبيه ظاهرًا إن منع النظام فتحها.',
+                                          ? context.prayerLabel(
+                                              'عند الموعد تظهر شاشة الأذان حسب حالة الجهاز. أوقفه بلمسها أو بأزرارها أو بقلب الهاتف.',
+                                            )
+                                          : context.prayerLabel(
+                                              'لظهور شاشة الأذان فوق القفل، اسمح بإشعارات ملء الشاشة. يبقى التنبيه ظاهرًا إن منع النظام فتحها.',
+                                            ),
                                       style: const TextStyle(fontSize: 12),
                                     ),
                                     if (device['fullScreen'] != true)
@@ -548,9 +614,11 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                                               ScaffoldMessenger.of(
                                                 context,
                                               ).showSnackBar(
-                                                const SnackBar(
+                                                SnackBar(
                                                   content: Text(
-                                                    'تعذّر فتح إعدادات الشاشة الكاملة',
+                                                    context.prayerLabel(
+                                                      'تعذّر فتح إعدادات الشاشة الكاملة',
+                                                    ),
                                                   ),
                                                 ),
                                               );
@@ -558,8 +626,10 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                                           }
                                         },
                                         icon: const Icon(Icons.fullscreen),
-                                        label: const Text(
-                                          'إذن شاشة الأذان فوق القفل',
+                                        label: Text(
+                                          context.prayerLabel(
+                                            'إذن شاشة الأذان فوق القفل',
+                                          ),
                                         ),
                                       ),
                                   ],
@@ -571,7 +641,7 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                             Align(
                               alignment: AlignmentDirectional.centerStart,
                               child: Text(
-                                'صوت المؤذن',
+                                context.prayerLabel('صوت المؤذن'),
                                 style: TextStyle(
                                   fontSize: 21,
                                   fontWeight: FontWeight.bold,
@@ -581,8 +651,10 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                             ),
                             const SizedBox(height: 12),
                             TextField(
-                              decoration: const InputDecoration(
-                                hintText: 'ابحث عن المؤذن…',
+                              decoration: InputDecoration(
+                                hintText: context.prayerLabel(
+                                  'ابحث عن المؤذن…',
+                                ),
                                 prefixIcon: Icon(Icons.search),
                               ),
                               onChanged: (v) => setState(() {
@@ -599,21 +671,30 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                                 '${v.name} ${v.englishName ?? ''}',
                               ).contains(normalizePlaceQuery(search)),
                             ))
-                              _notice(context, 'لا يوجد مؤذن يطابق البحث'),
-                            const Text(
-                              'تسجيلات المؤذنين من نسك. الأصوات المنزّلة تُحفظ على جهازك وتعمل بدون إنترنت.',
+                              _notice(
+                                context,
+                                context.prayerLabel('لا يوجد مؤذن يطابق البحث'),
+                              ),
+                            Text(
+                              context.prayerLabel(
+                                'تسجيلات المؤذنين من نسك. الأصوات المنزّلة تُحفظ على جهازك وتعمل بدون إنترنت.',
+                              ),
                               textAlign: TextAlign.center,
                               style: TextStyle(fontSize: 12),
                             ),
                           ],
                           _notice(
                             context,
-                            'يلزم تفعيل التذكيرات العامة وإذن الإشعارات. إعدادات الصوت والبطارية في الجهاز قد تؤثر في التنبيه.',
+                            context.prayerLabel(
+                              'يلزم تفعيل التذكيرات العامة وإذن الإشعارات. إعدادات الصوت والبطارية في الجهاز قد تؤثر في التنبيه.',
+                            ),
                           ),
                           if (device['allowed'] == true)
-                            const ListTile(
+                            ListTile(
                               leading: Icon(Icons.check_circle_outline),
-                              title: Text('إذن الإشعارات مفعّل'),
+                              title: Text(
+                                context.prayerLabel('إذن الإشعارات مفعّل'),
+                              ),
                             )
                           else
                             TextButton.icon(
@@ -624,7 +705,9 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                                 await _status();
                               },
                               icon: const Icon(Icons.notifications_outlined),
-                              label: const Text('إذن إشعارات الجهاز'),
+                              label: Text(
+                                context.prayerLabel('إذن إشعارات الجهاز'),
+                              ),
                             ),
                         ],
                         if (library.error case final error?)
@@ -637,7 +720,9 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                             onPressed: _saving ? null : _save,
                             icon: const Icon(Icons.check),
                             label: Text(
-                              _saving ? 'جارٍ الحفظ…' : 'احفظ التغييرات',
+                              _saving
+                                  ? 'جارٍ الحفظ…'
+                                  : context.prayerLabel('احفظ التغييرات'),
                             ),
                           ),
                         ),

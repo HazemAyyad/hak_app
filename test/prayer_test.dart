@@ -307,6 +307,13 @@ void main() {
         prayerHijriDate(DateTime.utc(2018, 11, 12), correction: 1),
         '5 ربيع الأول 1440 هـ',
       );
+      expect(prayerHijriParts(DateTime.utc(2018, 11, 12)), (
+        day: 4,
+        month: 3,
+        year: 1440,
+      ));
+      expect(prayerHijriParts(DateTime.utc(1800, 1, 1)), isNull);
+      expect(prayerHijriDate(DateTime.utc(1800, 1, 1)), '1800/1/1');
       expect(
         () => PrayerLocation(
           latitude: double.nan,

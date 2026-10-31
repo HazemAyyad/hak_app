@@ -2774,5 +2774,1077 @@
   "account.lastSync": {
     "ar": "آخر مزامنة: {date}",
     "en": "Last sync: {date}"
+  },
+  "prayer.label.f6bede49b704": {
+    "ar": "مواقيت الصلاة",
+    "en": "Prayer times"
+  },
+  "prayer.label.f6a85ba3b8a8": {
+    "ar": "مواقيتك حسب الموقع والطريقة المختارة",
+    "en": "Times for your selected location and calculation method"
+  },
+  "prayer.label.5df9dd586e6e": {
+    "ar": "لم تحدد موقعاً بعد",
+    "en": "No location selected yet"
+  },
+  "prayer.label.46e730b4a0de": {
+    "ar": "تقويم أم القرى مع التصحيح المختار؛ قد يختلف إعلان بداية الشهر محلياً",
+    "en": "Umm al-Qura calendar with your chosen adjustment. Local month announcements may differ."
+  },
+  "prayer.label.a439fdf4dc7e": {
+    "ar": "إعدادات الأذان",
+    "en": "Adhan settings"
+  },
+  "prayer.label.37fd92d1bb95": {
+    "ar": "تعذّر البحث. قد تكون الخدمة مشغولة؛ انتظر دقيقة وأعد المحاولة.",
+    "en": "Search failed. The service may be busy. Wait a minute and try again."
+  },
+  "prayer.label.0fd16425a5f2": {
+    "ar": "المساجد القريبة",
+    "en": "Nearby mosques"
+  },
+  "prayer.label.edaf77204318": {
+    "ar": "مساجد حول الموقع الذي تختاره",
+    "en": "Mosques around your chosen location"
+  },
+  "prayer.label.5a0374f3ff5a": {
+    "ar": "غير محدد",
+    "en": "Not selected"
+  },
+  "prayer.label.43bc5a2a9d05": {
+    "ar": "جارٍ البحث…",
+    "en": "Searching…"
+  },
+  "prayer.label.146ffeda4640": {
+    "ar": "البحث في OpenStreetMap",
+    "en": "Search OpenStreetMap"
+  },
+  "prayer.label.113e541b403c": {
+    "ar": "تحديد الموقع",
+    "en": "Choose location"
+  },
+  "prayer.label.5fd60e34f05b": {
+    "ar": "لم تُرجع الخريطة مساجد ضمن النطاق. هذا لا يعني عدم وجود مساجد على الأرض.",
+    "en": "The map returned no mosques in this area. This does not mean there are no mosques there."
+  },
+  "prayer.label.733e7a5d9f9a": {
+    "ar": "فتح الخريطة",
+    "en": "Open map"
+  },
+  "prayer.label.0864c158b4d9": {
+    "ar": "© OpenStreetMap contributors • ODbL. قائمة محدودة حتى100 نتيجة، تُرتّب بالمسافة المستقيمة ضمن النتائج المسترجعة. قد تكون البيانات ناقصة أو قديمة؛ لا معلومات مفترضة عن مواعيد الفتح أو الخدمات. الخدمة العامة بلا ضمان توافر؛ يلزم اعتماد استضافة مناسبة قبل الإطلاق الواسع.",
+    "en": "© OpenStreetMap contributors • ODbL. Up to 100 results, sorted by straight-line distance within the returned results. Data may be incomplete or outdated. Opening hours and services are not assumed. The public service has no availability guarantee; suitable hosting is needed for broad release."
+  },
+  "prayer.label.b9e7f8a1b7dd": {
+    "ar": "المصدر والترخيص — OpenStreetMap",
+    "en": "Source and license — OpenStreetMap"
+  },
+  "prayer.label.2d25557e7c23": {
+    "ar": "المنطقة الزمنية",
+    "en": "Time zone"
+  },
+  "prayer.label.467d7bfd9d07": {
+    "ar": "بحث مثل Asia/Hebron",
+    "en": "Search, for example Asia/Hebron"
+  },
+  "prayer.label.9a30dc2a96b8": {
+    "ar": "إلغاء",
+    "en": "Cancel"
+  },
+  "prayer.label.7fa1a6943e88": {
+    "ar": "ابحث عن مدينة أو اختر موقعك على الخريطة أولًا",
+    "en": "Search for a city or choose a point on the map first"
+  },
+  "prayer.label.390d996f34b5": {
+    "ar": "حُفظت إعدادات الصلاة",
+    "en": "Prayer settings saved"
+  },
+  "prayer.label.b8ad1533d638": {
+    "ar": "تحقق من الإحداثيات والمنطقة الزمنية",
+    "en": "Check the coordinates and time zone"
+  },
+  "prayer.label.ac9864be8a4a": {
+    "en": "Location and prayer calculation",
+    "ar": "الموقع وحساب المواقيت"
+  },
+  "prayer.label.2901c9a0047b": {
+    "ar": "المدينة والدولة وطريقة الحساب",
+    "en": "City, country and calculation method"
+  },
+  "prayer.label.651a0c9a2cc1": {
+    "ar": "الموقع المعتمد",
+    "en": "Selected location"
+  },
+  "prayer.label.68df7c53a47b": {
+    "en": "Finding your location…",
+    "ar": "جارٍ تحديد الموقع…"
+  },
+  "prayer.label.5fd8707e4523": {
+    "ar": "تحديد موقع الجهاز بإذن منك",
+    "en": "Use device location with your permission"
+  },
+  "prayer.label.424ef5f1547c": {
+    "ar": "تحديث موقع الجهاز",
+    "en": "Update device location"
+  },
+  "prayer.label.820ed9a83b9a": {
+    "ar": "لتسمية المدينة والدولة نستخدم خدمة الأماكن في نظام الجهاز. قد تحتاج إلى الإنترنت.",
+    "en": "City and country names use the device geocoding service, which may require internet access."
+  },
+  "prayer.label.dcfb640fbd81": {
+    "ar": "فتح أذونات الموقع في الجهاز",
+    "en": "Open device location permissions"
+  },
+  "prayer.label.82963d4deab8": {
+    "ar": "غير متاح",
+    "en": "Unavailable"
+  },
+  "prayer.label.45b05d0f0a35": {
+    "ar": "الاختيار اليدوي",
+    "en": "Manual selection"
+  },
+  "prayer.label.073105df3e89": {
+    "ar": "بحث عن دولة أو مدينة",
+    "en": "Search for a country or city"
+  },
+  "prayer.label.0d7f0fb0aaae": {
+    "ar": "تحديد نقطة على الخريطة",
+    "en": "Choose a point on the map"
+  },
+  "prayer.label.b604518fee4a": {
+    "ar": "بعد اختيار الموقع اضغط «حفظ إعدادات الصلاة».",
+    "en": "After choosing a location, tap Save prayer settings."
+  },
+  "prayer.label.a10d549b6414": {
+    "ar": "ضبط الإحداثيات والمنطقة الزمنية يدويًا",
+    "en": "Set coordinates and time zone manually"
+  },
+  "prayer.label.0f5de99885f0": {
+    "ar": "اسم الموقع اليدوي",
+    "en": "Custom location name"
+  },
+  "prayer.label.7815d84cb373": {
+    "ar": "اكتب اسماً للموقع",
+    "en": "Enter a location name"
+  },
+  "prayer.label.5e6f1b4258ad": {
+    "ar": "خط العرض (-90 إلى 90)",
+    "en": "Latitude (-90 to 90)"
+  },
+  "prayer.label.010cc11b94b9": {
+    "ar": "خط الطول (-180 إلى 180)",
+    "en": "Longitude (-180 to 180)"
+  },
+  "prayer.label.93db95ead4c6": {
+    "ar": "أدخل إحداثية صحيحة",
+    "en": "Enter a valid coordinate"
+  },
+  "prayer.label.10d429cb8ae3": {
+    "ar": "المنطقة الزمنية للموقع",
+    "en": "Location time zone"
+  },
+  "prayer.label.4a6644616db2": {
+    "ar": "استخدام المنطقة الزمنية الحالية للجهاز",
+    "en": "Use the device current time zone"
+  },
+  "prayer.label.a90dd7465949": {
+    "ar": "طريقة الحساب",
+    "en": "Calculation method"
+  },
+  "prayer.label.f8fac30a31cb": {
+    "ar": "حساب العصر الحنفي",
+    "en": "Hanafi Asr calculation"
+  },
+  "prayer.label.12b0fd5e5477": {
+    "ar": "عند الإيقاف يستخدم حساب العصر الشافعي",
+    "en": "When off, the Shafi Asr calculation is used"
+  },
+  "prayer.label.8832eff24c2e": {
+    "ar": "خطوط العرض العالية",
+    "en": "High latitudes"
+  },
+  "prayer.label.e9c75a2820d0": {
+    "ar": "القاعدة الموصى بها للموقع",
+    "en": "Recommended rule for the location"
+  },
+  "prayer.label.46bdda38a878": {
+    "ar": "منتصف الليل",
+    "en": "Middle of the night"
+  },
+  "prayer.label.7b5f8f17fc5d": {
+    "ar": "سُبع الليل",
+    "en": "One seventh of the night"
+  },
+  "prayer.label.0766c3897e53": {
+    "ar": "حسب زاوية الشفق",
+    "en": "Twilight angle"
+  },
+  "prayer.label.b7110f2ce35f": {
+    "ar": "الطرق حسابية وقد تختلف عن التوقيت الرسمي. أم القرى: يمكن زيادة تصحيح العشاء 30 دقيقة في رمضان حسب اعتمادك المحلي.",
+    "en": "Calculated times may differ from official schedules. For Umm al-Qura, you can add 30 minutes to the Isha adjustment in Ramadan according to local guidance."
+  },
+  "prayer.label.544ce61f143c": {
+    "ar": "تصحيح المواقيت بالدقائق",
+    "en": "Adjust times in minutes"
+  },
+  "prayer.label.47d263ad0ba4": {
+    "ar": "جارٍ الحفظ…",
+    "en": "Saving…"
+  },
+  "prayer.label.645199a68d63": {
+    "ar": "حفظ إعدادات الصلاة",
+    "en": "Save prayer settings"
+  },
+  "prayer.label.9709b6fc4d97": {
+    "ar": "مسح الموقع وإعدادات الصلاة؟",
+    "en": "Clear location and prayer settings?"
+  },
+  "prayer.label.0ca97586d6b9": {
+    "ar": "تلغي تذكيرات الصلاة لهذا الحساب وتبقى بقية بياناتك محفوظة.",
+    "en": "This cancels prayer reminders for this account. Your other data is kept."
+  },
+  "prayer.label.308cf07fa826": {
+    "ar": "مسح",
+    "en": "Clear"
+  },
+  "prayer.label.733a523926f7": {
+    "ar": "مسح الموقع وإعدادات هذا القسم",
+    "en": "Clear location and prayer settings"
+  },
+  "prayer.label.fde742cc0a13": {
+    "ar": "تعذّر تحميل قائمة المدن. حاول مجددًا.",
+    "en": "Could not load the city list. Try again."
+  },
+  "prayer.label.d9e1148ef53d": {
+    "ar": "لم نحدد منطقة زمنية لهذه النقطة. اختر نقطة على اليابسة أو ابحث عن مدينة.",
+    "en": "No time zone was found for this point. Choose a point on land or search for a city."
+  },
+  "prayer.label.81bfbc618397": {
+    "ar": "تعذّر تحديد المنطقة الزمنية. أعد اختيار النقطة أو ابحث عن مدينة.",
+    "en": "Could not identify the time zone. Choose another point or search for a city."
+  },
+  "prayer.label.c4b4a5ca5472": {
+    "ar": "اختر موقع الصلاة",
+    "en": "Choose prayer location"
+  },
+  "prayer.label.cb822418a29d": {
+    "ar": "رجوع",
+    "en": "Back"
+  },
+  "prayer.label.8519fcce9ab2": {
+    "ar": "دولة أو مدينة",
+    "en": "Country or city"
+  },
+  "prayer.label.6f498ca8e91f": {
+    "ar": "الخريطة",
+    "en": "Map"
+  },
+  "prayer.label.4c6ebf5990c7": {
+    "ar": "ابحث عن دولة أو مدينة",
+    "en": "Search for a country or city"
+  },
+  "prayer.label.a96b21490212": {
+    "ar": "مثل: فلسطين، الخليل، Amman",
+    "en": "For example: Palestine, Hebron, Amman"
+  },
+  "prayer.label.2e58b72edf70": {
+    "ar": "مسح البحث",
+    "en": "Clear search"
+  },
+  "prayer.label.840572a3581e": {
+    "ar": "جميع الدول",
+    "en": "All countries"
+  },
+  "prayer.label.75956cb4cab1": {
+    "ar": "إعادة تحميل المدن",
+    "en": "Reload cities"
+  },
+  "prayer.label.d2c78ad3dbfa": {
+    "ar": "لا توجد نتائج. جرّب اسمًا آخر أو حدّد موقعك على الخريطة.",
+    "en": "No results. Try another name or choose a point on the map."
+  },
+  "prayer.label.7611df1681e3": {
+    "ar": "ابحث باسم بلدك أو اختر مدينة",
+    "en": "Search for your country or choose a city"
+  },
+  "prayer.label.a02ba3e5f9dd": {
+    "ar": "دولة • عرض المدن",
+    "en": "Country • show cities"
+  },
+  "prayer.label.33e9f374ae7b": {
+    "ar": "البحث محفوظ دون إنترنت • إن لم تجد بلدتك اختر الخريطة",
+    "en": "Search is available offline. Use the map if your town is not listed."
+  },
+  "prayer.label.a4a2d93b6067": {
+    "ar": "حرّك الخريطة وكبّرها، ثم اضغط لوضع الدبوس. عرض الخريطة يحتاج إنترنت ويُرسل منطقة العرض لمزوّدها.",
+    "en": "Move and zoom the map, then tap to place a pin. Loading the map requires internet access and sends the viewed area to the map provider."
+  },
+  "prayer.label.b25d20fec217": {
+    "ar": "تعذّر تحميل بعض أجزاء الخريطة. تحقق من الإنترنت أو استخدم البحث.",
+    "en": "Some map tiles could not load. Check your connection or use search."
+  },
+  "prayer.label.abc825ff8648": {
+    "ar": "تكبير الخريطة",
+    "en": "Zoom in"
+  },
+  "prayer.label.7b85916ea493": {
+    "ar": "تصغير الخريطة",
+    "en": "Zoom out"
+  },
+  "prayer.label.ef8c12485f56": {
+    "ar": "جارٍ تحديد المنطقة الزمنية…",
+    "en": "Finding the time zone…"
+  },
+  "prayer.label.3c4c05e494f2": {
+    "ar": "اختر مدينة أو ضع دبوسًا على الخريطة",
+    "en": "Choose a city or place a pin on the map"
+  },
+  "prayer.label.ce1566fdc222": {
+    "ar": "اعتماد هذا الموقع",
+    "en": "Use this location"
+  },
+  "prayer.label.c6b4f4f9664f": {
+    "ar": "مصادر بيانات المواقع والخريطة",
+    "en": "Location and map data sources"
+  },
+  "prayer.label.f187cbfdc996": {
+    "ar": "مصادر المواقع",
+    "en": "Location sources"
+  },
+  "prayer.label.ca90c297b099": {
+    "ar": "إغلاق",
+    "en": "Close"
+  },
+  "prayer.label.8255332f4b9d": {
+    "ar": "الفجر",
+    "en": "Fajr"
+  },
+  "prayer.label.a7474537c85a": {
+    "ar": "الشروق",
+    "en": "Sunrise"
+  },
+  "prayer.label.4628b8f652c4": {
+    "ar": "الظهر",
+    "en": "Dhuhr"
+  },
+  "prayer.label.89537dd7c764": {
+    "ar": "العصر",
+    "en": "Asr"
+  },
+  "prayer.label.f1408559ec0b": {
+    "ar": "المغرب",
+    "en": "Maghrib"
+  },
+  "prayer.label.57b06d4d3a8e": {
+    "ar": "العشاء",
+    "en": "Isha"
+  },
+  "prayer.label.a82b797b9f4e": {
+    "ar": "رابطة العالم الإسلامي",
+    "en": "Muslim World League"
+  },
+  "prayer.label.7e522755bdb4": {
+    "ar": "الهيئة المصرية للمساحة",
+    "en": "Egyptian General Authority of Survey"
+  },
+  "prayer.label.bdd618b2ab2c": {
+    "ar": "جامعة كراتشي",
+    "en": "University of Karachi"
+  },
+  "prayer.label.64a89d555191": {
+    "ar": "أم القرى",
+    "en": "Umm al-Qura"
+  },
+  "prayer.label.77891fb48b38": {
+    "ar": "أمريكا الشمالية",
+    "en": "North America"
+  },
+  "prayer.label.f8193ba34cc0": {
+    "ar": "دبي",
+    "en": "Dubai"
+  },
+  "prayer.label.10ab621ab4c5": {
+    "ar": "الأردن",
+    "en": "Jordan"
+  },
+  "prayer.label.3c35f06de352": {
+    "ar": "الكويت",
+    "en": "Kuwait"
+  },
+  "prayer.label.f11398776f08": {
+    "ar": "لجنة رؤية الهلال",
+    "en": "Moonsighting Committee"
+  },
+  "prayer.label.d8dadc6451f4": {
+    "ar": "فلسطينية",
+    "en": "Palestinian Arabic"
+  },
+  "prayer.label.b3d456388ff2": {
+    "ar": "مصرية",
+    "en": "Egyptian Arabic"
+  },
+  "prayer.label.1dc963d82014": {
+    "ar": "خليجية",
+    "en": "Gulf Arabic"
+  },
+  "prayer.hijriMonth.1": {
+    "ar": "محرم",
+    "en": "Muharram"
+  },
+  "prayer.hijriMonth.2": {
+    "ar": "صفر",
+    "en": "Safar"
+  },
+  "prayer.hijriMonth.3": {
+    "ar": "ربيع الأول",
+    "en": "Rabi al-Awwal"
+  },
+  "prayer.hijriMonth.4": {
+    "ar": "ربيع الآخر",
+    "en": "Rabi al-Thani"
+  },
+  "prayer.hijriMonth.5": {
+    "ar": "جمادى الأولى",
+    "en": "Jumada al-Ula"
+  },
+  "prayer.hijriMonth.6": {
+    "ar": "جمادى الآخرة",
+    "en": "Jumada al-Akhirah"
+  },
+  "prayer.hijriMonth.7": {
+    "ar": "رجب",
+    "en": "Rajab"
+  },
+  "prayer.hijriMonth.8": {
+    "ar": "شعبان",
+    "en": "Shaban"
+  },
+  "prayer.hijriMonth.9": {
+    "ar": "رمضان",
+    "en": "Ramadan"
+  },
+  "prayer.hijriMonth.10": {
+    "ar": "شوال",
+    "en": "Shawwal"
+  },
+  "prayer.hijriMonth.11": {
+    "ar": "ذو القعدة",
+    "en": "Dhu al-Qadah"
+  },
+  "prayer.hijriMonth.12": {
+    "ar": "ذو الحجة",
+    "en": "Dhu al-Hijjah"
+  },
+  "prayer.hijriDate": {
+    "ar": "{day} {month} {year} هـ",
+    "en": "{day} {month} {year} AH"
+  },
+  "prayer.next": {
+    "ar": "الصلاة القادمة: {prayer}",
+    "en": "Next prayer: {prayer}"
+  },
+  "prayer.methodNotice": {
+    "ar": "طريقة الحساب: {method}. المواقيت محسوبة وليست جدولاً رسمياً للمسجد. راجعها مع الجهة المحلية وعدّل الفروق عند الحاجة.",
+    "en": "Calculation method: {method}. These are calculated times, not an official mosque timetable. Check local guidance and adjust differences if needed."
+  },
+  "prayer.alertFor": {
+    "ar": "إعدادات {prayer}",
+    "en": "{prayer} settings"
+  },
+  "prayer.label.cec43020341c": {
+    "en": "Unsaved changes",
+    "ar": "التغييرات غير محفوظة"
+  },
+  "prayer.label.36f014952179": {
+    "en": "Save this prayer's settings or leave without applying your changes.",
+    "ar": "احفظ إعدادات هذا الوقت أو اخرج دون تطبيق التعديلات."
+  },
+  "prayer.label.0dad58f39c6a": {
+    "en": "Save changes",
+    "ar": "احفظ التغييرات"
+  },
+  "prayer.label.9f77ad088915": {
+    "en": "Discard changes",
+    "ar": "تجاهل التغييرات"
+  },
+  "prayer.label.30dc28305899": {
+    "en": "Keep editing",
+    "ar": "متابعة التعديل"
+  },
+  "prayer.label.586eff44fe03": {
+    "en": "Allow exact alarms for background adhan, or choose a notification tone.",
+    "ar": "امنح إذن التنبيه الدقيق لتشغيل الأذان بالخلفية، أو اختر نغمة التنبيه."
+  },
+  "prayer.label.2c1acbd4b066": {
+    "en": "Could not enable reminders. Try again before saving this prayer alert.",
+    "ar": "تعذّر تفعيل التذكيرات. أعد المحاولة قبل حفظ تنبيه الصلاة."
+  },
+  "prayer.label.fb83b3a03f2f": {
+    "en": "Two recordings are bundled offline. Other recordings download on request.",
+    "ar": "صوتان مرفقان بدون إنترنت، وباقي الأصوات تُنزّل عند الطلب."
+  },
+  "prayer.label.ef7ec23cec03": {
+    "en": "Bundled with the app • offline",
+    "ar": "مرفق مع التطبيق • بدون إنترنت"
+  },
+  "prayer.label.0c5696abb133": {
+    "en": "Saved on this device",
+    "ar": "محفوظ على الجهاز"
+  },
+  "prayer.label.89d7cb2bcd54": {
+    "en": "Stop preview",
+    "ar": "إيقاف المعاينة"
+  },
+  "prayer.label.6bf2e1cf1a34": {
+    "en": "Selected recording source",
+    "ar": "مصدر التسجيل المختار"
+  },
+  "prayer.label.859f1de5e400": {
+    "en": "Default voice and adhan style",
+    "ar": "المؤذّن ونمط الأذان العام"
+  },
+  "prayer.label.37f79c2109ac": {
+    "en": "The call to prayer, in the voice you choose",
+    "ar": "نداء الصلاة… بالصوت الذي تختاره"
+  },
+  "prayer.label.149c3baa5a0a": {
+    "en": "Enable the alert for this prayer",
+    "ar": "تفعيل التنبيه لهذا الوقت"
+  },
+  "prayer.label.27c534b023e0": {
+    "en": "Notification preferences",
+    "ar": "تفضيلات الإشعارات"
+  },
+  "prayer.label.404883f3ba5a": {
+    "en": "Device notification sound at prayer time",
+    "ar": "صوت تنبيه الجهاز عند حلول الوقت"
+  },
+  "prayer.label.b55e368be3f8": {
+    "en": "Choose a voice and preview it before saving",
+    "ar": "اختر المؤذن وعاين صوته قبل الحفظ"
+  },
+  "prayer.label.ccc0e83a41e5": {
+    "en": "Vibration without sound, subject to device settings",
+    "ar": "يهتز الجهاز دون صوت، بحسب إعداداته"
+  },
+  "prayer.label.30bb6284a5b1": {
+    "en": "Visual notification without sound or vibration",
+    "ar": "إشعار مرئي دون صوت أو اهتزاز"
+  },
+  "prayer.label.42291f71cafb": {
+    "en": "Full adhan",
+    "ar": "الأذان الكامل"
+  },
+  "prayer.label.5c176f9886c6": {
+    "en": "iPhone: alerts use a short clip; the full preview plays inside the app",
+    "ar": "iPhone: التنبيه مقطع قصير؛ المعاينة كاملة داخل التطبيق"
+  },
+  "prayer.label.741b1ac6ddda": {
+    "en": "Android: requires exact alarms and a downloaded recording",
+    "ar": "Android: يحتاج التنبيه الدقيق والصوت المنزّل"
+  },
+  "prayer.label.eb3b8e13f836": {
+    "en": "Set exact alarm permission",
+    "ar": "إعداد إذن التنبيه الدقيق"
+  },
+  "prayer.label.fd2e69599737": {
+    "en": "The adhan screen opens at prayer time when the device allows it. Stop playback by touching the screen, using its controls or turning the phone over.",
+    "ar": "عند الموعد تظهر شاشة الأذان حسب حالة الجهاز. أوقفه بلمسها أو بأزرارها أو بقلب الهاتف."
+  },
+  "prayer.label.c7d4275a149a": {
+    "en": "Allow full-screen notifications to show adhan over the lock screen. A notification remains if the system blocks opening the screen.",
+    "ar": "لظهور شاشة الأذان فوق القفل، اسمح بإشعارات ملء الشاشة. يبقى التنبيه ظاهرًا إن منع النظام فتحها."
+  },
+  "prayer.label.5694c02978c3": {
+    "en": "Could not open full-screen settings",
+    "ar": "تعذّر فتح إعدادات الشاشة الكاملة"
+  },
+  "prayer.label.c54786336901": {
+    "en": "Lock-screen adhan permission",
+    "ar": "إذن شاشة الأذان فوق القفل"
+  },
+  "prayer.label.a65ad2ff141d": {
+    "en": "Adhan voice",
+    "ar": "صوت المؤذن"
+  },
+  "prayer.label.49250bfcabfc": {
+    "en": "Search voices…",
+    "ar": "ابحث عن المؤذن…"
+  },
+  "prayer.label.3c8bedaa3790": {
+    "en": "No voices match your search",
+    "ar": "لا يوجد مؤذن يطابق البحث"
+  },
+  "prayer.label.77387c218b56": {
+    "en": "Adhan recordings from Nusuk. Downloaded recordings stay on this device and work offline.",
+    "ar": "تسجيلات المؤذنين من نسك. الأصوات المنزّلة تُحفظ على جهازك وتعمل بدون إنترنت."
+  },
+  "prayer.label.b8b9e0a23e89": {
+    "en": "General reminders and notification permission must be enabled. Device sound and battery settings may affect alerts.",
+    "ar": "يلزم تفعيل التذكيرات العامة وإذن الإشعارات. إعدادات الصوت والبطارية في الجهاز قد تؤثر في التنبيه."
+  },
+  "prayer.label.f054de004cc7": {
+    "en": "Notification permission enabled",
+    "ar": "إذن الإشعارات مفعّل"
+  },
+  "prayer.label.a0f561aaa342": {
+    "en": "Device notification permission",
+    "ar": "إذن إشعارات الجهاز"
+  },
+  "prayer.label.1a99690ff6e9": {
+    "en": "Could not enable reminders. Try again.",
+    "ar": "تعذّر تفعيل التذكيرات؛ أعد المحاولة"
+  },
+  "prayer.label.eb13da95ecb9": {
+    "en": "The Dhuhr test starts in 10 seconds. You can minimize the app or lock the screen.",
+    "ar": "سيبدأ اختبار الظهر بعد 10 ثوانٍ؛ يمكنك تصغير التطبيق أو قفل الشاشة"
+  },
+  "prayer.label.a4bcf7d1c099": {
+    "en": "Could not prepare the test. Check notifications, exact alarms and the saved recording.",
+    "ar": "تعذّر تجهيز الاختبار؛ تحقق من أذونات الإشعار والتنبيه الدقيق والصوت المحفوظ"
+  },
+  "prayer.label.1a85582d5169": {
+    "en": "Your adhan voice and prayer alerts in one place",
+    "ar": "مؤذّنك وتنبيهات صلواتك في مكان واحد"
+  },
+  "prayer.label.71b567403076": {
+    "en": "Enable prayer alerts",
+    "ar": "تفعيل تنبيهات الصلاة"
+  },
+  "prayer.label.89212c0c91cd": {
+    "en": "Allow prayer notifications",
+    "ar": "السماح بإشعارات الصلاة"
+  },
+  "prayer.label.6c5c5220d5cc": {
+    "en": "Test Dhuhr reminder (10s)",
+    "ar": "اختبار تذكير الظهر (10ث)"
+  },
+  "prayer.label.a559e23777ce": {
+    "en": "Test Dhuhr adhan (10s)",
+    "ar": "اختبار أذان الظهر (10ث)"
+  },
+  "prayer.label.132fabec896f": {
+    "en": "The default applies to all five prayers. Customize each prayer below.",
+    "ar": "الاختيار العام يطبق على الصلوات الخمس؛ يمكنك تخصيص أي صلاة من القائمة أدناه."
+  },
+  "prayer.label.37748ba4020c": {
+    "en": "On Android, alarm volume increases to the chosen level during adhan and is then restored. System restrictions and Do Not Disturb still apply.",
+    "ar": "على Android يُرفع صوت المنبّه وقت الأذان للمستوى المختار ثم يعود كما كان. قيود النظام وعدم الإزعاج تبقى فعّالة."
+  },
+  "prayer.label.fb925f820034": {
+    "en": "Full adhan screen",
+    "ar": "شاشة الأذان الكاملة"
+  },
+  "prayer.label.c1b6091e3903": {
+    "en": "iPhone shows a notification with a short sound, subject to system limits",
+    "ar": "على iPhone يظهر إشعار بصوت قصير حسب قيود النظام"
+  },
+  "prayer.label.6fdf7ffaefab": {
+    "en": "Open the adhan screen when the device allows it",
+    "ar": "بدل الاكتفاء بالإشعار، عندما يسمح الجهاز"
+  },
+  "prayer.label.0bc7b1eb93c4": {
+    "en": "Allow full-screen alerts",
+    "ar": "السماح بالشاشة الكاملة"
+  },
+  "prayer.label.07bd46a91533": {
+    "en": "Manage Xiaomi lock-screen permissions",
+    "ar": "إدارة أذونات شاشة القفل على Xiaomi"
+  },
+  "prayer.label.2cf75857fb64": {
+    "en": "Enable Show on Lock screen and background pop-ups to display the adhan screen",
+    "ar": "فعّل Show on Lock screen وفتح النوافذ أثناء العمل بالخلفية لظهور شاشة الأذان"
+  },
+  "prayer.label.8ce1d29967df": {
+    "en": "Allow exact alarms",
+    "ar": "السماح بالتنبيه الدقيق"
+  },
+  "prayer.label.1afde3264153": {
+    "en": "Preview adhan screen",
+    "ar": "معاينة شاشة الأذان"
+  },
+  "prayer.label.1c5ff311de13": {
+    "en": "Iqama countdown after adhan",
+    "ar": "عدّ الإقامة بعد الأذان"
+  },
+  "prayer.label.4bef7dcd2d26": {
+    "en": "Hide countdown",
+    "ar": "إخفاء العدّ"
+  },
+  "prayer.label.82863abb5b88": {
+    "en": "The iqama delay is your personal choice and is not the mosque's official time.",
+    "ar": "مدة الإقامة اختيارك الشخصي، وليست موعدًا رسميًا للمسجد."
+  },
+  "prayer.label.1ff67f50bf75": {
+    "en": "Prayers with alerts",
+    "ar": "الصلوات التي يصدر لها تنبيه"
+  },
+  "prayer.label.8798aadbd81e": {
+    "en": "Reminder before prayer",
+    "ar": "التذكير قبل الصلاة"
+  },
+  "prayer.label.d25857e0d14e": {
+    "en": "No advance reminder",
+    "ar": "بدون تذكير مسبق"
+  },
+  "prayer.label.623eeca201f9": {
+    "en": "The voice reminder announces that Fajr, Dhuhr, Asr, Maghrib or Isha is approaching.",
+    "ar": "التذكير الصوتي: «اقتربت صلاة الفجر/الظهر/العصر/المغرب/العشاء»."
+  },
+  "prayer.label.66e11913fd8c": {
+    "en": "Three Arabic dialects and one English voice are bundled. You can add your own recording.",
+    "ar": "ثلاث لهجات عربية وصوت إنجليزي مضمّنة، ويمكن إضافة تسجيلك."
+  },
+  "prayer.label.b83a6f3642ef": {
+    "en": "Prayer reminder voices",
+    "ar": "أصوات التذكير قبل الصلاة"
+  },
+  "prayer.label.71e34284ea92": {
+    "en": "Remembrance after prayer",
+    "ar": "أذكار بعد الصلاة"
+  },
+  "prayer.label.85dc9b214a23": {
+    "en": "Disabled",
+    "ar": "غير مفعّل"
+  },
+  "prayer.label.19d495e1a6ab": {
+    "en": "Choose city and country",
+    "ar": "حدّد المدينة والدولة"
+  },
+  "prayer.label.bfe76576ff2c": {
+    "en": "Could not play the preview on this device",
+    "ar": "تعذّر تشغيل المعاينة على هذا الجهاز"
+  },
+  "prayer.label.b714ebdef066": {
+    "en": "Could not restore the bundled recording. Try again.",
+    "ar": "تعذّرت استعادة الصوت المضمّن؛ أعد المحاولة"
+  },
+  "prayer.label.45b5776effcc": {
+    "en": "Could not add the recording. Use a valid MP3 up to 30 seconds and 4 MB.",
+    "ar": "تعذّر إضافة التسجيل. استخدم MP3 صالحًا لا يتجاوز 30 ثانية و4 ميغابايت."
+  },
+  "prayer.label.ac6136f98e12": {
+    "en": "A bundled voice for each prayer, or your own recording",
+    "ar": "صوت مضمّن لكل صلاة، أو تسجيلك الخاص"
+  },
+  "prayer.label.bc851427881a": {
+    "en": "The default Arabic voice is synthetic and bundled for offline use. You can add your own human recording, which takes priority.",
+    "ar": "الصوت الافتراضي عربي مولّد اصطناعيًا، ومضمّن للعمل دون إنترنت. أضف تسجيلك البشري إذا رغبت؛ له الأولوية على الصوت المضمّن."
+  },
+  "prayer.label.8c4af6cf6d45": {
+    "en": "Reminder language",
+    "ar": "لغة التذكير / Reminder language"
+  },
+  "prayer.label.05b59710bd68": {
+    "en": "Follow app language",
+    "ar": "تلقائي حسب لغة التطبيق"
+  },
+  "prayer.label.cbd2247d5011": {
+    "en": "Arabic dialect",
+    "ar": "اللهجة العربية"
+  },
+  "prayer.label.e06df82fc8ca": {
+    "en": "Your recording is ready on this device",
+    "ar": "تسجيلك الخاص جاهز على هذا الجهاز"
+  },
+  "prayer.label.0009541de347": {
+    "en": "Bundled synthetic voice • ready offline",
+    "ar": "صوت مولّد مضمّن • جاهز دون إنترنت"
+  },
+  "prayer.label.247fcc4a0ade": {
+    "en": "Stop",
+    "ar": "إيقاف / Stop"
+  },
+  "prayer.label.c122b01bc71a": {
+    "en": "Preview",
+    "ar": "معاينة / Preview"
+  },
+  "prayer.label.427e74493cab": {
+    "en": "Qibla compass",
+    "ar": "بوصلة القبلة"
+  },
+  "prayer.label.889ecf74c369": {
+    "en": "Where your heart turns",
+    "ar": "حيث يتّجه قلبك"
+  },
+  "prayer.label.961c18dd2454": {
+    "en": "Location unavailable",
+    "ar": "الموقع غير متاح"
+  },
+  "prayer.label.075bcfa036e6": {
+    "en": "Facing the Qibla",
+    "ar": "استقبل القبلة"
+  },
+  "prayer.label.53b34f22e780": {
+    "en": "Choose your location or allow location access to show the Qibla bearing.",
+    "ar": "اختر موقعك أو اسمح بتحديده لعرض زاوية القبلة."
+  },
+  "prayer.label.808e2a6441eb": {
+    "en": "Direction is undefined very close to the Kaaba",
+    "ar": "الاتجاه غير محدد قرب الكعبة"
+  },
+  "prayer.label.8cf9629ae374": {
+    "en": "A true-north reading is required. Check location permission and sensor availability.",
+    "ar": "نحتاج قراءة الشمال الحقيقي. تحقق من إذن الموقع وتوفر الحساس."
+  },
+  "prayer.label.1a9bdb7de0bc": {
+    "en": "Low accuracy. Move the device in a figure eight away from metal.",
+    "ar": "الدقة منخفضة — حرّك الجهاز بشكل 8 بعيداً عن المعادن."
+  },
+  "prayer.label.62acd434cec7": {
+    "en": "Sensor reading available. Check calibration.",
+    "ar": "قراءة الحساس متاحة — تحقق من المعايرة"
+  },
+  "prayer.label.b219917b6842": {
+    "en": "No reliable live direction is available",
+    "ar": "لا يوجد اتجاه حي موثوق حاليًا"
+  },
+  "prayer.label.ae0f9e70012e": {
+    "en": "Other times",
+    "ar": "أوقات أخرى"
+  },
+  "prayer.label.00b30b5e2f16": {
+    "en": "Duha is estimated at 20 minutes after sunrise. Midnight and the last third are calculated from Maghrib to the following Fajr.",
+    "ar": "الضحى تقدير بعد الشروق بـ20 دقيقة. منتصف الليل والثلث الأخير من المغرب إلى الفجر التالي."
+  },
+  "prayer.label.b48e38414c3b": {
+    "en": "Set your location to show prayer times",
+    "ar": "حدّد الموقع لعرض مواقيت الصلاة"
+  },
+  "prayer.label.9be989539649": {
+    "en": "Allow location / try again",
+    "ar": "السماح بالموقع / إعادة المحاولة"
+  },
+  "prayer.label.62a429114f0c": {
+    "en": "Update location",
+    "ar": "تحديث الموقع"
+  },
+  "prayer.label.a87a715969bc": {
+    "en": "Read sensor again",
+    "ar": "إعادة قراءة الحساس"
+  },
+  "prayer.label.1da338e799ab": {
+    "en": "Hold the phone flat, away from magnets and metal. Move it in a figure eight to calibrate. Prayer times are calculated from the location and method. Verify them with your local authority.",
+    "ar": "ضع الهاتف مستوياً بعيداً عن المغناطيس والمعادن. حرّكه بشكل 8 للمعايرة. المواقيت محسوبة حسب الموقع والطريقة؛ راجعها مع الجهة المحلية."
+  },
+  "prayer.label.d0ec6e92e04f": {
+    "en": "No live direction arrow",
+    "ar": "لا يوجد سهم اتجاه حي"
+  },
+  "prayer.label.51480dcc595a": {
+    "en": "Qibla direction from sensor reading",
+    "ar": "اتجاه القبلة من قراءة الحساس"
+  },
+  "prayer.label.db61c47aada5": {
+    "en": "You are facing the Qibla",
+    "ar": "أنت تستقبل القبلة"
+  },
+  "prayer.label.712c9582574e": {
+    "en": "Waiting for a compass reading…",
+    "ar": "بانتظار قراءة البوصلة…"
+  },
+  "prayer.label.4b5bf752aee5": {
+    "en": "Compass reading unavailable or stopped. Try again.",
+    "ar": "قراءة البوصلة غير متاحة أو توقفت. أعد المحاولة."
+  },
+  "prayer.label.139b860cf673": {
+    "en": "Direction sensor unavailable. You can read the Qibla bearing from true north without a live arrow.",
+    "ar": "حساس الاتجاه غير متاح. يمكنك قراءة زاوية القبلة من الشمال الحقيقي دون سهم حي."
+  },
+  "prayer.label.173cf9b0b877": {
+    "en": "Notification tone",
+    "ar": "نغمة التنبيه"
+  },
+  "prayer.label.4920c829071d": {
+    "en": "Adhan sound",
+    "ar": "صوت الأذان"
+  },
+  "prayer.label.d82523958993": {
+    "en": "Vibration only",
+    "ar": "اهتزاز فقط"
+  },
+  "prayer.label.e39618859353": {
+    "en": "Silent",
+    "ar": "صامت"
+  },
+  "prayer.label.d27415986305": {
+    "en": "Arabic",
+    "ar": "العربية"
+  },
+  "prayer.cityIn": {
+    "en": "Choose a city in {country}",
+    "ar": "اختر مدينة في {country}"
+  },
+  "prayer.lastMeasurement": {
+    "en": "Last saved measurement: {date} • approximate accuracy {accuracy} m",
+    "ar": "آخر قياس محفوظ: {date} • دقة تقريبية {accuracy} متر"
+  },
+  "prayer.subtractMinute": {
+    "en": "Subtract one minute from {prayer}",
+    "ar": "نقص دقيقة {prayer}"
+  },
+  "prayer.addMinute": {
+    "en": "Add one minute to {prayer}",
+    "ar": "زيادة دقيقة {prayer}"
+  },
+  "prayer.mosquePrivacy": {
+    "en": "Location: {place}. Searching sends the chosen coordinates to Overpass / OpenStreetMap to search within 3 km. The request only starts when you tap search.",
+    "ar": "الموقع: {place}. بالضغط على البحث تُرسل الإحداثيات المختارة إلى Overpass / OpenStreetMap للبحث ضمن 3 كم. لا يبدأ الطلب تلقائياً."
+  },
+  "prayer.mosqueDistance": {
+    "en": "{distance} km straight-line distance; not a road distance",
+    "ar": "{distance} كم بخط مستقيم؛ ليست مسافة طريق"
+  },
+  "prayer.selectedVoice": {
+    "en": "Selected: {voice}",
+    "ar": "المختار: {voice}"
+  },
+  "prayer.recordingCount": {
+    "en": "{count} recordings • scroll for more",
+    "ar": "{count} تسجيل • اسحب القائمة للمزيد"
+  },
+  "prayer.downloadSize": {
+    "en": "Download from library • {size} MB",
+    "ar": "تنزيل من المكتبة • {size} م.ب"
+  },
+  "prayer.previewVoice": {
+    "en": "Preview {voice}",
+    "ar": "معاينة {voice}"
+  },
+  "prayer.downloadVoice": {
+    "en": "Download {voice}",
+    "ar": "تنزيل {voice}"
+  },
+  "prayer.notificationsFor": {
+    "en": "{prayer} notifications",
+    "ar": "إشعارات {prayer}"
+  },
+  "prayer.volume": {
+    "en": "Adhan volume: {volume}%",
+    "ar": "مستوى صوت الأذان: {volume}٪"
+  },
+  "prayer.customize": {
+    "en": "Customize {prayer}",
+    "ar": "تخصيص {prayer}"
+  },
+  "prayer.minutes": {
+    "en": "{count} minutes",
+    "ar": "{count} دقيقة"
+  },
+  "prayer.afterMinutes": {
+    "en": "After {count} minutes",
+    "ar": "بعد {count} دقيقة"
+  },
+  "prayer.restoreVoice": {
+    "en": "Restore bundled voice for {prayer}",
+    "ar": "استعادة الصوت المضمّن {prayer}"
+  },
+  "prayer.addRecording": {
+    "en": "Add a recording for {prayer}",
+    "ar": "إضافة تسجيل {prayer}"
+  },
+  "prayer.turn": {
+    "en": "Turn {direction} {degrees}°",
+    "ar": "اتجه {direction} {degrees}°"
+  },
+  "prayer.right": {
+    "en": "right",
+    "ar": "يمينًا"
+  },
+  "prayer.left": {
+    "en": "left",
+    "ar": "يسارًا"
+  },
+  "prayer.kaabaDistance": {
+    "en": "{distance} km to the Kaaba",
+    "ar": "إلى الكعبة {distance} كم"
+  },
+  "prayer.bearing": {
+    "en": "Qibla {degrees}° from true north",
+    "ar": "القبلة {degrees}° من الشمال الحقيقي"
+  },
+  "prayer.placeCredits": {
+    "en": "City search: GeoNames — CC BY 4.0. Arabic country names: Unicode CLDR 48 — Unicode License V3.\n\nMap and timezone boundary data © OpenStreetMap contributors, licensed under ODbL. Boundaries from Timezone Boundary Builder.\n\nThe city list does not include every village or address. Nearby labels are approximate; the selected point retains its coordinates.\n\ngeonames.org · unicode.org · openstreetmap.org/copyright",
+    "ar": "بحث المدن: GeoNames — CC BY 4.0. أسماء الدول العربية: Unicode CLDR 48 — Unicode License V3.\n\nالخريطة وبيانات حدود المناطق الزمنية © OpenStreetMap contributors، بترخيص ODbL. الحدود من Timezone Boundary Builder.\n\nقائمة المدن لا تشمل كل قرية أو عنوان. وصف «قرب» تقريبي؛ النقطة المختارة تبقى بإحداثياتها.\n\ngeonames.org · unicode.org · openstreetmap.org/copyright"
+  },
+  "prayer.label.41f54d0d9ad0": {
+    "en": "Could not read prayer settings. Reset this section to continue.",
+    "ar": "تعذّر قراءة إعدادات الصلاة. أعد ضبط هذا القسم للمتابعة."
+  },
+  "prayer.label.880060c8b16d": {
+    "en": "Could not calculate prayer times for this location and date. Check the method and high-latitude rule.",
+    "ar": "تعذّر حساب المواقيت لهذا الموقع والتاريخ. راجع الطريقة وقاعدة خطوط العرض العالية."
+  },
+  "prayer.label.7e43e7d93c2d": {
+    "en": "Could not save prayer settings. Try again.",
+    "ar": "تعذّر حفظ إعدادات الصلاة؛ حاول مجدداً."
+  },
+  "prayer.label.7c08207661ef": {
+    "en": "Location access was denied. Set it manually or open device settings.",
+    "ar": "لم يُسمح بالموقع. يمكنك تحديده يدوياً أو فتح إعدادات الجهاز."
+  },
+  "prayer.label.f05a518c5f21": {
+    "en": "Location services are off. Enable them in device settings or choose a location manually.",
+    "ar": "خدمة الموقع متوقفة. فعّلها من إعدادات الجهاز أو اختر الموقع يدوياً."
+  },
+  "prayer.label.214d843127c5": {
+    "en": "Could not get a recent location. Try again outdoors or set it manually.",
+    "ar": "تعذّر تحديد موقع حديث؛ أعد المحاولة في مكان مفتوح أو حدده يدوياً."
+  },
+  "prayer.label.3a59d67c5072": {
+    "en": "Native location access is unavailable in this environment. Set your location manually.",
+    "ar": "الموقع الأصلي غير متاح في بيئة العرض الحالية. استخدم الإدخال اليدوي."
+  },
+  "prayer.label.ce1001e63cec": {
+    "en": "The location is inaccurate or its timezone is unknown. Use manual entry.",
+    "ar": "الموقع غير دقيق أو المنطقة الزمنية غير معروفة؛ استخدم الإدخال اليدوي."
+  },
+  "prayer.label.76ea31b7eaa6": {
+    "en": "Could not open device settings",
+    "ar": "تعذّر فتح إعدادات الجهاز"
+  },
+  "prayer.label.399fa120be7f": {
+    "en": "Could not open the map on this device",
+    "ar": "تعذّر فتح الخريطة على هذا الجهاز"
+  },
+  "prayer.label.73f8ff83a94c": {
+    "en": "Could not reset settings",
+    "ar": "تعذّرت إعادة الضبط"
+  },
+  "prayer.label.4efdc5e4951d": {
+    "en": "Could not load mosques. Check your connection and try again.",
+    "ar": "تعذّر تحميل المساجد. تحقق من الاتصال وأعد المحاولة."
+  },
+  "prayer.label.52edbd43f471": {
+    "en": "Close preview",
+    "ar": "إغلاق المعاينة"
+  },
+  "prayer.label.a55bfe439158": {
+    "en": "Haq · adhan screen preview",
+    "ar": "حق · معاينة شاشة الأذان"
+  },
+  "prayer.label.b1b337bde025": {
+    "en": "Iqama delay from your settings",
+    "ar": "مدة الإقامة حسب إعدادك"
+  },
+  "prayer.label.78cbb551f87a": {
+    "en": "Quran",
+    "ar": "القرآن"
+  },
+  "prayer.label.b98ed32866c5": {
+    "en": "Qibla",
+    "ar": "القبلة"
+  },
+  "prayer.label.99682ad2d9e0": {
+    "en": "prayer",
+    "ar": "الصلاة"
+  },
+  "prayer.timeFor": {
+    "en": "It is time for {prayer}",
+    "ar": "حان وقت {prayer}"
+  },
+  "prayer.iqamaPreview": {
+    "en": "Iqama in\n{time}",
+    "ar": "الإقامة بعد\n{time}"
   }
 }

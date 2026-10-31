@@ -65,8 +65,10 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
           !await widget.enableReminders!()) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تعذّر تفعيل التذكيرات؛ أعد المحاولة'),
+            SnackBar(
+              content: Text(
+                context.prayerLabel('تعذّر تفعيل التذكيرات؛ أعد المحاولة'),
+              ),
             ),
           );
         }
@@ -104,9 +106,11 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'سيبدأ اختبار الظهر بعد 10 ثوانٍ؛ يمكنك تصغير التطبيق أو قفل الشاشة',
+              context.prayerLabel(
+                'سيبدأ اختبار الظهر بعد 10 ثوانٍ؛ يمكنك تصغير التطبيق أو قفل الشاشة',
+              ),
             ),
           ),
         );
@@ -114,9 +118,11 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'تعذّر تجهيز الاختبار؛ تحقق من أذونات الإشعار والتنبيه الدقيق والصوت المحفوظ',
+              context.prayerLabel(
+                'تعذّر تجهيز الاختبار؛ تحقق من أذونات الإشعار والتنبيه الدقيق والصوت المحفوظ',
+              ),
             ),
           ),
         );
@@ -148,7 +154,9 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: Scaffold(
       backgroundColor: AppPalette.of(context).background,
       body: ListenableBuilder(
@@ -161,7 +169,9 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
             children: [
               DirectoryHeader(
                 title: 'إعدادات الأذان',
-                subtitle: 'مؤذّنك وتنبيهات صلواتك في مكان واحد',
+                subtitle: context.prayerLabel(
+                  'مؤذّنك وتنبيهات صلواتك في مكان واحد',
+                ),
                 onBack: () => Navigator.maybePop(context),
               ),
               Padding(
@@ -176,7 +186,9 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                           SwitchListTile(
                             key: const ValueKey('adhan-master'),
                             contentPadding: EdgeInsets.zero,
-                            title: const Text('تفعيل تنبيهات الصلاة'),
+                            title: Text(
+                              context.prayerLabel('تفعيل تنبيهات الصلاة'),
+                            ),
                             value: config.notifications,
                             onChanged: busy
                                 ? null
@@ -184,9 +196,11 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                                       _save(config.copyWith(notifications: v)),
                           ),
                           if (device['allowed'] == true)
-                            const ListTile(
+                            ListTile(
                               leading: Icon(Icons.check_circle_outline),
-                              title: Text('إذن الإشعارات مفعّل'),
+                              title: Text(
+                                context.prayerLabel('إذن الإشعارات مفعّل'),
+                              ),
                             )
                           else
                             TextButton.icon(
@@ -196,7 +210,9 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                               icon: const Icon(
                                 Icons.notifications_active_outlined,
                               ),
-                              label: const Text('السماح بإشعارات الصلاة'),
+                              label: Text(
+                                context.prayerLabel('السماح بإشعارات الصلاة'),
+                              ),
                               onPressed: () async {
                                 await AdhanLibrary.bridge.invokeMethod<void>(
                                   'requestPermission',
@@ -214,27 +230,39 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                                   onPressed: busy
                                       ? null
                                       : () => _testPrayer('reminderVoice'),
-                                  child: const Text('اختبار تذكير الظهر (10ث)'),
+                                  child: Text(
+                                    context.prayerLabel(
+                                      'اختبار تذكير الظهر (10ث)',
+                                    ),
+                                  ),
                                 ),
                                 OutlinedButton(
                                   key: const ValueKey('test-dhuhr-adhan'),
                                   onPressed: busy
                                       ? null
                                       : () => _testPrayer('adhan'),
-                                  child: const Text('اختبار أذان الظهر (10ث)'),
+                                  child: Text(
+                                    context.prayerLabel(
+                                      'اختبار أذان الظهر (10ث)',
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ListTile(
-                            title: const Text('المؤذّن ونمط الأذان العام'),
+                            title: Text(
+                              context.prayerLabel('المؤذّن ونمط الأذان العام'),
+                            ),
                             subtitle: Text(
-                              '${voice.name} • ${config.defaultAlert.mode.label}',
+                              '${voice.displayLabel(context)} • ${config.defaultAlert.mode.displayLabel(context)}',
                             ),
                             trailing: const Icon(Icons.chevron_left),
                             onTap: () => _editor(general: true),
                           ),
-                          const Text(
-                            'الاختيار العام يطبق على الصلوات الخمس؛ يمكنك تخصيص أي صلاة من القائمة أدناه.',
+                          Text(
+                            context.prayerLabel(
+                              'الاختيار العام يطبق على الصلوات الخمس؛ يمكنك تخصيص أي صلاة من القائمة أدناه.',
+                            ),
                             style: TextStyle(fontSize: 12),
                           ),
                         ],
@@ -245,7 +273,12 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                       Column(
                         children: [
                           Text(
-                            'مستوى صوت الأذان: ${volumeDraft ?? config.adhanVolume}٪',
+                            context.tr(
+                              'prayer.volume',
+                              args: {
+                                'volume': volumeDraft ?? config.adhanVolume,
+                              },
+                            ),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: p.heading,
@@ -275,17 +308,25 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                               if (mounted) setState(() => volumeDraft = null);
                             },
                           ),
-                          const Text(
-                            'على Android يُرفع صوت المنبّه وقت الأذان للمستوى المختار ثم يعود كما كان. قيود النظام وعدم الإزعاج تبقى فعّالة.',
+                          Text(
+                            context.prayerLabel(
+                              'على Android يُرفع صوت المنبّه وقت الأذان للمستوى المختار ثم يعود كما كان. قيود النظام وعدم الإزعاج تبقى فعّالة.',
+                            ),
                             style: TextStyle(fontSize: 12),
                           ),
                           SwitchListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: const Text('شاشة الأذان الكاملة'),
+                            title: Text(
+                              context.prayerLabel('شاشة الأذان الكاملة'),
+                            ),
                             subtitle: Text(
                               device['platform'] == 'ios'
-                                  ? 'على iPhone يظهر إشعار بصوت قصير حسب قيود النظام'
-                                  : 'بدل الاكتفاء بالإشعار، عندما يسمح الجهاز',
+                                  ? context.prayerLabel(
+                                      'على iPhone يظهر إشعار بصوت قصير حسب قيود النظام',
+                                    )
+                                  : context.prayerLabel(
+                                      'بدل الاكتفاء بالإشعار، عندما يسمح الجهاز',
+                                    ),
                             ),
                             value: config.showAdhanScreen,
                             onChanged: busy || device['platform'] == 'ios'
@@ -300,7 +341,9 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                             TextButton(
                               onPressed: () => AdhanLibrary.bridge
                                   .invokeMethod<void>('fullScreenPermission'),
-                              child: const Text('السماح بالشاشة الكاملة'),
+                              child: Text(
+                                context.prayerLabel('السماح بالشاشة الكاملة'),
+                              ),
                             ),
                           if ([
                             'xiaomi',
@@ -312,11 +355,15 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                               leading: const Icon(
                                 Icons.phonelink_lock_outlined,
                               ),
-                              title: const Text(
-                                'إدارة أذونات شاشة القفل على Xiaomi',
+                              title: Text(
+                                context.prayerLabel(
+                                  'إدارة أذونات شاشة القفل على Xiaomi',
+                                ),
                               ),
-                              subtitle: const Text(
-                                'فعّل Show on Lock screen وفتح النوافذ أثناء العمل بالخلفية لظهور شاشة الأذان',
+                              subtitle: Text(
+                                context.prayerLabel(
+                                  'فعّل Show on Lock screen وفتح النوافذ أثناء العمل بالخلفية لظهور شاشة الأذان',
+                                ),
                               ),
                               onTap: () => AdhanLibrary.bridge
                                   .invokeMethod<void>('vendorAlarmPermissions'),
@@ -326,7 +373,9 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                             TextButton(
                               onPressed: () => AdhanLibrary.bridge
                                   .invokeMethod<void>('exactAlarmPermission'),
-                              child: const Text('السماح بالتنبيه الدقيق'),
+                              child: Text(
+                                context.prayerLabel('السماح بالتنبيه الدقيق'),
+                              ),
                             ),
                           OutlinedButton.icon(
                             onPressed: () async {
@@ -348,13 +397,17 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                               }
                             },
                             icon: const Icon(Icons.preview_outlined),
-                            label: const Text('معاينة شاشة الأذان'),
+                            label: Text(
+                              context.prayerLabel('معاينة شاشة الأذان'),
+                            ),
                           ),
                           DropdownButtonFormField<int>(
                             key: ValueKey('iqama-${config.iqamaMinutes}'),
                             initialValue: config.iqamaMinutes,
-                            decoration: const InputDecoration(
-                              labelText: 'عدّ الإقامة بعد الأذان',
+                            decoration: InputDecoration(
+                              labelText: context.prayerLabel(
+                                'عدّ الإقامة بعد الأذان',
+                              ),
                             ),
                             items: [
                               for (final n in {
@@ -372,7 +425,12 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                                 DropdownMenuItem(
                                   value: n,
                                   child: Text(
-                                    n == 0 ? 'إخفاء العدّ' : '$n دقيقة',
+                                    n == 0
+                                        ? context.prayerLabel('إخفاء العدّ')
+                                        : context.tr(
+                                            'prayer.minutes',
+                                            args: {'count': n},
+                                          ),
                                   ),
                                 ),
                             ],
@@ -384,8 +442,10 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                                     }
                                   },
                           ),
-                          const Text(
-                            'مدة الإقامة اختيارك الشخصي، وليست موعدًا رسميًا للمسجد.',
+                          Text(
+                            context.prayerLabel(
+                              'مدة الإقامة اختيارك الشخصي، وليست موعدًا رسميًا للمسجد.',
+                            ),
                             style: TextStyle(fontSize: 12),
                           ),
                         ],
@@ -395,8 +455,12 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                       context,
                       Column(
                         children: [
-                          const ListTile(
-                            title: Text('الصلوات التي يصدر لها تنبيه'),
+                          ListTile(
+                            title: Text(
+                              context.prayerLabel(
+                                'الصلوات التي يصدر لها تنبيه',
+                              ),
+                            ),
                           ),
                           for (final prayer in PrayerName.values.where(
                             (p) => p != PrayerName.sunrise,
@@ -404,15 +468,20 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                             SwitchListTile(
                               key: ValueKey('adhan-enabled-${prayer.name}'),
                               contentPadding: EdgeInsets.zero,
-                              title: Text(prayer.label),
+                              title: Text(prayer.displayLabel(context)),
                               value: config.enabledPrayers.contains(
                                 prayer.name,
                               ),
                               subtitle: Text(
-                                '${config.alert(prayer).mode.label} • ${adhanVoiceById(config.alert(prayer).voice)!.name}',
+                                '${config.alert(prayer).mode.displayLabel(context)} • ${adhanVoiceById(config.alert(prayer).voice)!.displayLabel(context)}',
                               ),
                               secondary: IconButton(
-                                tooltip: 'تخصيص ${prayer.label}',
+                                tooltip: context.tr(
+                                  'prayer.customize',
+                                  args: {
+                                    'prayer': prayer.displayLabel(context),
+                                  },
+                                ),
                                 icon: const Icon(Icons.tune),
                                 onPressed: () => _editor(prayer: prayer),
                               ),
@@ -441,8 +510,10 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                           DropdownButtonFormField<int>(
                             key: ValueKey('before-${config.beforeMinutes}'),
                             initialValue: config.beforeMinutes,
-                            decoration: const InputDecoration(
-                              labelText: 'التذكير قبل الصلاة',
+                            decoration: InputDecoration(
+                              labelText: context.prayerLabel(
+                                'التذكير قبل الصلاة',
+                              ),
                             ),
                             items: [
                               for (final n in {
@@ -459,7 +530,12 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                                 DropdownMenuItem(
                                   value: n,
                                   child: Text(
-                                    n == 0 ? 'بدون تذكير مسبق' : '$n دقيقة',
+                                    n == 0
+                                        ? context.prayerLabel('بدون تذكير مسبق')
+                                        : context.tr(
+                                            'prayer.minutes',
+                                            args: {'count': n},
+                                          ),
                                   ),
                                 ),
                             ],
@@ -472,11 +548,15 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                                   },
                           ),
                           const SizedBox(height: 12),
-                          const Text(
-                            'التذكير الصوتي: «اقتربت صلاة الفجر/الظهر/العصر/المغرب/العشاء».',
+                          Text(
+                            context.prayerLabel(
+                              'التذكير الصوتي: «اقتربت صلاة الفجر/الظهر/العصر/المغرب/العشاء».',
+                            ),
                           ),
-                          const Text(
-                            'ثلاث لهجات عربية وصوت إنجليزي مضمّنة، ويمكن إضافة تسجيلك.',
+                          Text(
+                            context.prayerLabel(
+                              'ثلاث لهجات عربية وصوت إنجليزي مضمّنة، ويمكن إضافة تسجيلك.',
+                            ),
                             style: TextStyle(fontSize: 12),
                           ),
                           OutlinedButton.icon(
@@ -490,14 +570,18 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                               ),
                             ),
                             icon: const Icon(Icons.record_voice_over),
-                            label: const Text('أصوات التذكير قبل الصلاة'),
+                            label: Text(
+                              context.prayerLabel('أصوات التذكير قبل الصلاة'),
+                            ),
                           ),
                           const SizedBox(height: 12),
                           DropdownButtonFormField<int>(
                             key: ValueKey('after-${config.afterMinutes}'),
                             initialValue: config.afterMinutes,
-                            decoration: const InputDecoration(
-                              labelText: 'أذكار بعد الصلاة',
+                            decoration: InputDecoration(
+                              labelText: context.prayerLabel(
+                                'أذكار بعد الصلاة',
+                              ),
                             ),
                             items: [
                               for (final n in {
@@ -513,7 +597,12 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                                 DropdownMenuItem(
                                   value: n,
                                   child: Text(
-                                    n == 0 ? 'غير مفعّل' : 'بعد $n دقيقة',
+                                    n == 0
+                                        ? context.prayerLabel('غير مفعّل')
+                                        : context.tr(
+                                            'prayer.afterMinutes',
+                                            args: {'count': n},
+                                          ),
                                   ),
                                 ),
                             ],
@@ -532,9 +621,12 @@ class _PrayerAdhanSettingsPageState extends State<PrayerAdhanSettingsPage>
                       context,
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: const Text('الموقع وحساب المواقيت'),
+                        title: Text(
+                          context.prayerLabel('الموقع وحساب المواقيت'),
+                        ),
                         subtitle: Text(
-                          config.location?.label ?? 'حدّد المدينة والدولة',
+                          config.location?.label ??
+                              context.prayerLabel('حدّد المدينة والدولة'),
                         ),
                         trailing: const Icon(Icons.chevron_left),
                         onTap: () => Navigator.push(

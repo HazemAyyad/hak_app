@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/features/prayer/data/prayer_controller.dart';
 import 'package:haq_app/features/prayer/data/prayer_models.dart';
 import 'package:haq_app/features/prayer/data/place_catalog.dart';
@@ -96,35 +97,39 @@ void main() {
     Widget page, {
     bool dark = false,
     double scale = 1.3,
+    AppLocalization? localization,
   }) async {
     tester.view.physicalSize = visualSize(const Size(320, 1000));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    await tester.pumpWidget(
-      AppearanceScope(
-        controller: appearance,
-        child: RepaintBoundary(
-          key: preview,
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            navigatorObservers: [prayerRoutes],
-            theme: ThemeData(
-              fontFamily: 'QuranUI',
-              brightness: dark ? Brightness.dark : Brightness.light,
-              colorSchemeSeed: const Color(0xFF2A8C82),
-            ),
-            builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                disableAnimations: true,
-                textScaler: TextScaler.linear(visualScale(scale)),
-              ),
-              child: child!,
-            ),
-            home: page,
+    final screen = AppearanceScope(
+      controller: appearance,
+      child: RepaintBoundary(
+        key: preview,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          navigatorObservers: [prayerRoutes],
+          theme: ThemeData(
+            fontFamily: 'QuranUI',
+            brightness: dark ? Brightness.dark : Brightness.light,
+            colorSchemeSeed: const Color(0xFF2A8C82),
           ),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              disableAnimations: true,
+              textScaler: TextScaler.linear(visualScale(scale)),
+            ),
+            child: child!,
+          ),
+          home: page,
         ),
       ),
+    );
+    await tester.pumpWidget(
+      localization == null
+          ? screen
+          : LocalizationScope(controller: localization, child: screen),
     );
     await settle(tester);
   }
@@ -371,6 +376,27 @@ void main() {
     longitude: 35.1,
     zone: 'Asia/Hebron',
     label: 'موقع يدوي للاختبار',
+  );
+  testWidgets(
+    'English prayer page preserves times and stored Arabic location',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await tester.runAsync(() => c.save(PrayerConfig(location: place())));
+      final originalTimes = c.today!.moments.map((p) => p.time).toList();
+      await pump(tester, PrayerPage(controller: c), localization: localization);
+      expect(find.text('Prayer times'), findsWidgets);
+      expect(find.text('موقع يدوي للاختبار'), findsOneWidget);
+      expect(find.textContaining(' AH'), findsOneWidget);
+      expect(find.text('Fajr'), findsOneWidget);
+      expect(find.text('Muslim World League'), findsNothing);
+      expect(c.today!.moments.map((p) => p.time).toList(), originalTimes);
+      expect(calls.where((call) => call.method == 'requestLocation'), isEmpty);
+      expect(tester.takeException(), isNull);
+    },
   );
   for (final dark in [false, true]) {
     testWidgets(

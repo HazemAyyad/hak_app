@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import '../../../core/localization/ui_text.dart';
 import '../../../app_appearance.dart';
 import '../data/prayer_models.dart';
 
@@ -53,10 +54,10 @@ class _QiblaDialState extends State<QiblaDial>
     return Semantics(
       container: true,
       label: widget.angle == null
-          ? 'لا يوجد سهم اتجاه حي'
-          : 'اتجاه القبلة من قراءة الحساس',
+          ? context.prayerLabel('لا يوجد سهم اتجاه حي')
+          : context.prayerLabel('اتجاه القبلة من قراءة الحساس'),
       value: widget.angle != null && widget.aligned
-          ? 'أنت تستقبل القبلة'
+          ? context.prayerLabel('أنت تستقبل القبلة')
           : null,
       child: AnimatedBuilder(
         animation: _motion,

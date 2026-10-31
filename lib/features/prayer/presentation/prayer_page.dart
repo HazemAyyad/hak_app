@@ -1,3 +1,6 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
+import 'prayer_labels.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -43,7 +46,7 @@ Widget _panel(BuildContext context, Widget child) => Container(
 Widget _notice(BuildContext context, String text) => _panel(
   context,
   Text(
-    text,
+    context.prayerLabel(text),
     textAlign: TextAlign.center,
     style: TextStyle(color: AppPalette.of(context).muted, height: 1.7),
   ),
@@ -63,7 +66,9 @@ class PrayerPage extends StatelessWidget {
   final Future<bool> Function()? enableReminders;
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: Scaffold(
       backgroundColor: AppPalette.of(context).background,
       body: ListenableBuilder(
@@ -72,8 +77,10 @@ class PrayerPage extends StatelessWidget {
           slivers: [
             SliverToBoxAdapter(
               child: DirectoryHeader(
-                title: 'مواقيت الصلاة',
-                subtitle: 'مواقيتك حسب الموقع والطريقة المختارة',
+                title: context.prayerLabel('مواقيت الصلاة'),
+                subtitle: context.prayerLabel(
+                  'مواقيتك حسب الموقع والطريقة المختارة',
+                ),
                 onBack: () => Navigator.maybePop(context),
               ),
             ),
@@ -87,22 +94,30 @@ class PrayerPage extends StatelessWidget {
                       children: [
                         Text(
                           controller.config.location?.label ??
-                              'لم تحدد موقعاً بعد',
+                              context.prayerLabel('لم تحدد موقعاً بعد'),
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                             color: AppPalette.of(context).tealHeading,
                           ),
                         ),
-                        Text(controller.hijriLabel),
-                        const Text(
-                          'تقويم أم القرى مع التصحيح المختار؛ قد يختلف إعلان بداية الشهر محلياً',
+                        Text(prayerHijriInterfaceLabel(context, controller)),
+                        Text(
+                          context.prayerLabel(
+                            'تقويم أم القرى مع التصحيح المختار؛ قد يختلف إعلان بداية الشهر محلياً',
+                          ),
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 11),
                         ),
                         if (controller.upcoming case final next?) ...[
                           const SizedBox(height: 16),
-                          Text('الصلاة القادمة: ${next.name.label}'),
+                          Text(
+                            context.tr(
+                              'prayer.next',
+                              fallback: 'الصلاة القادمة: ${next.name.label}',
+                              args: {'prayer': next.name.displayLabel(context)},
+                            ),
+                          ),
                           Text(
                             controller.countdown,
                             textDirection: TextDirection.ltr,
@@ -140,12 +155,21 @@ class PrayerPage extends StatelessWidget {
                       ),
                     ),
                     icon: const Icon(Icons.tune),
-                    label: const Text('إعدادات الأذان'),
+                    label: Text(context.prayerLabel('إعدادات الأذان')),
                   ),
                   const SizedBox(height: 12),
                   _notice(
                     context,
-                    'طريقة الحساب: ${controller.config.method.label}. المواقيت محسوبة وليست جدولاً رسمياً للمسجد. راجعها مع الجهة المحلية وعدّل الفروق عند الحاجة.',
+                    context.tr(
+                      'prayer.methodNotice',
+                      fallback:
+                          'طريقة الحساب: ${controller.config.method.label}. المواقيت محسوبة وليست جدولاً رسمياً للمسجد. راجعها مع الجهة المحلية وعدّل الفروق عند الحاجة.',
+                      args: {
+                        'method': controller.config.method.displayLabel(
+                          context,
+                        ),
+                      },
+                    ),
                   ),
                 ]),
               ),
@@ -216,8 +240,9 @@ class _MosquesPageState extends State<MosquesPage> {
     } catch (e) {
       if (mounted && token == _revision) {
         setState(
-          () => _error =
-              'تعذّر البحث. قد تكون الخدمة مشغولة؛ انتظر دقيقة وأعد المحاولة.',
+          () => _error = context.prayerLabel(
+            'تعذّر البحث. قد تكون الخدمة مشغولة؛ انتظر دقيقة وأعد المحاولة.',
+          ),
         );
       }
     } finally {
@@ -236,7 +261,9 @@ class _MosquesPageState extends State<MosquesPage> {
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: Scaffold(
       backgroundColor: AppPalette.of(context).background,
       body: ListenableBuilder(
@@ -245,8 +272,8 @@ class _MosquesPageState extends State<MosquesPage> {
           slivers: [
             SliverToBoxAdapter(
               child: DirectoryHeader(
-                title: 'المساجد القريبة',
-                subtitle: 'مساجد حول الموقع الذي تختاره',
+                title: context.prayerLabel('المساجد القريبة'),
+                subtitle: context.prayerLabel('مساجد حول الموقع الذي تختاره'),
                 onBack: () => Navigator.maybePop(context),
               ),
             ),
@@ -256,13 +283,21 @@ class _MosquesPageState extends State<MosquesPage> {
                 delegate: SliverChildListDelegate.fixed([
                   _notice(
                     context,
-                    'الموقع: ${_place?.label ?? 'غير محدد'}. بالضغط على البحث تُرسل الإحداثيات المختارة إلى Overpass / OpenStreetMap للبحث ضمن 3 كم. لا يبدأ الطلب تلقائياً.',
+                    context.tr(
+                      'prayer.mosquePrivacy',
+                      args: {
+                        'place':
+                            _place?.label ?? context.prayerLabel('غير محدد'),
+                      },
+                    ),
                   ),
                   FilledButton.icon(
                     onPressed: _place == null || _busy ? null : _search,
                     icon: const Icon(Icons.search),
                     label: Text(
-                      _busy ? 'جارٍ البحث…' : 'البحث في OpenStreetMap',
+                      _busy
+                          ? context.prayerLabel('جارٍ البحث…')
+                          : context.prayerLabel('البحث في OpenStreetMap'),
                     ),
                   ),
                   OutlinedButton(
@@ -273,13 +308,15 @@ class _MosquesPageState extends State<MosquesPage> {
                             PrayerSettingsPage(controller: widget.controller),
                       ),
                     ),
-                    child: const Text('تحديد الموقع'),
+                    child: Text(context.prayerLabel('تحديد الموقع')),
                   ),
                   if (_error != null) _notice(context, _error!),
                   if (_items?.isEmpty == true)
                     _notice(
                       context,
-                      'لم تُرجع الخريطة مساجد ضمن النطاق. هذا لا يعني عدم وجود مساجد على الأرض.',
+                      context.prayerLabel(
+                        'لم تُرجع الخريطة مساجد ضمن النطاق. هذا لا يعني عدم وجود مساجد على الأرض.',
+                      ),
                     ),
                   if (_items case final items?)
                     for (final mosque in items)
@@ -293,10 +330,24 @@ class _MosquesPageState extends State<MosquesPage> {
                           ),
                           title: Text(mosque.name),
                           subtitle: Text(
-                            '${(mosque.distance / 1000).toStringAsFixed(2)} كم بخط مستقيم؛ ليست مسافة طريق',
+                            context.tr(
+                              'prayer.mosqueDistance',
+                              args: {
+                                'distance':
+                                    LocalizationScope.maybeOf(
+                                      context,
+                                    )?.formats.number(
+                                      double.parse(
+                                        (mosque.distance / 1000)
+                                            .toStringAsFixed(2),
+                                      ),
+                                    ) ??
+                                    (mosque.distance / 1000).toStringAsFixed(2),
+                              },
+                            ),
                           ),
                           trailing: IconButton(
-                            tooltip: 'فتح الخريطة',
+                            tooltip: context.prayerLabel('فتح الخريطة'),
                             onPressed: () =>
                                 widget.controller.openMap(mosque.mapUrl),
                             icon: const Icon(Icons.open_in_new),
@@ -305,13 +356,17 @@ class _MosquesPageState extends State<MosquesPage> {
                       ),
                   _notice(
                     context,
-                    '© OpenStreetMap contributors • ODbL. قائمة محدودة حتى100 نتيجة، تُرتّب بالمسافة المستقيمة ضمن النتائج المسترجعة. قد تكون البيانات ناقصة أو قديمة؛ لا معلومات مفترضة عن مواعيد الفتح أو الخدمات. الخدمة العامة بلا ضمان توافر؛ يلزم اعتماد استضافة مناسبة قبل الإطلاق الواسع.',
+                    context.prayerLabel(
+                      '© OpenStreetMap contributors • ODbL. قائمة محدودة حتى100 نتيجة، تُرتّب بالمسافة المستقيمة ضمن النتائج المسترجعة. قد تكون البيانات ناقصة أو قديمة؛ لا معلومات مفترضة عن مواعيد الفتح أو الخدمات. الخدمة العامة بلا ضمان توافر؛ يلزم اعتماد استضافة مناسبة قبل الإطلاق الواسع.',
+                    ),
                   ),
                   TextButton(
                     onPressed: () => widget.controller.openMap(
                       Uri.https('www.openstreetmap.org', '/copyright'),
                     ),
-                    child: const Text('المصدر والترخيص — OpenStreetMap'),
+                    child: Text(
+                      context.prayerLabel('المصدر والترخيص — OpenStreetMap'),
+                    ),
                   ),
                 ]),
               ),

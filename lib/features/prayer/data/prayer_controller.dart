@@ -164,6 +164,16 @@ class PrayerController extends ChangeNotifier {
   }
 
   String get hijriLabel {
+    final context = _hijriContext;
+    return prayerHijriDate(context.date, correction: context.offset);
+  }
+
+  ({int day, int month, int year})? get hijriParts {
+    final context = _hijriContext;
+    return prayerHijriParts(context.date, correction: context.offset);
+  }
+
+  ({DateTime date, int offset}) get _hijriContext {
     final general = AppSettings(preferences, scope);
     final offset = general.flag('correctHijri')
         ? general.number('hijriOffset', 0)
@@ -172,7 +182,7 @@ class PrayerController extends ChangeNotifier {
     final date = config.location == null
         ? now
         : tz.TZDateTime.from(now, config.location!.timeZone);
-    return prayerHijriDate(date, correction: offset);
+    return (date: date, offset: offset);
   }
 
   Future<bool> save(PrayerConfig next) async {

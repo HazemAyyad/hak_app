@@ -1,3 +1,6 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
+import 'prayer_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -90,7 +93,7 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
       if (mounted && widget.controller.scope == _owner) {
         setState(() {
           _loading = false;
-          _error = 'تعذّر تحميل قائمة المدن. حاول مجددًا.';
+          _error = context.prayerLabel('تعذّر تحميل قائمة المدن. حاول مجددًا.');
         });
       }
     }
@@ -140,8 +143,9 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
       }
       if (zone == null) {
         setState(
-          () => _error =
-              'لم نحدد منطقة زمنية لهذه النقطة. اختر نقطة على اليابسة أو ابحث عن مدينة.',
+          () => _error = context.prayerLabel(
+            'لم نحدد منطقة زمنية لهذه النقطة. اختر نقطة على اليابسة أو ابحث عن مدينة.',
+          ),
         );
       } else {
         setState(
@@ -160,8 +164,9 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
           revision == _revision &&
           widget.controller.scope == _owner) {
         setState(
-          () => _error =
-              'تعذّر تحديد المنطقة الزمنية. أعد اختيار النقطة أو ابحث عن مدينة.',
+          () => _error = context.prayerLabel(
+            'تعذّر تحديد المنطقة الزمنية. أعد اختيار النقطة أو ابحث عن مدينة.',
+          ),
         );
       }
     } finally {
@@ -186,15 +191,17 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection:
+          LocalizationScope.maybeOf(context)?.language.direction ??
+          TextDirection.rtl,
       child: Scaffold(
         backgroundColor: p.background,
         appBar: AppBar(
           backgroundColor: p.background,
           foregroundColor: p.heading,
-          title: const Text('اختر موقع الصلاة'),
+          title: Text(context.prayerLabel('اختر موقع الصلاة')),
           leading: IconButton(
-            tooltip: 'رجوع',
+            tooltip: context.prayerLabel('رجوع'),
             onPressed: () => Navigator.maybePop(context),
             icon: const Icon(Icons.arrow_forward),
           ),
@@ -208,16 +215,16 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
                 child: SizedBox(
                   width: double.infinity,
                   child: SegmentedButton<int>(
-                    segments: const [
+                    segments: [
                       ButtonSegment(
                         value: 0,
                         icon: Icon(Icons.search),
-                        label: Text('دولة أو مدينة'),
+                        label: Text(context.prayerLabel('دولة أو مدينة')),
                       ),
                       ButtonSegment(
                         value: 1,
                         icon: Icon(Icons.map_outlined),
-                        label: Text('الخريطة'),
+                        label: Text(context.prayerLabel('الخريطة')),
                       ),
                     ],
                     selected: {_tab},
@@ -257,13 +264,13 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
           controller: _query,
           onChanged: (_) => setState(_search),
           decoration: InputDecoration(
-            labelText: 'ابحث عن دولة أو مدينة',
-            hintText: 'مثل: فلسطين، الخليل، Amman',
+            labelText: context.prayerLabel('ابحث عن دولة أو مدينة'),
+            hintText: context.prayerLabel('مثل: فلسطين، الخليل، Amman'),
             prefixIcon: const Icon(Icons.search),
             suffixIcon: _query.text.isEmpty
                 ? null
                 : IconButton(
-                    tooltip: 'مسح البحث',
+                    tooltip: context.prayerLabel('مسح البحث'),
                     icon: const Icon(Icons.close),
                     onPressed: () => setState(() {
                       _query.clear();
@@ -282,32 +289,34 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: InputChip(
-              label: Text(country.name),
+              label: Text(prayerCountryLabel(context, country)),
               onDeleted: () => setState(() {
                 _country = null;
                 _search();
               }),
-              deleteButtonTooltipMessage: 'جميع الدول',
+              deleteButtonTooltipMessage: context.prayerLabel('جميع الدول'),
             ),
           ),
         ),
       Expanded(
         child: _loading
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(child: CircularProgressIndicator())
             : _catalog == null
             ? Center(
                 child: TextButton.icon(
                   onPressed: _load,
                   icon: const Icon(Icons.refresh),
-                  label: const Text('إعادة تحميل المدن'),
+                  label: Text(context.prayerLabel('إعادة تحميل المدن')),
                 ),
               )
             : _results.cities.isEmpty && _results.countries.isEmpty
-            ? const Center(
+            ? Center(
                 child: Padding(
                   padding: EdgeInsets.all(24),
                   child: Text(
-                    'لا توجد نتائج. جرّب اسمًا آخر أو حدّد موقعك على الخريطة.',
+                    context.prayerLabel(
+                      'لا توجد نتائج. جرّب اسمًا آخر أو حدّد موقعك على الخريطة.',
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -322,16 +331,26 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
                       padding: const EdgeInsets.only(bottom: 8),
                       child: Text(
                         _country == null
-                            ? 'ابحث باسم بلدك أو اختر مدينة'
-                            : 'اختر مدينة في ${_country!.name}',
+                            ? context.prayerLabel(
+                                'ابحث باسم بلدك أو اختر مدينة',
+                              )
+                            : context.tr(
+                                'prayer.cityIn',
+                                args: {
+                                  'country': prayerCountryLabel(
+                                    context,
+                                    _country!,
+                                  ),
+                                },
+                              ),
                         style: TextStyle(color: p.muted),
                       ),
                     ),
                   for (final country in _results.countries)
                     ListTile(
                       leading: Icon(Icons.public, color: p.gold),
-                      title: Text(country.name),
-                      subtitle: const Text('دولة • عرض المدن'),
+                      title: Text(prayerCountryLabel(context, country)),
+                      subtitle: Text(context.prayerLabel('دولة • عرض المدن')),
                       trailing: const Icon(Icons.chevron_left),
                       onTap: () => setState(() {
                         _country = country;
@@ -352,8 +371,8 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
                         Icons.location_city_outlined,
                         color: p.tealHeading,
                       ),
-                      title: Text(city.name),
-                      subtitle: Text(city.country.name),
+                      title: Text(prayerCityLabel(context, city)),
+                      subtitle: Text(prayerCountryLabel(context, city.country)),
                       trailing: const Icon(Icons.chevron_left),
                       onTap: () => _city(city),
                     ),
@@ -363,7 +382,9 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Text(
-          'البحث محفوظ دون إنترنت • إن لم تجد بلدتك اختر الخريطة',
+          context.prayerLabel(
+            'البحث محفوظ دون إنترنت • إن لم تجد بلدتك اختر الخريطة',
+          ),
           style: TextStyle(fontSize: 11, color: p.muted),
           textAlign: TextAlign.center,
         ),
@@ -376,7 +397,9 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
       Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
         child: Text(
-          'حرّك الخريطة وكبّرها، ثم اضغط لوضع الدبوس. عرض الخريطة يحتاج إنترنت ويُرسل منطقة العرض لمزوّدها.',
+          context.prayerLabel(
+            'حرّك الخريطة وكبّرها، ثم اضغط لوضع الدبوس. عرض الخريطة يحتاج إنترنت ويُرسل منطقة العرض لمزوّدها.',
+          ),
           style: TextStyle(fontSize: 12, color: p.muted),
           textAlign: TextAlign.center,
         ),
@@ -385,7 +408,9 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'تعذّر تحميل بعض أجزاء الخريطة. تحقق من الإنترنت أو استخدم البحث.',
+            context.prayerLabel(
+              'تعذّر تحميل بعض أجزاء الخريطة. تحقق من الإنترنت أو استخدم البحث.',
+            ),
             style: TextStyle(color: p.heading, fontSize: 12),
           ),
         ),
@@ -456,9 +481,19 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
                 top: 12,
                 child: Column(
                   children: [
-                    _zoom(p, Icons.add, 'تكبير الخريطة', 1),
+                    _zoom(
+                      p,
+                      Icons.add,
+                      context.prayerLabel('تكبير الخريطة'),
+                      1,
+                    ),
                     const SizedBox(height: 6),
-                    _zoom(p, Icons.remove, 'تصغير الخريطة', -1),
+                    _zoom(
+                      p,
+                      Icons.remove,
+                      context.prayerLabel('تصغير الخريطة'),
+                      -1,
+                    ),
                   ],
                 ),
               ),
@@ -520,7 +555,7 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
         if (_resolving) ...[
           const LinearProgressIndicator(),
           const SizedBox(height: 6),
-          const Text('جارٍ تحديد المنطقة الزمنية…'),
+          Text(context.prayerLabel('جارٍ تحديد المنطقة الزمنية…')),
         ] else if (_selected case final place?) ...[
           Text(
             place.label,
@@ -532,7 +567,7 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
             style: TextStyle(fontSize: 11, color: p.muted),
           ),
         ] else
-          const Text('اختر مدينة أو ضع دبوسًا على الخريطة'),
+          Text(context.prayerLabel('اختر مدينة أو ضع دبوسًا على الخريطة')),
         if (_error case final error?)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
@@ -551,12 +586,12 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
               ? null
               : () => Navigator.pop(context, _selected),
           icon: const Icon(Icons.check_circle_outline),
-          label: const Text('اعتماد هذا الموقع'),
+          label: Text(context.prayerLabel('اعتماد هذا الموقع')),
         ),
         TextButton(
           onPressed: _credits,
-          child: const Text(
-            'مصادر بيانات المواقع والخريطة',
+          child: Text(
+            context.prayerLabel('مصادر بيانات المواقع والخريطة'),
             style: TextStyle(fontSize: 11),
           ),
         ),
@@ -570,19 +605,14 @@ class _PrayerLocationPickerState extends State<PrayerLocationPicker> {
       builder: (context) {
         _creditsContext = context;
         return AlertDialog(
-          title: const Text('مصادر المواقع'),
-          content: const SingleChildScrollView(
-            child: Text(
-              'بحث المدن: GeoNames — CC BY 4.0. أسماء الدول العربية: Unicode CLDR 48 — Unicode License V3.\n\n'
-              'الخريطة وبيانات حدود المناطق الزمنية © OpenStreetMap contributors، بترخيص ODbL. الحدود من Timezone Boundary Builder.\n\n'
-              'قائمة المدن لا تشمل كل قرية أو عنوان. وصف «قرب» تقريبي؛ النقطة المختارة تبقى بإحداثياتها.\n\n'
-              'geonames.org · unicode.org · openstreetmap.org/copyright',
-            ),
+          title: Text(context.prayerLabel('مصادر المواقع')),
+          content: SingleChildScrollView(
+            child: Text(context.tr('prayer.placeCredits')),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('إغلاق'),
+              child: Text(context.prayerLabel('إغلاق')),
             ),
           ],
         );
