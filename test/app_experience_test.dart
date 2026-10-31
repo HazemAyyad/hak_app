@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_experience.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/navigation/app_bottom_navigation.dart';
 import 'package:haq_app/settings_pages.dart';
@@ -155,65 +156,66 @@ void main() {
     double width = 426,
     double scale = 1,
     bool withPlayer = false,
+    AppLocalization? localization,
   }) async {
     tester.view.physicalSize = Size(width, 922);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    await tester.pumpWidget(
-      MaterialApp(
-        theme: ThemeData(
-          fontFamily: 'Tajawal',
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF075158)),
-        ),
-        navigatorKey: controller.navigatorKey,
-        navigatorObservers: [rootObserver],
-        builder: (context, child) => AppearanceScope(
-          controller: appearance,
-          child: MediaQuery(
-            data: MediaQuery.of(
-              context,
-            ).copyWith(textScaler: TextScaler.linear(scale)),
-            child: RepaintBoundary(
-              key: previewKey,
-              child: AppExperienceOverlay(
-                controller: controller,
-                child: child!,
-              ),
-            ),
+    final app = MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Tajawal',
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF075158)),
+      ),
+      navigatorKey: controller.navigatorKey,
+      navigatorObservers: [rootObserver],
+      builder: (context, child) => AppearanceScope(
+        controller: appearance,
+        child: MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(scale)),
+          child: RepaintBoundary(
+            key: previewKey,
+            child: AppExperienceOverlay(controller: controller, child: child!),
           ),
         ),
-        home: Scaffold(
-          body: Navigator(
-            key: nested,
-            observers: [nestedObserver],
-            onGenerateRoute: (_) => MaterialPageRoute<void>(
-              builder: (context) => SingleChildScrollView(
-                child: Column(
-                  children: [
-                    TextButton(
-                      child: const Text('الانتقال'),
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (_) => const Scaffold(
-                            body: Center(child: Text('صفحة ثانية')),
-                          ),
+      ),
+      home: Scaffold(
+        body: Navigator(
+          key: nested,
+          observers: [nestedObserver],
+          onGenerateRoute: (_) => MaterialPageRoute<void>(
+            builder: (context) => SingleChildScrollView(
+              child: Column(
+                children: [
+                  TextButton(
+                    child: const Text('الانتقال'),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) => const Scaffold(
+                          body: Center(child: Text('صفحة ثانية')),
                         ),
                       ),
                     ),
-                    if (withPlayer)
-                      QuranPlayerPanel(
-                        media: audio,
-                        repository: audio.repository(),
-                      ),
-                  ],
-                ),
+                  ),
+                  if (withPlayer)
+                    QuranPlayerPanel(
+                      media: audio,
+                      repository: audio.repository(),
+                    ),
+                ],
               ),
             ),
           ),
         ),
       ),
+    );
+    await tester.pumpWidget(
+      localization == null
+          ? app
+          : LocalizationScope(controller: localization, child: app),
     );
     await tester.pumpAndSettle();
   }
@@ -351,6 +353,35 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(AppPlaybackDock), findsOneWidget);
   });
+
+  testWidgets(
+    'English continuation dialog and dock keep personal Arabic recording metadata',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await pump(tester, width: 320, scale: 1.3, localization: localization);
+      audio.begin();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('الانتقال'));
+      await tester.pumpAndSettle();
+      expect(find.text('Continue listening?'), findsOneWidget);
+      await tester.tap(find.text('Yes, continue listening'));
+      await tester.pumpAndSettle();
+      expect(audio.playing, isTrue);
+      expect(audio.stops, 0);
+      expect(find.text('المقطع الجاري'), findsOneWidget);
+      expect(find.byTooltip('Close player and stop audio'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.byTooltip('Close player and stop audio'));
+      await tester.pumpAndSettle();
+      expect(audio.playing, isFalse);
+      expect(audio.stops, 1);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   testWidgets(
     'leaving audio page asks once and No stops and removes playback',

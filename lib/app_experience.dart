@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'core/localization/app_localization.dart';
 import 'navigation/app_bottom_navigation.dart';
 
 import 'features/quran/data/quran_audio.dart';
@@ -302,7 +303,9 @@ class _AppExperienceOverlayState extends State<AppExperienceOverlay> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           child: Directionality(
-            textDirection: TextDirection.rtl,
+            textDirection:
+                LocalizationScope.maybeOf(context)?.language.direction ??
+                TextDirection.rtl,
             child: QuranPlayerPanel(
               media: audio,
               repository: audio.repository(),
@@ -325,22 +328,22 @@ class _AppExperienceOverlayState extends State<AppExperienceOverlay> {
       context: context,
       barrierDismissible: false,
       builder: (context) => Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection:
+            LocalizationScope.maybeOf(context)?.language.direction ??
+            TextDirection.rtl,
         child: PopScope(
           canPop: false,
           child: AlertDialog(
-            title: const Text('متابعة الاستماع؟'),
-            content: const Text(
-              'هل تريد أن يستمر الصوت بعد مغادرة هذه الصفحة؟',
-            ),
+            title: Text(context.tr('playback.continueTitle')),
+            content: Text(context.tr('playback.continueQuestion')),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('لا، إيقاف الصوت'),
+                child: Text(context.tr('playback.stop')),
               ),
               FilledButton(
                 onPressed: () => Navigator.pop(context, true),
-                child: const Text('نعم، متابعة الاستماع'),
+                child: Text(context.tr('playback.continue')),
               ),
             ],
           ),
@@ -363,7 +366,9 @@ class _AppExperienceOverlayState extends State<AppExperienceOverlay> {
       child: ListenableBuilder(
         listenable: widget.controller,
         builder: (context, _) => Directionality(
-          textDirection: TextDirection.rtl,
+          textDirection:
+              LocalizationScope.maybeOf(context)?.language.direction ??
+              TextDirection.rtl,
           child: Stack(
             children: [
               widget.child,
@@ -374,14 +379,14 @@ class _AppExperienceOverlayState extends State<AppExperienceOverlay> {
                   right: 24,
                   child: IgnorePointer(
                     child: Semantics(
-                      label: 'جارٍ الانتقال',
+                      label: context.tr('navigation.loading'),
                       liveRegion: true,
                       child: Material(
                         key: ValueKey('app-navigation-loader'),
                         elevation: 4,
                         borderRadius: BorderRadius.circular(16),
                         color: Theme.of(context).colorScheme.surface,
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.symmetric(
                             horizontal: 16,
                             vertical: 12,
@@ -396,7 +401,9 @@ class _AppExperienceOverlayState extends State<AppExperienceOverlay> {
                                 ),
                               ),
                               SizedBox(width: 12),
-                              Flexible(child: Text('جارٍ فتح الصفحة…')),
+                              Flexible(
+                                child: Text(context.tr('navigation.opening')),
+                              ),
                             ],
                           ),
                         ),

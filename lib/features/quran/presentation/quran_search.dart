@@ -410,7 +410,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                     Expanded(
                       child: Text(
                         executedQuery.isEmpty
-                            ? 'البحث يعمل دون إنترنت'
+                            ? context.quranLabel('البحث يعمل دون إنترنت')
                             : context.tr(
                                 'search.results',
                                 fallback: 'نتائج البحث: ${results.length}',
@@ -547,7 +547,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                                       'name': repo
                                           .surah(verse.surah)
                                           .localizedName(context),
-                                      'ayah': verse.ayah,
+                                      'ayah': quranNumber(context, verse.ayah),
                                     },
                                   ),
                                   style: qText(
@@ -573,7 +573,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                                       ? (_source?.direction == 'rtl'
                                             ? TextDirection.rtl
                                             : TextDirection.ltr)
-                                      : null,
+                                      : TextDirection.rtl,
                                   maxLines: fullText ? null : 3,
                                   overflow: fullText
                                       ? null
@@ -603,7 +603,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                                         '${juzName(verse.juz)} • الصفحة ${verse.page}',
                                     args: {
                                       'juz': _juzLabel(verse.juz),
-                                      'page': verse.page,
+                                      'page': quranNumber(context, verse.page),
                                     },
                                   ),
                                   style: qText(

@@ -1,3 +1,5 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
@@ -65,8 +67,8 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
         slivers: [
           SliverToBoxAdapter(
             child: QuranHeader(
-              title: 'المفضلة والعلامات',
-              subtitle: 'احفظ الآيات والمواضع التي تهمك',
+              title: context.quranLabel('المفضلة والعلامات'),
+              subtitle: context.quranLabel('احفظ الآيات والمواضع التي تهمك'),
               height: 150,
               onBack: () => Navigator.pop(context),
             ),
@@ -77,13 +79,16 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
               child: Column(
                 children: [
                   QSegments(
-                    labels: const ['المفضلة', 'العلامات المرجعية'],
+                    labels: [
+                      context.quranLabel('المفضلة'),
+                      context.quranLabel('العلامات المرجعية'),
+                    ],
                     selected: tab,
                     onSelect: (value) => setState(() => tab = value),
                   ),
                   const SizedBox(height: 12),
                   QSearchField(
-                    hint: 'ابحث في المحفوظات ...',
+                    hint: context.quranLabel('ابحث في المحفوظات ...'),
                     onChanged: (value) => setState(() => query = value),
                   ),
                   const SizedBox(height: 10),
@@ -93,7 +98,14 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                         onPressed: () => setState(() => newest = !newest),
                         icon: const Icon(Icons.sort, color: qNavy, size: 18),
                         label: Text(
-                          'الترتيب: ${newest ? 'الأحدث' : 'الأقدم'}',
+                          context.tr(
+                            'quran.savedSort',
+                            args: {
+                              'sort': context.quranLabel(
+                                newest ? 'الأحدث' : 'الأقدم',
+                              ),
+                            },
+                          ),
                           style: qText(context, size: 11),
                         ),
                       ),
@@ -102,9 +114,9 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                         onSelected: (value) =>
                             setState(() => surah = value == 0 ? null : value),
                         itemBuilder: (_) => [
-                          const PopupMenuItem(
+                          PopupMenuItem(
                             value: 0,
-                            child: Text('كل السور'),
+                            child: Text(context.quranLabel('كل السور')),
                           ),
                           ...repo.surahs.map(
                             (s) => PopupMenuItem(
@@ -117,7 +129,7 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                           children: [
                             Text(
                               surah == null
-                                  ? 'كل السور'
+                                  ? context.quranLabel('كل السور')
                                   : repo.surah(surah!).localizedTitle(context),
                               style: qText(context, size: 11),
                             ),
@@ -149,11 +161,11 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'لا توجد آيات محفوظة هنا',
+                      context.quranLabel('لا توجد آيات محفوظة هنا'),
                       style: qText(context, size: 18, weight: FontWeight.w800),
                     ),
                     Text(
-                      'احفظ آية من خياراتها أثناء القراءة',
+                      context.quranLabel('احفظ آية من خياراتها أثناء القراءة'),
                       style: qText(
                         context,
                         size: 12,
@@ -212,6 +224,7 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                               const SizedBox(height: 5),
                               Text(
                                 verse.text,
+                                textDirection: TextDirection.rtl,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -223,7 +236,14 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                               ),
                               if (date != null)
                                 Text(
-                                  'تم الحفظ في ${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}',
+                                  context.tr(
+                                    'quran.savedOn',
+                                    args: {
+                                      'date': quranFormats(
+                                        context,
+                                      ).gregorianDate(date),
+                                    },
+                                  ),
                                   style: qText(
                                     context,
                                     size: 10,
@@ -238,12 +258,14 @@ class _QuranSavedPageState extends State<QuranSavedPage> {
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
                           iconSize: 20,
-                          tooltip: 'خيارات المحفوظ',
+                          tooltip: context.quranLabel('خيارات المحفوظ'),
                           itemBuilder: (_) => [
                             PopupMenuItem(
                               value: 'remove',
                               child: Text(
-                                tab == 0 ? 'إزالة من المفضلة' : 'إزالة العلامة',
+                                tab == 0
+                                    ? context.quranLabel('إزالة من المفضلة')
+                                    : context.quranLabel('إزالة العلامة'),
                               ),
                             ),
                           ],

@@ -336,7 +336,13 @@ class _QuranExplanationState extends State<QuranExplanation> {
               const SizedBox(height: 8),
               if (!meanings)
                 QSegments(
-                  labels: tafsirSources.values.toList(),
+                  labels: [
+                    for (final entry in tafsirSources.entries)
+                      context.tr(
+                        'quran.tafsirSource.${entry.key}',
+                        fallback: entry.value,
+                      ),
+                  ],
                   selected: tafsirSources.keys.toList().indexOf(source),
                   onSelect: (value) => setState(() {
                     source = tafsirSources.keys.elementAt(value);

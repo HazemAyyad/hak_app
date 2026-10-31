@@ -1,3 +1,4 @@
+import '../../../core/localization/ui_text.dart';
 import 'package:flutter/material.dart';
 import '../../sharing/share_card.dart';
 
@@ -39,7 +40,7 @@ class QuranAudioBanner extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'التلاوة الصوتية',
+                          context.quranLabel('التلاوة الصوتية'),
                           style: qText(
                             context,
                             size: 18,
@@ -48,12 +49,14 @@ class QuranAudioBanner extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'استمع إلى القرآن الكريم بصوت قارئك المفضل',
+                          context.quranLabel(
+                            'استمع إلى القرآن الكريم بصوت قارئك المفضل',
+                          ),
                           style: qText(context, size: 11, color: Colors.white),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'اختر القارئ  ‹',
+                          context.quranLabel('اختر القارئ  ‹'),
                           style: qText(
                             context,
                             size: 12,
@@ -97,7 +100,6 @@ class QuranDailyVerse extends StatelessWidget {
         DateTime.utc(now.year, now.month, now.day).millisecondsSinceEpoch ~/
         Duration.millisecondsPerDay;
     final verse = repository.byKey[keys[day % keys.length]]!;
-    final name = repository.surah(verse.surah).name;
     return QCard(
       color: AppPalette.of(context).dark
           ? AppPalette.of(context).notice
@@ -110,7 +112,7 @@ class QuranDailyVerse extends StatelessWidget {
               const Icon(Icons.auto_awesome_outlined, color: qGold, size: 21),
               const SizedBox(width: 8),
               Text(
-                'آية اليوم',
+                context.quranLabel('آية اليوم'),
                 style: qText(context, size: 17, weight: FontWeight.w800),
               ),
             ],
@@ -118,6 +120,7 @@ class QuranDailyVerse extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             verse.text,
+            textDirection: TextDirection.rtl,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
@@ -128,7 +131,7 @@ class QuranDailyVerse extends StatelessWidget {
             ),
           ),
           Text(
-            'سورة $name • الآية ${verse.ayah}',
+            quranVerseTitle(context, repository.surah(verse.surah), verse.ayah),
             style: qText(
               context,
               size: 10,
@@ -143,7 +146,7 @@ class QuranDailyVerse extends StatelessWidget {
                   onPressed: () => onExplain(verse),
                   icon: const Icon(Icons.menu_book_outlined, size: 17),
                   label: Text(
-                    'قراءة التفسير',
+                    context.quranLabel('قراءة التفسير'),
                     style: qText(context, size: 11, color: qAccent(context)),
                   ),
                 ),
@@ -157,7 +160,7 @@ class QuranDailyVerse extends StatelessWidget {
                   ),
                   icon: const Icon(Icons.share_outlined, size: 17),
                   label: Text(
-                    'مشاركة الآية',
+                    context.quranLabel('مشاركة الآية'),
                     style: qText(context, size: 11, color: qAccent(context)),
                   ),
                 ),

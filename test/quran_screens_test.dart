@@ -328,6 +328,90 @@ void main() {
   );
 
   testWidgets(
+    'English Quran home, saved verses and juz routing preserve canonical reading data',
+    (tester) async {
+      controller.toggleFavorite('2:3');
+      final saved = Map.of(controller.favorites);
+      await appearance.setFontScale(1.2);
+      await showApp(tester, size: const Size(320, 900), language: 'en');
+      expect(find.text('The Holy Quran'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      final host = tester.state<QuranHostState>(find.byType(QuranHost));
+      host.openSaved();
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'BAQARAH');
+      await tester.pumpAndSettle();
+      expect(find.text('Surah Al-Baqarah'), findsOneWidget);
+      final original = controller.repository!.byKey['2:3']!.text;
+      expect(
+        tester.widget<Text>(find.text(original)).textDirection,
+        TextDirection.rtl,
+      );
+      expect(controller.favorites, saved);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      host.openIndex(juz: true);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'JUZ 7');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Juz 7'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('From Surah Al-Ma\'idah to Surah Al-An\'am'),
+        findsNWidgets(2),
+      );
+      await tester.scrollUntilVisible(
+        find.text('Start reading Juz 7'),
+        180,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Start reading Juz 7'));
+      await tester.pumpAndSettle();
+      expect(controller.lastKey, '5:82');
+      expect(controller.favorites, saved);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets('English tafsir controls retain the exact Arabic source text', (
+    tester,
+  ) async {
+    await appearance.setFontScale(1.2);
+    await showApp(tester, size: const Size(320, 900), language: 'en');
+    final verse = controller.repository!.byKey['2:2']!;
+    final source = await controller.content.tafsir(verse.key, 15);
+    tester
+        .state<QuranHostState>(find.byType(QuranHost))
+        .openExplanation(verse: verse);
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('At-Tabari (Arabic)'),
+      180,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('At-Tabari (Arabic)'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text(source.text),
+      180,
+      scrollable: find.byType(Scrollable).last,
+    );
+    await tester.pumpAndSettle();
+    expect(find.text(source.text), findsOneWidget);
+    expect(
+      tester.widget<EditableText>(find.text(source.text)).textDirection,
+      TextDirection.rtl,
+    );
+    expect(find.text('تفسير الطبري'), findsOneWidget);
+    expect(controller.repository!.byKey['2:2']!.text, verse.text);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets(
     'audio downloads reader picker and account fit a narrow enlarged RTL interface',
     (tester) async {
       await appearance.setFontScale(1.2);

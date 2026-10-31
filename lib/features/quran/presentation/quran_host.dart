@@ -1,10 +1,10 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
 import '../../../app_experience.dart';
 import '../../../app_loading.dart';
-import '../../../core/localization/ui_text.dart';
-import '../../../core/localization/app_localization.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
 import 'quran_reader.dart';
@@ -198,16 +198,24 @@ class QuranHostState extends State<QuranHost> {
     listenable: controller,
     builder: (context, _) {
       if (controller.loading) {
-        return const AppLoadingSkeleton(label: 'جارٍ تحميل القرآن الكريم');
+        return AppLoadingSkeleton(
+          label: context.quranLabel('جارٍ تحميل القرآن الكريم'),
+        );
       }
       if (controller.loadError != null || controller.repository == null) {
         return Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('تعذّر فتح المصحف', style: qText(context, size: 20)),
+              Text(
+                context.quranLabel('تعذّر فتح المصحف'),
+                style: qText(context, size: 20),
+              ),
               const SizedBox(height: 12),
-              QPrimaryButton(label: 'إعادة المحاولة', onTap: controller.load),
+              QPrimaryButton(
+                label: context.quranLabel('إعادة المحاولة'),
+                onTap: controller.load,
+              ),
             ],
           ),
         );
@@ -293,14 +301,14 @@ class QuranHomePage extends StatelessWidget {
         slivers: [
           SliverToBoxAdapter(
             child: QuranHeader(
-              title: 'القرآن الكريم',
-              subtitle: 'نور وهداية لكل وقت',
+              title: context.quranLabel('القرآن الكريم'),
+              subtitle: context.quranLabel('نور وهداية لكل وقت'),
               center: true,
               height: 182,
               actions: [
                 QCircleButton(
                   icon: Icons.search,
-                  label: 'بحث القرآن',
+                  label: context.quranLabel('بحث القرآن'),
                   onTap: () => onSearch(),
                 ),
               ],
@@ -311,7 +319,7 @@ class QuranHomePage extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverChildListDelegate([
                 QSearchField(
-                  hint: 'ابحث في السور أو الآيات ...',
+                  hint: context.quranLabel('ابحث في السور أو الآيات ...'),
                   readOnly: true,
                   onTap: () => onSearch(),
                 ),
@@ -320,7 +328,7 @@ class QuranHomePage extends StatelessWidget {
                   children: [
                     _homeShortcut(
                       context,
-                      'السور',
+                      context.quranLabel('السور'),
                       Icons.menu_book_outlined,
                       () => onIndex(),
                       active: true,
@@ -328,21 +336,21 @@ class QuranHomePage extends StatelessWidget {
                     const SizedBox(width: 8),
                     _homeShortcut(
                       context,
-                      'الأجزاء',
+                      context.quranLabel('الأجزاء'),
                       Icons.layers_outlined,
                       () => onIndex(juz: true),
                     ),
                     const SizedBox(width: 8),
                     _homeShortcut(
                       context,
-                      'المفضلة',
+                      context.quranLabel('المفضلة'),
                       Icons.favorite_border,
                       () => onSaved(),
                     ),
                     const SizedBox(width: 8),
                     _homeShortcut(
                       context,
-                      'العلامات',
+                      context.quranLabel('العلامات'),
                       Icons.bookmark_outline,
                       () => onSaved(bookmarks: true),
                     ),
@@ -357,7 +365,7 @@ class QuranHomePage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'آخر قراءة',
+                              context.quranLabel('آخر قراءة'),
                               style: qText(
                                 context,
                                 size: 20,
@@ -367,7 +375,7 @@ class QuranHomePage extends StatelessWidget {
                             const SizedBox(height: 8),
                             Text(
                               verse == null
-                                  ? 'ابدأ رحلتك مع القرآن'
+                                  ? context.quranLabel('ابدأ رحلتك مع القرآن')
                                   : repo
                                         .surah(verse.surah)
                                         .localizedTitle(context),
@@ -379,8 +387,22 @@ class QuranHomePage extends StatelessWidget {
                             ),
                             Text(
                               verse == null
-                                  ? 'يُحفظ موضع القراءة على هذا الجهاز'
-                                  : 'الآية ${verse.ayah} من ${repo.surah(verse.surah).ayahCount}',
+                                  ? context.quranLabel(
+                                      'يُحفظ موضع القراءة على هذا الجهاز',
+                                    )
+                                  : context.tr(
+                                      'quran.lastVerseProgress',
+                                      args: {
+                                        'ayah': quranNumber(
+                                          context,
+                                          verse.ayah,
+                                        ),
+                                        'total': quranNumber(
+                                          context,
+                                          repo.surah(verse.surah).ayahCount,
+                                        ),
+                                      },
+                                    ),
                               style: qText(
                                 context,
                                 size: 12,
@@ -405,8 +427,8 @@ class QuranHomePage extends StatelessWidget {
                             const SizedBox(height: 10),
                             QPrimaryButton(
                               label: verse == null
-                                  ? 'بدء القراءة'
-                                  : 'متابعة القراءة',
+                                  ? context.quranLabel('بدء القراءة')
+                                  : context.quranLabel('متابعة القراءة'),
                               onTap: onResume,
                             ),
                           ],
@@ -418,7 +440,7 @@ class QuranHomePage extends StatelessWidget {
                         width: 78,
                         height: 118,
                         fit: BoxFit.contain,
-                        semanticLabel: 'القرآن الكريم',
+                        semanticLabel: context.quranLabel('القرآن الكريم'),
                       ),
                     ],
                   ),
@@ -427,8 +449,8 @@ class QuranHomePage extends StatelessWidget {
                 QuranAudioBanner(onOpen: onAudio),
                 const SizedBox(height: 14),
                 QSectionTitle(
-                  'استكشف القرآن',
-                  action: 'عرض الكل',
+                  context.quranLabel('استكشف القرآن'),
+                  action: context.quranLabel('عرض الكل'),
                   onAction: () => onIndex(),
                 ),
                 const SizedBox(height: 8),
@@ -436,31 +458,31 @@ class QuranHomePage extends StatelessWidget {
                   children: [
                     _explore(
                       context,
-                      'السور',
-                      'تصفح جميع السور\nمرتبة ومقسمة',
+                      context.quranLabel('السور'),
+                      context.quranLabel('تصفح جميع السور\nمرتبة ومقسمة'),
                       Icons.menu_book,
                       () => onIndex(),
                     ),
                     const SizedBox(width: 8),
                     _explore(
                       context,
-                      'الأجزاء',
-                      'القرآن مقسم إلى\n30 جزءًا',
+                      context.quranLabel('الأجزاء'),
+                      context.quranLabel('القرآن مقسم إلى\n30 جزءًا'),
                       Icons.layers,
                       () => onIndex(juz: true),
                     ),
                     const SizedBox(width: 8),
                     _explore(
                       context,
-                      'المفضلة',
-                      'الآيات والمواضع\nالمحفوظة لديك',
+                      context.quranLabel('المفضلة'),
+                      context.quranLabel('الآيات والمواضع\nالمحفوظة لديك'),
                       Icons.favorite_border,
                       () => onSaved(),
                     ),
                   ],
                 ),
                 const SizedBox(height: 18),
-                const QSectionTitle('أدوات إضافية'),
+                QSectionTitle(context.quranLabel('أدوات إضافية')),
                 const SizedBox(height: 10),
                 IntrinsicHeight(
                   child: Row(
@@ -468,28 +490,28 @@ class QuranHomePage extends StatelessWidget {
                     children: [
                       _homeShortcut(
                         context,
-                        'التفسير',
+                        context.quranLabel('التفسير'),
                         Icons.menu_book_outlined,
                         onExplain,
                       ),
                       const SizedBox(width: 8),
                       _homeShortcut(
                         context,
-                        'المحتوى المحمل',
+                        context.quranLabel('المحتوى المحمل'),
                         Icons.cloud_download_outlined,
                         onDownloads,
                       ),
                       const SizedBox(width: 8),
                       _homeShortcut(
                         context,
-                        'العلامات',
+                        context.quranLabel('العلامات'),
                         Icons.bookmark_outline,
                         () => onSaved(bookmarks: true),
                       ),
                       const SizedBox(width: 8),
                       _homeShortcut(
                         context,
-                        'آخر قراءة',
+                        context.quranLabel('آخر قراءة'),
                         Icons.history,
                         onResume,
                       ),
@@ -514,11 +536,13 @@ class QuranHomePage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'إعدادات القراءة',
+                              context.quranLabel('إعدادات القراءة'),
                               style: qText(context, weight: FontWeight.w800),
                             ),
                             Text(
-                              'حجم الخط وطريقة العرض ومظهر القراءة',
+                              context.quranLabel(
+                                'حجم الخط وطريقة العرض ومظهر القراءة',
+                              ),
                               style: qText(
                                 context,
                                 size: 11,
@@ -538,16 +562,22 @@ class QuranHomePage extends StatelessWidget {
                     onPressed: () => showDialog<void>(
                       context: context,
                       builder: (_) => AlertDialog(
-                        title: const Text('مصدر القرآن الكريم'),
+                        title: Text(context.quranLabel('مصدر القرآن الكريم')),
                         content: SingleChildScrollView(
                           child: SelectableText(
-                            'Tanzil Project\n${repo.sourceUrl}\n\n${repo.license}\n\nصفحات التجويد: خط QCF V4 من مجمع الملك فهد عبر Quran Foundation.\nhttps://api-docs.quran.com/docs/tutorials/fonts/font-rendering/\n\nصور المصحف المحفوظة: مصحف المدينة برواية حفص، مجمع الملك فهد عبر Quran.ws quran-svg v1.1.1.\nحقوق الرسوم للمجمع؛ بيانات مناطق الآيات © 2026 Quran.ws، ترخيص CC BY 4.0.\nhttps://github.com/quran-ws/quran-svg/blob/v1.1.1/NOTICE.md\n\nخطوط النص: أميري قرآن، شهرزاد، لطيف، ونوتو نسخ العربية بترخيص SIL OFL.\nخط عثماني حفص V3.0: مجمع الملك فهد لطباعة المصحف الشريف، موزّع دون تعديل وفق رخصته.\nhttps://fonts.qurancomplex.gov.sa/hafs-reading/\nتُرفق رخص الخطوط مع ملفات التطبيق.',
+                            context.tr(
+                              'quran.sourceAttribution',
+                              args: {
+                                'sourceUrl': repo.sourceUrl,
+                                'license': repo.license,
+                              },
+                            ),
                           ),
                         ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text('إغلاق'),
+                            child: Text(context.quranLabel('إغلاق')),
                           ),
                         ],
                       ),
@@ -693,8 +723,9 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
             (part) =>
                 (query.isEmpty ||
                     normalizeQuranSearch(
-                      juzName(part.id),
-                    ).contains(normalizeQuranSearch(query)) ||
+                      '${juzName(part.id)} ${quranJuzName(context, part.id)}'
+                          .toLowerCase(),
+                    ).contains(normalizeQuranSearch(query.toLowerCase())) ||
                     part.id.toString() == query) &&
                 (filter == 0 ||
                     (filter == 1
@@ -709,17 +740,19 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
         slivers: [
           SliverToBoxAdapter(
             child: QuranHeader(
-              title: widget.juz ? 'الأجزاء الثلاثون' : 'السور',
+              title: widget.juz
+                  ? context.quranLabel('الأجزاء الثلاثون')
+                  : context.quranLabel('السور'),
               subtitle: widget.juz
-                  ? 'تصفح القرآن الكريم حسب الأجزاء'
-                  : 'اختر السورة لبدء القراءة',
+                  ? context.quranLabel('تصفح القرآن الكريم حسب الأجزاء')
+                  : context.quranLabel('اختر السورة لبدء القراءة'),
               dark: widget.juz,
               height: widget.juz ? 164 : 128,
               onBack: () => Navigator.pop(context),
               actions: [
                 QCircleButton(
                   icon: Icons.search,
-                  label: 'بحث الآيات',
+                  label: context.quranLabel('بحث الآيات'),
                   onTap: () => widget.onSearch(),
                 ),
               ],
@@ -732,10 +765,10 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                 children: [
                   if (!widget.juz) ...[
                     QSegments(
-                      labels: const [
-                        'كل السور',
-                        'السور المكية',
-                        'السور المدنية',
+                      labels: [
+                        context.quranLabel('كل السور'),
+                        context.quranLabel('السور المكية'),
+                        context.quranLabel('السور المدنية'),
                       ],
                       selected: filter,
                       onSelect: (value) => setState(() => filter = value),
@@ -744,17 +777,17 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                   ],
                   QSearchField(
                     hint: widget.juz
-                        ? 'ابحث في الأجزاء ...'
-                        : 'ابحث في السور ...',
+                        ? context.quranLabel('ابحث في الأجزاء ...')
+                        : context.quranLabel('ابحث في السور ...'),
                     onChanged: (value) => setState(() => query = value),
                   ),
                   const SizedBox(height: 10),
                   if (widget.juz)
                     QSegments(
-                      labels: const [
-                        'الكل',
-                        'الأجزاء المحفوظة',
-                        'الأجزاء التي تمت قراءتها',
+                      labels: [
+                        context.quranLabel('الكل'),
+                        context.quranLabel('الأجزاء المحفوظة'),
+                        context.quranLabel('الأجزاء التي تمت قراءتها'),
                       ],
                       selected: filter,
                       onSelect: (value) => setState(() => filter = value),
@@ -830,7 +863,7 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
               child: Padding(
                 padding: const EdgeInsets.all(28),
                 child: Text(
-                  'لا توجد عناصر مطابقة',
+                  context.quranLabel('لا توجد عناصر مطابقة'),
                   textAlign: TextAlign.center,
                   style: qText(context),
                 ),
@@ -859,12 +892,16 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                             const SizedBox(width: 16),
                             Expanded(
                               child: Directionality(
-                                textDirection: TextDirection.rtl,
+                                textDirection:
+                                    LocalizationScope.maybeOf(
+                                      context,
+                                    )?.language.direction ??
+                                    TextDirection.rtl,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      juzName(part.id),
+                                      quranJuzName(context, part.id),
                                       style: qText(
                                         context,
                                         size: 17,
@@ -875,11 +912,32 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                                       ),
                                     ),
                                     Text(
-                                      'من سورة ${repo.surah(part.startSurah).localizedName(context)} إلى سورة ${repo.surah(part.endSurah).localizedName(context)}',
+                                      context.tr(
+                                        'quran.chapterRange',
+                                        args: {
+                                          'start': repo
+                                              .surah(part.startSurah)
+                                              .localizedName(context),
+                                          'end': repo
+                                              .surah(part.endSurah)
+                                              .localizedName(context),
+                                        },
+                                      ),
                                       style: qText(context, size: 11),
                                     ),
                                     Text(
-                                      'يبدأ من سورة ${repo.surah(part.startSurah).localizedName(context)} • الآية ${part.startAyah}',
+                                      context.tr(
+                                        'quran.juzStartsAt',
+                                        args: {
+                                          'name': repo
+                                              .surah(part.startSurah)
+                                              .localizedName(context),
+                                          'ayah': quranNumber(
+                                            context,
+                                            part.startAyah,
+                                          ),
+                                        },
+                                      ),
                                       style: qText(
                                         context,
                                         size: 10,
@@ -922,7 +980,13 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                           const SizedBox(width: 9),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                              crossAxisAlignment:
+                                  LocalizationScope.maybeOf(
+                                        context,
+                                      )?.language.direction ==
+                                      TextDirection.ltr
+                                  ? CrossAxisAlignment.start
+                                  : CrossAxisAlignment.end,
                               children: [
                                 Text(
                                   chapter.localizedTitle(context),
@@ -948,8 +1012,10 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                             key: ValueKey('quran-open-surah-${chapter.id}'),
                             icon: Icons.play_arrow,
                             size: 30,
-                            label:
-                                'بدء قراءة سورة ${chapter.localizedName(context)}',
+                            label: context.tr(
+                              'quran.startSurah',
+                              args: {'name': chapter.localizedName(context)},
+                            ),
                             onTap: () =>
                                 widget.onRead(repo.byKey['${chapter.id}:1']!),
                           ),
@@ -959,8 +1025,8 @@ class _QuranIndexPageState extends State<QuranIndexPage> {
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             tooltip: saved
-                                ? 'إزالة السورة المحفوظة'
-                                : 'حفظ السورة',
+                                ? context.quranLabel('إزالة السورة المحفوظة')
+                                : context.quranLabel('حفظ السورة'),
                             onPressed: () =>
                                 widget.controller.toggleSurah(chapter.id),
                             constraints: const BoxConstraints(
@@ -1002,13 +1068,18 @@ class QuranJuzPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final repo = controller.repository!;
     final chapters = repo.surahs.sublist(part.startSurah - 1, part.endSurah);
-    final range =
-        'من سورة ${repo.surah(part.startSurah).localizedName(context)} إلى سورة ${repo.surah(part.endSurah).localizedName(context)}';
+    final range = context.tr(
+      'quran.chapterRange',
+      args: {
+        'start': repo.surah(part.startSurah).localizedName(context),
+        'end': repo.surah(part.endSurah).localizedName(context),
+      },
+    );
     return ListView(
       padding: EdgeInsets.zero,
       children: [
         QuranHeader(
-          title: juzName(part.id),
+          title: quranJuzName(context, part.id),
           subtitle: range,
           dark: true,
           height: 164,
@@ -1033,7 +1104,7 @@ class QuranJuzPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            juzName(part.id),
+                            quranJuzName(context, part.id),
                             style: qText(
                               context,
                               size: 19,
@@ -1043,7 +1114,16 @@ class QuranJuzPage extends StatelessWidget {
                           ),
                           Text(range, style: qText(context, size: 11)),
                           Text(
-                            'عدد السور: ${chapters.length} • عدد الآيات: ${part.ayahCount}',
+                            context.tr(
+                              'quran.juzCounts',
+                              args: {
+                                'chapters': quranNumber(
+                                  context,
+                                  chapters.length,
+                                ),
+                                'verses': quranNumber(context, part.ayahCount),
+                              },
+                            ),
                             style: qText(
                               context,
                               size: 11,
@@ -1087,7 +1167,16 @@ class QuranJuzPage extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                'الآيات $start–$end • ${chapter.revelation}',
+                                context.tr(
+                                  'quran.verseRangeRevelation',
+                                  args: {
+                                    'start': quranNumber(context, start),
+                                    'end': quranNumber(context, end),
+                                    'revelation': chapter.localizedRevelation(
+                                      context,
+                                    ),
+                                  },
+                                ),
                                 style: qText(
                                   context,
                                   size: 12,
@@ -1107,7 +1196,10 @@ class QuranJuzPage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: QPrimaryButton(
-                  label: 'بدء قراءة ${juzName(part.id)}',
+                  label: context.tr(
+                    'quran.startJuz',
+                    args: {'juz': quranJuzName(context, part.id)},
+                  ),
                   icon: Icons.menu_book_outlined,
                   onTap: () => onRead(repo.byKey[part.startKey]!),
                 ),

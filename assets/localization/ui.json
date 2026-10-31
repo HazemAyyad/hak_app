@@ -1588,24 +1588,24 @@
     "ar": "فهرس السور"
   },
   "quran.label.bd51a8b5fb50": {
-    "ar": "الأجزاء",
-    "en": "Juz"
+    "en": "Juz",
+    "ar": "الأجزاء"
   },
   "quran.label.5e5225c86cab": {
-    "ar": "السور",
-    "en": "Surahs"
+    "en": "Surahs",
+    "ar": "السور"
   },
   "quran.label.ce1bdcc6a4a3": {
     "en": "Bookmarks",
     "ar": "العلامات المرجعية"
   },
   "quran.label.9f2908941570": {
-    "ar": "المفضلة",
-    "en": "Favorites"
+    "en": "Favorites",
+    "ar": "المفضلة"
   },
   "quran.label.2dea552e7835": {
-    "ar": "إعدادات القراءة",
-    "en": "Reading settings"
+    "en": "Reading settings",
+    "ar": "إعدادات القراءة"
   },
   "quran.label.30a5f3f111a0": {
     "en": "Quran settings",
@@ -1648,16 +1648,16 @@
     "en": "Share"
   },
   "quran.label.14d5786f2e64": {
-    "ar": "إعادة المحاولة",
-    "en": "Try again"
+    "en": "Try again",
+    "ar": "إعادة المحاولة"
   },
   "quran.label.83fcc51a28b4": {
     "ar": "التنزيلات",
     "en": "Downloads"
   },
   "quran.label.cc52200ebc71": {
-    "ar": "عرض الكل",
-    "en": "View all"
+    "en": "View all",
+    "ar": "عرض الكل"
   },
   "search.results": {
     "en": "Search results: {count}",
@@ -2156,44 +2156,44 @@
     "en": "{revelation} • {count} verses"
   },
   "quran.label.5313df4086bf": {
-    "ar": "كل السور",
-    "en": "All surahs"
+    "en": "All surahs",
+    "ar": "كل السور"
   },
   "quran.label.86e1ac9c80e9": {
-    "ar": "السور المكية",
-    "en": "Meccan surahs"
+    "en": "Meccan surahs",
+    "ar": "السور المكية"
   },
   "quran.label.8ab25bdfe741": {
-    "ar": "السور المدنية",
-    "en": "Medinan surahs"
+    "en": "Medinan surahs",
+    "ar": "السور المدنية"
   },
   "quran.label.f98dcf32d58c": {
-    "ar": "ابحث في السور ...",
-    "en": "Search surahs…"
+    "en": "Search surahs…",
+    "ar": "ابحث في السور ..."
   },
   "quran.label.b61b624818d9": {
-    "ar": "ابحث في الأجزاء ...",
-    "en": "Search juz…"
+    "en": "Search juz…",
+    "ar": "ابحث في الأجزاء ..."
   },
   "quran.label.7d96b27f64eb": {
-    "ar": "اختر السورة لبدء القراءة",
-    "en": "Choose a surah to start reading"
+    "en": "Choose a surah to start reading",
+    "ar": "اختر السورة لبدء القراءة"
   },
   "quran.label.6a95220c20c1": {
-    "ar": "الأجزاء الثلاثون",
-    "en": "The thirty juz"
+    "en": "The thirty juz",
+    "ar": "الأجزاء الثلاثون"
   },
   "quran.label.65f276da33cf": {
-    "ar": "الكل",
-    "en": "All"
+    "en": "All",
+    "ar": "الكل"
   },
   "quran.label.14eaf6a42877": {
-    "ar": "الأجزاء المحفوظة",
-    "en": "Saved juz"
+    "en": "Saved juz",
+    "ar": "الأجزاء المحفوظة"
   },
   "quran.label.04cc7dfe0712": {
-    "ar": "الأجزاء التي تمت قراءتها",
-    "en": "Read juz"
+    "en": "Read juz",
+    "ar": "الأجزاء التي تمت قراءتها"
   },
   "quran.label.909d12ae1e92": {
     "ar": "ترتيب المصحف",
@@ -2208,24 +2208,24 @@
     "en": "Name"
   },
   "quran.label.077e793f4e99": {
-    "ar": "لا توجد عناصر مطابقة",
-    "en": "No matching items"
+    "en": "No matching items",
+    "ar": "لا توجد عناصر مطابقة"
   },
   "quran.label.8e72c7da4a40": {
-    "ar": "حفظ السورة",
-    "en": "Save surah"
+    "en": "Save surah",
+    "ar": "حفظ السورة"
   },
   "quran.label.03d7727cd2e4": {
-    "ar": "إزالة السورة المحفوظة",
-    "en": "Remove saved surah"
+    "en": "Remove saved surah",
+    "ar": "إزالة السورة المحفوظة"
   },
   "quran.label.9e7450f9693f": {
-    "ar": "المفضلة والعلامات",
-    "en": "Favorites and bookmarks"
+    "en": "Favorites and bookmarks",
+    "ar": "المفضلة والعلامات"
   },
   "quran.label.64da176ec2b7": {
-    "ar": "احفظ الآيات والمواضع التي تهمك",
-    "en": "Save verses and reading positions"
+    "en": "Save verses and reading positions",
+    "ar": "احفظ الآيات والمواضع التي تهمك"
   },
   "quran.surahCount.zero": {
     "en": "No surahs",
@@ -6088,8 +6088,8 @@
     "ar": "الجزء"
   },
   "quran.label.12009aa898db": {
-    "ar": "مشاركة الآية",
-    "en": "Share verse"
+    "en": "Share verse",
+    "ar": "مشاركة الآية"
   },
   "quran.label.74aaaefb4ca8": {
     "en": "Play verse",
@@ -6308,8 +6308,8 @@
     "en": "Later"
   },
   "quran.label.ca90c297b099": {
-    "ar": "إغلاق",
-    "en": "Close"
+    "en": "Close",
+    "ar": "إغلاق"
   },
   "quran.label.58ed242e024e": {
     "ar": "متاحة بدون إنترنت",
@@ -8810,5 +8810,221 @@
   "quran.audioDeleteSelected": {
     "ar": "حذف المحدد ({count})",
     "en": "Delete selected ({count})"
+  },
+  "quran.label.fe08051f285e": {
+    "en": "Audio recitation",
+    "ar": "التلاوة الصوتية"
+  },
+  "quran.label.55b2f2d7d2a4": {
+    "en": "Listen to the Quran with your preferred reciter",
+    "ar": "استمع إلى القرآن الكريم بصوت قارئك المفضل"
+  },
+  "quran.label.dfae16631db4": {
+    "en": "Choose reciter",
+    "ar": "اختر القارئ  ‹"
+  },
+  "quran.label.d751d1f718c1": {
+    "en": "Verse of the day",
+    "ar": "آية اليوم"
+  },
+  "quran.label.f12190f997e7": {
+    "en": "Read tafsir",
+    "ar": "قراءة التفسير"
+  },
+  "quran.label.64df985627ce": {
+    "en": "Loading Quran",
+    "ar": "جارٍ تحميل القرآن الكريم"
+  },
+  "quran.label.e063a8633ebe": {
+    "en": "Could not open the mushaf",
+    "ar": "تعذّر فتح المصحف"
+  },
+  "quran.label.12e43098b973": {
+    "en": "Light and guidance at all times",
+    "ar": "نور وهداية لكل وقت"
+  },
+  "quran.label.ce07d9ddcfd7": {
+    "en": "Search Quran",
+    "ar": "بحث القرآن"
+  },
+  "quran.label.53b675575cfb": {
+    "en": "Search surahs or verses…",
+    "ar": "ابحث في السور أو الآيات ..."
+  },
+  "quran.label.ca65ca3f21b3": {
+    "en": "Bookmarks",
+    "ar": "العلامات"
+  },
+  "quran.label.18fca84d182d": {
+    "en": "Last read",
+    "ar": "آخر قراءة"
+  },
+  "quran.label.2c3d3165fdb8": {
+    "en": "Begin your Quran reading",
+    "ar": "ابدأ رحلتك مع القرآن"
+  },
+  "quran.label.4d92f8697259": {
+    "en": "Your reading position is saved on this device",
+    "ar": "يُحفظ موضع القراءة على هذا الجهاز"
+  },
+  "quran.label.364f4277789e": {
+    "en": "Start reading",
+    "ar": "بدء القراءة"
+  },
+  "quran.label.a48468ba1791": {
+    "en": "Continue reading",
+    "ar": "متابعة القراءة"
+  },
+  "quran.label.db53e360a372": {
+    "en": "Explore Quran",
+    "ar": "استكشف القرآن"
+  },
+  "quran.label.80c7889d5195": {
+    "en": "Browse all surahs\nin Quran order",
+    "ar": "تصفح جميع السور\nمرتبة ومقسمة"
+  },
+  "quran.label.0695d23efa3a": {
+    "en": "The Quran divided into\n30 juz",
+    "ar": "القرآن مقسم إلى\n30 جزءًا"
+  },
+  "quran.label.f4a5c22c5eab": {
+    "en": "Your saved verses\nand reading positions",
+    "ar": "الآيات والمواضع\nالمحفوظة لديك"
+  },
+  "quran.label.ca4e645e4370": {
+    "en": "More tools",
+    "ar": "أدوات إضافية"
+  },
+  "quran.label.628788333858": {
+    "en": "Downloaded content",
+    "ar": "المحتوى المحمل"
+  },
+  "quran.label.5dfcac2d0df5": {
+    "en": "Font size, layout and reading appearance",
+    "ar": "حجم الخط وطريقة العرض ومظهر القراءة"
+  },
+  "quran.label.c3f4131c7fe4": {
+    "en": "Quran sources",
+    "ar": "مصدر القرآن الكريم"
+  },
+  "quran.label.dd8ec1fbafe8": {
+    "en": "Quran sources and copyright",
+    "ar": "مصادر القرآن وحقوق النشر"
+  },
+  "quran.label.274bc10f3e4f": {
+    "en": "Browse the Quran by juz",
+    "ar": "تصفح القرآن الكريم حسب الأجزاء"
+  },
+  "quran.label.cd1b456ae744": {
+    "en": "Search verses",
+    "ar": "بحث الآيات"
+  },
+  "quran.label.147a84cd298b": {
+    "en": "Search saved items…",
+    "ar": "ابحث في المحفوظات ..."
+  },
+  "quran.label.ba99ba7eb5ef": {
+    "en": "Newest",
+    "ar": "الأحدث"
+  },
+  "quran.label.68024e0ad1f7": {
+    "en": "Oldest",
+    "ar": "الأقدم"
+  },
+  "quran.label.2cd3e089b5df": {
+    "en": "No saved verses here",
+    "ar": "لا توجد آيات محفوظة هنا"
+  },
+  "quran.label.d9e395facb8d": {
+    "en": "Save a verse from its options while reading",
+    "ar": "احفظ آية من خياراتها أثناء القراءة"
+  },
+  "quran.label.eaa66392a079": {
+    "en": "Saved item options",
+    "ar": "خيارات المحفوظ"
+  },
+  "quran.label.094968a55880": {
+    "en": "Remove bookmark",
+    "ar": "إزالة العلامة"
+  },
+  "quran.lastVerseProgress": {
+    "en": "Verse {ayah} of {total}",
+    "ar": "الآية {ayah} من {total}"
+  },
+  "quran.chapterRange": {
+    "en": "From Surah {start} to Surah {end}",
+    "ar": "من سورة {start} إلى سورة {end}"
+  },
+  "quran.juzStartsAt": {
+    "en": "Starts at Surah {name} • verse {ayah}",
+    "ar": "يبدأ من سورة {name} • الآية {ayah}"
+  },
+  "quran.startSurah": {
+    "en": "Start reading Surah {name}",
+    "ar": "بدء قراءة سورة {name}"
+  },
+  "quran.juzCounts": {
+    "en": "Surahs: {chapters} • verses: {verses}",
+    "ar": "عدد السور: {chapters} • عدد الآيات: {verses}"
+  },
+  "quran.verseRangeRevelation": {
+    "en": "Verses {start}–{end} • {revelation}",
+    "ar": "الآيات {start}–{end} • {revelation}"
+  },
+  "quran.startJuz": {
+    "en": "Start reading {juz}",
+    "ar": "بدء قراءة {juz}"
+  },
+  "quran.savedSort": {
+    "en": "Order: {sort}",
+    "ar": "الترتيب: {sort}"
+  },
+  "quran.savedOn": {
+    "en": "Saved on {date}",
+    "ar": "تم الحفظ في {date}"
+  },
+  "quran.sourceAttribution": {
+    "ar": "Tanzil Project\n{sourceUrl}\n\n{license}\n\nصفحات التجويد: خط QCF V4 من مجمع الملك فهد عبر Quran Foundation.\nhttps://api-docs.quran.com/docs/tutorials/fonts/font-rendering/\n\nصور المصحف المحفوظة: مصحف المدينة برواية حفص، مجمع الملك فهد عبر Quran.ws quran-svg v1.1.1.\nحقوق الرسوم للمجمع؛ بيانات مناطق الآيات © 2026 Quran.ws، ترخيص CC BY 4.0.\nhttps://github.com/quran-ws/quran-svg/blob/v1.1.1/NOTICE.md\n\nخطوط النص: أميري قرآن، شهرزاد، لطيف، ونوتو نسخ العربية بترخيص SIL OFL.\nخط عثماني حفص V3.0: مجمع الملك فهد لطباعة المصحف الشريف، موزّع دون تعديل وفق رخصته.\nhttps://fonts.qurancomplex.gov.sa/hafs-reading/\nتُرفق رخص الخطوط مع ملفات التطبيق.",
+    "en": "Tanzil Project\n{sourceUrl}\n\n{license}\n\nTajweed pages: QCF V4 font from the King Fahd Complex via Quran Foundation.\nhttps://api-docs.quran.com/docs/tutorials/fonts/font-rendering/\n\nSaved mushaf images: Madinah mushaf, Hafs, King Fahd Complex via Quran.ws quran-svg v1.1.1.\nArtwork rights belong to the Complex; verse-region data © 2026 Quran.ws, CC BY 4.0.\nhttps://github.com/quran-ws/quran-svg/blob/v1.1.1/NOTICE.md\n\nText fonts: Amiri Quran, Scheherazade, Lateef and Noto Naskh Arabic under SIL OFL.\nUthmanic Hafs V3.0: King Fahd Complex for the Printing of the Holy Quran, distributed unchanged under its license.\nhttps://fonts.qurancomplex.gov.sa/hafs-reading/\nFont licenses are included with the app."
+  },
+  "playback.continueTitle": {
+    "en": "Continue listening?",
+    "ar": "متابعة الاستماع؟"
+  },
+  "playback.continueQuestion": {
+    "en": "Would you like audio to continue after leaving this page?",
+    "ar": "هل تريد أن يستمر الصوت بعد مغادرة هذه الصفحة؟"
+  },
+  "playback.stop": {
+    "en": "No, stop audio",
+    "ar": "لا، إيقاف الصوت"
+  },
+  "playback.continue": {
+    "en": "Yes, continue listening",
+    "ar": "نعم، متابعة الاستماع"
+  },
+  "navigation.loading": {
+    "en": "Navigating",
+    "ar": "جارٍ الانتقال"
+  },
+  "navigation.opening": {
+    "en": "Opening page…",
+    "ar": "جارٍ فتح الصفحة…"
+  },
+  "quran.tafsirSource.91": {
+    "ar": "تفسير السعدي",
+    "en": "As-Sadi (Arabic)"
+  },
+  "quran.tafsirSource.15": {
+    "ar": "تفسير الطبري",
+    "en": "At-Tabari (Arabic)"
+  },
+  "quran.tafsirSource.14": {
+    "ar": "تفسير ابن كثير",
+    "en": "Ibn Kathir (Arabic)"
+  },
+  "quran.tafsirSource.90": {
+    "ar": "تفسير القرطبي",
+    "en": "Al-Qurtubi (Arabic)"
   }
 }
