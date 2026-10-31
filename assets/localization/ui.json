@@ -1492,8 +1492,8 @@
     "ar": "نطاق البحث"
   },
   "quran.label.9f06a940c07d": {
-    "en": "Entire Quran",
-    "ar": "كل القرآن"
+    "ar": "كل القرآن",
+    "en": "All Quran"
   },
   "quran.label.19f9aac381a8": {
     "en": "Specific surah",
@@ -1588,20 +1588,20 @@
     "ar": "فهرس السور"
   },
   "quran.label.bd51a8b5fb50": {
-    "en": "Juz index",
-    "ar": "الأجزاء"
+    "ar": "الأجزاء",
+    "en": "Juz"
   },
   "quran.label.5e5225c86cab": {
-    "en": "Surahs",
-    "ar": "السور"
+    "ar": "السور",
+    "en": "Surahs"
   },
   "quran.label.ce1bdcc6a4a3": {
     "en": "Bookmarks",
     "ar": "العلامات المرجعية"
   },
   "quran.label.9f2908941570": {
-    "en": "Favorites",
-    "ar": "المفضلة"
+    "ar": "المفضلة",
+    "en": "Favorites"
   },
   "quran.label.2dea552e7835": {
     "ar": "إعدادات القراءة",
@@ -1612,12 +1612,12 @@
     "ar": "إعدادات القرآن"
   },
   "quran.label.8c84ce4c577f": {
-    "en": "Play",
-    "ar": "تشغيل"
+    "ar": "تشغيل",
+    "en": "Play"
   },
   "quran.label.cb7f6fd46259": {
-    "en": "Pause",
-    "ar": "إيقاف مؤقت"
+    "ar": "إيقاف مؤقت",
+    "en": "Pause"
   },
   "quran.label.87c89429ccaa": {
     "en": "Stop",
@@ -1636,28 +1636,28 @@
     "ar": "حفظ"
   },
   "quran.label.9a30dc2a96b8": {
-    "en": "Cancel",
-    "ar": "إلغاء"
+    "ar": "إلغاء",
+    "en": "Cancel"
   },
   "quran.label.29a0e2739a92": {
     "en": "Copy",
     "ar": "نسخ"
   },
   "quran.label.ace24891cec1": {
-    "en": "Share",
-    "ar": "مشاركة"
+    "ar": "مشاركة",
+    "en": "Share"
   },
   "quran.label.14d5786f2e64": {
     "ar": "إعادة المحاولة",
     "en": "Try again"
   },
   "quran.label.83fcc51a28b4": {
-    "en": "Downloads",
-    "ar": "التنزيلات"
+    "ar": "التنزيلات",
+    "en": "Downloads"
   },
   "quran.label.cc52200ebc71": {
-    "en": "View all",
-    "ar": "عرض الكل"
+    "ar": "عرض الكل",
+    "en": "View all"
   },
   "search.results": {
     "en": "Search results: {count}",
@@ -6068,8 +6068,8 @@
     "ar": "خيارات الآية"
   },
   "quran.label.1551d5ed3d4d": {
-    "en": "Clear selection",
-    "ar": "إلغاء التحديد"
+    "ar": "إلغاء التحديد",
+    "en": "Clear selection"
   },
   "quran.label.c15b3a94c113": {
     "en": "Surah",
@@ -6104,8 +6104,8 @@
     "en": "Listen to verse"
   },
   "quran.label.a8af43b37aca": {
-    "en": "Listen to and repeat a verse range",
-    "ar": "استماع وتكرار نطاق آيات"
+    "ar": "استماع وتكرار نطاق آيات",
+    "en": "Listen to and repeat a verse range"
   },
   "quran.label.09b7a507874a": {
     "en": "Choose verse reciter",
@@ -6220,12 +6220,12 @@
     "ar": "اختيار القارئ"
   },
   "quran.label.2301497b65a8": {
-    "en": "Collapse player",
-    "ar": "طي المشغل"
+    "ar": "طي المشغل",
+    "en": "Collapse player"
   },
   "quran.label.eec5b9c06eff": {
-    "en": "Expand player",
-    "ar": "توسيع المشغل"
+    "ar": "توسيع المشغل",
+    "en": "Expand player"
   },
   "quran.label.808622b854e0": {
     "en": "Play full surah",
@@ -6470,5 +6470,2345 @@
   "quran.label.1054faf35a6b": {
     "en": "The saved page is damaged. Download it again.",
     "ar": "الصفحة المحفوظة تالفة؛ أعد تنزيلها"
+  },
+  "quran.label.148096cae435": {
+    "ar": "حفص عن عاصم",
+    "en": "Hafs from Asim"
+  },
+  "quran.label.6ebc54883cce": {
+    "ar": "تصغير المشغل",
+    "en": "Minimize player"
+  },
+  "quran.label.c34edf7b14ae": {
+    "ar": "جارٍ تحميل التلاوة…",
+    "en": "Loading recitation…"
+  },
+  "quran.label.ae7d43e61c0b": {
+    "ar": "إغلاق المشغل وإيقاف الصوت",
+    "en": "Close player and stop audio"
+  },
+  "quran.label.1d40c54876d1": {
+    "ar": "مؤقت إيقاف",
+    "en": "Sleep timer"
+  },
+  "quran.label.8d0bda8a3a9f": {
+    "ar": "المؤقت مفعّل",
+    "en": "Timer active"
+  },
+  "quran.label.5c93bfa9abf4": {
+    "ar": "قائمة التشغيل وخيارات التلاوة",
+    "en": "Queue and recitation options"
+  },
+  "quran.label.086d2496167c": {
+    "ar": "قائمة التشغيل",
+    "en": "Queue"
+  },
+  "quran.label.740acd793cc3": {
+    "ar": "فتح المشغل",
+    "en": "Open player"
+  },
+  "quran.label.332ec57cdb03": {
+    "ar": "إيقاف التلاوة",
+    "en": "Stop recitation"
+  },
+  "quran.label.2cf7c33eb62d": {
+    "ar": "التلاوة السابقة",
+    "en": "Previous recitation"
+  },
+  "quran.label.7889f8f7ab27": {
+    "ar": "التلاوة التالية",
+    "en": "Next recitation"
+  },
+  "quran.label.b308d640bc25": {
+    "ar": "التكرار",
+    "en": "Repeat"
+  },
+  "quran.label.75e38ead8851": {
+    "ar": "اختر سورة للاستماع",
+    "en": "Choose a surah to listen"
+  },
+  "quran.label.e5ec94754d89": {
+    "ar": "مطلع السورة",
+    "en": "Start of surah"
+  },
+  "quran.label.43f49034c1ef": {
+    "ar": "إرجاع 10 ثوانٍ",
+    "en": "Rewind 10 seconds"
+  },
+  "quran.label.25a749c1a1b8": {
+    "ar": "تقديم 10 ثوانٍ",
+    "en": "Forward 10 seconds"
+  },
+  "quran.label.e0500290a197": {
+    "ar": "لم تبدأ تلاوة بعد",
+    "en": "No recitation started yet"
+  },
+  "quran.label.39ad70c011f4": {
+    "ar": "سرعة التلاوة",
+    "en": "Playback speed"
+  },
+  "quran.label.db4aca07fd8f": {
+    "ar": "تكرار التلاوة",
+    "en": "Repeat recitation"
+  },
+  "quran.label.b11feef358d1": {
+    "ar": "دون تكرار",
+    "en": "No repeat"
+  },
+  "quran.label.764c4c121e05": {
+    "ar": "تكرار التلاوة الحالية",
+    "en": "Repeat current recitation"
+  },
+  "quran.label.6fd4975fa282": {
+    "ar": "تكرار القائمة أو نطاق الآيات",
+    "en": "Repeat queue or verse range"
+  },
+  "quran.label.534f2a6e345c": {
+    "ar": "مؤقت إيقاف التلاوة",
+    "en": "Recitation sleep timer"
+  },
+  "quran.label.4d88a43466ee": {
+    "ar": "تلاشي الصوت في آخر 5 ثوانٍ",
+    "en": "Fade out during the last 5 seconds"
+  },
+  "quran.label.7c579960579d": {
+    "ar": "إلغاء المؤقت",
+    "en": "Cancel timer"
+  },
+  "quran.label.c563bd896dec": {
+    "ar": "بعد التسجيل الحالي",
+    "en": "After current recording"
+  },
+  "quran.label.492f9c6ce413": {
+    "ar": "بعد السورة الحالية",
+    "en": "After current surah"
+  },
+  "quran.label.9d757713e6c3": {
+    "ar": "حتى نهاية السورة أو النطاق المحمّل؛ يلغي التكرار الحالي",
+    "en": "Until the end of the surah or loaded range; disables repeat"
+  },
+  "quran.label.86682eebece2": {
+    "ar": "من الآية",
+    "en": "From verse"
+  },
+  "quran.label.32bd7cf5f40c": {
+    "ar": "إلى الآية",
+    "en": "To verse"
+  },
+  "quran.label.ce121e112f18": {
+    "ar": "عدد مرات تكرار النطاق",
+    "en": "Number of range repetitions"
+  },
+  "quran.label.f06eb6ba84dc": {
+    "ar": "بدء الاستماع",
+    "en": "Start listening"
+  },
+  "quran.label.e5757616319f": {
+    "ar": "إعادة تحميل قائمة القراء",
+    "en": "Reload reciter list"
+  },
+  "quran.label.4dc477ea4029": {
+    "ar": "جارٍ تحميل القراء والتلاوات",
+    "en": "Loading reciters and recitations"
+  },
+  "quran.label.74e9a4c1c75e": {
+    "ar": "القرآن المسموع",
+    "en": "Quran audio"
+  },
+  "quran.label.2641c77d231e": {
+    "ar": "استمع إلى تلاوات متنوعة وخشوع",
+    "en": "Listen to a selection of Quran recitations"
+  },
+  "quran.label.19deea10817e": {
+    "ar": "اختر القارئ",
+    "en": "Choose reciter"
+  },
+  "quran.label.25e991bb55ff": {
+    "ar": "قائمة السور",
+    "en": "Surah list"
+  },
+  "quran.label.1606b036d54f": {
+    "ar": "بحث عن سورة...",
+    "en": "Search for a surah…"
+  },
+  "quran.label.a1ac703ec27d": {
+    "ar": "لا توجد سور مطابقة",
+    "en": "No matching surahs"
+  },
+  "quran.label.3881e2005fc3": {
+    "ar": "خيارات التلاوة",
+    "en": "Recitation options"
+  },
+  "quran.label.c1ea8bb77a49": {
+    "ar": "تنزيل السورة",
+    "en": "Download surah"
+  },
+  "quran.label.d98b0ce98368": {
+    "ar": "إزالة من المفضلة الصوتية",
+    "en": "Remove from audio favorites"
+  },
+  "quran.label.3ac580a8d23f": {
+    "ar": "إضافة للمفضلة الصوتية",
+    "en": "Add to audio favorites"
+  },
+  "quran.label.b549b65a92ca": {
+    "ar": "مشاركة التلاوة",
+    "en": "Share recitation"
+  },
+  "quran.label.d5da3973631f": {
+    "ar": "مصدر التلاوات: MP3Quran.net • رواية حفص عن عاصم",
+    "en": "Recitation source: MP3Quran.net • Hafs from Asim"
+  },
+  "quran.label.710eced21ba8": {
+    "ar": "اختيار القارئ والتلاوة",
+    "en": "Choose reciter and recitation"
+  },
+  "quran.label.05c7bfb00b01": {
+    "ar": "تلاوة الآيات • حفص عن عاصم",
+    "en": "Verse recitations • Hafs from Asim"
+  },
+  "quran.label.89f23aad659a": {
+    "ar": "تلاوات السور • حفص عن عاصم",
+    "en": "Surah recitations • Hafs from Asim"
+  },
+  "quran.label.27b03248f74f": {
+    "ar": "ابحث عن قارئ...",
+    "en": "Search for a reciter…"
+  },
+  "quran.label.1f063e3aaf48": {
+    "ar": "مرتل",
+    "en": "Murattal"
+  },
+  "quran.label.20505152d477": {
+    "ar": "مجود",
+    "en": "Mujawwad"
+  },
+  "quran.label.59a10a367980": {
+    "ar": "لا توجد تلاوات مطابقة",
+    "en": "No matching recitations"
+  },
+  "quran.label.25df3412cd6d": {
+    "ar": "مفضلة القراء",
+    "en": "Favorite reciters"
+  },
+  "quran.audioListenSurah": {
+    "ar": "استماع إلى سورة {name}",
+    "en": "Listen to Surah {name}"
+  },
+  "quran.audioChapterDetails": {
+    "ar": "{count} آية • الصفحة {page}",
+    "en": "{count} verses • page {page}"
+  },
+  "quran.audioChaptersAvailable": {
+    "ar": "{count} سورة متاحة",
+    "en": "{count} surahs available"
+  },
+  "quran.audioSleepMinutes": {
+    "ar": "بعد {minutes} دقيقة",
+    "en": "After {minutes} minutes"
+  },
+  "quran.recitation.mp3quran:1.name": {
+    "en": "Ibrahim Al-Akdar",
+    "ar": "إبراهيم الأخضر"
+  },
+  "quran.recitation.mp3quran:1.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10.name": {
+    "en": "Akram Alalaqmi",
+    "ar": "أكرم العلاقمي"
+  },
+  "quran.recitation.mp3quran:10.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:100.name": {
+    "en": "Majed Al-Enezi",
+    "ar": "ماجد العنزي"
+  },
+  "quran.recitation.mp3quran:100.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:102.name": {
+    "en": "Maher Al Meaqli",
+    "ar": "ماهر المعيقلي"
+  },
+  "quran.recitation.mp3quran:102.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:105.name": {
+    "en": "Mohammed Al-Barrak",
+    "ar": "محمد البراك"
+  },
+  "quran.recitation.mp3quran:105.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:106.name": {
+    "en": "Mohammad Al-Tablaway",
+    "ar": "محمد الطبلاوي"
+  },
+  "quran.recitation.mp3quran:106.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:107.name": {
+    "en": "Mohammed Al-Lohaidan",
+    "ar": "محمد اللحيدان"
+  },
+  "quran.recitation.mp3quran:107.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:108.name": {
+    "en": "Mohammed Al-Muhasny",
+    "ar": "محمد المحيسني"
+  },
+  "quran.recitation.mp3quran:108.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:320.name": {
+    "en": "Mohammed Ayyub",
+    "ar": "محمد أيوب"
+  },
+  "quran.recitation.mp3quran:320.style": {
+    "en": "Rewayat Hafs A'n Assem - Featured Recitation",
+    "ar": "حفص عن عاصم - تلاوة مميزة"
+  },
+  "quran.recitation.mp3quran:109.name": {
+    "en": "Mohammed Ayyub",
+    "ar": "محمد أيوب"
+  },
+  "quran.recitation.mp3quran:109.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:110.name": {
+    "en": "Mohammad Saleh Alim Shah",
+    "ar": "محمد صالح عالم شاه"
+  },
+  "quran.recitation.mp3quran:110.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:111.name": {
+    "en": "Mohammed Jibreel",
+    "ar": "محمد جبريل"
+  },
+  "quran.recitation.mp3quran:111.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10924.name": {
+    "en": "Mohammed Siddiq Al-Minshawi",
+    "ar": "محمد صديق المنشاوي"
+  },
+  "quran.recitation.mp3quran:10924.style": {
+    "en": "Rewayat Hafs A'n Assem - Recorded in 1387 AH (1967 CE)",
+    "ar": "حفص عن عاصم - تسجيل عام 1387 هـ - 1967م"
+  },
+  "quran.recitation.mp3quran:112.name": {
+    "en": "Mohammed Siddiq Al-Minshawi",
+    "ar": "محمد صديق المنشاوي"
+  },
+  "quran.recitation.mp3quran:112.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:115.name": {
+    "en": "Mohammad Abdullkarem",
+    "ar": "محمد عبدالكريم"
+  },
+  "quran.recitation.mp3quran:115.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:118.name": {
+    "en": "Mahmoud Khalil Al-Hussary",
+    "ar": "محمود خليل الحصري"
+  },
+  "quran.recitation.mp3quran:118.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:12.name": {
+    "en": "Idrees Abkr",
+    "ar": "إدريس أبكر"
+  },
+  "quran.recitation.mp3quran:12.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:121.name": {
+    "en": "Mahmoud Ali  Albanna",
+    "ar": "محمود علي البنا"
+  },
+  "quran.recitation.mp3quran:121.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:123.name": {
+    "en": "Mishary Alafasi",
+    "ar": "مشاري العفاسي"
+  },
+  "quran.recitation.mp3quran:123.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:125.name": {
+    "en": "Mustafa Ismail",
+    "ar": "مصطفى إسماعيل"
+  },
+  "quran.recitation.mp3quran:125.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:126.name": {
+    "en": "Mustafa Al-Lahoni",
+    "ar": "مصطفى اللاهوني"
+  },
+  "quran.recitation.mp3quran:126.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:127.name": {
+    "en": "Mustafa raad Alazawy",
+    "ar": "مصطفى رعد العزاوي"
+  },
+  "quran.recitation.mp3quran:127.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:128.name": {
+    "en": "Muamar (From Indonesia)",
+    "ar": "معمر الأندونيسي"
+  },
+  "quran.recitation.mp3quran:128.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:182.name": {
+    "en": "Muftah Alsaltany",
+    "ar": "مفتاح السلطني"
+  },
+  "quran.recitation.mp3quran:182.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:13.name": {
+    "en": "Alzain Mohammad Ahmad",
+    "ar": "الزين محمد أحمد"
+  },
+  "quran.recitation.mp3quran:13.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:135.name": {
+    "en": "Abdulrahman Alsuwayid",
+    "ar": "عبدالرحمن السويّد"
+  },
+  "quran.recitation.mp3quran:135.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:136.name": {
+    "en": "Abdulelah bin Aoun",
+    "ar": "عبدالإله بن عون"
+  },
+  "quran.recitation.mp3quran:136.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:137.name": {
+    "en": "Ahmad Talib bin Humaid",
+    "ar": "أحمد طالب بن حميد"
+  },
+  "quran.recitation.mp3quran:137.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:139.name": {
+    "en": "Majed Al-Zamil",
+    "ar": "ماجد الزامل"
+  },
+  "quran.recitation.mp3quran:139.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:149.name": {
+    "en": "Maher Shakhashero",
+    "ar": "ماهر شخاشيرو"
+  },
+  "quran.recitation.mp3quran:149.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:15.name": {
+    "en": "Alashri Omran",
+    "ar": "العشري عمران"
+  },
+  "quran.recitation.mp3quran:15.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:150.name": {
+    "en": "Mohammad AlMonshed",
+    "ar": "محمد المنشد"
+  },
+  "quran.recitation.mp3quran:150.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:152.name": {
+    "en": "Yasser Salamah",
+    "ar": "ياسر سلامة"
+  },
+  "quran.recitation.mp3quran:152.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:153.name": {
+    "en": "Akhil Abdulhayy Rawa",
+    "ar": "أخيل عبدالحي روا"
+  },
+  "quran.recitation.mp3quran:153.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:154.name": {
+    "en": "Ustaz Zamri",
+    "ar": "أستاذ زامري"
+  },
+  "quran.recitation.mp3quran:154.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:159.name": {
+    "en": "Khalid Almohana",
+    "ar": "خالد المهنا"
+  },
+  "quran.recitation.mp3quran:159.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:160.name": {
+    "en": "Adel Al-Khalbany",
+    "ar": "عادل الكلباني"
+  },
+  "quran.recitation.mp3quran:160.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:161.name": {
+    "en": "Mousa Bilal",
+    "ar": "موسى بلال"
+  },
+  "quran.recitation.mp3quran:161.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:162.name": {
+    "en": "Hussain Alshaik",
+    "ar": "حسين آل الشيخ"
+  },
+  "quran.recitation.mp3quran:162.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:163.name": {
+    "en": "Hatem Fareed Alwaer",
+    "ar": "حاتم فريد الواعر"
+  },
+  "quran.recitation.mp3quran:163.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:164.name": {
+    "en": "Ibrahim Aljormy",
+    "ar": "إبراهيم الجرمي"
+  },
+  "quran.recitation.mp3quran:164.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:165.name": {
+    "en": "Mahmood Al rifai",
+    "ar": "محمود الرفاعي"
+  },
+  "quran.recitation.mp3quran:165.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:166.name": {
+    "en": "Nasser Al obaid",
+    "ar": "ناصر العبيد"
+  },
+  "quran.recitation.mp3quran:166.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:167.name": {
+    "en": "Wasel Almethen",
+    "ar": "واصل المذن"
+  },
+  "quran.recitation.mp3quran:167.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:17.name": {
+    "en": "Tawfeeq As-Sayegh",
+    "ar": "توفيق الصايغ"
+  },
+  "quran.recitation.mp3quran:17.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:232.name": {
+    "en": "Ibrahim Aldosari",
+    "ar": "إبراهيم الدوسري"
+  },
+  "quran.recitation.mp3quran:232.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:18.name": {
+    "en": "Jamal Shaker Abdullah",
+    "ar": "جمال شاكر عبدالله"
+  },
+  "quran.recitation.mp3quran:18.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:181.name": {
+    "en": "Jamaan Alosaimi",
+    "ar": "جمعان العصيمي"
+  },
+  "quran.recitation.mp3quran:181.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:183.name": {
+    "en": "Rodziah Abdulrahman",
+    "ar": "رضية عبدالرحمن"
+  },
+  "quran.recitation.mp3quran:183.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:184.name": {
+    "en": "Rogayah Sulong",
+    "ar": "رقية سولونق"
+  },
+  "quran.recitation.mp3quran:184.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:185.name": {
+    "en": "Sapinah Mamat",
+    "ar": "سابينة مامات"
+  },
+  "quran.recitation.mp3quran:185.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:187.name": {
+    "en": "Saidin Abdulrahman",
+    "ar": "سيدين عبدالرحمن"
+  },
+  "quran.recitation.mp3quran:187.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:188.name": {
+    "en": "Abdulghani Abdullah",
+    "ar": "عبدالغني عبدالله"
+  },
+  "quran.recitation.mp3quran:188.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:189.name": {
+    "en": "Abdullah Fahmi",
+    "ar": "عبدالله فهمي"
+  },
+  "quran.recitation.mp3quran:189.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:19.name": {
+    "en": "Hamad Al Daghriri",
+    "ar": "حمد الدغريري"
+  },
+  "quran.recitation.mp3quran:19.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:190.name": {
+    "en": "Muhammad Al-Hafiz",
+    "ar": "محمد الحافظ"
+  },
+  "quran.recitation.mp3quran:190.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:191.name": {
+    "en": "Mohammed Hafas Ali",
+    "ar": "محمد حفص علي"
+  },
+  "quran.recitation.mp3quran:191.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:192.name": {
+    "en": "Muhammed Khairul Anuar",
+    "ar": "محمد خير النور"
+  },
+  "quran.recitation.mp3quran:192.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:193.name": {
+    "en": "Yousef Bin Noah Ahmad",
+    "ar": "يوسف بن نوح أحمد"
+  },
+  "quran.recitation.mp3quran:193.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:194.name": {
+    "en": "Jamal Addeen Alzailaie",
+    "ar": "جمال الدين الزيلعي"
+  },
+  "quran.recitation.mp3quran:194.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:197.name": {
+    "en": "Moeedh Alharthi",
+    "ar": "معيض الحارثي"
+  },
+  "quran.recitation.mp3quran:197.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:198.name": {
+    "en": "Mohammad Rashad Alshareef",
+    "ar": "محمد رشاد الشريف"
+  },
+  "quran.recitation.mp3quran:198.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:2.name": {
+    "en": "Ibrahim Al-Jebreen",
+    "ar": "إبراهيم الجبرين"
+  },
+  "quran.recitation.mp3quran:2.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:20.name": {
+    "en": "Khalid Al-Jileel",
+    "ar": "خالد الجليل"
+  },
+  "quran.recitation.mp3quran:20.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:201.name": {
+    "en": "Ahmed Al-trabulsi",
+    "ar": "أحمد الطرابلسي"
+  },
+  "quran.recitation.mp3quran:201.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:202.name": {
+    "en": "Abdullah Al-Kandari",
+    "ar": "عبدالله الكندري"
+  },
+  "quran.recitation.mp3quran:202.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:203.name": {
+    "en": "Ahmed Amer",
+    "ar": "أحمد عامر"
+  },
+  "quran.recitation.mp3quran:203.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:204.name": {
+    "en": "Ibrahem Assadan",
+    "ar": "إبراهيم السعدان"
+  },
+  "quran.recitation.mp3quran:204.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:205.name": {
+    "en": "Ahmad Alhuthaifi",
+    "ar": "أحمد الحذيفي"
+  },
+  "quran.recitation.mp3quran:205.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:206.name": {
+    "en": "Mohammed Osman Khan",
+    "ar": "محمد عثمان خان"
+  },
+  "quran.recitation.mp3quran:206.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:207.name": {
+    "en": "Youssef Edghouch",
+    "ar": "يوسف الدغوش"
+  },
+  "quran.recitation.mp3quran:207.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:209.name": {
+    "en": "Wishear Hayder Arbili",
+    "ar": "وشيار حيدر اربيلي"
+  },
+  "quran.recitation.mp3quran:209.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:21.name": {
+    "en": "Khaled Al-Qahtani",
+    "ar": "خالد القحطاني"
+  },
+  "quran.recitation.mp3quran:21.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10914.name": {
+    "en": "Abdullah Alqarafi",
+    "ar": "عبدالله القرافي"
+  },
+  "quran.recitation.mp3quran:10914.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10915.name": {
+    "en": "Abdulbadi Ghailan",
+    "ar": "عبدالبديع غيلان"
+  },
+  "quran.recitation.mp3quran:10915.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:340.name": {
+    "en": "Muhammad Burhaji",
+    "ar": "محمد برهجي"
+  },
+  "quran.recitation.mp3quran:340.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10904.name": {
+    "en": "Yusuf ALaidroos",
+    "ar": "يوسف العيدروس"
+  },
+  "quran.recitation.mp3quran:10904.style": {
+    "en": "Rewayat Hafs A'n Assem - Featured Recitation",
+    "ar": "حفص عن عاصم - تلاوة مميزة"
+  },
+  "quran.recitation.mp3quran:10905.name": {
+    "en": "Hassan Aldaghriri",
+    "ar": "حسن الدغريري"
+  },
+  "quran.recitation.mp3quran:10905.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10906.name": {
+    "en": "Muhammad Al Faqih",
+    "ar": "محمد الفقيه"
+  },
+  "quran.recitation.mp3quran:10906.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10908.name": {
+    "en": "Junaid Adam Abdullah",
+    "ar": "جنيد آدم عبدالله"
+  },
+  "quran.recitation.mp3quran:10908.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10909.name": {
+    "en": "Khalid Alziyadi",
+    "ar": "خالد الزيادي"
+  },
+  "quran.recitation.mp3quran:10909.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10910.name": {
+    "en": "Alwaleed Alshamsan",
+    "ar": "الوليد الشمسان"
+  },
+  "quran.recitation.mp3quran:10910.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10911.name": {
+    "en": "Ibrahim Al-Shahri",
+    "ar": "إبراهيم الشهري"
+  },
+  "quran.recitation.mp3quran:10911.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10913.name": {
+    "en": "Abdul Rahman bin Abdul Razzaq Al Badr",
+    "ar": "عبدالرحمن بن عبدالرزاق البدر"
+  },
+  "quran.recitation.mp3quran:10913.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10917.name": {
+    "en": "Alijon Qori",
+    "ar": "عليجان قوري حمدان"
+  },
+  "quran.recitation.mp3quran:10917.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10918.name": {
+    "en": "Mohammed Al-Zubaidi",
+    "ar": "محمد الزبيدي"
+  },
+  "quran.recitation.mp3quran:10918.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10921.name": {
+    "en": "Mohammad Dibirov",
+    "ar": "محمد ديبيروف"
+  },
+  "quran.recitation.mp3quran:10921.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10922.name": {
+    "en": "Asim Al-Luhaidan",
+    "ar": "عاصم اللحیدان"
+  },
+  "quran.recitation.mp3quran:10922.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10923.name": {
+    "en": "Mahmoud Harfoush",
+    "ar": "محمود حرفوش"
+  },
+  "quran.recitation.mp3quran:10923.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:10925.name": {
+    "en": "Ayman Rushdi Swaid",
+    "ar": "أيمن رشدي سويد"
+  },
+  "quran.recitation.mp3quran:10925.style": {
+    "en": "Rewayat Hafs A'n Assem - Almusshaf Al Mo'lim",
+    "ar": "حفص عن عاصم - المصحف المعلم"
+  },
+  "quran.recitation.mp3quran:216.name": {
+    "en": "Othman Al-Ansary",
+    "ar": "عثمان الأنصاري"
+  },
+  "quran.recitation.mp3quran:216.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:217.name": {
+    "en": "Bandar Balilah",
+    "ar": "بندر بليله"
+  },
+  "quran.recitation.mp3quran:217.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:218.name": {
+    "en": "Khalid Al-Shoraimy",
+    "ar": "خالد الشريمي"
+  },
+  "quran.recitation.mp3quran:218.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:219.name": {
+    "en": "Wadeea Al-Yamani",
+    "ar": "وديع اليمني"
+  },
+  "quran.recitation.mp3quran:219.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:22.name": {
+    "en": "Khalid Abdulkafi",
+    "ar": "خالد عبدالكافي"
+  },
+  "quran.recitation.mp3quran:22.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:221.name": {
+    "en": "Raad Al Kurdi",
+    "ar": "رعد محمد الكردي"
+  },
+  "quran.recitation.mp3quran:221.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:225.name": {
+    "en": "Abdulrahman Aloosi",
+    "ar": "عبدالرحمن العوسي"
+  },
+  "quran.recitation.mp3quran:225.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:226.name": {
+    "en": "Khalid Algamdi",
+    "ar": "خالد الغامدي"
+  },
+  "quran.recitation.mp3quran:226.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:227.name": {
+    "en": "Ramadan Shakoor",
+    "ar": "رمضان شكور"
+  },
+  "quran.recitation.mp3quran:227.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:228.name": {
+    "en": "Abdulmajeed Al-Arkani",
+    "ar": "عبدالمجيد الأركاني"
+  },
+  "quran.recitation.mp3quran:228.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:229.name": {
+    "en": "Mohammad Khalil Al-Qari",
+    "ar": "محمد خليل القارئ"
+  },
+  "quran.recitation.mp3quran:229.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:23.name": {
+    "en": "Khalid Al-Wehabi",
+    "ar": "خالد الوهيبي"
+  },
+  "quran.recitation.mp3quran:23.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:230.name": {
+    "en": "Rami Aldeais",
+    "ar": "رامي الدعيس"
+  },
+  "quran.recitation.mp3quran:230.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:231.name": {
+    "en": "Hazza Al-Balushi",
+    "ar": "هزاع البلوشي"
+  },
+  "quran.recitation.mp3quran:231.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:236.name": {
+    "en": "Abdulrahman Al-Majed",
+    "ar": "عبدالرحمن الماجد"
+  },
+  "quran.recitation.mp3quran:236.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:24.name": {
+    "en": "Khalifa Altunaiji",
+    "ar": "خليفة الطنيجي"
+  },
+  "quran.recitation.mp3quran:24.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:240.name": {
+    "en": "Salman Alotaibi",
+    "ar": "سلمان العتيبي"
+  },
+  "quran.recitation.mp3quran:240.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:241.name": {
+    "en": "Mohammad Refat",
+    "ar": "محمد رفعت"
+  },
+  "quran.recitation.mp3quran:241.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:243.name": {
+    "en": "Abdullah Al-Mousa",
+    "ar": "عبدالله الموسى"
+  },
+  "quran.recitation.mp3quran:243.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:244.name": {
+    "en": "Abdullah Al-Khalaf",
+    "ar": "عبدالله الخلف"
+  },
+  "quran.recitation.mp3quran:244.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:245.name": {
+    "en": "Mansour Al-Salemi",
+    "ar": "منصور السالمي"
+  },
+  "quran.recitation.mp3quran:245.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:246.name": {
+    "en": "Salah Musali",
+    "ar": "صلاح مصلي"
+  },
+  "quran.recitation.mp3quran:246.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:247.name": {
+    "en": "Khalid Alsharekh",
+    "ar": "خالد الشارخ"
+  },
+  "quran.recitation.mp3quran:247.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:248.name": {
+    "en": "Nasser Alosfor",
+    "ar": "ناصر العصفور"
+  },
+  "quran.recitation.mp3quran:248.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:25.name": {
+    "en": "Dawood Hamza",
+    "ar": "داود حمزة"
+  },
+  "quran.recitation.mp3quran:25.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:250.name": {
+    "en": "Mohammad Albukheet",
+    "ar": "محمد البخيت"
+  },
+  "quran.recitation.mp3quran:250.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:251.name": {
+    "en": "Nasser Almajed",
+    "ar": "ناصر الماجد"
+  },
+  "quran.recitation.mp3quran:251.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:252.name": {
+    "en": "Ahmed Al-Swailem",
+    "ar": "أحمد السويلم"
+  },
+  "quran.recitation.mp3quran:252.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:253.name": {
+    "en": "Islam Sobhi",
+    "ar": "إسلام صبحي"
+  },
+  "quran.recitation.mp3quran:253.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:254.name": {
+    "en": "Bader Alturki",
+    "ar": "بدر التركي"
+  },
+  "quran.recitation.mp3quran:254.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:255.name": {
+    "en": "Hitham Aljadani",
+    "ar": "هيثم الجدعاني"
+  },
+  "quran.recitation.mp3quran:255.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:256.name": {
+    "en": "Ahmad Shaheen",
+    "ar": "أحمد خليل شاهين"
+  },
+  "quran.recitation.mp3quran:256.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:257.name": {
+    "en": "Saad Almqren",
+    "ar": "سعد المقرن"
+  },
+  "quran.recitation.mp3quran:257.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:259.name": {
+    "en": "Ahmad Al Nufais",
+    "ar": "أحمد النفيس"
+  },
+  "quran.recitation.mp3quran:259.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:260.name": {
+    "en": "Omar Al Darweez",
+    "ar": "عمر الدريويز"
+  },
+  "quran.recitation.mp3quran:260.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:263.name": {
+    "en": "Abdulaziz Alasiri",
+    "ar": "عبدالعزيز العسيري"
+  },
+  "quran.recitation.mp3quran:263.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:265.name": {
+    "en": "Ahmad Deban",
+    "ar": "أحمد ديبان"
+  },
+  "quran.recitation.mp3quran:265.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:267.name": {
+    "en": "Abdullah Kamel",
+    "ar": "عبدالله كامل"
+  },
+  "quran.recitation.mp3quran:267.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:268.name": {
+    "en": "Peshawa Qadr Al-Kurdi",
+    "ar": "بيشه وا قادر الكردي"
+  },
+  "quran.recitation.mp3quran:268.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:261.name": {
+    "en": "Rachid Belalya",
+    "ar": "رشيد بلعالية"
+  },
+  "quran.recitation.mp3quran:261.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:271.name": {
+    "en": "Nathier Almalki",
+    "ar": "نذير المالكي"
+  },
+  "quran.recitation.mp3quran:271.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:273.name": {
+    "en": "Haitham Aldukhain",
+    "ar": "هيثم الدخين"
+  },
+  "quran.recitation.mp3quran:273.style": {
+    "en": "Rewayat Hafs A'n Assem - Featured Recitation",
+    "ar": "حفص عن عاصم - تلاوة مميزة"
+  },
+  "quran.recitation.mp3quran:277.name": {
+    "en": "Mahmoud Abdul Hakam",
+    "ar": "محمود عبدالحكم"
+  },
+  "quran.recitation.mp3quran:277.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:289.name": {
+    "en": "Ahmad Issa Al Maasaraawi",
+    "ar": "أحمد عيسى المعصراوي"
+  },
+  "quran.recitation.mp3quran:289.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:28.name": {
+    "en": "Zakaria Hamamah",
+    "ar": "زكريا حمامة"
+  },
+  "quran.recitation.mp3quran:28.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:292.name": {
+    "en": "Hashim Abu Dalal",
+    "ar": "هاشم أبو دلال"
+  },
+  "quran.recitation.mp3quran:292.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:293.name": {
+    "en": "Fouad Alkhamery",
+    "ar": "فؤاد الخامري"
+  },
+  "quran.recitation.mp3quran:293.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:294.name": {
+    "en": "Sayed Ahmad Hashemi",
+    "ar": "سيد أحمد هاشمي"
+  },
+  "quran.recitation.mp3quran:294.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:295.name": {
+    "en": "Khalid Mohammadi",
+    "ar": "خالد كريم محمدي"
+  },
+  "quran.recitation.mp3quran:295.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:297.name": {
+    "en": "Mal-Allah Abdulrhman Aljaber",
+    "ar": "مال الله عبدالرحمن الجابر"
+  },
+  "quran.recitation.mp3quran:297.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:298.name": {
+    "en": "Salman Alsadeiq",
+    "ar": "سلمان الصديق"
+  },
+  "quran.recitation.mp3quran:298.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:299.name": {
+    "en": "Hasan Saleh",
+    "ar": "حسن صالح"
+  },
+  "quran.recitation.mp3quran:299.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:302.name": {
+    "en": "Abdulrahman Alshahhat",
+    "ar": "عبدالرحمن الشحات"
+  },
+  "quran.recitation.mp3quran:302.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:303.name": {
+    "en": "Issa Omar Sanankoua",
+    "ar": "عيسى عمر سناكو"
+  },
+  "quran.recitation.mp3quran:303.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:304.name": {
+    "en": "Haroon Baqai",
+    "ar": "هارون بقائي"
+  },
+  "quran.recitation.mp3quran:304.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:281.name": {
+    "en": "Abdullah Bukhari",
+    "ar": "عبدالله بخاري"
+  },
+  "quran.recitation.mp3quran:281.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:306.name": {
+    "en": "Saleh Alquraishi",
+    "ar": "صالح القريشي"
+  },
+  "quran.recitation.mp3quran:306.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:3.name": {
+    "en": "Ibrahim Al-Asiri",
+    "ar": "إبراهيم العسيري"
+  },
+  "quran.recitation.mp3quran:3.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:30.name": {
+    "en": "Saad Al-Ghamdi",
+    "ar": "سعد الغامدي"
+  },
+  "quran.recitation.mp3quran:30.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:300.name": {
+    "en": "Saleh Alshamrani",
+    "ar": "صالح الشمراني"
+  },
+  "quran.recitation.mp3quran:300.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:307.name": {
+    "en": "Faisal Al-Hajry",
+    "ar": "فيصل الهاجري"
+  },
+  "quran.recitation.mp3quran:307.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:314.name": {
+    "en": "Anas Alemadi",
+    "ar": "أنس العمادي"
+  },
+  "quran.recitation.mp3quran:314.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:315.name": {
+    "en": "Abdulmalik Alaskar",
+    "ar": "عبدالملك العسكر"
+  },
+  "quran.recitation.mp3quran:315.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:316.name": {
+    "en": "Abdulkareem Alhazmi",
+    "ar": "عبدالكريم الحازمي"
+  },
+  "quran.recitation.mp3quran:316.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:318.name": {
+    "en": "Abdullah Al-Mishal",
+    "ar": "عبدالله المشعل"
+  },
+  "quran.recitation.mp3quran:318.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:31.name": {
+    "en": "Saud Al-Shuraim",
+    "ar": "سعود الشريم"
+  },
+  "quran.recitation.mp3quran:31.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:32.name": {
+    "en": "Sahl Yassin",
+    "ar": "سهل ياسين"
+  },
+  "quran.recitation.mp3quran:32.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:33.name": {
+    "en": "Zaki Daghistani",
+    "ar": "زكي داغستاني"
+  },
+  "quran.recitation.mp3quran:33.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:34.name": {
+    "en": "Sami Al-Hasn",
+    "ar": "سامي الحسن"
+  },
+  "quran.recitation.mp3quran:34.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:35.name": {
+    "en": "Sami Al-Dosari",
+    "ar": "سامي الدوسري"
+  },
+  "quran.recitation.mp3quran:35.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:36.name": {
+    "en": "Sayeed Ramadan",
+    "ar": "سيد رمضان"
+  },
+  "quran.recitation.mp3quran:36.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:37.name": {
+    "en": "Shaban Al-Sayiaad",
+    "ar": "شعبان الصياد"
+  },
+  "quran.recitation.mp3quran:37.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:38.name": {
+    "en": "Shirazad Taher",
+    "ar": "شيرزاد عبدالرحمن طاهر"
+  },
+  "quran.recitation.mp3quran:38.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:39.name": {
+    "en": "Saber Abdulhakm",
+    "ar": "صابر عبدالحكم"
+  },
+  "quran.recitation.mp3quran:39.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:4.name": {
+    "en": "Shaik Abu Bakr Al Shatri",
+    "ar": "شيخ أبو بكر الشاطري"
+  },
+  "quran.recitation.mp3quran:4.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:40.name": {
+    "en": "Saleh Alsahood",
+    "ar": "صالح الصاهود"
+  },
+  "quran.recitation.mp3quran:40.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:41.name": {
+    "en": "Saleh Al-Talib",
+    "ar": "صالح آل طالب"
+  },
+  "quran.recitation.mp3quran:41.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:42.name": {
+    "en": "Saleh Al-Habdan",
+    "ar": "صالح الهبدان"
+  },
+  "quran.recitation.mp3quran:42.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:43.name": {
+    "en": "Salah Albudair",
+    "ar": "صلاح البدير"
+  },
+  "quran.recitation.mp3quran:43.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:44.name": {
+    "en": "Salah Alhashim",
+    "ar": "صلاح الهاشم"
+  },
+  "quran.recitation.mp3quran:44.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:46.name": {
+    "en": "Slaah Bukhatir",
+    "ar": "صلاح بو خاطر"
+  },
+  "quran.recitation.mp3quran:46.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:283.name": {
+    "en": "Mukhtar Al-Haj",
+    "ar": "مختار الحاج"
+  },
+  "quran.recitation.mp3quran:283.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:48.name": {
+    "en": "Adel Ryyan",
+    "ar": "عادل ريان"
+  },
+  "quran.recitation.mp3quran:48.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:49.name": {
+    "en": "Abdelbari Al-Toubayti",
+    "ar": "عبدالبارئ الثبيتي"
+  },
+  "quran.recitation.mp3quran:49.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:5.name": {
+    "en": "Ahmad Al-Ajmy",
+    "ar": "أحمد بن علي العجمي"
+  },
+  "quran.recitation.mp3quran:5.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:50.name": {
+    "en": "Abdulbari Mohammad",
+    "ar": "عبدالبارئ محمد"
+  },
+  "quran.recitation.mp3quran:50.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:53.name": {
+    "en": "Abdulbasit Abdulsamad",
+    "ar": "عبدالباسط عبدالصمد"
+  },
+  "quran.recitation.mp3quran:53.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:54.name": {
+    "en": "Abdulrahman Alsudaes",
+    "ar": "عبدالرحمن السديس"
+  },
+  "quran.recitation.mp3quran:54.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:55.name": {
+    "en": "Abdul Aziz Al-Ahmad",
+    "ar": "عبدالعزيز الأحمد"
+  },
+  "quran.recitation.mp3quran:55.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:56.name": {
+    "en": "Abdulaziz Az-Zahrani",
+    "ar": "عبدالعزيز الزهراني"
+  },
+  "quran.recitation.mp3quran:56.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:57.name": {
+    "en": "Abdullah Al-Burimi",
+    "ar": "عبدالله البريمي"
+  },
+  "quran.recitation.mp3quran:57.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:58.name": {
+    "en": "Abdullah Albuajan",
+    "ar": "عبدالله البعيجان"
+  },
+  "quran.recitation.mp3quran:58.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:59.name": {
+    "en": "Abdullah Al-Mattrod",
+    "ar": "عبدالله المطرود"
+  },
+  "quran.recitation.mp3quran:59.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:6.name": {
+    "en": "Ahmad Al-Hawashi",
+    "ar": "أحمد الحواشي"
+  },
+  "quran.recitation.mp3quran:6.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:60.name": {
+    "en": "Abdullah Basfer",
+    "ar": "عبدالله بصفر"
+  },
+  "quran.recitation.mp3quran:60.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:61.name": {
+    "en": "Abdullah Khayyat",
+    "ar": "عبدالله خياط"
+  },
+  "quran.recitation.mp3quran:61.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:62.name": {
+    "en": "Abdullah Al-Johany",
+    "ar": "عبدالله عواد الجهني"
+  },
+  "quran.recitation.mp3quran:62.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:63.name": {
+    "en": "Abdullah Qaulan",
+    "ar": "عبدالله غيلان"
+  },
+  "quran.recitation.mp3quran:63.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:258.name": {
+    "en": "Abdulrasheed Soufi",
+    "ar": "عبدالرشيد صوفي"
+  },
+  "quran.recitation.mp3quran:258.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:66.name": {
+    "en": "Abdulmohsin Al-Harthy",
+    "ar": "عبدالمحسن الحارثي"
+  },
+  "quran.recitation.mp3quran:66.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:67.name": {
+    "en": "Abdulmohsen Al-Qasim",
+    "ar": "عبدالمحسن القاسم"
+  },
+  "quran.recitation.mp3quran:67.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:68.name": {
+    "en": "Abdulmohsin Al-Askar",
+    "ar": "عبدالمحسن العسكر"
+  },
+  "quran.recitation.mp3quran:68.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:69.name": {
+    "en": "Abdulmohsin Al-Obaikan",
+    "ar": "عبدالمحسن العبيكان"
+  },
+  "quran.recitation.mp3quran:69.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:7.name": {
+    "en": "Ahmad Saud",
+    "ar": "أحمد سعود"
+  },
+  "quran.recitation.mp3quran:7.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:70.name": {
+    "en": "Abdulhadi Kanakeri",
+    "ar": "عبدالهادي أحمد كناكري"
+  },
+  "quran.recitation.mp3quran:70.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:71.name": {
+    "en": "Abdulwadood Haneef",
+    "ar": "عبدالودود حنيف"
+  },
+  "quran.recitation.mp3quran:71.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:72.name": {
+    "en": "Abdulwali Al-Arkani",
+    "ar": "عبدالولي الأركاني"
+  },
+  "quran.recitation.mp3quran:72.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:73.name": {
+    "en": "Ali Abo-Hashim",
+    "ar": "علي أبو هاشم"
+  },
+  "quran.recitation.mp3quran:73.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:74.name": {
+    "en": "Ali Alhuthaifi",
+    "ar": "علي بن عبدالرحمن الحذيفي"
+  },
+  "quran.recitation.mp3quran:74.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:76.name": {
+    "en": "Ali Jaber",
+    "ar": "علي جابر"
+  },
+  "quran.recitation.mp3quran:76.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:77.name": {
+    "en": "Ali Hajjaj Alsouasi",
+    "ar": "علي حجاج السويسي"
+  },
+  "quran.recitation.mp3quran:77.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:78.name": {
+    "en": "Emad Hafez",
+    "ar": "عماد زهير حافظ"
+  },
+  "quran.recitation.mp3quran:78.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:282.name": {
+    "en": "Abdulaziz Alturki",
+    "ar": "عبدالعزيز التركي"
+  },
+  "quran.recitation.mp3quran:282.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:8.name": {
+    "en": "Ahmad Saber",
+    "ar": "أحمد صابر"
+  },
+  "quran.recitation.mp3quran:8.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:81.name": {
+    "en": "Fares Abbad",
+    "ar": "فارس عباد"
+  },
+  "quran.recitation.mp3quran:81.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:82.name": {
+    "en": "Fahad Al-Otaibi",
+    "ar": "فهد العتيبي"
+  },
+  "quran.recitation.mp3quran:82.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:83.name": {
+    "en": "Fahad Al-Kandari",
+    "ar": "فهد الكندري"
+  },
+  "quran.recitation.mp3quran:83.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:84.name": {
+    "en": "Fawaz Alkabi",
+    "ar": "فواز الكعبي"
+  },
+  "quran.recitation.mp3quran:84.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:85.name": {
+    "en": "Lafi Al-Oni",
+    "ar": "لافي العوني"
+  },
+  "quran.recitation.mp3quran:85.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:86.name": {
+    "en": "Nasser Alqatami",
+    "ar": "ناصر القطامي"
+  },
+  "quran.recitation.mp3quran:86.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:87.name": {
+    "en": "Nabil Al Rifay",
+    "ar": "نبيل الرفاعي"
+  },
+  "quran.recitation.mp3quran:87.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:88.name": {
+    "en": "Neamah Al-Hassan",
+    "ar": "نعمة الحسان"
+  },
+  "quran.recitation.mp3quran:88.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:89.name": {
+    "en": "Hani Arrifai",
+    "ar": "هاني الرفاعي"
+  },
+  "quran.recitation.mp3quran:89.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:9.name": {
+    "en": "Ahmad Nauina",
+    "ar": "أحمد نعينع"
+  },
+  "quran.recitation.mp3quran:9.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:90.name": {
+    "en": "Walid Al-Dulaimi",
+    "ar": "وليد الدليمي"
+  },
+  "quran.recitation.mp3quran:90.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:92.name": {
+    "en": "Yasser Al-Dosari",
+    "ar": "ياسر الدوسري"
+  },
+  "quran.recitation.mp3quran:92.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:93.name": {
+    "en": "Yasser Al-Qurashi",
+    "ar": "ياسر القرشي"
+  },
+  "quran.recitation.mp3quran:93.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:94.name": {
+    "en": "Yasser Al-Faylakawi",
+    "ar": "ياسر الفيلكاوي"
+  },
+  "quran.recitation.mp3quran:94.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:96.name": {
+    "en": "Yahya Hawwa",
+    "ar": "يحيى حوا"
+  },
+  "quran.recitation.mp3quran:96.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:97.name": {
+    "en": "Yousef Alshoaey",
+    "ar": "يوسف الشويعي"
+  },
+  "quran.recitation.mp3quran:97.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.mp3quran:284.name": {
+    "en": "Abdullah Abdal",
+    "ar": "عبدالله عبدل"
+  },
+  "quran.recitation.mp3quran:284.style": {
+    "en": "Rewayat Hafs A'n Assem - Murattal",
+    "ar": "حفص عن عاصم - مرتل"
+  },
+  "quran.recitation.everyayah:alafasy.name": {
+    "en": "Mishary Alafasy",
+    "ar": "مشاري العفاسي"
+  },
+  "quran.recitation.everyayah:alafasy.style": {
+    "en": "Hafs from Asim • verse files",
+    "ar": "حفص عن عاصم • ملفات الآيات"
+  },
+  "quran.recitation.everyayah:sudais.name": {
+    "en": "Abdurrahman As-Sudais",
+    "ar": "عبدالرحمن السديس"
+  },
+  "quran.recitation.everyayah:sudais.style": {
+    "en": "Hafs from Asim • verse files",
+    "ar": "حفص عن عاصم • ملفات الآيات"
+  },
+  "quran.recitation.everyayah:abdulbasit.name": {
+    "en": "Abdul Basit Abdus Samad",
+    "ar": "عبدالباسط عبدالصمد"
+  },
+  "quran.recitation.everyayah:abdulbasit.style": {
+    "en": "Hafs from Asim • verse files",
+    "ar": "حفص عن عاصم • ملفات الآيات"
+  },
+  "quran.recitation.everyayah:maher.name": {
+    "en": "Maher Al-Muaiqly",
+    "ar": "ماهر المعيقلي"
+  },
+  "quran.recitation.everyayah:maher.style": {
+    "en": "Hafs from Asim • verse files",
+    "ar": "حفص عن عاصم • ملفات الآيات"
+  },
+  "quran.audioNotificationChannel": {
+    "en": "Quran recitation",
+    "ar": "تلاوة القرآن الكريم"
+  },
+  "quran.recitation.qurancom:word.name": {
+    "en": "Word pronunciation • Quran.com",
+    "ar": "نطق الكلمة • Quran.com"
+  },
+  "quran.label.ef2200786fcf": {
+    "en": "Could not play the recitation. Check your connection or download the file again.",
+    "ar": "تعذّر تشغيل التلاوة؛ تحقق من الاتصال أو أعد تنزيل الملف"
+  },
+  "quran.label.7f2bc33b6bb7": {
+    "en": "Could not play the recitation",
+    "ar": "تعذّر تشغيل التلاوة"
+  },
+  "quran.label.9b89c70ea663": {
+    "en": "Could not load the recitation list",
+    "ar": "تعذّر تحميل قائمة التلاوات"
+  },
+  "quran.label.02822bdc790f": {
+    "en": "Could not play the recitation. Check your connection and try again.",
+    "ar": "تعذّر تشغيل التلاوة؛ تحقق من الاتصال وأعد المحاولة"
+  },
+  "quran.label.14f75df7d57b": {
+    "en": "This surah is not available in the selected recitation",
+    "ar": "هذه السورة غير متاحة في التلاوة المختارة"
+  },
+  "quran.label.b7ec287d1fdc": {
+    "en": "Could not resume playback",
+    "ar": "تعذّر استئناف التشغيل"
+  },
+  "quran.label.5ff09ab2460c": {
+    "en": "Could not change playback state",
+    "ar": "تعذّر تغيير حالة التشغيل"
+  },
+  "quran.label.3a8ffb13c75e": {
+    "en": "Could not fade out audio",
+    "ar": "تعذّر تلاشي الصوت"
+  },
+  "quran.label.aed6f5abca84": {
+    "en": "Could not stop playback",
+    "ar": "تعذّر إيقاف التشغيل"
+  },
+  "quran.label.ec031d82fdd7": {
+    "en": "Could not stop playback after the surah",
+    "ar": "تعذّر إيقاف التشغيل بعد السورة"
+  },
+  "quran.label.62853165f4d5": {
+    "ar": "في الانتظار",
+    "en": "Queued"
+  },
+  "quran.label.12c29258da43": {
+    "ar": "جارٍ التحميل",
+    "en": "Downloading"
+  },
+  "quran.label.10d4bdd26281": {
+    "ar": "التحميل متوقف",
+    "en": "Download paused"
+  },
+  "quran.label.ebb6dca1a33e": {
+    "ar": "فشل التنزيل",
+    "en": "Download failed"
+  },
+  "quran.label.994362e9d8fa": {
+    "ar": "تم التحميل",
+    "en": "Downloaded"
+  },
+  "quran.label.1d447cff30fe": {
+    "ar": "حذف التلاوة المحمّلة؟",
+    "en": "Delete downloaded recitation?"
+  },
+  "quran.label.59ca629220a6": {
+    "ar": "حذف",
+    "en": "Delete"
+  },
+  "quran.label.ded2c36b76b3": {
+    "ar": "تم حذف الملفات الصوتية المحددة",
+    "en": "Selected audio files deleted"
+  },
+  "quran.label.65facdf733e5": {
+    "ar": "تعذّر حذف بعض الملفات؛ أعد المحاولة",
+    "en": "Could not delete some files. Try again."
+  },
+  "quran.label.ea0245cea76a": {
+    "ar": "جارٍ تحميل التنزيلات",
+    "en": "Loading downloads"
+  },
+  "quran.label.c09e0db6b0b9": {
+    "ar": "إدارة التلاوات المحمّلة",
+    "en": "Manage downloaded recitations"
+  },
+  "quran.label.d905ef53cd4e": {
+    "ar": "التحميل والاستخدام دون إنترنت",
+    "en": "Downloads and offline listening"
+  },
+  "quran.label.6860272faebf": {
+    "ar": "استمع للتلاوات التي نزّلتها على جهازك",
+    "en": "Listen to recitations saved on your device"
+  },
+  "quran.label.fdd65921b2e0": {
+    "ar": "تنزيل السور أو الأجزاء للاستماع دون إنترنت",
+    "en": "Download surahs or juz for offline listening"
+  },
+  "quran.label.8375f7edff9e": {
+    "ar": "المحفوظات",
+    "en": "Saved"
+  },
+  "quran.label.806a58e991d6": {
+    "ar": "تحميل سريع",
+    "en": "Quick download"
+  },
+  "quran.label.72edf1ec3b30": {
+    "ar": "إيقاف الكل",
+    "en": "Pause all"
+  },
+  "quran.label.49a5a5600ffd": {
+    "ar": "استئناف الكل",
+    "en": "Resume all"
+  },
+  "quran.label.4af2fc5e1538": {
+    "ar": "تحميل الكل",
+    "en": "Download all"
+  },
+  "quran.label.ff772da7f5ce": {
+    "ar": "حجم الملف يظهر من التنزيل الفعلي. تنزيل الأجزاء يستخدم ملفات آياتها فقط.",
+    "en": "File size is shown during the actual download. Juz downloads use their individual verse files."
+  },
+  "quran.label.2dee40cb42e4": {
+    "ar": "إيقاف جميع التنزيلات",
+    "en": "Pause all downloads"
+  },
+  "quran.label.bc6856e04519": {
+    "ar": "إدارة المساحة",
+    "en": "Manage storage"
+  },
+  "quran.label.890a72f08fa2": {
+    "ar": "حساب حجم الملفات...",
+    "en": "Calculating file size…"
+  },
+  "quran.label.a4dbd4d8ce52": {
+    "ar": "ابحث في التلاوات المحمّلة...",
+    "en": "Search downloaded recitations…"
+  },
+  "quran.label.cd05c752bac1": {
+    "ar": "ابحث في الأجزاء...",
+    "en": "Search juz…"
+  },
+  "quran.label.010f8d3f847c": {
+    "ar": "ابحث عن سورة...",
+    "en": "Search for a surah…"
+  },
+  "quran.label.c99b3e57d492": {
+    "ar": "المحمّلة حديثًا",
+    "en": "Recently downloaded"
+  },
+  "quran.label.26ad02b6f946": {
+    "ar": "حسب السور",
+    "en": "By surah"
+  },
+  "quran.label.6c2034bb95eb": {
+    "ar": "حسب القراء",
+    "en": "By reciter"
+  },
+  "quran.label.f1a53164e056": {
+    "ar": "لا توجد تلاوات محمّلة مطابقة",
+    "en": "No matching downloaded recitations"
+  },
+  "quran.label.3e54e3565aa4": {
+    "ar": "حذف جميع التلاوات المحمّلة",
+    "en": "Delete all downloaded recitations"
+  },
+  "quran.label.0121a2fe1269": {
+    "ar": "إدارة التحميلات والمساحة",
+    "en": "Manage downloads and storage"
+  },
+  "quran.label.56e26f1994a9": {
+    "ar": "استماع دون إنترنت",
+    "en": "Listen offline"
+  },
+  "quran.label.96c00dfe6326": {
+    "ar": "تنزيل أو استئناف",
+    "en": "Download or resume"
+  },
+  "quran.label.e3c13a0607c5": {
+    "ar": "حذف التلاوة",
+    "en": "Delete recitation"
+  },
+  "quran.label.4cf9b08a5cb1": {
+    "ar": "تحميل جميع الملفات المعروضة؟",
+    "en": "Download all displayed files?"
+  },
+  "quran.label.2d17bd0f6e49": {
+    "ar": "بدء التحميل",
+    "en": "Start download"
+  },
+  "quran.label.36f7a2525205": {
+    "ar": "تنزيل التلاوة",
+    "en": "Download recitation"
+  },
+  "quran.label.2a25912906e2": {
+    "ar": "تحميل تلاوات القراء للاستماع دون إنترنت",
+    "en": "Download recitations for offline listening"
+  },
+  "quran.label.98dd9df9f496": {
+    "ar": "إيقاف التحميل",
+    "en": "Pause download"
+  },
+  "quran.label.ad8143573069": {
+    "ar": "إعادة المحاولة أو الاستئناف",
+    "en": "Try again or resume"
+  },
+  "quran.label.548e3334db09": {
+    "ar": "إلغاء التنزيل أو حذف الملف",
+    "en": "Cancel download or delete file"
+  },
+  "quran.label.dc487bb06070": {
+    "ar": "إدارة التلاوات المحمّلة وتحرير المساحة عند الحاجة",
+    "en": "Manage downloaded recitations and free storage when needed"
+  },
+  "quran.label.8fd6e0d5e642": {
+    "ar": "مساحة التلاوات على الجهاز",
+    "en": "Recitation storage on device"
+  },
+  "quran.label.47ef1b08f303": {
+    "ar": "التلاوات المحمّلة",
+    "en": "Downloaded recitations"
+  },
+  "quran.label.cf79723bb808": {
+    "ar": "تحديد الكل",
+    "en": "Select all"
+  },
+  "quran.label.53a3331c8118": {
+    "ar": "لا توجد ملفات صوتية محمّلة",
+    "en": "No downloaded audio files"
+  },
+  "quran.label.0646ae817652": {
+    "ar": "حذف جميع التلاوات",
+    "en": "Delete all recitations"
+  },
+  "quran.label.b0262f4cceec": {
+    "ar": "الملف غير مكتمل؛ أعد تنزيله",
+    "en": "The file is incomplete. Download it again."
+  },
+  "quran.label.c087c316c3a3": {
+    "ar": "تعذّر استعادة قائمة التحميل",
+    "en": "Could not restore the download list"
+  },
+  "quran.label.9595db8b89ae": {
+    "ar": "تعذّر حفظ حالة التحميل؛ تحقق من مساحة الجهاز",
+    "en": "Could not save download status. Check device storage."
+  },
+  "quran.label.0fcd5f8d69b7": {
+    "ar": "فشل التنزيل؛ تحقق من الاتصال ومساحة الجهاز وأعد المحاولة",
+    "en": "Download failed. Check your connection and device storage, then try again."
+  },
+  "quran.label.3dba43963f93": {
+    "ar": "الملف تالف؛ أعد تنزيله",
+    "en": "The file is damaged. Download it again."
+  },
+  "quran.audioDeleteInfo": {
+    "ar": "سيتم حذف الملف من هذا الجهاز وتحرير {size}. يمكنك تنزيله مرة أخرى للاستماع دون إنترنت.",
+    "en": "The file will be deleted from this device, freeing {size}. You can download it again for offline listening."
+  },
+  "quran.audioFileCount": {
+    "ar": "{count} ملف صوتي",
+    "en": "{count} audio files"
+  },
+  "quran.audioDownloadHint": {
+    "ar": "اختر قارئًا ثم حدد {kind} التي تريد تنزيلها",
+    "en": "Choose a reciter, then select the {kind} to download"
+  },
+  "quran.audioVerseFilesComplete": {
+    "ar": "{done} من {total} ملف آية مكتمل",
+    "en": "{done} of {total} verse files complete"
+  },
+  "quran.audioKeyRange": {
+    "ar": "من {start} إلى {end}",
+    "en": "From {start} to {end}"
+  },
+  "quran.audioPauseJuz": {
+    "ar": "إيقاف تنزيل {juz}",
+    "en": "Pause {juz} download"
+  },
+  "quran.audioDownloadJuz": {
+    "ar": "تنزيل أو استئناف {juz}",
+    "en": "Download or resume {juz}"
+  },
+  "quran.audioDownloadAllInfo": {
+    "ar": "{count} ملف صوتي للقارئ {name}. يُفضّل اتصال Wi-Fi ومساحة كافية.",
+    "en": "{count} audio files by {name}. Wi-Fi and sufficient storage are recommended."
+  },
+  "quran.audioFreeSpace": {
+    "ar": "المتاح على الجهاز: {size}",
+    "en": "Available on device: {size}"
+  },
+  "quran.audioDeviceCapacity": {
+    "ar": "من سعة تخزين الجهاز {size}",
+    "en": "Of device capacity {size}"
+  },
+  "quran.audioDeleteSelected": {
+    "ar": "حذف المحدد ({count})",
+    "en": "Delete selected ({count})"
   }
 }

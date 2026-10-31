@@ -1,3 +1,5 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 
@@ -58,7 +60,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
       if (snapshot.hasError) {
         return Center(
           child: QPrimaryButton(
-            label: 'إعادة تحميل قائمة القراء',
+            label: context.quranLabel('إعادة تحميل قائمة القراء'),
             onTap: () => setState(() {
               request = media.initialize();
             }),
@@ -66,7 +68,9 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
         );
       }
       if (snapshot.connectionState != ConnectionState.done) {
-        return const AppLoadingSkeleton(label: 'جارٍ تحميل القراء والتلاوات');
+        return AppLoadingSkeleton(
+          label: context.quranLabel('جارٍ تحميل القراء والتلاوات'),
+        );
       }
       return ListenableBuilder(
         listenable: media,
@@ -78,8 +82,8 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                 (s) =>
                     recitation.chapters.contains(s.id) &&
                     normalizeQuranSearch(
-                      s.name,
-                    ).contains(normalizeQuranSearch(query)) &&
+                      '${s.name} ${s.localizedName(context)}'.toLowerCase(),
+                    ).contains(normalizeQuranSearch(query.toLowerCase())) &&
                     (juz == null ||
                         repo.surahVerses(s.id).any((v) => v.juz == juz)) &&
                     (!onlyFavorites ||
@@ -103,8 +107,8 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
             slivers: [
               SliverToBoxAdapter(
                 child: QuranHeader(
-                  title: 'القرآن المسموع',
-                  subtitle: 'استمع إلى تلاوات متنوعة وخشوع',
+                  title: context.quranLabel('القرآن المسموع'),
+                  subtitle: context.quranLabel('استمع إلى تلاوات متنوعة وخشوع'),
                   height: 145,
                   onBack: () => Navigator.pop(context),
                 ),
@@ -124,21 +128,21 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                         children: [
                           _action(
                             context,
-                            'مؤقت إيقاف',
+                            context.quranLabel('مؤقت إيقاف'),
                             Icons.timer_outlined,
                             () => chooseAudioTimer(context, media),
                           ),
                           const SizedBox(width: 6),
                           _action(
                             context,
-                            'التنزيلات',
+                            context.quranLabel('التنزيلات'),
                             Icons.cloud_download_outlined,
                             _downloads,
                           ),
                           const SizedBox(width: 6),
                           _action(
                             context,
-                            'المفضلة',
+                            context.quranLabel('المفضلة'),
                             Icons.favorite_border,
                             () =>
                                 setState(() => onlyFavorites = !onlyFavorites),
@@ -147,7 +151,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                           const SizedBox(width: 6),
                           _action(
                             context,
-                            'مشاركة',
+                            context.quranLabel('مشاركة'),
                             Icons.share_outlined,
                             media.current == null
                                 ? null
@@ -157,8 +161,8 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                       ),
                       const SizedBox(height: 14),
                       QSectionTitle(
-                        'اختر القارئ',
-                        action: 'عرض الكل',
+                        context.quranLabel('اختر القارئ'),
+                        action: context.quranLabel('عرض الكل'),
                         onAction: _readers,
                       ),
                       SingleChildScrollView(
@@ -197,7 +201,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                       ),
                                       const SizedBox(height: 6),
                                       Text(
-                                        entry.name,
+                                        entry.localizedName(context),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         textAlign: TextAlign.center,
@@ -208,7 +212,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                         ),
                                       ),
                                       Text(
-                                        entry.style,
+                                        entry.localizedStyle(context),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: qText(
@@ -226,13 +230,13 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                         ),
                       ),
                       const SizedBox(height: 14),
-                      const QSectionTitle('قائمة السور'),
+                      QSectionTitle(context.quranLabel('قائمة السور')),
                       const SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
                             child: QSearchField(
-                              hint: 'بحث عن سورة...',
+                              hint: context.quranLabel('بحث عن سورة...'),
                               onChanged: (value) =>
                                   setState(() => query = value),
                             ),
@@ -242,14 +246,14 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                             onSelected: (value) =>
                                 setState(() => juz = value == 0 ? null : value),
                             itemBuilder: (_) => [
-                              const PopupMenuItem(
+                              PopupMenuItem(
                                 value: 0,
-                                child: Text('كل القرآن'),
+                                child: Text(context.quranLabel('كل القرآن')),
                               ),
                               for (final part in repo.juzs)
                                 PopupMenuItem(
                                   value: part.id,
-                                  child: Text(juzName(part.id)),
+                                  child: Text(quranJuzName(context, part.id)),
                                 ),
                             ],
                             child: QCard(
@@ -257,7 +261,9 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                               child: Row(
                                 children: [
                                   Text(
-                                    juz == null ? 'كل القرآن' : juzName(juz!),
+                                    juz == null
+                                        ? context.quranLabel('كل القرآن')
+                                        : quranJuzName(context, juz!),
                                     style: qText(context, size: 11),
                                   ),
                                   Icon(
@@ -281,7 +287,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Text(
-                      'لا توجد سور مطابقة',
+                      context.quranLabel('لا توجد سور مطابقة'),
                       textAlign: TextAlign.center,
                       style: qText(context),
                     ),
@@ -310,7 +316,10 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                               icon: current && media.playing
                                   ? Icons.pause
                                   : Icons.play_arrow,
-                              label: 'استماع إلى سورة ${chapter.name}',
+                              label: context.tr(
+                                'quran.audioListenSurah',
+                                args: {'name': chapter.localizedName(context)},
+                              ),
                               loading: current && media.buffering,
                               color: qAccent(context),
                               onTap: () => current
@@ -323,7 +332,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'سورة ${chapter.name}',
+                                    chapter.localizedTitle(context),
                                     style: qText(
                                       context,
                                       size: 14,
@@ -331,7 +340,19 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                     ),
                                   ),
                                   Text(
-                                    '${chapter.ayahCount} آية • الصفحة ${chapter.startPage}',
+                                    context.tr(
+                                      'quran.audioChapterDetails',
+                                      args: {
+                                        'count': quranNumber(
+                                          context,
+                                          chapter.ayahCount,
+                                        ),
+                                        'page': quranNumber(
+                                          context,
+                                          chapter.startPage,
+                                        ),
+                                      },
+                                    ),
                                     style: qText(
                                       context,
                                       size: 11,
@@ -343,7 +364,7 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                             ),
                             QMedallion(number: chapter.id, size: 35),
                             PopupMenuButton<String>(
-                              tooltip: 'خيارات التلاوة',
+                              tooltip: context.quranLabel('خيارات التلاوة'),
                               onSelected: (value) {
                                 if (value == 'download') {
                                   unawaited(media.downloads.enqueue(track));
@@ -356,21 +377,29 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                                 }
                               },
                               itemBuilder: (_) => [
-                                const PopupMenuItem(
+                                PopupMenuItem(
                                   value: 'download',
-                                  child: Text('تنزيل السورة'),
+                                  child: Text(
+                                    context.quranLabel('تنزيل السورة'),
+                                  ),
                                 ),
                                 PopupMenuItem(
                                   value: 'favorite',
                                   child: Text(
                                     media.favorites.contains(track.id)
-                                        ? 'إزالة من المفضلة الصوتية'
-                                        : 'إضافة للمفضلة الصوتية',
+                                        ? context.quranLabel(
+                                            'إزالة من المفضلة الصوتية',
+                                          )
+                                        : context.quranLabel(
+                                            'إضافة للمفضلة الصوتية',
+                                          ),
                                   ),
                                 ),
-                                const PopupMenuItem(
+                                PopupMenuItem(
                                   value: 'share',
-                                  child: Text('مشاركة التلاوة'),
+                                  child: Text(
+                                    context.quranLabel('مشاركة التلاوة'),
+                                  ),
                                 ),
                               ],
                             ),
@@ -385,7 +414,9 @@ class _QuranAudioPageState extends State<QuranAudioPage> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 105),
                   child: Text(
-                    'مصدر التلاوات: MP3Quran.net • رواية حفص عن عاصم',
+                    context.quranLabel(
+                      'مصدر التلاوات: MP3Quran.net • رواية حفص عن عاصم',
+                    ),
                     textAlign: TextAlign.center,
                     style: qText(
                       context,
@@ -486,12 +517,14 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
     future: request,
     builder: (context, snapshot) {
       if (snapshot.connectionState != ConnectionState.done) {
-        return const AppLoadingSkeleton(label: 'جارٍ تحميل القراء والتلاوات');
+        return AppLoadingSkeleton(
+          label: context.quranLabel('جارٍ تحميل القراء والتلاوات'),
+        );
       }
       if (snapshot.hasError || widget.media.catalog == null) {
         return Center(
           child: QPrimaryButton(
-            label: 'إعادة تحميل قائمة القراء',
+            label: context.quranLabel('إعادة تحميل قائمة القراء'),
             onTap: () => setState(() {
               request = widget.media.initialize();
             }),
@@ -507,15 +540,17 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
     builder: (context, _) {
       final catalog = widget.media.catalog;
       if (catalog == null) {
-        return const AppLoadingSkeleton(label: 'جارٍ تحميل القراء والتلاوات');
+        return AppLoadingSkeleton(
+          label: context.quranLabel('جارٍ تحميل القراء والتلاوات'),
+        );
       }
       final recitations = catalog.recitations
           .where(
             (r) =>
                 r.verseAudio == widget.verse &&
                 normalizeQuranSearch(
-                  r.name,
-                ).contains(normalizeQuranSearch(query)) &&
+                  '${r.name} ${r.localizedName(context)}'.toLowerCase(),
+                ).contains(normalizeQuranSearch(query.toLowerCase())) &&
                 (filter == 0 ||
                     filter == 1 && !r.style.contains('مجود') ||
                     filter == 2 && r.style.contains('مجود') ||
@@ -527,10 +562,10 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
         slivers: [
           SliverToBoxAdapter(
             child: QuranHeader(
-              title: 'اختيار القارئ والتلاوة',
+              title: context.quranLabel('اختيار القارئ والتلاوة'),
               subtitle: widget.verse
-                  ? 'تلاوة الآيات • حفص عن عاصم'
-                  : 'تلاوات السور • حفص عن عاصم',
+                  ? context.quranLabel('تلاوة الآيات • حفص عن عاصم')
+                  : context.quranLabel('تلاوات السور • حفص عن عاصم'),
               height: 150,
               onBack: () => Navigator.pop(context),
             ),
@@ -549,12 +584,17 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
                     const SizedBox(height: 12),
                   ],
                   QSearchField(
-                    hint: 'ابحث عن قارئ...',
+                    hint: context.quranLabel('ابحث عن قارئ...'),
                     onChanged: (value) => setState(() => query = value),
                   ),
                   const SizedBox(height: 12),
                   QSegments(
-                    labels: const ['الكل', 'مرتل', 'مجود', 'المفضلة'],
+                    labels: [
+                      context.quranLabel('الكل'),
+                      context.quranLabel('مرتل'),
+                      context.quranLabel('مجود'),
+                      context.quranLabel('المفضلة'),
+                    ],
                     selected: filter,
                     onSelect: (value) => setState(() => filter = value),
                   ),
@@ -567,7 +607,7 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'لا توجد تلاوات مطابقة',
+                  context.quranLabel('لا توجد تلاوات مطابقة'),
                   style: qText(context),
                   textAlign: TextAlign.center,
                 ),
@@ -611,7 +651,7 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                entry.name,
+                                entry.localizedName(context),
                                 style: qText(
                                   context,
                                   size: 15,
@@ -619,7 +659,7 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
                                 ),
                               ),
                               Text(
-                                '${entry.style}${entry.quality == null ? '' : ' • ${entry.quality}'}',
+                                '${entry.localizedStyle(context)}${entry.quality == null ? '' : ' • ${entry.quality}'}',
                                 style: qText(
                                   context,
                                   size: 11,
@@ -627,7 +667,15 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
                                 ),
                               ),
                               Text(
-                                '${entry.chapters.length} سورة متاحة',
+                                context.tr(
+                                  'quran.audioChaptersAvailable',
+                                  args: {
+                                    'count': quranNumber(
+                                      context,
+                                      entry.chapters.length,
+                                    ),
+                                  },
+                                ),
                                 style: qText(
                                   context,
                                   size: 10,
@@ -638,7 +686,7 @@ class _QuranReciterPickerState extends State<QuranReciterPicker> {
                           ),
                         ),
                         IconButton(
-                          tooltip: 'مفضلة القراء',
+                          tooltip: context.quranLabel('مفضلة القراء'),
                           onPressed: () =>
                               widget.media.toggleFavorite(entry.id),
                           icon: Icon(

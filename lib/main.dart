@@ -327,6 +327,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         const <String, dynamic>{};
     _religious.setEditorialUpdates(publishedArabic);
     final messages = _interfaceMessages;
+    _quran.audio.setInterfaceMessages(messages);
+    _religious.media.setInterfaceMessages(messages);
     _prayer?.setInterfaceMessages(messages);
     _reminders?.setInterfaceMessages(messages);
     final next = AppExperienceScope.maybeOf(context);

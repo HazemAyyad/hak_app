@@ -1,3 +1,5 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,13 +15,16 @@ import 'quran_audio_pages.dart';
 import 'quran_audio_widgets.dart';
 import 'quran_widgets.dart';
 
-String downloadLabel(QuranDownloadState state) => switch (state) {
-  QuranDownloadState.queued => 'في الانتظار',
-  QuranDownloadState.downloading => 'جارٍ التحميل',
-  QuranDownloadState.paused => 'التحميل متوقف',
-  QuranDownloadState.failed => 'فشل التنزيل',
-  QuranDownloadState.complete => 'تم التحميل',
-};
+String downloadLabel(QuranDownloadState state, {BuildContext? context}) {
+  final label = switch (state) {
+    QuranDownloadState.queued => 'في الانتظار',
+    QuranDownloadState.downloading => 'جارٍ التحميل',
+    QuranDownloadState.paused => 'التحميل متوقف',
+    QuranDownloadState.failed => 'فشل التنزيل',
+    QuranDownloadState.complete => 'تم التحميل',
+  };
+  return context?.quranLabel(label) ?? label;
+}
 
 Future<void> confirmAudioDelete(
   BuildContext context,
@@ -53,13 +58,18 @@ Future<void> confirmAudioDelete(
               ),
               const SizedBox(height: 14),
               Text(
-                'حذف التلاوة المحمّلة؟',
+                context.quranLabel('حذف التلاوة المحمّلة؟'),
                 textAlign: TextAlign.center,
                 style: qText(context, size: 19, weight: FontWeight.w800),
               ),
               const SizedBox(height: 8),
               Text(
-                'سيتم حذف الملف من هذا الجهاز وتحرير ${audioBytes(size)}. يمكنك تنزيله مرة أخرى للاستماع دون إنترنت.',
+                context.tr(
+                  'quran.audioDeleteInfo',
+                  args: {
+                    'size': audioBytes(size, formats: quranFormats(context)),
+                  },
+                ),
                 textAlign: TextAlign.center,
                 style: qText(
                   context,
@@ -80,7 +90,10 @@ Future<void> confirmAudioDelete(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              entries.first.track.title,
+                              entries.first.track.localizedTitle(
+                                context,
+                                media.repository(),
+                              ),
                               style: qText(
                                 context,
                                 size: 14,
@@ -88,7 +101,7 @@ Future<void> confirmAudioDelete(
                               ),
                             ),
                             Text(
-                              entries.first.track.reciter,
+                              entries.first.track.localizedReciter(context),
                               style: qText(
                                 context,
                                 size: 10,
@@ -96,7 +109,7 @@ Future<void> confirmAudioDelete(
                               ),
                             ),
                             Text(
-                              audioBytes(size),
+                              audioBytes(size, formats: quranFormats(context)),
                               textDirection: TextDirection.ltr,
                               style: qText(
                                 context,
@@ -117,7 +130,10 @@ Future<void> confirmAudioDelete(
                 )
               else
                 Text(
-                  '${entries.length} ملف صوتي',
+                  context.tr(
+                    'quran.audioFileCount',
+                    args: {'count': quranNumber(context, entries.length)},
+                  ),
                   style: qText(context, size: 14),
                 ),
               const SizedBox(height: 18),
@@ -134,7 +150,7 @@ Future<void> confirmAudioDelete(
                   onPressed: () => Navigator.pop(context, true),
                   icon: const Icon(Icons.delete_outline, size: 20),
                   label: Text(
-                    'حذف',
+                    context.quranLabel('حذف'),
                     style: qText(context, color: Colors.white),
                   ),
                 ),
@@ -151,7 +167,10 @@ Future<void> confirmAudioDelete(
                     ),
                   ),
                   onPressed: () => Navigator.pop(context, false),
-                  child: Text('إلغاء', style: qText(context)),
+                  child: Text(
+                    context.quranLabel('إلغاء'),
+                    style: qText(context),
+                  ),
                 ),
               ),
             ],
@@ -168,10 +187,15 @@ Future<void> confirmAudioDelete(
     for (final entry in entries) {
       await media.downloads.remove(entry.track.id);
     }
-    if (context.mounted) qNotice(context, 'تم حذف الملفات الصوتية المحددة');
+    if (context.mounted) {
+      qNotice(context, context.quranLabel('تم حذف الملفات الصوتية المحددة'));
+    }
   } catch (_) {
     if (context.mounted) {
-      qNotice(context, 'تعذّر حذف بعض الملفات؛ أعد المحاولة');
+      qNotice(
+        context,
+        context.quranLabel('تعذّر حذف بعض الملفات؛ أعد المحاولة'),
+      );
     }
   }
 }
@@ -232,7 +256,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
       if (snapshot.hasError) {
         return Center(
           child: QPrimaryButton(
-            label: 'إعادة المحاولة',
+            label: context.quranLabel('إعادة المحاولة'),
             onTap: () => setState(() {
               request = media.initialize();
             }),
@@ -240,7 +264,9 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
         );
       }
       if (snapshot.connectionState != ConnectionState.done) {
-        return const AppLoadingSkeleton(label: 'جارٍ تحميل التنزيلات');
+        return AppLoadingSkeleton(
+          label: context.quranLabel('جارٍ تحميل التنزيلات'),
+        );
       }
       return ListenableBuilder(
         listenable: media.downloads,
@@ -254,22 +280,25 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                   (chapter) =>
                       recitation.chapters.contains(chapter.id) &&
                       normalizeQuranSearch(
-                        chapter.localizedName(context),
-                      ).contains(normalizeQuranSearch(query)),
+                        '${chapter.name} ${chapter.localizedName(context)}'
+                            .toLowerCase(),
+                      ).contains(normalizeQuranSearch(query.toLowerCase())),
                 )
                 .toList();
             final parts = repo.juzs
                 .where(
                   (part) => normalizeQuranSearch(
-                    juzName(part.id),
-                  ).contains(normalizeQuranSearch(query)),
+                    '${juzName(part.id)} ${quranJuzName(context, part.id)}'
+                        .toLowerCase(),
+                  ).contains(normalizeQuranSearch(query.toLowerCase())),
                 )
                 .toList();
             final saved = media.downloads.entries.values
                 .where(
                   (entry) => normalizeQuranSearch(
-                    '${entry.track.title} ${entry.track.reciter}',
-                  ).contains(normalizeQuranSearch(query)),
+                    '${entry.track.title} ${entry.track.reciter} ${entry.track.localizedTitle(context, repo)} ${entry.track.localizedReciter(context)}'
+                        .toLowerCase(),
+                  ).contains(normalizeQuranSearch(query.toLowerCase())),
                 )
                 .toList();
             final pending = media.downloads.entries.values
@@ -304,11 +333,15 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                 SliverToBoxAdapter(
                   child: QuranHeader(
                     title: tab == 2
-                        ? 'إدارة التلاوات المحمّلة'
-                        : 'التحميل والاستخدام دون إنترنت',
+                        ? context.quranLabel('إدارة التلاوات المحمّلة')
+                        : context.quranLabel('التحميل والاستخدام دون إنترنت'),
                     subtitle: tab == 2
-                        ? 'استمع للتلاوات التي نزّلتها على جهازك'
-                        : 'تنزيل السور أو الأجزاء للاستماع دون إنترنت',
+                        ? context.quranLabel(
+                            'استمع للتلاوات التي نزّلتها على جهازك',
+                          )
+                        : context.quranLabel(
+                            'تنزيل السور أو الأجزاء للاستماع دون إنترنت',
+                          ),
                     height: 164,
                     dark: tab == 2,
                     onBack: () => Navigator.pop(context),
@@ -320,7 +353,11 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                     child: Column(
                       children: [
                         QSegments(
-                          labels: const ['السور', 'الأجزاء', 'المحفوظات'],
+                          labels: [
+                            context.quranLabel('السور'),
+                            context.quranLabel('الأجزاء'),
+                            context.quranLabel('المحفوظات'),
+                          ],
                           selected: tab,
                           onSelect: (value) => setState(() => tab = value),
                         ),
@@ -334,7 +371,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        'تحميل سريع',
+                                        context.quranLabel('تحميل سريع'),
                                         style: qText(
                                           context,
                                           size: 18,
@@ -360,10 +397,10 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                       ),
                                       label: Text(
                                         hasPending
-                                            ? 'إيقاف الكل'
+                                            ? context.quranLabel('إيقاف الكل')
                                             : hasPaused
-                                            ? 'استئناف الكل'
-                                            : 'تحميل الكل',
+                                            ? context.quranLabel('استئناف الكل')
+                                            : context.quranLabel('تحميل الكل'),
                                         style: qText(
                                           context,
                                           size: 12,
@@ -374,7 +411,14 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                   ],
                                 ),
                                 Text(
-                                  'اختر قارئًا ثم حدد ${tab == 0 ? 'السور' : 'الأجزاء'} التي تريد تنزيلها',
+                                  context.tr(
+                                    'quran.audioDownloadHint',
+                                    args: {
+                                      'kind': context.quranLabel(
+                                        tab == 0 ? 'السور' : 'الأجزاء',
+                                      ),
+                                    },
+                                  ),
                                   style: qText(
                                     context,
                                     size: 11,
@@ -398,12 +442,14 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              recitation.name,
+                                              recitation.localizedName(context),
                                               style: qText(context, size: 13),
                                             ),
                                             Text(
                                               recitation.quality ??
-                                                  recitation.style,
+                                                  recitation.localizedStyle(
+                                                    context,
+                                                  ),
                                               style: qText(
                                                 context,
                                                 size: 10,
@@ -422,7 +468,9 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'حجم الملف يظهر من التنزيل الفعلي. تنزيل الأجزاء يستخدم ملفات آياتها فقط.',
+                                  context.quranLabel(
+                                    'حجم الملف يظهر من التنزيل الفعلي. تنزيل الأجزاء يستخدم ملفات آياتها فقط.',
+                                  ),
                                   style: qText(
                                     context,
                                     size: 10,
@@ -436,7 +484,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 10),
                             child: QPrimaryButton(
-                              label: 'إيقاف جميع التنزيلات',
+                              label: context.quranLabel('إيقاف جميع التنزيلات'),
                               icon: Icons.pause_circle_outline,
                               onTap: () => media.downloads.pauseAll(),
                             ),
@@ -458,7 +506,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'إدارة المساحة',
+                                        context.quranLabel('إدارة المساحة'),
                                         style: qText(
                                           context,
                                           size: 16,
@@ -469,8 +517,15 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                         future: media.downloads.diskUsage(),
                                         builder: (context, size) => Text(
                                           size.hasData
-                                              ? audioBytes(size.data!)
-                                              : 'حساب حجم الملفات...',
+                                              ? audioBytes(
+                                                  size.data!,
+                                                  formats: quranFormats(
+                                                    context,
+                                                  ),
+                                                )
+                                              : context.quranLabel(
+                                                  'حساب حجم الملفات...',
+                                                ),
                                           style: qText(
                                             context,
                                             size: 12,
@@ -491,20 +546,22 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                         const SizedBox(height: 12),
                         QSearchField(
                           hint: tab == 2
-                              ? 'ابحث في التلاوات المحمّلة...'
+                              ? context.quranLabel(
+                                  'ابحث في التلاوات المحمّلة...',
+                                )
                               : tab == 1
-                              ? 'ابحث في الأجزاء...'
-                              : 'ابحث عن سورة...',
+                              ? context.quranLabel('ابحث في الأجزاء...')
+                              : context.quranLabel('ابحث عن سورة...'),
                           onChanged: (value) => setState(() => query = value),
                         ),
                         if (tab == 2)
                           Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: QSegments(
-                              labels: const [
-                                'المحمّلة حديثًا',
-                                'حسب السور',
-                                'حسب القراء',
+                              labels: [
+                                context.quranLabel('المحمّلة حديثًا'),
+                                context.quranLabel('حسب السور'),
+                                context.quranLabel('حسب القراء'),
                               ],
                               selected: sort,
                               onSelect: (value) => setState(() => sort = value),
@@ -512,7 +569,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                           ),
                         if (media.downloads.storageError != null)
                           Text(
-                            media.downloads.storageError!,
+                            context.quranLabel(media.downloads.storageError!),
                             style: qText(context, size: 11, color: Colors.red),
                           ),
                       ],
@@ -580,7 +637,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        juzName(part.id),
+                                        quranJuzName(context, part.id),
                                         style: qText(
                                           context,
                                           size: 16,
@@ -588,7 +645,19 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                         ),
                                       ),
                                       Text(
-                                        '$completed من ${tracks.length} ملف آية مكتمل',
+                                        context.tr(
+                                          'quran.audioVerseFilesComplete',
+                                          args: {
+                                            'done': quranNumber(
+                                              context,
+                                              completed,
+                                            ),
+                                            'total': quranNumber(
+                                              context,
+                                              tracks.length,
+                                            ),
+                                          },
+                                        ),
                                         style: qText(
                                           context,
                                           size: 11,
@@ -596,7 +665,13 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                         ),
                                       ),
                                       Text(
-                                        'من ${part.startKey} إلى ${part.endKey}',
+                                        context.tr(
+                                          'quran.audioKeyRange',
+                                          args: {
+                                            'start': part.startKey,
+                                            'end': part.endKey,
+                                          },
+                                        ),
                                         textDirection: TextDirection.ltr,
                                         style: qText(context, size: 10),
                                       ),
@@ -605,8 +680,24 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                 ),
                                 IconButton(
                                   tooltip: running
-                                      ? 'إيقاف تنزيل ${juzName(part.id)}'
-                                      : 'تنزيل أو استئناف ${juzName(part.id)}',
+                                      ? context.tr(
+                                          'quran.audioPauseJuz',
+                                          args: {
+                                            'juz': quranJuzName(
+                                              context,
+                                              part.id,
+                                            ),
+                                          },
+                                        )
+                                      : context.tr(
+                                          'quran.audioDownloadJuz',
+                                          args: {
+                                            'juz': quranJuzName(
+                                              context,
+                                              part.id,
+                                            ),
+                                          },
+                                        ),
                                   onPressed: toggle,
                                   icon: Icon(
                                     running
@@ -629,7 +720,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(28),
                       child: Text(
-                        'لا توجد تلاوات محمّلة مطابقة',
+                        context.quranLabel('لا توجد تلاوات محمّلة مطابقة'),
                         style: qText(context),
                         textAlign: TextAlign.center,
                       ),
@@ -660,7 +751,9 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                               media.downloads.entries.values.toList(),
                             ),
                             icon: const Icon(Icons.delete_outline),
-                            label: const Text('حذف جميع التلاوات المحمّلة'),
+                            label: Text(
+                              context.quranLabel('حذف جميع التلاوات المحمّلة'),
+                            ),
                           ),
                         if (tab != 2)
                           QCard(
@@ -674,7 +767,9 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: Text(
-                                    'إدارة التحميلات والمساحة',
+                                    context.quranLabel(
+                                      'إدارة التحميلات والمساحة',
+                                    ),
                                     style: qText(context, size: 14),
                                   ),
                                 ),
@@ -727,11 +822,11 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    track.title,
+                    track.localizedTitle(context, media.repository()),
                     style: qText(context, size: 14, weight: FontWeight.w800),
                   ),
                   Text(
-                    track.reciter,
+                    track.localizedReciter(context),
                     style: qText(
                       context,
                       size: 11,
@@ -740,7 +835,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
                   ),
                   if (entry != null) ...[
                     Text(
-                      '${downloadLabel(entry.state)} • ${audioBytes(entry.received)}${entry.total > 0 ? ' / ${audioBytes(entry.total)}' : ''}',
+                      '${downloadLabel(entry.state, context: context)} • ${audioBytes(entry.received, formats: quranFormats(context))}${entry.total > 0 ? ' / ${audioBytes(entry.total, formats: quranFormats(context))}' : ''}',
                       style: qText(
                         context,
                         size: 10,
@@ -762,11 +857,11 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
             ),
             IconButton(
               tooltip: complete
-                  ? 'استماع دون إنترنت'
+                  ? context.quranLabel('استماع دون إنترنت')
                   : entry?.state == QuranDownloadState.downloading ||
                         entry?.state == QuranDownloadState.queued
-                  ? 'إيقاف التنزيل'
-                  : 'تنزيل أو استئناف',
+                  ? context.quranLabel('إيقاف التنزيل')
+                  : context.quranLabel('تنزيل أو استئناف'),
               onPressed: complete
                   ? () => media.playTracks([track])
                   : entry?.state == QuranDownloadState.downloading ||
@@ -787,7 +882,7 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
             ),
             if (entry != null && tab == 2)
               IconButton(
-                tooltip: 'حذف التلاوة',
+                tooltip: context.quranLabel('حذف التلاوة'),
                 onPressed: () => confirmAudioDelete(context, media, [entry]),
                 icon: const Icon(
                   Icons.delete_outline,
@@ -828,18 +923,24 @@ class _QuranDownloadPageState extends State<QuranDownloadPage> {
     final yes = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('تحميل جميع الملفات المعروضة؟'),
+        title: Text(context.quranLabel('تحميل جميع الملفات المعروضة؟')),
         content: Text(
-          '${tracks.length} ملف صوتي للقارئ ${recitation.name}. يُفضّل اتصال Wi-Fi ومساحة كافية.',
+          context.tr(
+            'quran.audioDownloadAllInfo',
+            args: {
+              'count': quranNumber(context, tracks.length),
+              'name': recitation.localizedName(context),
+            },
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('إلغاء'),
+            child: Text(context.quranLabel('إلغاء')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('بدء التحميل'),
+            child: Text(context.quranLabel('بدء التحميل')),
           ),
         ],
       ),
@@ -863,8 +964,10 @@ class QuranDownloadDetail extends StatelessWidget {
       padding: EdgeInsets.zero,
       children: [
         QuranHeader(
-          title: 'تنزيل التلاوة',
-          subtitle: 'تحميل تلاوات القراء للاستماع دون إنترنت',
+          title: context.quranLabel('تنزيل التلاوة'),
+          subtitle: context.quranLabel(
+            'تحميل تلاوات القراء للاستماع دون إنترنت',
+          ),
           height: 160,
           dark: true,
           onBack: () => Navigator.pop(context),
@@ -875,11 +978,11 @@ class QuranDownloadDetail extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  entry.track.reciter,
+                  entry.track.localizedReciter(context),
                   style: qText(context, size: 18, weight: FontWeight.w800),
                 ),
                 Text(
-                  entry.track.title,
+                  entry.track.localizedTitle(context, media.repository()),
                   style: qText(
                     context,
                     size: 14,
@@ -911,7 +1014,7 @@ class QuranDownloadDetail extends StatelessWidget {
                       ),
                       const SizedBox(height: 14),
                       Text(
-                        downloadLabel(entry.state),
+                        downloadLabel(entry.state, context: context),
                         style: qText(
                           context,
                           size: 21,
@@ -925,7 +1028,7 @@ class QuranDownloadDetail extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(
-                            entry.error!,
+                            context.quranLabel(entry.error!),
                             textAlign: TextAlign.center,
                             style: qText(context, size: 13),
                           ),
@@ -939,17 +1042,17 @@ class QuranDownloadDetail extends StatelessWidget {
                         ),
                       const SizedBox(height: 12),
                       Text(
-                        '${audioBytes(entry.received)}${entry.total > 0 ? ' / ${audioBytes(entry.total)}' : ''}',
+                        '${audioBytes(entry.received, formats: quranFormats(context))}${entry.total > 0 ? ' / ${audioBytes(entry.total, formats: quranFormats(context))}' : ''}',
                         style: qText(context, size: 13),
                       ),
                       const SizedBox(height: 16),
                       QPrimaryButton(
                         label: entry.state == QuranDownloadState.complete
-                            ? 'استماع دون إنترنت'
+                            ? context.quranLabel('استماع دون إنترنت')
                             : entry.state == QuranDownloadState.downloading ||
                                   entry.state == QuranDownloadState.queued
-                            ? 'إيقاف التحميل'
-                            : 'إعادة المحاولة أو الاستئناف',
+                            ? context.quranLabel('إيقاف التحميل')
+                            : context.quranLabel('إعادة المحاولة أو الاستئناف'),
                         icon: entry.state == QuranDownloadState.complete
                             ? Icons.play_arrow
                             : Icons.refresh,
@@ -971,7 +1074,9 @@ class QuranDownloadDetail extends StatelessWidget {
                           }
                         },
                         icon: const Icon(Icons.close),
-                        label: const Text('إلغاء التنزيل أو حذف الملف'),
+                        label: Text(
+                          context.quranLabel('إلغاء التنزيل أو حذف الملف'),
+                        ),
                       ),
                     ],
                   ),
@@ -1023,8 +1128,10 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
         slivers: [
           SliverToBoxAdapter(
             child: QuranHeader(
-              title: 'إدارة المساحة',
-              subtitle: 'إدارة التلاوات المحمّلة وتحرير المساحة عند الحاجة',
+              title: context.quranLabel('إدارة المساحة'),
+              subtitle: context.quranLabel(
+                'إدارة التلاوات المحمّلة وتحرير المساحة عند الحاجة',
+              ),
               height: 164,
               dark: true,
               onBack: () => Navigator.pop(context),
@@ -1058,7 +1165,9 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'مساحة التلاوات على الجهاز',
+                                        context.quranLabel(
+                                          'مساحة التلاوات على الجهاز',
+                                        ),
                                         style: qText(
                                           context,
                                           size: 16,
@@ -1067,8 +1176,13 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                                       ),
                                       Text(
                                         snapshot.hasData
-                                            ? audioBytes(used)
-                                            : 'حساب حجم الملفات...',
+                                            ? audioBytes(
+                                                used,
+                                                formats: quranFormats(context),
+                                              )
+                                            : context.quranLabel(
+                                                'حساب حجم الملفات...',
+                                              ),
                                         style: qText(
                                           context,
                                           size: 18,
@@ -1077,7 +1191,15 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                                       ),
                                       if (free != null)
                                         Text(
-                                          'المتاح على الجهاز: ${audioBytes(free)}',
+                                          context.tr(
+                                            'quran.audioFreeSpace',
+                                            args: {
+                                              'size': audioBytes(
+                                                free,
+                                                formats: quranFormats(context),
+                                              ),
+                                            },
+                                          ),
                                           style: qText(
                                             context,
                                             size: 11,
@@ -1103,7 +1225,9 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                                           strokeWidth: 6,
                                         ),
                                         Text(
-                                          '${(100 * used / total).toStringAsFixed(1)}%',
+                                          quranFormats(
+                                            context,
+                                          ).percent(used / total),
                                           style: qText(context, size: 11),
                                         ),
                                       ],
@@ -1119,7 +1243,15 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                'من سعة تخزين الجهاز ${audioBytes(total)}',
+                                context.tr(
+                                  'quran.audioDeviceCapacity',
+                                  args: {
+                                    'size': audioBytes(
+                                      total,
+                                      formats: quranFormats(context),
+                                    ),
+                                  },
+                                ),
                                 style: qText(context, size: 11),
                               ),
                             ],
@@ -1133,7 +1265,7 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                     children: [
                       Expanded(
                         child: Text(
-                          'التلاوات المحمّلة',
+                          context.quranLabel('التلاوات المحمّلة'),
                           style: qText(
                             context,
                             size: 17,
@@ -1152,8 +1284,8 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                         child: Text(
                           selected.length == entries.length &&
                                   entries.isNotEmpty
-                              ? 'إلغاء التحديد'
-                              : 'تحديد الكل',
+                              ? context.quranLabel('إلغاء التحديد')
+                              : context.quranLabel('تحديد الكل'),
                           style: qText(
                             context,
                             size: 12,
@@ -1166,7 +1298,7 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                   if (entries.isEmpty)
                     QCard(
                       child: Text(
-                        'لا توجد ملفات صوتية محمّلة',
+                        context.quranLabel('لا توجد ملفات صوتية محمّلة'),
                         style: qText(context),
                       ),
                     ),
@@ -1201,7 +1333,10 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                entry.track.title,
+                                entry.track.localizedTitle(
+                                  context,
+                                  media.repository(),
+                                ),
                                 style: qText(
                                   context,
                                   size: 14,
@@ -1209,7 +1344,7 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                                 ),
                               ),
                               Text(
-                                entry.track.reciter,
+                                entry.track.localizedReciter(context),
                                 style: qText(
                                   context,
                                   size: 11,
@@ -1217,7 +1352,7 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                                 ),
                               ),
                               Text(
-                                '${audioBytes(entry.received)} • ${downloadLabel(entry.state)}',
+                                '${audioBytes(entry.received, formats: quranFormats(context))} • ${downloadLabel(entry.state, context: context)}',
                                 style: qText(
                                   context,
                                   size: 10,
@@ -1228,7 +1363,7 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                           ),
                         ),
                         IconButton(
-                          tooltip: 'حذف التلاوة',
+                          tooltip: context.quranLabel('حذف التلاوة'),
                           onPressed: () async {
                             await confirmAudioDelete(context, media, [entry]);
                             _readDisk();
@@ -1267,7 +1402,7 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                                 _readDisk();
                               },
                         icon: const Icon(Icons.delete_outline),
-                        label: const Text('حذف جميع التلاوات'),
+                        label: Text(context.quranLabel('حذف جميع التلاوات')),
                       ),
                       OutlinedButton.icon(
                         onPressed: selected.isEmpty
@@ -1289,7 +1424,14 @@ class _QuranStoragePageState extends State<QuranStoragePage> {
                           Icons.delete_outline,
                           color: Colors.red,
                         ),
-                        label: Text('حذف المحدد (${selected.length})'),
+                        label: Text(
+                          context.tr(
+                            'quran.audioDeleteSelected',
+                            args: {
+                              'count': quranNumber(context, selected.length),
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),

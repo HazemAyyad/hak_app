@@ -1,3 +1,7 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
+import '../../../core/localization/locale_formats.dart';
+import '../../../core/localization/interface_messages.dart';
 import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
@@ -7,18 +11,43 @@ import '../../../app_appearance.dart';
 import '../../../app_experience.dart';
 import '../data/quran_audio.dart';
 import '../data/quran_audio_models.dart';
+import '../data/quran_audio_labels.dart';
 import '../data/quran_repository.dart';
 import 'quran_widgets.dart';
 
-String audioTime(Duration? duration) {
+String audioTime(Duration? duration, {LocaleFormats? formats}) {
   if (duration == null) return '--:--';
   final seconds = duration.inSeconds;
-  return '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}';
+  return formats == null
+      ? '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}'
+      : '${formats.integer(seconds ~/ 60)}:${formats.integer(seconds % 60).padLeft(2, formats.integer(0))}';
 }
 
-String audioBytes(int bytes) => bytes >= 1024 * 1024 * 1024
-    ? '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB'
-    : '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+String audioBytes(int bytes, {LocaleFormats? formats}) {
+  final gigabytes = bytes >= 1024 * 1024 * 1024;
+  final value = (bytes / (gigabytes ? 1024 * 1024 * 1024 : 1024 * 1024))
+      .toStringAsFixed(gigabytes ? 2 : 1);
+  return '${formats?.number(double.parse(value)) ?? value} ${gigabytes ? 'GB' : 'MB'}';
+}
+
+extension QuranRecitationInterfaceLabels on QuranRecitation {
+  String localizedName(BuildContext context) =>
+      context.tr('quran.recitation.$id.name', fallback: name);
+  String localizedStyle(BuildContext context) =>
+      context.tr('quran.recitation.$id.style', fallback: style);
+}
+
+extension QuranTrackInterfaceLabels on QuranAudioTrack {
+  String localizedTitle(BuildContext context, QuranRepository repository) =>
+      audioTrackLabel(
+        this,
+        repository,
+        LocalizationScope.maybeOf(context)?.messages ??
+            InterfaceMessages.bundled('ar'),
+      );
+  String localizedReciter(BuildContext context) =>
+      context.tr('quran.recitation.$recitation.name', fallback: reciter);
+}
 
 class QuranPlayerPanel extends StatelessWidget {
   const QuranPlayerPanel({
@@ -81,10 +110,18 @@ class QuranPlayerPanel extends StatelessWidget {
         : null;
   }
 
-  String get _reciter =>
+  String _reciter(BuildContext context) =>
+      media.current?.localizedReciter(context) ??
+      (media.catalog == null
+          ? context.quranLabel('حفص عن عاصم')
+          : media
+                .selection(verse: verseReciter ?? (compact && onStart != null))
+                .localizedName(context));
+
+  String get _reciterSource =>
       media.current?.reciter ??
       (media.catalog == null
-          ? 'حفص عن عاصم'
+          ? ''
           : media
                 .selection(verse: verseReciter ?? (compact && onStart != null))
                 .name);
@@ -97,10 +134,10 @@ class QuranPlayerPanel extends StatelessWidget {
           children: [
             IconButton(
               tooltip: onToggleCollapsed == null
-                  ? 'تصغير المشغل'
+                  ? context.quranLabel('تصغير المشغل')
                   : collapsed
-                  ? 'توسيع المشغل'
-                  : 'طي المشغل',
+                  ? context.quranLabel('توسيع المشغل')
+                  : context.quranLabel('طي المشغل'),
               icon: Icon(
                 collapsed ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
               ),
@@ -111,7 +148,9 @@ class QuranPlayerPanel extends StatelessWidget {
                 onTap:
                     onOpen ?? AppExperienceScope.maybeOf(context)?.openPlayer,
                 child: Text(
-                  media.current?.title ?? initialTitle ?? 'جارٍ تحميل التلاوة…',
+                  media.current?.localizedTitle(context, repository) ??
+                      initialTitle ??
+                      context.quranLabel('جارٍ تحميل التلاوة…'),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: qText(context, size: 12, weight: FontWeight.w800),
@@ -121,7 +160,7 @@ class QuranPlayerPanel extends StatelessWidget {
             if (collapsed) _playButton(context, size: 32),
             if (onClose != null)
               IconButton(
-                tooltip: 'إغلاق المشغل وإيقاف الصوت',
+                tooltip: context.quranLabel('إغلاق المشغل وإيقاف الصوت'),
                 icon: const Icon(Icons.close, size: 20),
                 onPressed: onClose,
               ),
@@ -132,7 +171,7 @@ class QuranPlayerPanel extends StatelessWidget {
           height: 26,
           child: Row(
             children: [
-              _AudioPortrait(name: _reciter, size: 26),
+              _AudioPortrait(name: _reciterSource, size: 26),
               const SizedBox(width: 7),
               Expanded(
                 child: InkWell(
@@ -144,7 +183,7 @@ class QuranPlayerPanel extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            _reciter,
+                            _reciter(context),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: qText(
@@ -164,7 +203,9 @@ class QuranPlayerPanel extends StatelessWidget {
               _smallButton(
                 context,
                 Icons.timer_outlined,
-                !media.sleepTimerActive ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
+                !media.sleepTimerActive
+                    ? context.quranLabel('مؤقت إيقاف')
+                    : context.quranLabel('المؤقت مفعّل'),
                 () => chooseAudioTimer(context, media),
                 active: media.sleepTimerActive,
               ),
@@ -178,7 +219,7 @@ class QuranPlayerPanel extends StatelessWidget {
                   ),
                   onPressed: () => chooseAudioSpeed(context, media),
                   child: Text(
-                    '${media.speed.toStringAsFixed(1)}x',
+                    '${quranNumber(context, media.speed)}x',
                     textDirection: TextDirection.ltr,
                     style: qText(context, size: 10.5, weight: FontWeight.w800),
                   ),
@@ -187,7 +228,7 @@ class QuranPlayerPanel extends StatelessWidget {
               SizedBox(
                 width: 26,
                 child: PopupMenuButton<String>(
-                  tooltip: 'قائمة التشغيل وخيارات التلاوة',
+                  tooltip: context.quranLabel('قائمة التشغيل وخيارات التلاوة'),
                   padding: EdgeInsets.zero,
                   icon: const Icon(Icons.playlist_play, size: 23, color: qNavy),
                   onSelected: (value) {
@@ -196,19 +237,19 @@ class QuranPlayerPanel extends StatelessWidget {
                     if (value == 'stop') unawaited(media.stop());
                   },
                   itemBuilder: (_) => [
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'queue',
-                      child: Text('قائمة التشغيل'),
+                      child: Text(context.quranLabel('قائمة التشغيل')),
                     ),
                     if (onOpen != null)
-                      const PopupMenuItem(
+                      PopupMenuItem(
                         value: 'open',
-                        child: Text('فتح المشغل'),
+                        child: Text(context.quranLabel('فتح المشغل')),
                       ),
                     PopupMenuItem(
                       value: 'stop',
                       enabled: media.current != null || media.loading,
-                      child: const Text('إيقاف التلاوة'),
+                      child: Text(context.quranLabel('إيقاف التلاوة')),
                     ),
                   ],
                 ),
@@ -228,7 +269,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 _smallButton(
                   context,
                   Icons.skip_previous,
-                  'التلاوة السابقة',
+                  context.quranLabel('التلاوة السابقة'),
                   media.handler?.player.hasPrevious == true
                       ? () => media.skip(-1)
                       : null,
@@ -240,7 +281,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 _smallButton(
                   context,
                   Icons.skip_next,
-                  'التلاوة التالية',
+                  context.quranLabel('التلاوة التالية'),
                   media.handler?.player.hasNext == true
                       ? () => media.skip(1)
                       : null,
@@ -250,7 +291,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 _smallButton(
                   context,
                   Icons.repeat,
-                  'التكرار',
+                  context.quranLabel('التكرار'),
                   () => chooseAudioRepeat(context, media),
                   active: media.repeat != AudioServiceRepeatMode.none,
                 ),
@@ -281,14 +322,16 @@ class QuranPlayerPanel extends StatelessWidget {
           onTap: onOpen,
           child: Row(
             children: [
-              _AudioPortrait(name: _reciter, size: 42),
+              _AudioPortrait(name: _reciterSource, size: 42),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      track?.title ?? initialTitle ?? 'اختر سورة للاستماع',
+                      track?.localizedTitle(context, repository) ??
+                          initialTitle ??
+                          context.quranLabel('اختر سورة للاستماع'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: qText(context, size: 18, weight: FontWeight.w800),
@@ -300,7 +343,7 @@ class QuranPlayerPanel extends StatelessWidget {
                         children: [
                           Flexible(
                             child: Text(
-                              _reciter,
+                              _reciter(context),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: qText(
@@ -324,7 +367,7 @@ class QuranPlayerPanel extends StatelessWidget {
               ),
               if (_minimize(context) != null)
                 IconButton(
-                  tooltip: 'تصغير المشغل',
+                  tooltip: context.quranLabel('تصغير المشغل'),
                   icon: const Icon(Icons.keyboard_arrow_down),
                   onPressed: _minimize(context),
                 ),
@@ -346,7 +389,12 @@ class QuranPlayerPanel extends StatelessWidget {
             ),
           ),
           Text(
-            track?.ayah == null ? 'مطلع السورة' : 'الآية ${track!.ayah}',
+            track?.ayah == null
+                ? context.quranLabel('مطلع السورة')
+                : context.tr(
+                    'quran.verseLabel',
+                    args: {'ayah': quranNumber(context, track!.ayah!)},
+                  ),
             style: qText(
               context,
               size: 10,
@@ -362,11 +410,11 @@ class QuranPlayerPanel extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                audioTime(media.position),
+                audioTime(media.position, formats: quranFormats(context)),
                 style: qText(context, size: 10, color: qAccent(context)),
               ),
               Text(
-                audioTime(media.duration),
+                audioTime(media.duration, formats: quranFormats(context)),
                 style: qText(context, size: 10, color: qAccent(context)),
               ),
             ],
@@ -382,7 +430,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 child: _smallButton(
                   context,
                   Icons.repeat,
-                  'التكرار',
+                  context.quranLabel('التكرار'),
                   () => chooseAudioRepeat(context, media),
                   active: media.repeat != AudioServiceRepeatMode.none,
                 ),
@@ -391,7 +439,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 child: _smallButton(
                   context,
                   Icons.replay_10,
-                  'إرجاع 10 ثوانٍ',
+                  context.quranLabel('إرجاع 10 ثوانٍ'),
                   () =>
                       media.seek(media.position - const Duration(seconds: 10)),
                 ),
@@ -400,7 +448,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 child: _smallButton(
                   context,
                   Icons.skip_previous,
-                  'التلاوة السابقة',
+                  context.quranLabel('التلاوة السابقة'),
                   media.handler?.player.hasPrevious == true
                       ? () => media.skip(-1)
                       : null,
@@ -411,7 +459,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 child: _smallButton(
                   context,
                   Icons.skip_next,
-                  'التلاوة التالية',
+                  context.quranLabel('التلاوة التالية'),
                   media.handler?.player.hasNext == true
                       ? () => media.skip(1)
                       : null,
@@ -421,7 +469,7 @@ class QuranPlayerPanel extends StatelessWidget {
                 child: _smallButton(
                   context,
                   Icons.forward_10,
-                  'تقديم 10 ثوانٍ',
+                  context.quranLabel('تقديم 10 ثوانٍ'),
                   () =>
                       media.seek(media.position + const Duration(seconds: 10)),
                 ),
@@ -437,7 +485,7 @@ class QuranPlayerPanel extends StatelessWidget {
               onPressed: () => chooseAudioSpeed(context, media),
               icon: const Icon(Icons.speed, size: 17),
               label: Text(
-                '${media.speed.toStringAsFixed(2)}x',
+                '${quranNumber(context, media.speed)}x',
                 style: qText(context, size: 11, color: qAccent(context)),
               ),
             ),
@@ -445,7 +493,9 @@ class QuranPlayerPanel extends StatelessWidget {
               onPressed: () => chooseAudioTimer(context, media),
               icon: const Icon(Icons.timer_outlined, size: 17),
               label: Text(
-                !media.sleepTimerActive ? 'مؤقت إيقاف' : 'المؤقت مفعّل',
+                !media.sleepTimerActive
+                    ? context.quranLabel('مؤقت إيقاف')
+                    : context.quranLabel('المؤقت مفعّل'),
                 style: qText(context, size: 11, color: qAccent(context)),
               ),
             ),
@@ -470,7 +520,7 @@ class QuranPlayerPanel extends StatelessWidget {
             overlayShape: const RoundSliderOverlayShape(overlayRadius: 8),
           ),
           child: Directionality(
-            textDirection: TextDirection.rtl,
+            textDirection: Directionality.of(context),
             child: Slider(
               key: floating ? const ValueKey('app-playback-seek') : null,
               value: max > 0
@@ -497,7 +547,9 @@ class QuranPlayerPanel extends StatelessWidget {
   }
 
   Widget _playButton(BuildContext context, {required double size}) => Tooltip(
-    message: media.playing ? 'إيقاف مؤقت' : 'تشغيل',
+    message: media.playing
+        ? context.quranLabel('إيقاف مؤقت')
+        : context.quranLabel('تشغيل'),
     child: Material(
       color: qAccentFill(context),
       shape: const CircleBorder(),
@@ -563,7 +615,7 @@ class QuranPlayerPanel extends StatelessWidget {
     child: FittedBox(
       fit: BoxFit.scaleDown,
       child: Text(
-        audioTime(time),
+        audioTime(time, formats: quranFormats(context)),
         style: qText(context, size: 9.5, color: qAccent(context)),
       ),
     ),
@@ -572,7 +624,7 @@ class QuranPlayerPanel extends StatelessWidget {
   Widget _error(BuildContext context) => Padding(
     padding: const EdgeInsets.only(top: 6),
     child: Text(
-      media.error!,
+      context.quranLabel(media.error!),
       style: qText(context, size: 11, color: AppPalette.of(context).muted),
       textAlign: TextAlign.center,
     ),
@@ -588,16 +640,18 @@ class QuranPlayerPanel extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(12),
             child: Text(
-              'قائمة التشغيل',
+              context.quranLabel('قائمة التشغيل'),
               style: qText(context, size: 18, weight: FontWeight.w800),
             ),
           ),
           if (media.playingTracks.isEmpty)
-            const ListTile(title: Text('لم تبدأ تلاوة بعد')),
+            ListTile(title: Text(context.quranLabel('لم تبدأ تلاوة بعد'))),
           for (var i = 0; i < media.playingTracks.length; i++)
             ListTile(
-              title: Text(media.playingTracks[i].title),
-              subtitle: Text(media.playingTracks[i].reciter),
+              title: Text(
+                media.playingTracks[i].localizedTitle(context, repository),
+              ),
+              subtitle: Text(media.playingTracks[i].localizedReciter(context)),
               trailing: media.handler?.playbackState.value.queueIndex == i
                   ? Icon(Icons.check_circle, color: qAccent(context))
                   : null,
@@ -652,12 +706,12 @@ Future<void> chooseAudioSpeed(BuildContext context, QuranMedia media) =>
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'سرعة التلاوة',
+              context.quranLabel('سرعة التلاوة'),
               style: qText(context, size: 18, weight: FontWeight.w800),
             ),
             for (final speed in [.5, .75, 1.0, 1.25, 1.5, 2.0])
               ListTile(
-                title: Text('${speed}x'),
+                title: Text('${quranNumber(context, speed)}x'),
                 trailing: media.speed == speed
                     ? Icon(Icons.check, color: qAccent(context))
                     : null,
@@ -679,13 +733,19 @@ Future<void> chooseAudioRepeat(BuildContext context, QuranMedia media) =>
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'تكرار التلاوة',
+              context.quranLabel('تكرار التلاوة'),
               style: qText(context, size: 18, weight: FontWeight.w800),
             ),
             for (final option in [
-              (AudioServiceRepeatMode.none, 'دون تكرار'),
-              (AudioServiceRepeatMode.one, 'تكرار التلاوة الحالية'),
-              (AudioServiceRepeatMode.all, 'تكرار القائمة أو نطاق الآيات'),
+              (AudioServiceRepeatMode.none, context.quranLabel('دون تكرار')),
+              (
+                AudioServiceRepeatMode.one,
+                context.quranLabel('تكرار التلاوة الحالية'),
+              ),
+              (
+                AudioServiceRepeatMode.all,
+                context.quranLabel('تكرار القائمة أو نطاق الآيات'),
+              ),
             ])
               ListTile(
                 title: Text(option.$2),
@@ -712,11 +772,11 @@ Future<void> chooseAudioTimer(BuildContext context, QuranMedia media) =>
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'مؤقت إيقاف التلاوة',
+                  context.quranLabel('مؤقت إيقاف التلاوة'),
                   style: qText(context, size: 18, weight: FontWeight.w800),
                 ),
                 SwitchListTile(
-                  title: const Text('تلاشي الصوت في آخر 5 ثوانٍ'),
+                  title: Text(context.quranLabel('تلاشي الصوت في آخر 5 ثوانٍ')),
                   value: media.fadeTimer,
                   onChanged: (value) {
                     media.setTimerFade(value);
@@ -724,7 +784,7 @@ Future<void> chooseAudioTimer(BuildContext context, QuranMedia media) =>
                   },
                 ),
                 ListTile(
-                  title: const Text('إلغاء المؤقت'),
+                  title: Text(context.quranLabel('إلغاء المؤقت')),
                   onTap: () {
                     media.setTimer(null);
                     Navigator.pop(context);
@@ -733,11 +793,13 @@ Future<void> chooseAudioTimer(BuildContext context, QuranMedia media) =>
                 ListTile(
                   title: Text(
                     media.current?.surah == 0
-                        ? 'بعد التسجيل الحالي'
-                        : 'بعد السورة الحالية',
+                        ? context.quranLabel('بعد التسجيل الحالي')
+                        : context.quranLabel('بعد السورة الحالية'),
                   ),
-                  subtitle: const Text(
-                    'حتى نهاية السورة أو النطاق المحمّل؛ يلغي التكرار الحالي',
+                  subtitle: Text(
+                    context.quranLabel(
+                      'حتى نهاية السورة أو النطاق المحمّل؛ يلغي التكرار الحالي',
+                    ),
                   ),
                   enabled: media.ownsPlayback && media.current != null,
                   onTap: () {
@@ -747,7 +809,12 @@ Future<void> chooseAudioTimer(BuildContext context, QuranMedia media) =>
                 ),
                 for (final minutes in [5, 10, 15, 20, 30, 60])
                   ListTile(
-                    title: Text('بعد $minutes دقيقة'),
+                    title: Text(
+                      context.tr(
+                        'quran.audioSleepMinutes',
+                        args: {'minutes': quranNumber(context, minutes)},
+                      ),
+                    ),
                     enabled: media.ownsPlayback,
                     onTap: () {
                       media.setTimer(Duration(minutes: minutes));
@@ -787,11 +854,11 @@ Future<void> chooseVerseRange(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'استماع وتكرار نطاق آيات',
+                  context.quranLabel('استماع وتكرار نطاق آيات'),
                   style: qText(context, size: 18, weight: FontWeight.w800),
                 ),
                 Text(
-                  'سورة ${media.repository().surah(verse.surah).name}',
+                  media.repository().surah(verse.surah).localizedTitle(context),
                   style: qText(context, size: 12),
                 ),
                 Row(
@@ -800,14 +867,14 @@ Future<void> chooseVerseRange(
                       child: DropdownButtonFormField<int>(
                         initialValue: first,
                         isExpanded: true,
-                        decoration: const InputDecoration(
-                          labelText: 'من الآية',
+                        decoration: InputDecoration(
+                          labelText: context.quranLabel('من الآية'),
                         ),
                         items: List.generate(
                           media.repository().surah(verse.surah).ayahCount,
                           (i) => DropdownMenuItem(
                             value: i + 1,
-                            child: Text('${i + 1}'),
+                            child: Text(quranNumber(context, i + 1)),
                           ),
                         ),
                         onChanged: (value) => setState(() {
@@ -822,8 +889,8 @@ Future<void> chooseVerseRange(
                         key: ValueKey(first),
                         initialValue: last,
                         isExpanded: true,
-                        decoration: const InputDecoration(
-                          labelText: 'إلى الآية',
+                        decoration: InputDecoration(
+                          labelText: context.quranLabel('إلى الآية'),
                         ),
                         items: List.generate(
                           media.repository().surah(verse.surah).ayahCount -
@@ -831,7 +898,7 @@ Future<void> chooseVerseRange(
                               1,
                           (i) => DropdownMenuItem(
                             value: first + i,
-                            child: Text('${first + i}'),
+                            child: Text(quranNumber(context, first + i)),
                           ),
                         ),
                         onChanged: (value) => setState(() => last = value!),
@@ -843,19 +910,21 @@ Future<void> chooseVerseRange(
                 DropdownButtonFormField<int>(
                   initialValue: repeats,
                   isExpanded: true,
-                  decoration: const InputDecoration(
-                    labelText: 'عدد مرات تكرار النطاق',
+                  decoration: InputDecoration(
+                    labelText: context.quranLabel('عدد مرات تكرار النطاق'),
                   ),
                   items: List.generate(
                     10,
-                    (i) =>
-                        DropdownMenuItem(value: i + 1, child: Text('${i + 1}')),
+                    (i) => DropdownMenuItem(
+                      value: i + 1,
+                      child: Text(quranNumber(context, i + 1)),
+                    ),
                   ),
                   onChanged: (value) => repeats = value!,
                 ),
                 const SizedBox(height: 18),
                 QPrimaryButton(
-                  label: 'بدء الاستماع',
+                  label: context.quranLabel('بدء الاستماع'),
                   icon: Icons.play_arrow,
                   onTap: () {
                     Navigator.pop(context);

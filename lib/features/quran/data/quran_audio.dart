@@ -12,6 +12,8 @@ import 'quran_audio_models.dart';
 import 'quran_downloads.dart';
 import 'quran_repository.dart';
 import 'quran_playback_ownership.dart';
+import 'quran_audio_labels.dart';
+import '../../../core/localization/interface_messages.dart';
 
 class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
   QuranAudioHandler({AudioPlayer? player})
@@ -100,6 +102,8 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
     List<Uri> uris, {
     int start = 0,
     bool Function()? isCurrent,
+    QuranRepository? repository,
+    InterfaceMessages? messages,
   }) async {
     if (tracks.isEmpty || tracks.length != uris.length) {
       throw ArgumentError('A recording URI is required for every track');
@@ -118,10 +122,18 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
         final portrait = reciterPortrait(track.reciter);
         return MediaItem(
           id: '${track.id}#queue-${entry.key}',
-          title: track.title,
-          artist: track.reciter,
-          displayTitle: track.title,
-          displaySubtitle: track.reciter,
+          title: repository != null && messages != null
+              ? audioTrackLabel(track, repository, messages)
+              : track.title,
+          artist: messages != null
+              ? audioReciterLabel(track, messages)
+              : track.reciter,
+          displayTitle: repository != null && messages != null
+              ? audioTrackLabel(track, repository, messages)
+              : track.title,
+          displaySubtitle: messages != null
+              ? audioReciterLabel(track, messages)
+              : track.reciter,
           artUri: portrait == null ? null : Uri.parse(portrait),
           isLive: false,
           extras: {
@@ -158,6 +170,46 @@ class QuranAudioHandler extends BaseAudioHandler with SeekHandler {
         );
       }),
     );
+  }
+
+  void refreshInterfaceMetadata(
+    List<QuranAudioTrack> tracks,
+    QuranRepository repository,
+    InterfaceMessages messages,
+  ) {
+    final byId = {for (final track in tracks) track.id: track};
+    final updated = [
+      for (final item in queue.value)
+        if (byId[item.extras?['trackId']] case final track?)
+          item.copyWith(
+            title: audioTrackLabel(track, repository, messages),
+            displayTitle: audioTrackLabel(track, repository, messages),
+            artist: audioReciterLabel(track, messages),
+            displaySubtitle: audioReciterLabel(track, messages),
+          )
+        else
+          item,
+    ];
+    // MediaItem equality compares identity; a locale change intentionally keeps
+    // the same identity while changing only display metadata.
+    if (queue.value.length == updated.length &&
+        List.generate(updated.length, (index) => index).every((index) {
+          final before = queue.value[index], after = updated[index];
+          return before.title == after.title &&
+              before.artist == after.artist &&
+              before.displayTitle == after.displayTitle &&
+              before.displaySubtitle == after.displaySubtitle;
+        })) {
+      return;
+    }
+    queue.add(updated);
+    final current = mediaItem.value;
+    for (final item in updated) {
+      if (item.id == current?.id) {
+        mediaItem.add(item);
+        break;
+      }
+    }
   }
 
   @override
@@ -241,6 +293,24 @@ class QuranMedia extends ChangeNotifier {
   final String storageKey;
   final QuranDownloads downloads;
   final Future<QuranAudioHandler> Function()? handlerFactory;
+  InterfaceMessages _messages = InterfaceMessages.bundled('ar');
+  void setInterfaceMessages(InterfaceMessages messages) {
+    if (_messages.code == messages.code &&
+        mapEquals(_messages.strings, messages.strings)) {
+      return;
+    }
+    _messages = messages;
+    scheduleMicrotask(() {
+      if (!_disposed && identical(_messages, messages) && ownsPlayback) {
+        handler!.refreshInterfaceMetadata(
+          playingTracks,
+          repository(),
+          messages,
+        );
+      }
+    });
+  }
+
   QuranAudioCatalog? catalog;
   QuranAudioHandler? handler;
   static Future<QuranAudioHandler>? _sharedHandler;
@@ -376,9 +446,11 @@ class QuranMedia extends ChangeNotifier {
     } else {
       _sharedHandler ??= AudioService.init<QuranAudioHandler>(
         builder: QuranAudioHandler.new,
-        config: const AudioServiceConfig(
+        config: AudioServiceConfig(
           androidNotificationChannelId: 'com.haqfoundation.haq_app.quran',
-          androidNotificationChannelName: 'تلاوة القرآن الكريم',
+          androidNotificationChannelName: _messages.text(
+            'quran.audioNotificationChannel',
+          ),
           androidNotificationIcon: 'drawable/ic_quran_notification',
           notificationColor: Color(0xFF006570),
           androidNotificationOngoing: false,
@@ -454,10 +526,19 @@ class QuranMedia extends ChangeNotifier {
           tracks,
           uris,
           start: start,
+          repository: repository(),
+          messages: _messages,
           isCurrent: () =>
               generation == _generation && !_disposed && ownsPlayback,
         );
-        if (ownsPlayback) await audio.setSpeed(_preferredSpeed);
+        if (ownsPlayback) {
+          audio.refreshInterfaceMetadata(
+            playingTracks,
+            repository(),
+            _messages,
+          );
+          await audio.setSpeed(_preferredSpeed);
+        }
       });
     } catch (failure) {
       if (generation == _generation) {

@@ -149,11 +149,13 @@ void main() {
   Future<void> showApp(
     WidgetTester tester, {
     Size size = const Size(430, 932),
+    String language = 'ar',
   }) async {
     tester.view.physicalSize = visualSize(size);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
+    await controller.preferences!.setString('app.language.v1', language);
     await tester.pumpWidget(
       RepaintBoundary(
         key: boundary,
@@ -178,7 +180,7 @@ void main() {
       }
     });
     await tester.pumpAndSettle();
-    await tester.tap(find.text('القرآن').last);
+    await tester.tap(find.text(language == 'en' ? 'Quran' : 'القرآن').last);
     await tester.pumpAndSettle();
   }
 
@@ -267,6 +269,64 @@ void main() {
       await tester.pumpAndSettle();
     },
   );
+  testWidgets(
+    'English audio search and reciter selection preserve recording identities at narrow width',
+    (tester) async {
+      await appearance.setFontScale(1.2);
+      await showApp(tester, size: const Size(320, 900), language: 'en');
+      await controller.audio.initialize();
+      final recitation = controller.audio.catalog!.recitations.firstWhere(
+        (entry) => entry.id == 'mp3quran:123',
+      );
+      final originalTrack = recitation
+          .track(controller.repository!, 1)
+          .toJson();
+      final host = tester.state<QuranHostState>(find.byType(QuranHost));
+      host.openAudio();
+      await tester.pumpAndSettle();
+      expect(find.text('Quran audio'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.byType(TextField),
+        180,
+        scrollable: find
+            .descendant(
+              of: find.byType(QuranAudioPage),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'FATIHAH');
+      await tester.pumpAndSettle();
+      expect(find.text('Surah Al-Fatihah'), findsOneWidget);
+      await tester.enterText(find.byType(TextField), 'الفاتحة');
+      await tester.pumpAndSettle();
+      expect(find.text('Surah Al-Fatihah'), findsOneWidget);
+      await tester.ensureVisible(find.text('View all'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('View all'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'ALAFASI');
+      await tester.pumpAndSettle();
+      expect(find.text('Mishary Alafasi'), findsOneWidget);
+      await tester.tap(find.text('Mishary Alafasi'));
+      await tester.pumpAndSettle();
+      expect(controller.audio.selectedChapter, recitation.id);
+      expect(
+        recitation.track(controller.repository!, 1).toJson(),
+        originalTrack,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      host.openDownloads();
+      await tester.pumpAndSettle();
+      expect(find.text('Downloads and offline listening'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
   testWidgets(
     'audio downloads reader picker and account fit a narrow enlarged RTL interface',
     (tester) async {

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/features/quran/data/quran_audio.dart';
+import 'package:haq_app/core/localization/interface_messages.dart';
 import 'package:haq_app/features/quran/data/quran_audio_models.dart';
 import 'package:haq_app/features/quran/data/quran_downloads.dart';
 import 'package:haq_app/features/quran/data/quran_playback_ownership.dart';
@@ -119,6 +120,45 @@ void main() {
     );
     await directory.delete(recursive: true);
   });
+
+  test(
+    'language metadata changes preserve active audio, timing and ownership',
+    () async {
+      quran.setInterfaceMessages(InterfaceMessages.bundled('en'));
+      await quran.playChapter(1);
+      final original = quran.current!.toJson();
+      expect(handler.mediaItem.value!.title, 'Surah Al-Fatihah');
+      expect(handler.mediaItem.value!.artist, isNot(original['reciter']));
+      await quran.setSpeed(1.25);
+      await quran.setRepeat(AudioServiceRepeatMode.one);
+      await quran.seek(const Duration(seconds: 7));
+      quran.setTimer(const Duration(minutes: 10));
+      final timer = quran.stopAt;
+      final plays = player.played.toList();
+      final seeks = player.seeks.toList();
+      final queueIds = handler.queue.value.map((item) => item.id).toList();
+      quran.setInterfaceMessages(InterfaceMessages.bundled('ar'));
+      await Future<void>.delayed(Duration.zero);
+      expect(handler.mediaItem.value!.title, 'سورة الفاتحة');
+      expect(handler.mediaItem.value!.artist, original['reciter']);
+      expect(quran.current!.toJson(), original);
+      expect(quran.playing, isTrue);
+      expect(player.played, plays);
+      expect(player.seeks, seeks);
+      expect(player.rate, 1.25);
+      expect(player.loopMode, LoopMode.one);
+      expect(quran.stopAt, timer);
+      expect(handler.queue.value.map((item) => item.id).toList(), queueIds);
+      await religious.playTracks([fixture.recording('personal-recording')]);
+      final personalTitle = handler.mediaItem.value!.title;
+      quran.setInterfaceMessages(InterfaceMessages.bundled('en'));
+      religious.setInterfaceMessages(InterfaceMessages.bundled('en'));
+      await Future<void>.delayed(Duration.zero);
+      expect(handler.mediaItem.value!.title, personalTitle);
+      expect(religious.playing, isTrue);
+      expect(quran.ownsPlayback, isFalse);
+    },
+  );
 
   test(
     'only current owner exposes playback or controls the shared native queue',
