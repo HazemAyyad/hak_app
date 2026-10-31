@@ -20,12 +20,12 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('جميع الأقسام'),
+                title: Text(context.religiousLabel('جميع الأقسام')),
                 onTap: () => Navigator.pop(context, 'all'),
               ),
               for (final category in host.catalog.children(null))
                 ListTile(
-                  title: Text(category.title),
+                  title: Text(category.interfaceTitle(context)),
                   onTap: () => Navigator.pop(context, category.id),
                 ),
             ],
@@ -52,7 +52,7 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
         ...host.catalog.children(null).where((c) => c.id != 'nawawi'),
         ReligiousCategory({
           'id': 'daily-shortcut',
-          'title': 'أدعية الحياة اليومية',
+          'title': context.religiousLabel('أدعية الحياة اليومية'),
           'description': 'أدعية مقسمة حسب مناحي الحياة اليومية',
           'image': 'lantern',
         }),
@@ -73,9 +73,10 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
           padding: EdgeInsets.zero,
           children: [
             ReligiousHeader(
-              title: 'المزيد',
-              subtitle:
-                  'مجموعة من الأدعية والكتب والمحتوى الإسلامي\nللاقتراب من الله في كل وقت',
+              title: context.religiousLabel('المزيد'),
+              subtitle: context.religiousLabel(
+                'مجموعة من الأدعية والكتب والمحتوى الإسلامي\nللاقتراب من الله في كل وقت',
+              ),
               image: 'home',
               light: true,
             ),
@@ -94,7 +95,7 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                     offset: const Offset(0, -10),
                     child: ReligiousSearch(
                       controller: search,
-                      hint: 'ابحث عن دعاء أو موضوع...',
+                      hint: context.religiousLabel('ابحث عن دعاء أو موضوع...'),
                       onChanged: (_) => setState(() {}),
                       onFilter: chooseScope,
                     ),
@@ -104,12 +105,20 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: InputChip(
-                          label: Text(host.catalog.byCategory[scope]!.title),
+                          label: Text(
+                            host.catalog.byCategory[scope]!.interfaceTitle(
+                              context,
+                            ),
+                          ),
                           onDeleted: () => setState(() => scope = null),
                         ),
                       ),
                     if (results.isEmpty)
-                      const ReligiousEmpty(text: 'لا توجد نتائج مطابقة للبحث'),
+                      ReligiousEmpty(
+                        text: context.religiousLabel(
+                          'لا توجد نتائج مطابقة للبحث',
+                        ),
+                      ),
                     for (final (index, item) in results.indexed)
                       _ItemTile(host: host, item: item, index: index),
                   ] else ...[
@@ -143,7 +152,9 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                       onTap: () => host._push(
                         _ReligiousCategoryPage(
                           host: host,
-                          titleOverride: 'محتوى ديني متنوع',
+                          titleOverride: context.religiousLabel(
+                            'محتوى ديني متنوع',
+                          ),
                         ),
                         '/religious/browse',
                       ),
@@ -154,7 +165,12 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                             borderRadius:
                                 const BorderRadiusDirectional.horizontal(
                                   start: Radius.circular(14),
-                                ).resolve(TextDirection.rtl),
+                                ).resolve(
+                                  LocalizationScope.maybeOf(
+                                        context,
+                                      )?.language.direction ??
+                                      TextDirection.rtl,
+                                ),
                             child: Image.asset(
                               rAsset('books'),
                               width: 110,
@@ -168,7 +184,7 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'محتوى ديني متنوع',
+                                  context.religiousLabel('محتوى ديني متنوع'),
                                   style: rText(
                                     context,
                                     13,
@@ -176,7 +192,9 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                                   ),
                                 ),
                                 Text(
-                                  'مقالات وقصص وفوائد إيمانية',
+                                  context.religiousLabel(
+                                    'مقالات وقصص وفوائد إيمانية',
+                                  ),
                                   style: rText(context, 10),
                                 ),
                                 InkWell(
@@ -186,7 +204,9 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                                       vertical: 5,
                                     ),
                                     child: Text(
-                                      'الأربعون النووية  ‹',
+                                      context.religiousLabel(
+                                        'الأربعون النووية  ‹',
+                                      ),
                                       style: rText(
                                         context,
                                         12,
@@ -243,7 +263,7 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'دعاء اليوم',
+                                    context.religiousLabel('دعاء اليوم'),
                                     style: rText(
                                       context,
                                       13,
@@ -279,7 +299,7 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                       children: [
                         Expanded(
                           child: Text(
-                            'الوصول السريع',
+                            context.religiousLabel('الوصول السريع'),
                             style: rText(context, 14, weight: FontWeight.w800),
                           ),
                         ),
@@ -290,17 +310,36 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                             minimumSize: Size.zero,
                             padding: const EdgeInsets.all(8),
                           ),
-                          child: Text('عرض الكل', style: rText(context, 11)),
+                          child: Text(
+                            context.religiousLabel('عرض الكل'),
+                            style: rText(context, 11),
+                          ),
                         ),
                       ],
                     ),
                     Row(
                       children: [
                         for (final (title, icon, tag) in [
-                          ('المفضلة', Icons.bookmark_border, 'saved'),
-                          ('أذكاري', Icons.front_hand_outlined, 'adhkar'),
-                          ('أدعية الصباح', Icons.wb_sunny_outlined, 'morning'),
-                          ('أدعية النوم', Icons.nightlight_outlined, 'sleep'),
+                          (
+                            context.religiousLabel('المفضلة'),
+                            Icons.bookmark_border,
+                            'saved',
+                          ),
+                          (
+                            context.religiousLabel('أذكاري'),
+                            Icons.front_hand_outlined,
+                            'adhkar',
+                          ),
+                          (
+                            context.religiousLabel('أدعية الصباح'),
+                            Icons.wb_sunny_outlined,
+                            'morning',
+                          ),
+                          (
+                            context.religiousLabel('أدعية النوم'),
+                            Icons.nightlight_outlined,
+                            'sleep',
+                          ),
                         ])
                           Expanded(
                             child: Padding(
@@ -414,12 +453,12 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              title: const Text('جميع المواد'),
+              title: Text(context.religiousLabel('جميع المواد')),
               leading: const Icon(Icons.view_list_outlined),
               onTap: () => Navigator.pop(context, false),
             ),
             ListTile(
-              title: const Text('المفضلة فقط'),
+              title: Text(context.religiousLabel('المفضلة فقط')),
               leading: const Icon(Icons.bookmark_border),
               onTap: () => Navigator.pop(context, true),
             ),
@@ -437,8 +476,10 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
       final category = widget.category;
       final title =
           widget.titleOverride ??
-          category?.title ??
-          (widget.adhkar ? 'أذكاري' : 'المفضلة');
+          category?.interfaceTitle(context) ??
+          (widget.adhkar
+              ? context.religiousLabel('أذكاري')
+              : context.religiousLabel('المفضلة'));
       final items = host.catalog.search(
         category: category?.id,
         query: search.text,
@@ -474,7 +515,8 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
             child: ReligiousHeader(
               title: title,
               subtitle:
-                  category?.description ?? 'المحتوى الذي حفظته للرجوع إليه',
+                  category?.description ??
+                  context.religiousLabel('المحتوى الذي حفظته للرجوع إليه'),
               image: category?.header ?? 'ruqya',
               light: const ['home', 'medina'].contains(category?.header),
               onBack: host.back,
@@ -497,7 +539,10 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                 children: [
                   ReligiousSearch(
                     controller: search,
-                    hint: 'ابحث في $title ...',
+                    hint: context.tr(
+                      'religious.searchIn',
+                      args: {'title': title},
+                    ),
                     onChanged: (_) => setState(() {}),
                     onFilter: filter,
                   ),
@@ -508,13 +553,13 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                       child: Row(
                         children: [
                           ReligiousPill(
-                            text: 'الكل',
+                            text: context.religiousLabel('الكل'),
                             selected: tag == null,
                             onTap: () => setState(() => tag = null),
                           ),
                           for (final label in tags)
                             ReligiousPill(
-                              text: label,
+                              text: context.religiousLabel(label),
                               selected: tag == label,
                               onTap: () => setState(() => tag = label),
                             ),
@@ -546,10 +591,12 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                 ? SliverToBoxAdapter(
                     child: ReligiousEmpty(
                       text: widget.saved
-                          ? 'لم تحفظ أي محتوى بعد'
+                          ? context.religiousLabel('لم تحفظ أي محتوى بعد')
                           : widget.adhkar
-                          ? 'أضف الأدعية إلى أذكارك من صفحة التفاصيل'
-                          : 'لا توجد نتائج مطابقة',
+                          ? context.religiousLabel(
+                              'أضف الأدعية إلى أذكارك من صفحة التفاصيل',
+                            )
+                          : context.religiousLabel('لا توجد نتائج مطابقة'),
                       icon: widget.saved
                           ? Icons.bookmark_border
                           : Icons.search_off,
@@ -602,7 +649,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
               child: IconButton(
                 padding: EdgeInsets.zero,
                 onPressed: () => host.controller.toggleFavorite(item.id),
-                tooltip: 'المفضلة',
+                tooltip: context.religiousLabel('المفضلة'),
                 icon: Icon(
                   host.controller.favorites.contains(item.id)
                       ? Icons.favorite
@@ -650,7 +697,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
       key: const PageStorageKey('religious-ruqya-home'),
       children: [
         ReligiousHeader(
-          title: category.title,
+          title: category.interfaceTitle(context),
           subtitle: category.description,
           image: 'ruqya',
           onBack: host.back,
@@ -667,7 +714,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
             children: [
               ReligiousSearch(
                 controller: search,
-                hint: 'ابحث في الرقية الشرعية...',
+                hint: context.religiousLabel('ابحث في الرقية الشرعية...'),
                 onChanged: (_) => setState(() {}),
               ),
               const SizedBox(height: 12),
@@ -692,7 +739,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'الرقية الشرعية الكاملة',
+                              context.religiousLabel('الرقية الشرعية الكاملة'),
                               style: rText(
                                 context,
                                 15,
@@ -700,7 +747,9 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                               ),
                             ),
                             Text(
-                              'استمع إلى الآيات المختارة\nمن القرآن الكريم',
+                              context.religiousLabel(
+                                'استمع إلى الآيات المختارة\nمن القرآن الكريم',
+                              ),
                               style: rText(context, 12),
                             ),
                           ],
@@ -720,7 +769,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
               ),
               const SizedBox(height: 16),
               Text(
-                'الأقسام',
+                context.religiousLabel('الأقسام'),
                 style: rText(context, 17, weight: FontWeight.w800),
               ),
               const SizedBox(height: 10),
@@ -789,13 +838,15 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
               ),
               const SizedBox(height: 18),
               Text(
-                'آخر ما استمعت إليه',
+                context.religiousLabel('آخر ما استمعت إليه'),
                 style: rText(context, 16, weight: FontWeight.w800),
               ),
               const SizedBox(height: 8),
               if (recent.isEmpty)
-                const ReligiousEmpty(
-                  text: 'ابدأ الاستماع لتظهر هنا المقاطع الأخيرة',
+                ReligiousEmpty(
+                  text: context.religiousLabel(
+                    'ابدأ الاستماع لتظهر هنا المقاطع الأخيرة',
+                  ),
                   icon: Icons.history,
                 ),
               for (final id in host.controller.listeningQueue)
@@ -813,7 +864,9 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                         if (host.controller.hasAudio(queued))
                           ReligiousRoundButton(
                             icon: Icons.play_arrow,
-                            label: 'تشغيل قائمة الاستماع',
+                            label: context.religiousLabel(
+                              'تشغيل قائمة الاستماع',
+                            ),
                             filled: true,
                             onTap: () => host.play(context, queued),
                           ),
@@ -843,7 +896,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                         if (host.controller.hasAudio(item))
                           ReligiousRoundButton(
                             icon: Icons.play_arrow,
-                            label: 'استئناف الاستماع',
+                            label: context.religiousLabel('استئناف الاستماع'),
                             filled: true,
                             onTap: () => host.play(context, item),
                           ),

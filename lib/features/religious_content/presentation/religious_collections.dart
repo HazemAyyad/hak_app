@@ -8,8 +8,8 @@ class _RamadanDaysPage extends StatelessWidget {
     padding: EdgeInsets.zero,
     children: [
       ReligiousHeader(
-        title: 'الأدعية الرمضانية',
-        subtitle: 'القرآن والدعاء في أيام الشهر',
+        title: context.religiousLabel('الأدعية الرمضانية'),
+        subtitle: context.religiousLabel('القرآن والدعاء في أيام الشهر'),
         image: 'medina',
         light: true,
         onBack: host.back,
@@ -18,6 +18,7 @@ class _RamadanDaysPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Text(
           host.catalog.ramadanDaysNote,
+          textDirection: contentTextDirection(host.catalog.ramadanDaysNote),
           style: rText(context, 12, color: ReligiousColors(context).muted),
         ),
       ),
@@ -41,7 +42,7 @@ class _RamadanDaysPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: Text(
-                    '$day',
+                    religiousNumber(context, day),
                     style: rText(context, 20, weight: FontWeight.w800),
                   ),
                 ),
@@ -51,7 +52,10 @@ class _RamadanDaysPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'اليوم $day',
+                        context.tr(
+                          'religious.day',
+                          args: {'day': religiousNumber(context, day)},
+                        ),
                         style: rText(context, 14, weight: FontWeight.w800),
                       ),
                       Text(
@@ -59,7 +63,9 @@ class _RamadanDaysPage extends StatelessWidget {
                                 .catalog
                                 .byId[host.catalog.ramadanDays[day]]
                                 ?.title ??
-                            'لا يوجد مقترح منشور لهذا اليوم',
+                            context.religiousLabel(
+                              'لا يوجد مقترح منشور لهذا اليوم',
+                            ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: rText(context, 12),
@@ -101,16 +107,14 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
     context: context,
     useRootNavigator: false,
     builder: (context) => AlertDialog(
-      title: const Text('مصادر مكتبة الحديث'),
+      title: Text(context.religiousLabel('مصادر مكتبة الحديث')),
       content: SingleChildScrollView(
-        child: SelectableText(
-          'تحتوي المكتبة المضمّنة على أحاديث الأربعين النووية وشروحها الموجودة في حق، وأحاديث رمضان الموثقة مع إحالة المصدر لكل حديث. تصنيفات الموضوعات تساعد على التصفح ولا تغيّر المتن أو درجته.\n\nhttps://github.com/osamayy/40-hadith-nawawi-db\nhttps://sunnah.com\n\nالمتن والشرح منفصلان في صفحة القراءة.',
-        ),
+        child: SelectableText(context.tr('religious.hadithSources')),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('إغلاق'),
+          child: Text(context.religiousLabel('إغلاق')),
         ),
       ],
     ),
@@ -126,8 +130,8 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
       padding: EdgeInsets.zero,
       children: [
         ReligiousHeader(
-          title: 'الأحاديث النبوية',
-          subtitle: 'المتن والشرح والمصدر',
+          title: context.religiousLabel('الأحاديث النبوية'),
+          subtitle: context.religiousLabel('المتن والشرح والمصدر'),
           image: 'reading',
           onBack: host.back,
         ),
@@ -141,14 +145,14 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
                   Expanded(
                     child: ReligiousSearch(
                       controller: _search,
-                      hint: 'ابحث في الأحاديث…',
+                      hint: context.religiousLabel('ابحث في الأحاديث…'),
                       onChanged: (_) => setState(() {}),
                     ),
                   ),
                   IconButton(
                     onPressed: _sources,
                     icon: const Icon(Icons.info_outline),
-                    tooltip: 'مصدر الأحاديث',
+                    tooltip: context.religiousLabel('مصدر الأحاديث'),
                   ),
                 ],
               ),
@@ -158,15 +162,30 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
                 child: Row(
                   children: [
                     ReligiousPill(
-                      text:
-                          'الكل (${host.catalog.search(category: 'hadith').length})',
+                      text: context.tr(
+                        'religious.allCount',
+                        args: {
+                          'count': religiousNumber(
+                            context,
+                            host.catalog.search(category: 'hadith').length,
+                          ),
+                        },
+                      ),
                       selected: _category == 'hadith',
                       onTap: () => setState(() => _category = 'hadith'),
                     ),
                     for (final category in host.catalog.children('hadith'))
                       ReligiousPill(
-                        text:
-                            '${category.title} (${host.catalog.search(category: category.id).length})',
+                        text: context.tr(
+                          'religious.categoryCount',
+                          args: {
+                            'title': category.interfaceTitle(context),
+                            'count': religiousNumber(
+                              context,
+                              host.catalog.search(category: category.id).length,
+                            ),
+                          },
+                        ),
                         selected: _category == category.id,
                         onTap: () => setState(() => _category = category.id),
                       ),
@@ -175,8 +194,8 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
               ),
               const SizedBox(height: 12),
               if (items.isEmpty)
-                const ReligiousEmpty(
-                  text: 'لا توجد أحاديث مطابقة',
+                ReligiousEmpty(
+                  text: context.religiousLabel('لا توجد أحاديث مطابقة'),
                   icon: Icons.search_off,
                 ),
               for (final item in items)
@@ -195,7 +214,12 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
                       CircleAvatar(
                         backgroundColor: AppPalette.of(context).notice,
                         child: Text(
-                          '${item.number > 0 ? item.number : items.indexOf(item) + 1}',
+                          religiousNumber(
+                            context,
+                            item.number > 0
+                                ? item.number
+                                : items.indexOf(item) + 1,
+                          ),
                           style: rText(context, 14),
                         ),
                       ),
@@ -206,6 +230,7 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
                           children: [
                             Text(
                               item.title,
+                              textDirection: contentTextDirection(item.title),
                               style: rText(
                                 context,
                                 15,

@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_repository.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
@@ -17,6 +18,8 @@ import 'package:haq_app/features/religious_activity/data/activity_store.dart';
 import 'package:haq_app/features/religious_content/data/religious_catalog.dart';
 import 'package:haq_app/features/religious_content/data/religious_controller.dart';
 import 'package:haq_app/features/religious_content/presentation/religious_host.dart';
+import 'package:haq_app/features/religious_content/presentation/religious_widgets.dart'
+    show ReligiousHeader;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'support/visual_audit.dart';
@@ -121,53 +124,58 @@ void main() {
     String category, {
     bool dark = false,
     double width = 426,
+    AppLocalization? localization,
   }) async {
     tester.view.physicalSize = visualSize(Size(width, 1100));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
-    await tester.pumpWidget(
-      AppearanceScope(
-        controller: appearance,
-        child: RepaintBoundary(
-          key: preview,
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              fontFamily: 'QuranUI',
-              colorScheme: visualAudit
-                  ? ColorScheme.fromSeed(
-                      seedColor: const Color(0xFF2A8C82),
-                      primary: const Color(0xFF2A8C82),
-                      secondary: const Color(0xFFC7A45A),
-                      brightness: dark ? Brightness.dark : Brightness.light,
-                    )
-                  : null,
-              brightness: dark ? Brightness.dark : Brightness.light,
-            ),
-            builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(context).copyWith(
-                textScaler: TextScaler.linear(
-                  visualScale(width == 320 ? 1.2 : 1),
-                ),
-              ),
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: child!,
+    final screen = AppearanceScope(
+      controller: appearance,
+      child: RepaintBoundary(
+        key: preview,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            fontFamily: 'QuranUI',
+            colorScheme: visualAudit
+                ? ColorScheme.fromSeed(
+                    seedColor: const Color(0xFF2A8C82),
+                    primary: const Color(0xFF2A8C82),
+                    secondary: const Color(0xFFC7A45A),
+                    brightness: dark ? Brightness.dark : Brightness.light,
+                  )
+                : null,
+            brightness: dark ? Brightness.dark : Brightness.light,
+          ),
+          builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: TextScaler.linear(
+                visualScale(width == 320 ? 1.2 : 1),
               ),
             ),
-            home: Scaffold(
-              body: ReligiousHost(
-                key: host,
-                controller: religious,
-                onClose: () {},
-                initialCategory: category,
-                initialCategoryAsRoot: true,
-              ),
+            child: Directionality(
+              textDirection:
+                  localization?.language.direction ?? TextDirection.rtl,
+              child: child!,
+            ),
+          ),
+          home: Scaffold(
+            body: ReligiousHost(
+              key: host,
+              controller: religious,
+              onClose: () {},
+              initialCategory: category,
+              initialCategoryAsRoot: true,
             ),
           ),
         ),
       ),
+    );
+    await tester.pumpWidget(
+      localization == null
+          ? screen
+          : LocalizationScope(controller: localization, child: screen),
     );
     await settle(tester);
   }
@@ -274,6 +282,83 @@ void main() {
       },
     );
   }
+  testWidgets(
+    'English mood controls preserve Arabic scripture and daily counts through locale changes',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await pump(tester, 'feelings', width: 320, localization: localization);
+      expect(find.text('How are you feeling?'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('mood-happy')));
+      await settle(tester);
+      expect(
+        find.descendant(
+          of: find.byType(ReligiousHeader),
+          matching: find.text('Happiness'),
+        ),
+        findsOneWidget,
+      );
+      final original = catalog.byId['qdua-thankfulness']!.text;
+      final scripture = find.byWidgetPredicate(
+        (widget) => widget is SelectableText && widget.data == original,
+      );
+      expect(scripture, findsOneWidget);
+      expect(
+        tester.widget<SelectableText>(scripture).textDirection,
+        TextDirection.rtl,
+      );
+      final count = find.byKey(const ValueKey('mood-count-qdua-thankfulness'));
+      await tester.ensureVisible(count);
+      await tester.tap(count);
+      await settle(tester);
+      expect(
+        find.descendant(of: count, matching: find.text('0')),
+        findsOneWidget,
+      );
+      final before = (await store.entities(
+        activity.scope,
+      )).map((entity) => entity.toJson()).toList();
+      await localization.select('ar');
+      await settle(tester);
+      await tester.scrollUntilVisible(
+        find.byType(ReligiousHeader),
+        -180,
+        scrollable: find
+            .descendant(
+              of: find.byKey(const PageStorageKey('mood-reader-happy')),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
+      await settle(tester);
+      expect(
+        find.descendant(
+          of: find.byType(ReligiousHeader),
+          matching: find.text('السعادة'),
+        ),
+        findsOneWidget,
+      );
+      await tester.ensureVisible(count);
+      await settle(tester);
+      expect(
+        find.descendant(of: count, matching: find.text('0')),
+        findsOneWidget,
+      );
+      expect(catalog.byId['qdua-thankfulness']!.text, original);
+      expect(
+        (await store.entities(
+          activity.scope,
+        )).map((entity) => entity.toJson()).toList(),
+        before,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
   testWidgets(
     'mood count stays red at zero, undoes its own card and keeps account history separate',
     (tester) async {

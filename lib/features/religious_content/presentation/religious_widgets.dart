@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import '../../../app_appearance.dart';
 
 const rTeal = Color(0xFF075158);
@@ -214,6 +216,44 @@ class ReligiousHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final top = MediaQuery.paddingOf(context).top;
+    final subtitleMatch = RegExp(
+      r'^الحديث ([0-9]+) من الأربعين النووية$',
+    ).firstMatch(subtitle);
+    final displaySubtitle = subtitleMatch == null
+        ? subtitle
+        : context.tr(
+            'religious.nawawiNumber',
+            args: {
+              'number':
+                  LocalizationScope.maybeOf(
+                    context,
+                  )?.formats.integer(int.parse(subtitleMatch.group(1)!)) ??
+                  subtitleMatch.group(1)!,
+            },
+          );
+    final displayBreadcrumb = breadcrumb
+        ?.split(RegExp(r'\s*‹\s*'))
+        .map((part) {
+          final hadith = RegExp(r'^الحديث ([0-9]+)$').firstMatch(part);
+          return hadith == null
+              ? context.religiousLabel(part)
+              : context.tr(
+                  'religious.hadithNumber',
+                  args: {
+                    'number':
+                        LocalizationScope.maybeOf(
+                          context,
+                        )?.formats.integer(int.parse(hadith.group(1)!)) ??
+                        hadith.group(1)!,
+                  },
+                );
+        })
+        .join(
+          LocalizationScope.maybeOf(context)?.language.direction ==
+                  TextDirection.ltr
+              ? '  ›  '
+              : '  ‹  ',
+        );
     final scale = MediaQuery.textScalerOf(context).scale(1);
     final color = light ? rAccent(context) : Colors.white;
     final width = MediaQuery.sizeOf(context).width;
@@ -228,7 +268,7 @@ class ReligiousHeader extends StatelessWidget {
           text: text,
           style: rText(context, size, weight: weight),
         ),
-        textDirection: TextDirection.rtl,
+        textDirection: contentTextDirection(text),
         textScaler: MediaQuery.textScalerOf(context),
       )..layout(maxWidth: maxWidth);
       return painter.height;
@@ -239,8 +279,12 @@ class ReligiousHeader extends StatelessWidget {
         29 +
         (onBack != null || onSaved != null ? 44 : 8) +
         measured(title, light ? 18 : 20, width * .75, weight: FontWeight.w800) +
-        (subtitle.isEmpty ? 0 : 5 + measured(subtitle, 11, width * .65)) +
-        (breadcrumb == null ? 0 : measured(breadcrumb!, 9, width - 32));
+        (displaySubtitle.isEmpty
+            ? 0
+            : 5 + measured(displaySubtitle, 11, width * .65)) +
+        (displayBreadcrumb == null
+            ? 0
+            : measured(displayBreadcrumb, 9, width - 32));
     final baseHeight =
         (tall
             ? 205
@@ -260,8 +304,8 @@ class ReligiousHeader extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: light
               ? LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
+                  begin: AlignmentDirectional.centerEnd,
+                  end: AlignmentDirectional.centerStart,
                   colors: [
                     Colors.transparent,
                     rCream.withValues(alpha: .12),
@@ -285,7 +329,7 @@ class ReligiousHeader extends StatelessWidget {
                         _whiteButton(
                           context,
                           Icons.chevron_left,
-                          'رجوع',
+                          context.religiousLabel('رجوع'),
                           onBack!,
                         ),
                       const Spacer(),
@@ -293,7 +337,7 @@ class ReligiousHeader extends StatelessWidget {
                         _whiteButton(
                           context,
                           Icons.bookmark_border,
-                          'المفضلة',
+                          context.religiousLabel('المفضلة'),
                           onSaved!,
                         ),
                       if (onShare != null) ...[
@@ -301,7 +345,7 @@ class ReligiousHeader extends StatelessWidget {
                         _whiteButton(
                           context,
                           Icons.share_outlined,
-                          'مشاركة',
+                          context.religiousLabel('مشاركة'),
                           onShare!,
                         ),
                       ],
@@ -309,21 +353,23 @@ class ReligiousHeader extends StatelessWidget {
                   ),
                 ),
               const Spacer(),
-              if (breadcrumb != null)
+              if (displayBreadcrumb != null)
                 Text(
-                  breadcrumb!,
-                  textAlign: TextAlign.right,
+                  displayBreadcrumb,
+                  textDirection: contentTextDirection(displayBreadcrumb),
+                  textAlign: TextAlign.start,
                   style: rText(context, 9, color: color.withValues(alpha: .9)),
                 ),
               Align(
-                alignment: Alignment.centerRight,
+                alignment: AlignmentDirectional.centerStart,
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.sizeOf(context).width * .75,
                   ),
                   child: Text(
                     title,
-                    textAlign: TextAlign.right,
+                    textDirection: contentTextDirection(title),
+                    textAlign: TextAlign.start,
                     style: rText(
                       context,
                       light ? 18 : 20,
@@ -334,17 +380,18 @@ class ReligiousHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              if (subtitle.isNotEmpty) ...[
+              if (displaySubtitle.isNotEmpty) ...[
                 const SizedBox(height: 5),
                 Align(
-                  alignment: Alignment.centerRight,
+                  alignment: AlignmentDirectional.centerStart,
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       maxWidth: MediaQuery.sizeOf(context).width * .65,
                     ),
                     child: Text(
-                      subtitle,
-                      textAlign: TextAlign.right,
+                      displaySubtitle,
+                      textDirection: contentTextDirection(displaySubtitle),
+                      textAlign: TextAlign.start,
                       style: rText(context, 11, color: color, height: 1.6),
                     ),
                   ),
@@ -410,7 +457,7 @@ class ReligiousSearch extends StatelessWidget {
             constraints: const BoxConstraints.tightFor(width: 34, height: 34),
             iconSize: 21,
             icon: const Icon(Icons.tune),
-            tooltip: 'تصفية النتائج',
+            tooltip: context.religiousLabel('تصفية النتائج'),
             color: ReligiousColors(context).heading,
           ),
         Expanded(
@@ -456,7 +503,7 @@ class ReligiousSearch extends StatelessWidget {
                   onChanged('');
                 },
                 icon: const Icon(Icons.close),
-                tooltip: 'مسح البحث',
+                tooltip: context.religiousLabel('مسح البحث'),
               ),
       ],
     ),
@@ -610,12 +657,12 @@ class ReligiousNavigationBar extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
           child: Row(
             children: [
-              for (final (index, entry) in const [
-                (Icons.home_outlined, 'الرئيسية'),
-                (Icons.menu_book_outlined, 'القرآن'),
-                (Icons.eco_outlined, 'الأذكار'),
-                (Icons.explore_outlined, 'القبلة'),
-                (Icons.more_horiz, 'المزيد'),
+              for (final (index, entry) in [
+                (Icons.home_outlined, context.religiousLabel('الرئيسية')),
+                (Icons.menu_book_outlined, context.religiousLabel('القرآن')),
+                (Icons.eco_outlined, context.religiousLabel('الأذكار')),
+                (Icons.explore_outlined, context.religiousLabel('القبلة')),
+                (Icons.more_horiz, context.religiousLabel('المزيد')),
               ].indexed)
                 Expanded(
                   child: Semantics(

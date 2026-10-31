@@ -9142,5 +9142,697 @@
   "sharing.autoFontSize": {
     "ar": "صُغّر الخط تلقائيًا إلى {size} لإظهار النص كاملًا",
     "en": "Font size was reduced to {size} to show the full text"
+  },
+  "religious.label.3546384391b4": {
+    "en": "Text copied",
+    "ar": "تم نسخ النص"
+  },
+  "religious.label.be0ea2a62ce8": {
+    "en": "Loading religious content",
+    "ar": "جارٍ تحميل المحتوى الديني"
+  },
+  "religious.label.032b56d67ec3": {
+    "en": "Content unavailable",
+    "ar": "المحتوى غير متاح"
+  },
+  "religious.label.14d5786f2e64": {
+    "en": "Try again",
+    "ar": "إعادة المحاولة"
+  },
+  "religious.label.68125490b634": {
+    "en": "Daily-life supplications",
+    "ar": "أدعية الحياة اليومية"
+  },
+  "religious.label.f254c43261a8": {
+    "en": "Remove from favorites",
+    "ar": "إزالة من المفضلة"
+  },
+  "religious.label.6cc323d58539": {
+    "en": "Add to favorites",
+    "ar": "إضافة إلى المفضلة"
+  },
+  "religious.label.bdd4487d469d": {
+    "en": "Loading audio",
+    "ar": "جارٍ تحميل الصوت"
+  },
+  "religious.label.cb7f6fd46259": {
+    "en": "Pause",
+    "ar": "إيقاف مؤقت"
+  },
+  "religious.label.8c84ce4c577f": {
+    "en": "Play",
+    "ar": "تشغيل"
+  },
+  "religious.label.5cf7af74fd3a": {
+    "en": "Next",
+    "ar": "التالي"
+  },
+  "religious.label.a9e9d067101a": {
+    "en": "Previous",
+    "ar": "السابق"
+  },
+  "religious.label.87db0fae6c34": {
+    "en": "Sleep timer",
+    "ar": "مؤقت النوم"
+  },
+  "religious.label.cb822418a29d": {
+    "en": "Back",
+    "ar": "رجوع"
+  },
+  "religious.label.9f2908941570": {
+    "en": "Favorites",
+    "ar": "المفضلة"
+  },
+  "religious.label.ace24891cec1": {
+    "en": "Share",
+    "ar": "مشاركة"
+  },
+  "religious.label.5d1d149083e0": {
+    "en": "Filter results",
+    "ar": "تصفية النتائج"
+  },
+  "religious.label.2e58b72edf70": {
+    "en": "Clear search",
+    "ar": "مسح البحث"
+  },
+  "religious.label.bfcf48307970": {
+    "en": "Home",
+    "ar": "الرئيسية"
+  },
+  "religious.label.78cbb551f87a": {
+    "en": "Quran",
+    "ar": "القرآن"
+  },
+  "religious.label.0cde29a629c5": {
+    "en": "Adhkar",
+    "ar": "الأذكار"
+  },
+  "religious.label.b98ed32866c5": {
+    "en": "Qibla",
+    "ar": "القبلة"
+  },
+  "religious.label.478c486f3efe": {
+    "en": "More",
+    "ar": "المزيد"
+  },
+  "religious.label.748e40172795": {
+    "en": "Ramadan supplications",
+    "ar": "الأدعية الرمضانية"
+  },
+  "religious.label.2f407f0bf94e": {
+    "en": "Quran and supplications during Ramadan",
+    "ar": "القرآن والدعاء في أيام الشهر"
+  },
+  "religious.label.765f1eb8a03b": {
+    "en": "No suggestion published for this day",
+    "ar": "لا يوجد مقترح منشور لهذا اليوم"
+  },
+  "religious.label.a2d5984f1eeb": {
+    "en": "Hadith library sources",
+    "ar": "مصادر مكتبة الحديث"
+  },
+  "religious.label.ca90c297b099": {
+    "en": "Close",
+    "ar": "إغلاق"
+  },
+  "religious.label.5734dacb0c59": {
+    "en": "Prophetic hadiths",
+    "ar": "الأحاديث النبوية"
+  },
+  "religious.label.4f0c9961612f": {
+    "en": "Narration, explanation and source",
+    "ar": "المتن والشرح والمصدر"
+  },
+  "religious.label.d2f115f003ab": {
+    "en": "Search hadiths…",
+    "ar": "ابحث في الأحاديث…"
+  },
+  "religious.label.10b3dd8c7c51": {
+    "en": "Hadith sources",
+    "ar": "مصدر الأحاديث"
+  },
+  "religious.label.5fc3d9215058": {
+    "en": "No matching hadiths",
+    "ar": "لا توجد أحاديث مطابقة"
+  },
+  "religious.label.9b3f6a52c0ba": {
+    "en": "How are you feeling?",
+    "ar": "بماذا تشعر؟"
+  },
+  "religious.label.1042dcc9c699": {
+    "en": "Choose how you feel right now",
+    "ar": "اختر شعورك في هذه اللحظة"
+  },
+  "religious.label.554135a216db": {
+    "en": "How are you feeling today?",
+    "ar": "كيف تشعر اليوم؟"
+  },
+  "religious.label.0d7f54cc740b": {
+    "en": "Supplications and remembrance for this moment",
+    "ar": "دعاء وذكر يرافقان لحظتك"
+  },
+  "religious.label.f2336839d56f": {
+    "en": "No feelings published in this content",
+    "ar": "لا توجد مشاعر منشورة في هذا المحتوى"
+  },
+  "religious.label.cbd7efa964c4": {
+    "en": "Cannot open the texts now. Try again.",
+    "ar": "لا يمكن فتح النصوص الآن؛ أعد المحاولة"
+  },
+  "religious.label.75661650a9bc": {
+    "en": "Reopen this section to restore the session for the current account and day.",
+    "ar": "افتح القسم مجددًا لاستعادة جلسة الحساب واليوم الحالي."
+  },
+  "religious.label.397b6d146f52": {
+    "en": "Counts accompanying a text come from its source. Marking a card as read does not prescribe a repetition count for this section.",
+    "ar": "الأعداد الواردة مع النص من مصدره؛ علامة القراءة الواحدة لا تخصّص عبادة بعدد لهذا القسم."
+  },
+  "religious.label.eec0e6368fef": {
+    "en": "Undo",
+    "ar": "تراجع"
+  },
+  "religious.label.29a0e2739a92": {
+    "en": "Copy",
+    "ar": "نسخ"
+  },
+  "religious.label.ef1d8fecd32d": {
+    "en": "Supplication options",
+    "ar": "خيارات الدعاء"
+  },
+  "religious.label.fb42843f99e8": {
+    "en": "Details and source",
+    "ar": "التفاصيل والمصدر"
+  },
+  "religious.label.bff694c691ea": {
+    "en": "Save to favorites",
+    "ar": "حفظ في المفضلة"
+  },
+  "religious.label.01c6528e27fc": {
+    "en": "You have read all cards in this section today",
+    "ar": "أتممت قراءة بطاقات هذا القسم اليوم"
+  },
+  "religious.label.aa99de9958c5": {
+    "en": "Start new session",
+    "ar": "بدء جلسة جديدة"
+  },
+  "religious.label.1e39724d0f69": {
+    "en": "All sections",
+    "ar": "جميع الأقسام"
+  },
+  "religious.label.8e08111ea20d": {
+    "en": "Supplications, books and Islamic content\nto draw closer to Allah at all times",
+    "ar": "مجموعة من الأدعية والكتب والمحتوى الإسلامي\nللاقتراب من الله في كل وقت"
+  },
+  "religious.label.8b930a688aae": {
+    "en": "Search for a supplication or topic…",
+    "ar": "ابحث عن دعاء أو موضوع..."
+  },
+  "religious.label.174f9ae28a53": {
+    "en": "No matching search results",
+    "ar": "لا توجد نتائج مطابقة للبحث"
+  },
+  "religious.label.44e7a0675159": {
+    "en": "More religious content",
+    "ar": "محتوى ديني متنوع"
+  },
+  "religious.label.7677071900cd": {
+    "en": "Articles, stories and reflections",
+    "ar": "مقالات وقصص وفوائد إيمانية"
+  },
+  "religious.label.3e53bed6c974": {
+    "en": "Nawawi's Forty Hadiths",
+    "ar": "الأربعون النووية  ‹"
+  },
+  "religious.label.859592716191": {
+    "en": "Supplication of the day",
+    "ar": "دعاء اليوم"
+  },
+  "religious.label.e2e246ffadc4": {
+    "en": "Quick access",
+    "ar": "الوصول السريع"
+  },
+  "religious.label.cc52200ebc71": {
+    "en": "View all",
+    "ar": "عرض الكل"
+  },
+  "religious.label.699c41a09359": {
+    "en": "My adhkar",
+    "ar": "أذكاري"
+  },
+  "religious.label.c614ba6e60dc": {
+    "en": "Morning supplications",
+    "ar": "أدعية الصباح"
+  },
+  "religious.label.794f88d4871b": {
+    "en": "Bedtime supplications",
+    "ar": "أدعية النوم"
+  },
+  "religious.label.b18facc9c446": {
+    "en": "All items",
+    "ar": "جميع المواد"
+  },
+  "religious.label.b52a9fb97093": {
+    "en": "Favorites only",
+    "ar": "المفضلة فقط"
+  },
+  "religious.label.ce2a0918b690": {
+    "en": "Content saved for later",
+    "ar": "المحتوى الذي حفظته للرجوع إليه"
+  },
+  "religious.label.65f276da33cf": {
+    "en": "All",
+    "ar": "الكل"
+  },
+  "religious.label.b5626d1d58f1": {
+    "en": "No content saved yet",
+    "ar": "لم تحفظ أي محتوى بعد"
+  },
+  "religious.label.1334136a369c": {
+    "en": "Add supplications to your adhkar from their details page",
+    "ar": "أضف الأدعية إلى أذكارك من صفحة التفاصيل"
+  },
+  "religious.label.ee6d68a794bb": {
+    "en": "No matching results",
+    "ar": "لا توجد نتائج مطابقة"
+  },
+  "religious.label.84968f18ddf5": {
+    "en": "Search ruqya…",
+    "ar": "ابحث في الرقية الشرعية..."
+  },
+  "religious.label.67127a14e1b7": {
+    "en": "Full ruqya",
+    "ar": "الرقية الشرعية الكاملة"
+  },
+  "religious.label.b766106900e8": {
+    "en": "Listen to selected verses\nfrom the Quran",
+    "ar": "استمع إلى الآيات المختارة\nمن القرآن الكريم"
+  },
+  "religious.label.44ebad4f1085": {
+    "en": "Sections",
+    "ar": "الأقسام"
+  },
+  "religious.label.889db813cedf": {
+    "en": "Recently played",
+    "ar": "آخر ما استمعت إليه"
+  },
+  "religious.label.0516f70379c0": {
+    "en": "Start listening to see recent recordings here",
+    "ar": "ابدأ الاستماع لتظهر هنا المقاطع الأخيرة"
+  },
+  "religious.label.03940e8da658": {
+    "en": "Play listening queue",
+    "ar": "تشغيل قائمة الاستماع"
+  },
+  "religious.label.4fc129ebc19c": {
+    "en": "Resume listening",
+    "ar": "استئناف الاستماع"
+  },
+  "religious.itemCount": {
+    "en": "{count} items",
+    "ar": "{count} مادة"
+  },
+  "religious.listenItem": {
+    "en": "Listen to {title}",
+    "ar": "استماع {title}"
+  },
+  "religious.itemDetails": {
+    "en": "Details of {title}",
+    "ar": "تفاصيل {title}"
+  },
+  "religious.day": {
+    "en": "Day {day}",
+    "ar": "اليوم {day}"
+  },
+  "religious.allCount": {
+    "en": "All ({count})",
+    "ar": "الكل ({count})"
+  },
+  "religious.categoryCount": {
+    "en": "{title} ({count})",
+    "ar": "{title} ({count})"
+  },
+  "religious.searchIn": {
+    "en": "Search {title}…",
+    "ar": "ابحث في {title} ..."
+  },
+  "religious.category.prophetic-duas.title": {
+    "en": "Prophetic supplications",
+    "ar": "الأدعية النبوية"
+  },
+  "religious.category.quran-duas.title": {
+    "en": "Quranic supplications",
+    "ar": "الأدعية القرآنية"
+  },
+  "religious.category.friday.title": {
+    "en": "Friday sunnahs",
+    "ar": "سنن الجمعة"
+  },
+  "religious.category.sunnah.title": {
+    "en": "The Prophet's sunnah",
+    "ar": "سنن النبي ﷺ"
+  },
+  "religious.category.names.title": {
+    "en": "The beautiful names of Allah",
+    "ar": "أسماء الله الحسنى"
+  },
+  "religious.category.ruqya.title": {
+    "en": "Ruqya",
+    "ar": "الرقية الشرعية"
+  },
+  "religious.category.nawawi.title": {
+    "en": "Nawawi's Forty Hadiths",
+    "ar": "الأربعون النووية"
+  },
+  "religious.category.sunnah-prayer.title": {
+    "en": "Prayer sunnahs",
+    "ar": "سنن الصلاة"
+  },
+  "religious.category.sunnah-recitation.title": {
+    "en": "Quran reading sunnahs",
+    "ar": "سنن قراءة القرآن"
+  },
+  "religious.category.sunnah-supplication.title": {
+    "en": "Supplication and remembrance sunnahs",
+    "ar": "سنن الدعاء والذكر"
+  },
+  "religious.category.sunnah-fasting.title": {
+    "en": "Fasting sunnahs",
+    "ar": "سنن الصيام"
+  },
+  "religious.category.sunnah-pilgrimage.title": {
+    "en": "Hajj and Umrah sunnahs",
+    "ar": "سنن الحج والعمرة"
+  },
+  "religious.category.sunnah-manners.title": {
+    "en": "Sunnahs in dealings",
+    "ar": "سنن المعاملات"
+  },
+  "religious.category.sunnah-daily-life.title": {
+    "en": "Daily-life sunnahs",
+    "ar": "سنن الحياة اليومية"
+  },
+  "religious.category.sunnah-other.title": {
+    "en": "Other sunnahs",
+    "ar": "سنن متفرقة"
+  },
+  "religious.category.ruqya-protection.title": {
+    "en": "Verses of protection",
+    "ar": "آيات الحفظ"
+  },
+  "religious.category.ruqya-healing.title": {
+    "en": "Verses of healing",
+    "ar": "آيات الشفاء"
+  },
+  "religious.category.ruqya-eye.title": {
+    "en": "Ruqya for the evil eye and envy",
+    "ar": "الرقية من العين والحسد"
+  },
+  "religious.category.ruqya-magic.title": {
+    "en": "Ruqya for sorcery",
+    "ar": "الرقية من السحر"
+  },
+  "religious.category.ruqya-children.title": {
+    "en": "Ruqya for children",
+    "ar": "الرقية للأطفال"
+  },
+  "religious.category.ruqya-duas.title": {
+    "en": "Supplications for protection",
+    "ar": "أدعية الحفظ والتحصين"
+  },
+  "religious.category.ruqya-various.title": {
+    "en": "Other supplications",
+    "ar": "أدعية متنوعة"
+  },
+  "religious.category.feelings.title": {
+    "en": "How are you feeling?",
+    "ar": "بماذا تشعر؟"
+  },
+  "religious.category.mood-happy.title": {
+    "en": "Happiness",
+    "ar": "السعادة"
+  },
+  "religious.category.mood-sad.title": {
+    "en": "Sadness",
+    "ar": "الحزن"
+  },
+  "religious.category.mood-anxiety.title": {
+    "en": "Anxiety",
+    "ar": "القلق"
+  },
+  "religious.category.mood-rest.title": {
+    "en": "Peace",
+    "ar": "الراحة"
+  },
+  "religious.category.mood-love.title": {
+    "en": "Love",
+    "ar": "الحب"
+  },
+  "religious.category.mood-contentment.title": {
+    "en": "Contentment",
+    "ar": "الرضا"
+  },
+  "religious.category.mood-anger.title": {
+    "en": "Anger",
+    "ar": "الغضب"
+  },
+  "religious.category.mood-confusion.title": {
+    "en": "Confusion",
+    "ar": "الحيرة"
+  },
+  "religious.category.mood-curiosity.title": {
+    "en": "Curiosity",
+    "ar": "الفضول"
+  },
+  "religious.category.mood-faith.title": {
+    "en": "Weakness of faith",
+    "ar": "ضعف الإيمان"
+  },
+  "religious.category.mood-illness.title": {
+    "en": "Illness",
+    "ar": "المرض"
+  },
+  "religious.category.mood-impatience.title": {
+    "en": "Impatience",
+    "ar": "عدم الصبر"
+  },
+  "religious.category.mood-worry.title": {
+    "en": "Worry",
+    "ar": "الهم"
+  },
+  "religious.category.mood-weakness.title": {
+    "en": "Weakness",
+    "ar": "الضعف"
+  },
+  "religious.category.mood-fear.title": {
+    "en": "Fear",
+    "ar": "الخوف"
+  },
+  "religious.category.mood-study.title": {
+    "en": "Study",
+    "ar": "الدراسة"
+  },
+  "religious.category.mood-laziness.title": {
+    "en": "Laziness",
+    "ar": "الكسل"
+  },
+  "religious.category.istighfar.title": {
+    "en": "Seeking forgiveness",
+    "ar": "الاستغفار"
+  },
+  "religious.category.praise.title": {
+    "en": "Praise",
+    "ar": "الحمد"
+  },
+  "religious.category.glorification.title": {
+    "en": "Glorification",
+    "ar": "التسبيح"
+  },
+  "religious.category.prophets.title": {
+    "en": "Supplications of the prophets",
+    "ar": "أدعية الأنبياء"
+  },
+  "religious.category.ramadan.title": {
+    "en": "Ramadan",
+    "ar": "رمضان"
+  },
+  "religious.category.ramadan-quran.title": {
+    "en": "Quran in Ramadan",
+    "ar": "القرآن في رمضان"
+  },
+  "religious.category.ramadan-duas.title": {
+    "en": "Ramadan supplications",
+    "ar": "الأدعية الرمضانية"
+  },
+  "religious.category.ramadan-suhur.title": {
+    "en": "Suhur",
+    "ar": "السحور"
+  },
+  "religious.category.ramadan-iftar.title": {
+    "en": "Iftar",
+    "ar": "الإفطار"
+  },
+  "religious.category.ramadan-itikaf.title": {
+    "en": "Itikaf",
+    "ar": "الاعتكاف"
+  },
+  "religious.category.ramadan-last-ten.title": {
+    "en": "The last ten nights",
+    "ar": "العشر الأواخر"
+  },
+  "religious.category.ramadan-qadr.title": {
+    "en": "Laylat al-Qadr",
+    "ar": "ليلة القدر"
+  },
+  "religious.category.hadith.title": {
+    "en": "Prophetic hadiths",
+    "ar": "الأحاديث النبوية"
+  },
+  "religious.category.hadith-creed.title": {
+    "en": "Creed",
+    "ar": "العقيدة"
+  },
+  "religious.category.hadith-worship.title": {
+    "en": "Worship",
+    "ar": "العبادات"
+  },
+  "religious.category.hadith-dealings.title": {
+    "en": "Dealings",
+    "ar": "المعاملات"
+  },
+  "religious.category.hadith-ethics.title": {
+    "en": "Ethics and manners",
+    "ar": "الأخلاق والآداب"
+  },
+  "religious.category.hadith-sciences.title": {
+    "en": "Hadith and its sciences",
+    "ar": "الحديث وعلومه"
+  },
+  "religious.category.hadith-comprehensive.title": {
+    "en": "Comprehensive sayings",
+    "ar": "جوامع الكلم"
+  },
+  "religious.mood.happy.title": {
+    "en": "Happiness",
+    "ar": "السعادة"
+  },
+  "religious.mood.sad.title": {
+    "en": "Sadness",
+    "ar": "الحزن"
+  },
+  "religious.mood.anxiety.title": {
+    "en": "Anxiety",
+    "ar": "القلق"
+  },
+  "religious.mood.rest.title": {
+    "en": "Peace",
+    "ar": "الراحة"
+  },
+  "religious.mood.love.title": {
+    "en": "Love",
+    "ar": "الحب"
+  },
+  "religious.mood.contentment.title": {
+    "en": "Contentment",
+    "ar": "الرضا"
+  },
+  "religious.mood.anger.title": {
+    "en": "Anger",
+    "ar": "الغضب"
+  },
+  "religious.mood.confusion.title": {
+    "en": "Confusion",
+    "ar": "الحيرة"
+  },
+  "religious.mood.curiosity.title": {
+    "en": "Curiosity",
+    "ar": "الفضول"
+  },
+  "religious.mood.faith.title": {
+    "en": "Weakness of faith",
+    "ar": "ضعف الإيمان"
+  },
+  "religious.mood.illness.title": {
+    "en": "Illness",
+    "ar": "المرض"
+  },
+  "religious.mood.impatience.title": {
+    "en": "Impatience",
+    "ar": "عدم الصبر"
+  },
+  "religious.mood.worry.title": {
+    "en": "Worry",
+    "ar": "الهم"
+  },
+  "religious.mood.weakness.title": {
+    "en": "Weakness",
+    "ar": "الضعف"
+  },
+  "religious.mood.fear.title": {
+    "en": "Fear",
+    "ar": "الخوف"
+  },
+  "religious.mood.study.title": {
+    "en": "Study",
+    "ar": "الدراسة"
+  },
+  "religious.mood.laziness.title": {
+    "en": "Laziness",
+    "ar": "الكسل"
+  },
+  "religious.label.24796353fb7a": {
+    "en": "Quranic supplications",
+    "ar": "الأدعية القرآنية"
+  },
+  "religious.label.97902d86c2e3": {
+    "en": "Ruqya",
+    "ar": "الرقية الشرعية"
+  },
+  "religious.label.cc518e53f0f4": {
+    "en": "Nawawi's Forty Hadiths",
+    "ar": "الأربعون النووية"
+  },
+  "religious.label.bd6c2d9b1b76": {
+    "en": "Before Friday prayer",
+    "ar": "قبل الجمعة"
+  },
+  "religious.label.00f8c7800fd6": {
+    "en": "During Friday prayer",
+    "ar": "أثناء الجمعة"
+  },
+  "religious.label.6316de4daacc": {
+    "en": "After Friday prayer",
+    "ar": "بعد الجمعة"
+  },
+  "religious.label.a3014f1bcf65": {
+    "en": "Could not load content. Try again.",
+    "ar": "تعذّر تحميل المحتوى؛ أعد المحاولة"
+  },
+  "religious.label.d36a246af690": {
+    "en": "No audio recording is currently available for this content",
+    "ar": "التسجيل الصوتي لهذا المحتوى غير متاح حاليًا"
+  },
+  "religious.label.20380ccdabb8": {
+    "en": "Could not play audio. Check your connection or downloaded file.",
+    "ar": "تعذّر تشغيل الصوت؛ تحقق من الاتصال أو الملف المحمّل"
+  },
+  "religious.label.d618010cbdf3": {
+    "en": "No recording is available to download",
+    "ar": "لا يوجد تسجيل متاح للتنزيل"
+  },
+  "religious.label.deae5b343a1f": {
+    "en": "Could not start the download. Try again.",
+    "ar": "تعذّر بدء التنزيل؛ أعد المحاولة"
+  },
+  "religious.hadithNumber": {
+    "en": "Hadith {number}",
+    "ar": "الحديث {number}"
+  },
+  "religious.nawawiNumber": {
+    "en": "Hadith {number} from Nawawi's Forty Hadiths",
+    "ar": "الحديث {number} من الأربعين النووية"
+  },
+  "religious.hadithSources": {
+    "en": "The bundled library contains Haq's existing Nawawi's Forty Hadiths and their explanations, plus sourced Ramadan hadiths with references for each narration. Topic categories aid navigation and do not change the narration or its grading.\n\nhttps://github.com/osamayy/40-hadith-nawawi-db\nhttps://sunnah.com\n\nNarration and explanation are separate on the reading page.",
+    "ar": "تحتوي المكتبة المضمّنة على أحاديث الأربعين النووية وشروحها الموجودة في حق، وأحاديث رمضان الموثقة مع إحالة المصدر لكل حديث. تصنيفات الموضوعات تساعد على التصفح ولا تغيّر المتن أو درجته.\n\nhttps://github.com/osamayy/40-hadith-nawawi-db\nhttps://sunnah.com\n\nالمتن والشرح منفصلان في صفحة القراءة."
   }
 }

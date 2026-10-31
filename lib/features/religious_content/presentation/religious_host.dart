@@ -1,4 +1,7 @@
 import 'dart:async';
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
+import 'religious_interface.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../sharing/share_card.dart';
@@ -128,7 +131,9 @@ class ReligiousHostState extends State<ReligiousHost> {
 
   Future<void> copy(BuildContext context, ReligiousItem item) async {
     await Clipboard.setData(ClipboardData(text: item.copyText));
-    if (context.mounted) message(context, 'تم نسخ النص');
+    if (context.mounted) {
+      message(context, context.religiousLabel('تم نسخ النص'));
+    }
   }
 
   void share(BuildContext context, ReligiousItem item) {
@@ -178,7 +183,7 @@ class ReligiousHostState extends State<ReligiousHost> {
       await controller.play(item);
     }
     if (context.mounted && controller.error != null) {
-      message(context, controller.error!);
+      message(context, context.religiousLabel(controller.error!));
     }
   }
 
@@ -187,12 +192,14 @@ class ReligiousHostState extends State<ReligiousHost> {
     listenable: controller,
     builder: (context, _) {
       if (controller.loading) {
-        return const AppLoadingSkeleton(label: 'جارٍ تحميل المحتوى الديني');
+        return AppLoadingSkeleton(
+          label: context.religiousLabel('جارٍ تحميل المحتوى الديني'),
+        );
       }
       if (controller.catalog == null) {
         return ReligiousEmpty(
-          text: controller.error ?? 'المحتوى غير متاح',
-          action: 'إعادة المحاولة',
+          text: context.religiousLabel(controller.error ?? 'المحتوى غير متاح'),
+          action: context.religiousLabel('إعادة المحاولة'),
           onAction: controller.load,
         );
       }
@@ -314,7 +321,7 @@ class _CategoryTile extends StatelessWidget {
             _ReligiousCategoryPage(
               host: host,
               category: host.catalog.byCategory['sunnah-daily-life'],
-              titleOverride: 'أدعية الحياة اليومية',
+              titleOverride: context.religiousLabel('أدعية الحياة اليومية'),
             ),
             '/religious/daily-duas',
           );
@@ -374,7 +381,7 @@ class _CategoryTile extends StatelessWidget {
                           ),
                         if (!compact) const SizedBox(height: 3),
                         Text(
-                          category.title,
+                          category.interfaceTitle(context),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
@@ -388,7 +395,17 @@ class _CategoryTile extends StatelessWidget {
                         Flexible(
                           child: Text(
                             compact
-                                ? '${host.catalog.search(category: category.id).length} مادة'
+                                ? context.tr(
+                                    'religious.itemCount',
+                                    args: {
+                                      'count': religiousNumber(
+                                        context,
+                                        host.catalog
+                                            .search(category: category.id)
+                                            .length,
+                                      ),
+                                    },
+                                  )
                                 : category.description,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -459,8 +476,8 @@ class _ItemTile extends StatelessWidget {
                     minHeight: 30,
                   ),
                   tooltip: host.controller.favorites.contains(item.id)
-                      ? 'إزالة من المفضلة'
-                      : 'إضافة إلى المفضلة',
+                      ? context.religiousLabel('إزالة من المفضلة')
+                      : context.religiousLabel('إضافة إلى المفضلة'),
                   onPressed: () => host.controller.toggleFavorite(item.id),
                   icon: Icon(
                     host.controller.favorites.contains(item.id)
@@ -494,6 +511,9 @@ class _ItemTile extends StatelessWidget {
               children: [
                 Text(
                   verse ? item.text.replaceAll('\n', ' ') : item.title,
+                  textDirection: contentTextDirection(
+                    verse ? item.text : item.title,
+                  ),
                   maxLines: verse ? 1 : 2,
                   overflow: TextOverflow.ellipsis,
                   style: verse
@@ -554,7 +574,10 @@ class _ItemTile extends StatelessWidget {
           ],
           ReligiousRoundButton(
             icon: canPlay ? Icons.play_arrow : Icons.chevron_left,
-            label: canPlay ? 'استماع ${item.title}' : 'تفاصيل ${item.title}',
+            label: context.tr(
+              canPlay ? 'religious.listenItem' : 'religious.itemDetails',
+              args: {'title': item.title},
+            ),
             size: verse ? 29 : 24,
             filled: canPlay,
             onTap: () =>
@@ -591,7 +614,8 @@ class _ReligiousPlayer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          media.current?.title ?? 'جارٍ تحميل الصوت',
+                          media.current?.title ??
+                              context.religiousLabel('جارٍ تحميل الصوت'),
                           style: rText(context, 12, weight: FontWeight.w800),
                         ),
                         Text(
@@ -607,14 +631,18 @@ class _ReligiousPlayer extends StatelessWidget {
                   ),
                   ReligiousRoundButton(
                     icon: media.playing ? Icons.pause : Icons.play_arrow,
-                    label: media.playing ? 'إيقاف مؤقت' : 'تشغيل',
+                    label: media.playing
+                        ? context.religiousLabel('إيقاف مؤقت')
+                        : context.religiousLabel('تشغيل'),
                     filled: true,
                     onTap: media.toggle,
                   ),
                 ],
               ),
               Directionality(
-                textDirection: TextDirection.rtl,
+                textDirection:
+                    LocalizationScope.maybeOf(context)?.language.direction ??
+                    TextDirection.rtl,
                 child: SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     trackHeight: 2,
@@ -659,17 +687,17 @@ class _ReligiousPlayer extends StatelessWidget {
                     ),
                     ReligiousRoundButton(
                       icon: Icons.skip_next,
-                      label: 'التالي',
+                      label: context.religiousLabel('التالي'),
                       onTap: () => media.skip(1),
                     ),
                     ReligiousRoundButton(
                       icon: Icons.skip_previous,
-                      label: 'السابق',
+                      label: context.religiousLabel('السابق'),
                       onTap: () => media.skip(-1),
                     ),
                     ReligiousRoundButton(
                       icon: Icons.bedtime_outlined,
-                      label: 'مؤقت النوم',
+                      label: context.religiousLabel('مؤقت النوم'),
                       onTap: () => chooseAudioTimer(context, media),
                     ),
                   ],

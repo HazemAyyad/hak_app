@@ -31,9 +31,9 @@ class _ReligiousTopicsPage extends StatelessWidget {
         SliverToBoxAdapter(
           child: Stack(
             children: [
-              const DirectoryHeader(
-                title: 'بماذا تشعر؟',
-                subtitle: 'اختر شعورك في هذه اللحظة',
+              DirectoryHeader(
+                title: context.religiousLabel('بماذا تشعر؟'),
+                subtitle: context.religiousLabel('اختر شعورك في هذه اللحظة'),
                 maxTitleLines: 2,
                 imageAsset: 'assets/navigation/header-moods.png',
               ),
@@ -43,7 +43,7 @@ class _ReligiousTopicsPage extends StatelessWidget {
                 child: IconButton.filledTonal(
                   onPressed: host.back,
                   icon: const Icon(Icons.arrow_back),
-                  tooltip: 'رجوع',
+                  tooltip: context.religiousLabel('رجوع'),
                 ),
               ),
             ],
@@ -62,7 +62,7 @@ class _ReligiousTopicsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'كيف تشعر اليوم؟',
+                    context.religiousLabel('كيف تشعر اليوم؟'),
                     style: TextStyle(
                       color: p.tealHeading,
                       fontSize: 22,
@@ -70,7 +70,7 @@ class _ReligiousTopicsPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'دعاء وذكر يرافقان لحظتك',
+                    context.religiousLabel('دعاء وذكر يرافقان لحظتك'),
                     style: TextStyle(color: p.muted, fontSize: 13),
                   ),
                 ],
@@ -79,9 +79,11 @@ class _ReligiousTopicsPage extends StatelessWidget {
           ),
         ),
         if (host.catalog.moods.isEmpty)
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: ReligiousEmpty(
-              text: 'لا توجد مشاعر منشورة في هذا المحتوى',
+              text: context.religiousLabel(
+                'لا توجد مشاعر منشورة في هذا المحتوى',
+              ),
               icon: Icons.favorite_border,
             ),
           ),
@@ -162,7 +164,7 @@ class _ReligiousTopicsPage extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(6, 0, 6, 10),
                             child: Text(
-                              mood.title,
+                              mood.interfaceTitle(context),
                               maxLines: 2,
                               textAlign: TextAlign.center,
                               style: TextStyle(
@@ -196,6 +198,9 @@ class _MoodReadingPage extends StatefulWidget {
   String get id => mood?.id ?? collectionId!;
   String get title =>
       mood?.title ?? host.catalog.byCategory[collectionId]!.title;
+  String interfaceTitle(BuildContext context) =>
+      mood?.interfaceTitle(context) ??
+      host.catalog.byCategory[collectionId]!.interfaceTitle(context);
   List<String> get itemIds =>
       mood?.itemIds ??
       host.catalog
@@ -298,17 +303,24 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
         if (!snapshot.hasData) {
           return ListView(
             children: [
-              ReligiousHeader(title: widget.title, onBack: host.back),
+              ReligiousHeader(
+                title: widget.interfaceTitle(context),
+                onBack: host.back,
+              ),
               if (snapshot.hasError)
                 Padding(
                   padding: const EdgeInsets.all(20),
                   child: TextButton(
                     onPressed: () => setState(() => _load = _prepare()),
-                    child: const Text('لا يمكن فتح النصوص الآن؛ أعد المحاولة'),
+                    child: Text(
+                      context.religiousLabel(
+                        'لا يمكن فتح النصوص الآن؛ أعد المحاولة',
+                      ),
+                    ),
                   ),
                 )
               else
-                const Center(
+                Center(
                   child: Padding(
                     padding: EdgeInsets.all(32),
                     child: CircularProgressIndicator(),
@@ -321,11 +333,16 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
         if (!c.available) {
           return ListView(
             children: [
-              ReligiousHeader(title: widget.title, onBack: host.back),
-              const Padding(
+              ReligiousHeader(
+                title: widget.interfaceTitle(context),
+                onBack: host.back,
+              ),
+              Padding(
                 padding: EdgeInsets.all(24),
                 child: Text(
-                  'افتح القسم مجددًا لاستعادة جلسة الحساب واليوم الحالي.',
+                  context.religiousLabel(
+                    'افتح القسم مجددًا لاستعادة جلسة الحساب واليوم الحالي.',
+                  ),
                 ),
               ),
             ],
@@ -336,8 +353,8 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
           padding: EdgeInsets.zero,
           children: [
             ReligiousHeader(
-              title: widget.title,
-              subtitle: 'دعاء وذكر يرافقان لحظتك',
+              title: widget.interfaceTitle(context),
+              subtitle: context.religiousLabel('دعاء وذكر يرافقان لحظتك'),
               image: 'medina',
               light: true,
               onBack: host.back,
@@ -345,7 +362,9 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
             Padding(
               padding: const EdgeInsets.all(16),
               child: Text(
-                'الأعداد الواردة مع النص من مصدره؛ علامة القراءة الواحدة لا تخصّص عبادة بعدد لهذا القسم.',
+                context.religiousLabel(
+                  'الأعداد الواردة مع النص من مصدره؛ علامة القراءة الواحدة لا تخصّص عبادة بعدد لهذا القسم.',
+                ),
                 style: TextStyle(fontSize: 12, color: p.muted, height: 1.7),
               ),
             ),
@@ -359,17 +378,20 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
                     children: [
                       Text(
                         item.title,
+                        textDirection: contentTextDirection(item.title),
                         style: rText(context, 15, weight: FontWeight.w800),
                       ),
                       const SizedBox(height: 12),
                       SelectableText(
                         item.text,
+                        textDirection: contentTextDirection(item.text),
                         textAlign: TextAlign.center,
                         style: rText(context, 22, height: 1.95),
                       ),
                       const SizedBox(height: 14),
                       Text(
                         item.source,
+                        textDirection: contentTextDirection(item.source),
                         style: rText(context, 11, color: p.muted),
                       ),
                       const SizedBox(height: 12),
@@ -389,7 +411,7 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
                                 foregroundColor: Colors.white,
                               ),
                               child: Text(
-                                '${c.remaining(item.id)}',
+                                religiousNumber(context, c.remaining(item.id)),
                                 style: const TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
@@ -401,7 +423,7 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
                           IconButton(
                             onPressed: () => c.undo(subjectId: item.id),
                             icon: const Icon(Icons.undo),
-                            tooltip: 'تراجع',
+                            tooltip: context.religiousLabel('تراجع'),
                           ),
                           IconButton(
                             onPressed: () => Clipboard.setData(
@@ -410,10 +432,10 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
                               ),
                             ),
                             icon: const Icon(Icons.copy_outlined),
-                            tooltip: 'نسخ',
+                            tooltip: context.religiousLabel('نسخ'),
                           ),
                           PopupMenuButton<String>(
-                            tooltip: 'خيارات الدعاء',
+                            tooltip: context.religiousLabel('خيارات الدعاء'),
                             onSelected: (action) {
                               final content =
                                   host.catalog.byId[item.haqContentId];
@@ -427,17 +449,21 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
                               }
                             },
                             itemBuilder: (_) => [
-                              const PopupMenuItem(
+                              PopupMenuItem(
                                 value: 'details',
-                                child: Text('التفاصيل والمصدر'),
+                                child: Text(
+                                  context.religiousLabel('التفاصيل والمصدر'),
+                                ),
                               ),
-                              const PopupMenuItem(
+                              PopupMenuItem(
                                 value: 'save',
-                                child: Text('حفظ في المفضلة'),
+                                child: Text(
+                                  context.religiousLabel('حفظ في المفضلة'),
+                                ),
                               ),
-                              const PopupMenuItem(
+                              PopupMenuItem(
                                 value: 'share',
-                                child: Text('مشاركة'),
+                                child: Text(context.religiousLabel('مشاركة')),
                               ),
                             ],
                           ),
@@ -452,10 +478,15 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
               child: Column(
                 children: [
                   if (c.error != null)
-                    Text(c.error!, style: const TextStyle(color: Colors.red)),
+                    Text(
+                      context.adhkarLabel(c.error!),
+                      style: const TextStyle(color: Colors.red),
+                    ),
                   if (c.completed)
                     Text(
-                      'أتممت قراءة بطاقات هذا القسم اليوم',
+                      context.religiousLabel(
+                        'أتممت قراءة بطاقات هذا القسم اليوم',
+                      ),
                       style: TextStyle(
                         color: p.tealHeading,
                         fontWeight: FontWeight.bold,
@@ -464,7 +495,7 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
                   TextButton.icon(
                     onPressed: () => c.restart(),
                     icon: const Icon(Icons.restart_alt),
-                    label: const Text('بدء جلسة جديدة'),
+                    label: Text(context.religiousLabel('بدء جلسة جديدة')),
                   ),
                 ],
               ),

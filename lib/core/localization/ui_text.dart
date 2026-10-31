@@ -31,6 +31,7 @@ extension FixedInterfaceText on BuildContext {
       _interfaceLabel(original, 'progress');
   String tasbihLabel(String original) => _interfaceLabel(original, 'tasbih');
   String sharingLabel(String original) => _interfaceLabel(original, 'sharing');
+  String religiousLabel(String original) => _interfaceLabel(original, 'religious');
   String _interfaceLabel(String original, String namespace) {
     final key = _sourceKeys['$namespace\u0000$original'];
     return key == null ? original : tr(key, fallback: original);
