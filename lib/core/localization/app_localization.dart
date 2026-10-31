@@ -23,11 +23,8 @@ String _bundledArabicText(
   String? fallback,
   Map<String, Object> args,
 ) {
-  var value = fallback ?? _bundledInterface[key]?['ar'] as String? ?? key;
-  for (final entry in args.entries) {
-    value = value.replaceAll('{${entry.key}}', entry.value.toString());
-  }
-  return value;
+  final value = fallback ?? _bundledInterface[key]?['ar'] as String? ?? key;
+  return formatInterfaceMessage(value, args);
 }
 
 class AppLanguage {
@@ -318,16 +315,13 @@ class AppLocalization extends ChangeNotifier {
     String? fallback,
     Map<String, Object> args = const {},
   }) {
-    var value =
+    final value =
         installed[code]?.strings[key] ??
         registry[key]?[code] ??
         registry[key]?['ar'] ??
         fallback ??
         key;
-    for (final entry in args.entries) {
-      value = value.replaceAll('{${entry.key}}', entry.value.toString());
-    }
-    return value;
+    return formatInterfaceMessage(value, args);
   }
 
   Map<String, dynamic>? content(String id) {

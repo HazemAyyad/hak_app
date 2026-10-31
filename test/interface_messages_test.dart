@@ -12,6 +12,30 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   test(
+    'personal text containing placeholder-like names stays literal',
+    () async {
+      const args = {
+        'source': r'Personal {url} and $1\path',
+        'url': 'https://example.test',
+      };
+      final prefs = await SharedPreferences.getInstance();
+      final localization = AppLocalization(prefs);
+      addTearDown(localization.dispose);
+      final result = localization.text('adhkar.sourceNotice', args: args);
+      expect(result, startsWith('${args['source']}\n${args['url']}'));
+      final snapshot = InterfaceMessages('en', {'message': '{source} · {url}'});
+      expect(
+        snapshot.text('message', args: args),
+        '${args['source']} · ${args['url']}',
+      );
+      expect(
+        formatInterfaceMessage('{missing} {source}', args),
+        '{missing} ${args['source']}',
+      );
+    },
+  );
+
+  test(
     'background snapshot follows the interface while content and recordings remain independent',
     () async {
       final prefs = await SharedPreferences.getInstance();

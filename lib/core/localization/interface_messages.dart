@@ -2,6 +2,17 @@ import 'dart:convert';
 import 'bundled_localization.dart';
 import 'locale_formats.dart';
 
+final _messageVariable = RegExp(r'\{([a-zA-Z][a-zA-Z0-9_]*)\}');
+
+/// Substitute the template once. Inserted personal text is never interpreted as
+/// another placeholder, even when it contains braces or another argument name.
+String formatInterfaceMessage(String template, Map<String, Object> args) =>
+    template.replaceAllMapped(
+      _messageVariable,
+      (match) =>
+          args.containsKey(match[1]) ? args[match[1]].toString() : match[0]!,
+    );
+
 /// A snapshot for background plans. It contains interface text only; recordings,
 /// scripture and user-authored text never pass through this registry.
 class InterfaceMessages {
@@ -23,11 +34,8 @@ class InterfaceMessages {
   LocaleFormats get formats => LocaleFormats(code);
 
   String text(String key, {Map<String, Object> args = const {}}) {
-    var result = strings[key] ?? (_registry[key]?['ar'] as String?) ?? key;
-    for (final entry in args.entries) {
-      result = result.replaceAll('{${entry.key}}', entry.value.toString());
-    }
-    return result;
+    final result = strings[key] ?? (_registry[key]?['ar'] as String?) ?? key;
+    return formatInterfaceMessage(result, args);
   }
 
   Map<String, Object> get nativePayload => {
