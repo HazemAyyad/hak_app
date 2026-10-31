@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:haq_app/main.dart';
 import 'package:haq_app/features/quran/data/quran_content.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
@@ -20,6 +21,7 @@ import 'package:haq_app/features/quran/presentation/quran_mushaf_line.dart';
 import 'package:haq_app/features/quran/presentation/quran_offline_page.dart';
 import 'package:haq_app/features/quran/presentation/quran_page_viewport.dart';
 import 'package:haq_app/features/quran/presentation/quran_reader_player.dart';
+import 'package:haq_app/features/quran/presentation/quran_reader.dart';
 import 'package:haq_app/features/quran/presentation/quran_widgets.dart';
 
 class ReaderContent extends QuranContent {
@@ -144,13 +146,16 @@ void main() {
   Future<void> open(
     WidgetTester tester,
     String key,
-    QuranReadingMode mode,
-  ) async {
-    tester.view.physicalSize = const Size(430, 932);
+    QuranReadingMode mode, {
+    String language = 'ar',
+    double width = 430,
+  }) async {
+    tester.view.physicalSize = Size(width, 932);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     controller.setMode(mode);
+    await controller.preferences!.setString('app.language.v1', language);
     await tester.pumpWidget(
       RepaintBoundary(
         key: boundary,
@@ -162,7 +167,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('القرآن').last);
+    await tester.tap(find.text(language == 'en' ? 'Quran' : 'القرآن').last);
     await tester.pumpAndSettle();
     tester
         .state<QuranHostState>(find.byType(QuranHost))
@@ -183,6 +188,103 @@ void main() {
       screenshot.dispose();
     });
   }
+
+  testWidgets(
+    'English narrow reader keeps Arabic scripture and the selected verse across language changes',
+    (tester) async {
+      await open(
+        tester,
+        '1:1',
+        QuranReadingMode.continuous,
+        language: 'en',
+        width: 320,
+      );
+      expect(find.text('Surah Al-Fatihah in full'), findsOneWidget);
+      expect(find.byTooltip('Hide header'), findsOneWidget);
+      final original = repository.byKey['1:1']!.text;
+      expect(
+        tester.widget<Text>(find.text(original)).textDirection,
+        TextDirection.rtl,
+      );
+      await tester.tap(find.byKey(const ValueKey('quran-select-1:3')));
+      await tester.pumpAndSettle();
+      expect(find.text('Verse 3'), findsOneWidget);
+      expect(find.text('Surah Al-Fatihah • verse 3'), findsOneWidget);
+      final localization = LocalizationScope.maybeOf(
+        tester.element(find.byType(QuranReader)),
+      )!;
+      await localization.select('ar');
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<QuranReaderPlayer>(find.byType(QuranReaderPlayer))
+            .selected
+            ?.key,
+        '1:3',
+      );
+      expect(find.text(original), findsOneWidget);
+      expect(find.byTooltip('إخفاء الهيدر'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'English page download choice keeps the exact surah page request',
+    (tester) async {
+      await open(
+        tester,
+        '2:2',
+        QuranReadingMode.pages,
+        language: 'en',
+        width: 320,
+      );
+      expect(find.text('Download mushaf pages'), findsOneWidget);
+      expect(find.textContaining('Full mushaf • 604 pages'), findsOneWidget);
+      await tester.tap(find.textContaining('This surah •'));
+      await tester.pumpAndSettle();
+      expect(
+        pages.requested.single,
+        pages.pagesForSurah(repository, 2).toSet(),
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  testWidgets(
+    'English reading settings change only the selected layout and font',
+    (tester) async {
+      await open(
+        tester,
+        '1:1',
+        QuranReadingMode.continuous,
+        language: 'en',
+        width: 320,
+      );
+      final original = repository.byKey['1:1']!.text;
+      await tester.tap(find.text('Go to'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Reading settings'));
+      await tester.pumpAndSettle();
+      expect(find.text('Continuous text'), findsOneWidget);
+      await tester.scrollUntilVisible(
+        find.text('Amiri Quran'),
+        160,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Amiri Quran'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Naskh — Noto').last);
+      await tester.pumpAndSettle();
+      expect(controller.scriptFont, QuranScriptFont.noto);
+      expect(controller.mode, QuranReadingMode.continuous);
+      expect(controller.repository!.byKey['1:1']!.text, original);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
 
   testWidgets(
     'surah starts unselected and header can be hidden without losing navigation',

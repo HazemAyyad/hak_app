@@ -1,11 +1,46 @@
 import '../../../core/localization/ui_text.dart';
 import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/locale_formats.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
-import '../data/quran_repository.dart' show QuranSurah;
+import '../data/quran_repository.dart' show QuranSurah, juzName;
+
+LocaleFormats quranFormats(BuildContext context) =>
+    LocalizationScope.maybeOf(context)?.formats ?? const LocaleFormats('ar');
+
+String quranPageDownloadError(BuildContext context, String message) {
+  final failedPage = RegExp(
+    r'^تعذّر تنزيل الصفحة ([0-9]+)؛ يمكنك استكمالها$',
+  ).firstMatch(message);
+  return failedPage == null
+      ? context.quranLabel(message)
+      : context.tr(
+          'quran.downloadPageFailed',
+          args: {'page': quranNumber(context, int.parse(failedPage.group(1)!))},
+        );
+}
+
+String quranNumber(BuildContext context, num value) =>
+    quranFormats(context).number(value);
+
+String quranJuzName(BuildContext context, int id) =>
+    LocalizationScope.maybeOf(context)?.code == 'ar' ||
+        LocalizationScope.maybeOf(context) == null
+    ? juzName(id)
+    : context.tr('search.juz', args: {'number': quranNumber(context, id)});
+
+String quranVerseTitle(BuildContext context, QuranSurah chapter, int ayah) =>
+    context.tr(
+      'search.verse',
+      fallback: 'سورة ${chapter.name} • الآية $ayah',
+      args: {
+        'name': chapter.localizedName(context),
+        'ayah': quranNumber(context, ayah),
+      },
+    );
 
 extension QuranSurahInterfaceLabels on QuranSurah {
   String localizedName(BuildContext context) =>

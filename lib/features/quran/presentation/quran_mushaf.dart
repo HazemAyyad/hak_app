@@ -1,3 +1,5 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -150,8 +152,8 @@ class _QuranMushafState extends State<QuranMushaf> {
               future: _offlinePage(index + 1),
               builder: (context, offline) {
                 if (offline.connectionState != ConnectionState.done) {
-                  return const AppLoadingSkeleton(
-                    label: 'جارٍ تحميل صفحة المصحف',
+                  return AppLoadingSkeleton(
+                    label: context.quranLabel('جارٍ تحميل صفحة المصحف'),
                     lines: 10,
                   );
                 }
@@ -192,17 +194,19 @@ class _QuranMushafState extends State<QuranMushaf> {
                               ),
                               const SizedBox(height: 10),
                               Text(
-                                'تعذّر فتح صفحة المصحف',
+                                context.quranLabel('تعذّر فتح صفحة المصحف'),
                                 style: qText(context, size: 16),
                               ),
                               Text(
-                                'نزّل صفحات السورة أو المصحف من زر التنزيل لتصفحها بدون إنترنت. النص المتصل والآيات متاحان دائمًا.',
+                                context.quranLabel(
+                                  'نزّل صفحات السورة أو المصحف من زر التنزيل لتصفحها بدون إنترنت. النص المتصل والآيات متاحان دائمًا.',
+                                ),
                                 textAlign: TextAlign.center,
                                 style: qText(context, size: 12),
                               ),
                               const SizedBox(height: 12),
                               QPrimaryButton(
-                                label: 'إعادة المحاولة',
+                                label: context.quranLabel('إعادة المحاولة'),
                                 onTap: () => setState(() {}),
                               ),
                             ],
@@ -211,8 +215,8 @@ class _QuranMushafState extends State<QuranMushaf> {
                       );
                     }
                     if (!snapshot.hasData) {
-                      return const AppLoadingSkeleton(
-                        label: 'جارٍ تحميل صفحة المصحف',
+                      return AppLoadingSkeleton(
+                        label: context.quranLabel('جارٍ تحميل صفحة المصحف'),
                         lines: 10,
                       );
                     }
@@ -256,7 +260,7 @@ class _QuranMushafState extends State<QuranMushaf> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              tooltip: 'الصفحة السابقة',
+              tooltip: context.quranLabel('الصفحة السابقة'),
               padding: EdgeInsets.zero,
               onPressed: current == 1 ? null : () => move(-1),
               icon: Icon(
@@ -266,11 +270,17 @@ class _QuranMushafState extends State<QuranMushaf> {
               ),
             ),
             Text(
-              'الصفحة $current من 604',
+              context.tr(
+                'quran.mushafPageProgress',
+                args: {
+                  'page': quranNumber(context, current),
+                  'total': quranNumber(context, 604),
+                },
+              ),
               style: qText(context, size: 12, color: widget.ink),
             ),
             IconButton(
-              tooltip: 'الصفحة التالية',
+              tooltip: context.quranLabel('الصفحة التالية'),
               padding: EdgeInsets.zero,
               onPressed: current == 604 ? null : () => move(1),
               icon: Icon(
@@ -368,6 +378,7 @@ class MushafCanvas extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     child: Text(
                       'سُورَةُ ${firstChapter.name}',
+                      textDirection: TextDirection.rtl,
                       style: TextStyle(
                         fontFamily: 'AmiriQuran',
                         fontSize: 33,
@@ -392,6 +403,7 @@ class MushafCanvas extends StatelessWidget {
                             ? Center(
                                 child: Text(
                                   'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+                                  textDirection: TextDirection.rtl,
                                   style: TextStyle(
                                     fontFamily: 'AmiriQuran',
                                     fontSize: opening ? 36 : 29,
@@ -438,6 +450,7 @@ class MushafCanvas extends StatelessWidget {
     ),
     child: Text(
       'سُورَةُ ${chapter.name}',
+      textDirection: TextDirection.rtl,
       style: const TextStyle(
         fontFamily: 'AmiriQuran',
         color: Color(0xFF17150F),

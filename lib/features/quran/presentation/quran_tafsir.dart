@@ -1,3 +1,5 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/localization/published_meaning_card.dart';
@@ -57,7 +59,7 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'التفسير • السعدي',
+              context.quranLabel('التفسير • السعدي'),
               style: qText(context, size: 16, weight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
@@ -65,23 +67,28 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
               future: tafsir,
               builder: (context, snapshot) =>
                   !snapshot.hasData && !snapshot.hasError
-                  ? const AppLoadingSkeleton(
-                      label: 'جارٍ تحميل التفسير',
+                  ? AppLoadingSkeleton(
+                      label: context.quranLabel('جارٍ تحميل التفسير'),
                       page: false,
                       lines: 3,
                     )
                   : Text(
                       snapshot.data?.text ??
                           (snapshot.hasError
-                              ? 'التفسير غير محمّل؛ افتح التفاصيل لإعادة المحاولة'
-                              : 'جارٍ تحميل التفسير…'),
+                              ? context.quranLabel(
+                                  'التفسير غير محمّل؛ افتح التفاصيل لإعادة المحاولة',
+                                )
+                              : context.quranLabel('جارٍ تحميل التفسير…')),
+                      textDirection: snapshot.hasData
+                          ? contentTextDirection(snapshot.data!.text)
+                          : null,
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                       style: qText(context, size: 13),
                     ),
             ),
             Text(
-              'عرض التفسير الكامل',
+              context.quranLabel('عرض التفسير الكامل'),
               style: qText(context, size: 11, color: qAccent(context)),
             ),
           ],
@@ -94,7 +101,7 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'معاني الكلمات',
+              context.quranLabel('معاني الكلمات'),
               style: qText(context, size: 16, weight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
@@ -105,7 +112,9 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
                       children: [
                         if (snapshot.data!.entries.isEmpty)
                           Text(
-                            'لا توجد كلمات غريبة مشروحة لهذه الآية في المصدر',
+                            context.quranLabel(
+                              'لا توجد كلمات غريبة مشروحة لهذه الآية في المصدر',
+                            ),
                             style: qText(context, size: 12),
                           ),
                         for (final e in snapshot.data!.entries.take(2))
@@ -117,6 +126,7 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
                                   flex: 2,
                                   child: Text(
                                     e.word,
+                                    textDirection: TextDirection.rtl,
                                     style: const TextStyle(
                                       fontFamily: 'AmiriQuran',
                                       fontSize: 19,
@@ -128,6 +138,9 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
                                   flex: 5,
                                   child: Text(
                                     e.meaning,
+                                    textDirection: contentTextDirection(
+                                      e.meaning,
+                                    ),
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
                                     style: qText(context, size: 12),
@@ -140,17 +153,19 @@ class _QuranVerseInsightState extends State<QuranVerseInsight> {
                     )
                   : snapshot.hasError
                   ? Text(
-                      'المعاني غير محمّلة؛ افتح التفاصيل لإعادة المحاولة',
+                      context.quranLabel(
+                        'المعاني غير محمّلة؛ افتح التفاصيل لإعادة المحاولة',
+                      ),
                       style: qText(context, size: 12),
                     )
-                  : const AppLoadingSkeleton(
-                      label: 'جارٍ تحميل المعاني',
+                  : AppLoadingSkeleton(
+                      label: context.quranLabel('جارٍ تحميل المعاني'),
                       page: false,
                       lines: 2,
                     ),
             ),
             Text(
-              'المصدر: السراج • QuranEnc',
+              context.quranLabel('المصدر: السراج • QuranEnc'),
               style: qText(context, size: 10, color: qAccent(context)),
             ),
           ],
@@ -205,20 +220,27 @@ class _QuranExplanationState extends State<QuranExplanation> {
       padding: EdgeInsets.zero,
       children: [
         QuranHeader(
-          title: meanings ? 'معاني الكلمات' : 'تفسير الآية',
-          subtitle:
-              'سورة ${repo.surah(verse.surah).name} • الآية ${verse.ayah}',
+          title: meanings
+              ? context.quranLabel('معاني الكلمات')
+              : context.quranLabel('تفسير الآية'),
+          subtitle: quranVerseTitle(
+            context,
+            repo.surah(verse.surah),
+            verse.ayah,
+          ),
           height: 150,
           onBack: () => Navigator.pop(context),
           actions: [
             QCircleButton(
               icon: Icons.bookmark_outline,
-              label: 'علامة مرجعية',
+              label: context.quranLabel('علامة مرجعية'),
               onTap: () => widget.controller.toggleBookmark(verse.key),
             ),
             QCircleButton(
               icon: Icons.menu_book_outlined,
-              label: meanings ? 'تفسير الآية' : 'معاني الكلمات',
+              label: meanings
+                  ? context.quranLabel('تفسير الآية')
+                  : context.quranLabel('معاني الكلمات'),
               onTap: () => setState(() {
                 meanings = !meanings;
                 _load();
@@ -226,7 +248,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
             ),
             QCircleButton(
               icon: Icons.settings_outlined,
-              label: 'إعدادات القراءة',
+              label: context.quranLabel('إعدادات القراءة'),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute<void>(
@@ -263,6 +285,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                     Expanded(
                       child: Text(
                         verse.text,
+                        textDirection: TextDirection.rtl,
                         textAlign: TextAlign.right,
                         style: const TextStyle(
                           fontFamily: 'AmiriQuran',
@@ -273,7 +296,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                     ),
                     if (widget.onPlay != null)
                       Tooltip(
-                        message: 'استماع إلى الآية',
+                        message: context.quranLabel('استماع إلى الآية'),
                         child: Material(
                           color: qAccentFill(context),
                           shape: const CircleBorder(),
@@ -305,7 +328,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                   ),
                   icon: const Icon(Icons.share_outlined, size: 16),
                   label: Text(
-                    'مشاركة الآية',
+                    context.quranLabel('مشاركة الآية'),
                     style: qText(context, size: 11, color: qAccent(context)),
                   ),
                 ),
@@ -324,7 +347,9 @@ class _QuranExplanationState extends State<QuranExplanation> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    'معاني الكلمات • السراج في بيان غريب القرآن',
+                    context.quranLabel(
+                      'معاني الكلمات • السراج في بيان غريب القرآن',
+                    ),
                     style: qText(context, size: 15, weight: FontWeight.w800),
                   ),
                 ),
@@ -342,17 +367,19 @@ class _QuranExplanationState extends State<QuranExplanation> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            'تعذّر تحميل المحتوى',
+                            context.quranLabel('تعذّر تحميل المحتوى'),
                             style: qText(context, size: 17),
                           ),
                           Text(
-                            'المحتوى المحمّل متاح دون إنترنت لمدة سبعة أيام.',
+                            context.quranLabel(
+                              'المحتوى المحمّل متاح دون إنترنت لمدة سبعة أيام.',
+                            ),
                             style: qText(context, size: 11),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 10),
                           QPrimaryButton(
-                            label: 'إعادة المحاولة',
+                            label: context.quranLabel('إعادة المحاولة'),
                             onTap: () => setState(_load),
                           ),
                         ],
@@ -360,8 +387,8 @@ class _QuranExplanationState extends State<QuranExplanation> {
                     );
                   }
                   if (!snapshot.hasData) {
-                    return const AppLoadingSkeleton(
-                      label: 'جارٍ تحميل التفسير والمعاني',
+                    return AppLoadingSkeleton(
+                      label: context.quranLabel('جارٍ تحميل التفسير والمعاني'),
                       page: false,
                     );
                   }
@@ -392,7 +419,10 @@ class _QuranExplanationState extends State<QuranExplanation> {
                           ),
                           if (text.keys.length > 1)
                             Text(
-                              'يشمل هذا النص الآيات: ${text.keys.join('، ')}',
+                              context.tr(
+                                'quran.tafsirCoveredVerses',
+                                args: {'verses': text.keys.join(', ')},
+                              ),
                               style: qText(
                                 context,
                                 size: 10,
@@ -402,6 +432,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                           const SizedBox(height: 14),
                           SelectableText(
                             text.text,
+                            textDirection: contentTextDirection(text.text),
                             style: TextStyle(
                               fontFamily: 'AmiriQuran',
                               fontSize: 17,
@@ -414,7 +445,10 @@ class _QuranExplanationState extends State<QuranExplanation> {
                           ),
                           const SizedBox(height: 14),
                           Text(
-                            'المصدر: Quran.com • ${text.title}\nالنص كما ورد من المصدر؛ يُحفظ مؤقتًا لمدة سبعة أيام بعد فتحه.',
+                            context.tr(
+                              'quran.tafsirSource',
+                              args: {'title': text.title},
+                            ),
                             style: qText(
                               context,
                               size: 10,
@@ -431,7 +465,9 @@ class _QuranExplanationState extends State<QuranExplanation> {
                       if (data.original.trim().isEmpty)
                         QCard(
                           child: Text(
-                            'لم يورد المصدر معاني كلمات لهذه الآية.',
+                            context.quranLabel(
+                              'لم يورد المصدر معاني كلمات لهذه الآية.',
+                            ),
                             style: qText(context),
                           ),
                         ),
@@ -468,6 +504,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                     ),
                                     child: Text(
                                       entry.word,
+                                      textDirection: TextDirection.rtl,
                                       textAlign: TextAlign.center,
                                       style: const TextStyle(
                                         fontFamily: 'AmiriQuran',
@@ -480,6 +517,9 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                 Expanded(
                                   child: SelectableText(
                                     entry.meaning,
+                                    textDirection: contentTextDirection(
+                                      entry.meaning,
+                                    ),
                                     style: TextStyle(
                                       fontFamily: 'AmiriQuran',
                                       fontSize: 15,
@@ -492,7 +532,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
-                                      tooltip: 'نسخ المعنى',
+                                      tooltip: context.quranLabel('نسخ المعنى'),
                                       visualDensity: VisualDensity.compact,
                                       padding: const EdgeInsets.all(4),
                                       constraints: const BoxConstraints(
@@ -507,7 +547,10 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                           ),
                                         );
                                         if (context.mounted) {
-                                          qNotice(context, 'تم نسخ المعنى');
+                                          qNotice(
+                                            context,
+                                            context.quranLabel('تم نسخ المعنى'),
+                                          );
                                         }
                                       },
                                       icon: const Icon(
@@ -519,7 +562,9 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                     if (widget.onWordPlay != null &&
                                         entry.word.isNotEmpty)
                                       IconButton(
-                                        tooltip: 'استماع إلى الكلمة',
+                                        tooltip: context.quranLabel(
+                                          'استماع إلى الكلمة',
+                                        ),
                                         visualDensity: VisualDensity.compact,
                                         padding: const EdgeInsets.all(4),
                                         constraints: const BoxConstraints(
@@ -544,11 +589,16 @@ class _QuranExplanationState extends State<QuranExplanation> {
                         QCard(
                           child: SelectableText(
                             data.footnotes!,
+                            textDirection: contentTextDirection(
+                              data.footnotes!,
+                            ),
                             style: qText(context, size: 12),
                           ),
                         ),
                       Text(
-                        'المصدر: السراج في بيان غريب القرآن • QuranEnc.com\nتُعرض المعاني التي أوردها المصدر لهذه الآية.',
+                        context.quranLabel(
+                          'المصدر: السراج في بيان غريب القرآن • QuranEnc.com\nتُعرض المعاني التي أوردها المصدر لهذه الآية.',
+                        ),
                         style: qText(
                           context,
                           size: 10,
@@ -582,12 +632,19 @@ class _QuranExplanationState extends State<QuranExplanation> {
           .where((w) => normalizeQuranSearch(w.text) == target)
           .toList();
       if (matches.isEmpty) {
-        if (mounted) qNotice(context, 'لا يتوفر تسجيل منفصل لهذه الكلمة');
+        if (mounted) {
+          qNotice(
+            context,
+            context.quranLabel('لا يتوفر تسجيل منفصل لهذه الكلمة'),
+          );
+        }
         return;
       }
       await widget.onWordPlay!(matches.first);
     } catch (_) {
-      if (mounted) qNotice(context, 'تعذّر تحميل نطق الكلمة');
+      if (mounted) {
+        qNotice(context, context.quranLabel('تعذّر تحميل نطق الكلمة'));
+      }
     }
   }
 }

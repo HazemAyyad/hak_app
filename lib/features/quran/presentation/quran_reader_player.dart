@@ -1,3 +1,5 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app_appearance.dart';
@@ -53,14 +55,14 @@ class QuranReaderPlayer extends StatelessWidget {
       builder: (context, _) {
         if (experience?.isDocked(media) == true) return const SizedBox.shrink();
         final palette = AppPalette.of(context);
-        final name = repository.surah(surah).name;
+        final name = repository.surah(surah).localizedName(context);
         final title = selected == null
-            ? 'سورة $name كاملة'
-            : 'سورة $name • الآية ${selected!.ayah}';
+            ? context.tr('quran.fullSurahTitle', args: {'name': name})
+            : quranVerseTitle(context, repository.surah(surah), selected!.ayah);
         final reciter = matches
             ? media.current!.reciter
             : media.catalog == null
-            ? 'اختيار القارئ'
+            ? context.quranLabel('اختيار القارئ')
             : media.selection(verse: selected != null).name;
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -106,6 +108,7 @@ class QuranReaderPlayer extends StatelessWidget {
                               Flexible(
                                 child: Text(
                                   reciter,
+                                  textDirection: contentTextDirection(reciter),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: qText(
@@ -128,7 +131,9 @@ class QuranReaderPlayer extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: onToggleExpanded,
-                    tooltip: expanded ? 'طي المشغل' : 'توسيع المشغل',
+                    tooltip: expanded
+                        ? context.quranLabel('طي المشغل')
+                        : context.quranLabel('توسيع المشغل'),
                     icon: Icon(
                       expanded
                           ? Icons.keyboard_arrow_down
@@ -143,10 +148,10 @@ class QuranReaderPlayer extends StatelessWidget {
                       key: const ValueKey('quran-reader-play'),
                       onPressed: media.buffering ? null : toggle,
                       tooltip: matches && media.playing
-                          ? 'إيقاف مؤقت'
+                          ? context.quranLabel('إيقاف مؤقت')
                           : selected == null
-                          ? 'تشغيل السورة كاملة'
-                          : 'تشغيل الآية المحددة',
+                          ? context.quranLabel('تشغيل السورة كاملة')
+                          : context.quranLabel('تشغيل الآية المحددة'),
                       icon: media.buffering
                           ? const SizedBox.square(
                               dimension: 24,

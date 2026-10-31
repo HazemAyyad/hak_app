@@ -1552,8 +1552,8 @@
     "ar": "التفسير"
   },
   "quran.label.5af497936aa2": {
-    "en": "Word meanings",
-    "ar": "معاني الكلمات"
+    "ar": "معاني الكلمات",
+    "en": "Word meanings"
   },
   "quran.label.93e561444555": {
     "en": "Search works offline",
@@ -1604,8 +1604,8 @@
     "ar": "المفضلة"
   },
   "quran.label.2dea552e7835": {
-    "en": "Reading settings",
-    "ar": "إعدادات القراءة"
+    "ar": "إعدادات القراءة",
+    "en": "Reading settings"
   },
   "quran.label.30a5f3f111a0": {
     "en": "Quran settings",
@@ -1648,8 +1648,8 @@
     "ar": "مشاركة"
   },
   "quran.label.14d5786f2e64": {
-    "en": "Retry",
-    "ar": "إعادة المحاولة"
+    "ar": "إعادة المحاولة",
+    "en": "Try again"
   },
   "quran.label.83fcc51a28b4": {
     "en": "Downloads",
@@ -6018,5 +6018,457 @@
   "tasbih.label.dfa50a7ceed4": {
     "ar": "تم التعرف على الذكر؛ اضغط الميكروفون للاستماع مجددًا",
     "en": "Remembrance recognized. Tap the microphone to listen again."
+  },
+  "quran.label.cae7d39febc4": {
+    "ar": "تعذّر فتح ملفات المصحف؛ تحقق من مساحة الجهاز",
+    "en": "Could not open mushaf files. Check device storage."
+  },
+  "quran.label.acf9826bc32c": {
+    "ar": "علامة مرجعية",
+    "en": "Bookmark"
+  },
+  "quran.label.7e54cec6d648": {
+    "ar": "تفسير الآية",
+    "en": "Verse tafsir"
+  },
+  "quran.label.d624a9aa76c7": {
+    "en": "Close expanded view",
+    "ar": "إغلاق التكبير"
+  },
+  "quran.label.dea11cbf584f": {
+    "en": "Back to results",
+    "ar": "العودة إلى النتائج"
+  },
+  "quran.label.f7424fc7a0ff": {
+    "en": "Go to",
+    "ar": "انتقال"
+  },
+  "quran.label.605470fc2c42": {
+    "en": "Hide header",
+    "ar": "إخفاء الهيدر"
+  },
+  "quran.label.a9de05f0947b": {
+    "en": "Show header",
+    "ar": "إظهار الهيدر"
+  },
+  "quran.label.4ee712e88583": {
+    "ar": "تنزيل صفحات المصحف",
+    "en": "Download mushaf pages"
+  },
+  "quran.label.39a4ad699605": {
+    "en": "Reading layout",
+    "ar": "طريقة العرض"
+  },
+  "quran.label.a51fe0fab306": {
+    "en": "Expand surah",
+    "ar": "تكبير السورة"
+  },
+  "quran.label.8b796ea003e4": {
+    "en": "Verse options",
+    "ar": "خيارات الآية"
+  },
+  "quran.label.1551d5ed3d4d": {
+    "en": "Clear selection",
+    "ar": "إلغاء التحديد"
+  },
+  "quran.label.c15b3a94c113": {
+    "en": "Surah",
+    "ar": "السورة"
+  },
+  "quran.label.4f137908a13f": {
+    "en": "Page",
+    "ar": "الصفحة"
+  },
+  "quran.label.123f36702ce4": {
+    "en": "Verse",
+    "ar": "الآية"
+  },
+  "quran.label.30b0b0151395": {
+    "en": "Juz",
+    "ar": "الجزء"
+  },
+  "quran.label.12009aa898db": {
+    "ar": "مشاركة الآية",
+    "en": "Share verse"
+  },
+  "quran.label.74aaaefb4ca8": {
+    "en": "Play verse",
+    "ar": "تشغيل الآية"
+  },
+  "quran.label.3eb74c34c73b": {
+    "en": "Repeat verse",
+    "ar": "تكرار الآية"
+  },
+  "quran.label.3b3ec61e819f": {
+    "ar": "استماع إلى الآية",
+    "en": "Listen to verse"
+  },
+  "quran.label.a8af43b37aca": {
+    "en": "Listen to and repeat a verse range",
+    "ar": "استماع وتكرار نطاق آيات"
+  },
+  "quran.label.09b7a507874a": {
+    "en": "Choose verse reciter",
+    "ar": "اختيار قارئ الآيات"
+  },
+  "quran.label.f254c43261a8": {
+    "en": "Remove from favorites",
+    "ar": "إزالة من المفضلة"
+  },
+  "quran.label.6cc323d58539": {
+    "en": "Add to favorites",
+    "ar": "إضافة إلى المفضلة"
+  },
+  "quran.label.f40698975daa": {
+    "en": "Remove bookmark",
+    "ar": "إزالة العلامة المرجعية"
+  },
+  "quran.label.f3007430d76b": {
+    "en": "Save bookmark",
+    "ar": "حفظ علامة مرجعية"
+  },
+  "quran.label.54287de5ca01": {
+    "en": "Copy verse",
+    "ar": "نسخ الآية"
+  },
+  "quran.label.bc018170e2b4": {
+    "en": "Verse copied",
+    "ar": "تم نسخ الآية"
+  },
+  "quran.label.ac4ab6721509": {
+    "en": "Mushaf layout",
+    "ar": "طريقة عرض المصحف"
+  },
+  "quran.label.6ee26fbfd0be": {
+    "en": "Continuous text",
+    "ar": "نص متصل"
+  },
+  "quran.label.6c26f4fbbe45": {
+    "en": "Verse by verse",
+    "ar": "آية بآية"
+  },
+  "quran.label.a1d291946ee6": {
+    "en": "Mushaf pages",
+    "ar": "صفحات المصحف"
+  },
+  "quran.label.1c1e4758ae93": {
+    "en": "Adjust the reader to suit you",
+    "ar": "خصص تجربة القراءة بما يناسبك"
+  },
+  "quran.label.0458a671e96c": {
+    "en": "Account and sync",
+    "ar": "الحساب والمزامنة"
+  },
+  "quran.label.2dcbfe5bce51": {
+    "en": "Save favorites, bookmarks and reading progress to your account",
+    "ar": "حفظ المفضلة والعلامات والتقدم على حسابك"
+  },
+  "quran.label.f119ebe0a501": {
+    "en": "Choose how verses are displayed",
+    "ar": "اختر الطريقة المناسبة لعرض الآيات"
+  },
+  "quran.label.9d9c76f5c6ff": {
+    "en": "Font and text size",
+    "ar": "الخط وحجم النص"
+  },
+  "quran.label.13b7436b0b9d": {
+    "en": "Choose the Quran text font",
+    "ar": "اختر خط نص القرآن"
+  },
+  "quran.label.e94b559e0d75": {
+    "en": "Quran font",
+    "ar": "نوع خط القرآن"
+  },
+  "quran.label.454b447bf266": {
+    "en": "The font applies to continuous and verse-by-verse reading. Mushaf pages keep their original font and layout; pinch to zoom.",
+    "ar": "نوع الخط للنص المتصل وآية بآية. صفحات المصحف بخطها الأصلي وتوزيعها الثابت؛ كبّرها بإصبعين."
+  },
+  "quran.label.a21c1ec548c8": {
+    "en": "Appearance and colors",
+    "ar": "المظهر والألوان"
+  },
+  "quran.label.aa7339e5b3fe": {
+    "en": "Show tajweed colors",
+    "ar": "إظهار ألوان التجويد"
+  },
+  "quran.label.d26d055fcf47": {
+    "en": "Show tajweed colors on mushaf pages that support them.",
+    "ar": "اعرض ألوان أحكام التجويد في صفحات المصحف التي تدعمها."
+  },
+  "quran.label.da903e1cd150": {
+    "en": "Choose a comfortable reading background",
+    "ar": "اختر نمط القراءة المريح لعينيك"
+  },
+  "quran.label.aabb4f12fa31": {
+    "en": "Light",
+    "ar": "فاتح"
+  },
+  "quran.label.0c2f9b9a665f": {
+    "en": "Ivory paper",
+    "ar": "ورق أصفر"
+  },
+  "quran.label.1ea72ae301c0": {
+    "en": "Soft green paper",
+    "ar": "ورق مريح"
+  },
+  "quran.label.b95b2ced0e0a": {
+    "en": "Dark",
+    "ar": "داكن"
+  },
+  "quran.label.30c636a4e4cc": {
+    "en": "Choose reciter",
+    "ar": "اختيار القارئ"
+  },
+  "quran.label.2301497b65a8": {
+    "en": "Collapse player",
+    "ar": "طي المشغل"
+  },
+  "quran.label.eec5b9c06eff": {
+    "en": "Expand player",
+    "ar": "توسيع المشغل"
+  },
+  "quran.label.808622b854e0": {
+    "en": "Play full surah",
+    "ar": "تشغيل السورة كاملة"
+  },
+  "quran.label.f3449ecef37d": {
+    "en": "Play selected verse",
+    "ar": "تشغيل الآية المحددة"
+  },
+  "quran.readerHeader": {
+    "en": "{juz} • page {page}\n{revelation} • {count} verses",
+    "ar": "{juz} • الصفحة {page}\n{revelation} • {count} آية"
+  },
+  "quran.pageLabel": {
+    "en": "Page {page}",
+    "ar": "الصفحة {page}"
+  },
+  "quran.verseLabel": {
+    "en": "Verse {ayah}",
+    "ar": "الآية {ayah}"
+  },
+  "quran.readerLocationOption": {
+    "en": "{kind} {number}",
+    "ar": "{kind} {number}"
+  },
+  "quran.surahVerseSemantics": {
+    "en": "Surah {name}, verse {ayah}",
+    "ar": "سورة {name} الآية {ayah}"
+  },
+  "quran.fullSurahTitle": {
+    "en": "Surah {name} in full",
+    "ar": "سورة {name} كاملة"
+  },
+  "quran.label.0b41a1868ee7": {
+    "en": "Amiri Quran",
+    "ar": "أميري قرآن"
+  },
+  "quran.label.5f2cb1331e60": {
+    "en": "Uthmani — Hafs",
+    "ar": "عثماني — حفص"
+  },
+  "quran.label.7079e007e973": {
+    "en": "Naskh — Scheherazade",
+    "ar": "نسخ — شهرزاد"
+  },
+  "quran.label.3e09467d3420": {
+    "en": "Naskh — Noto",
+    "ar": "نسخ — نوتو"
+  },
+  "quran.label.7e64594213c9": {
+    "en": "Lateef",
+    "ar": "لطيف"
+  },
+  "quran.label.ec1dc9e63b39": {
+    "ar": "تعذّر بدء التنزيل؛ تحقق من مساحة الجهاز",
+    "en": "Could not start the download. Check device storage."
+  },
+  "quran.label.e28b5e540a95": {
+    "ar": "نزّل صور هذه السورة أو المصحف كاملًا لتتصفح الصفحات بدون إنترنت.",
+    "en": "Download images of this surah or the full mushaf to read its pages offline."
+  },
+  "quran.label.7f98318cbd9a": {
+    "ar": "المصحف كاملًا محفوظ",
+    "en": "Full mushaf saved"
+  },
+  "quran.label.eb62059a9a23": {
+    "ar": "إيقاف التنزيل",
+    "en": "Pause download"
+  },
+  "quran.label.bf8f45d82132": {
+    "ar": "استكمال التنزيل",
+    "en": "Resume download"
+  },
+  "quran.label.ee454c4c3030": {
+    "ar": "صور مصحف المدينة • مجمع الملك فهد / Quran.ws",
+    "en": "Madinah mushaf images • King Fahd Complex / Quran.ws"
+  },
+  "quran.label.04edeb961583": {
+    "ar": "لاحقًا",
+    "en": "Later"
+  },
+  "quran.label.ca90c297b099": {
+    "ar": "إغلاق",
+    "en": "Close"
+  },
+  "quran.label.58ed242e024e": {
+    "ar": "متاحة بدون إنترنت",
+    "en": "Available offline"
+  },
+  "quran.label.d2f299ac1b49": {
+    "ar": "جارٍ تحميل صفحة المصحف",
+    "en": "Loading mushaf page"
+  },
+  "quran.label.3be57350ae7b": {
+    "ar": "تعذّر فتح صفحة المصحف",
+    "en": "Could not open the mushaf page"
+  },
+  "quran.label.6f8a0a156dd5": {
+    "ar": "نزّل صفحات السورة أو المصحف من زر التنزيل لتصفحها بدون إنترنت. النص المتصل والآيات متاحان دائمًا.",
+    "en": "Use the download button to save surah or mushaf pages for offline reading. Continuous and verse-by-verse text are always available."
+  },
+  "quran.label.bea963cb7b74": {
+    "ar": "الصفحة السابقة",
+    "en": "Previous page"
+  },
+  "quran.label.56ed8bb2532c": {
+    "ar": "الصفحة التالية",
+    "en": "Next page"
+  },
+  "quran.label.0bf5b29530f9": {
+    "ar": "التفسير • السعدي",
+    "en": "Tafsir • As-Sadi (Arabic)"
+  },
+  "quran.label.a43f24135675": {
+    "ar": "جارٍ تحميل التفسير",
+    "en": "Loading tafsir"
+  },
+  "quran.label.3fb06fa5bf94": {
+    "ar": "التفسير غير محمّل؛ افتح التفاصيل لإعادة المحاولة",
+    "en": "Tafsir is not downloaded. Open details to try again."
+  },
+  "quran.label.b6da2c6cc36c": {
+    "ar": "جارٍ تحميل التفسير…",
+    "en": "Loading tafsir…"
+  },
+  "quran.label.5bbb2d9636a7": {
+    "ar": "عرض التفسير الكامل",
+    "en": "View full tafsir"
+  },
+  "quran.label.645ae0438c8c": {
+    "ar": "لا توجد كلمات غريبة مشروحة لهذه الآية في المصدر",
+    "en": "The source has no vocabulary explanations for this verse"
+  },
+  "quran.label.fb6fa869f9e4": {
+    "ar": "المعاني غير محمّلة؛ افتح التفاصيل لإعادة المحاولة",
+    "en": "Word meanings are not downloaded. Open details to try again."
+  },
+  "quran.label.43bdeafaa401": {
+    "ar": "جارٍ تحميل المعاني",
+    "en": "Loading word meanings"
+  },
+  "quran.label.007fa375ff42": {
+    "ar": "المصدر: السراج • QuranEnc",
+    "en": "Source: As-Siraj (Arabic) • QuranEnc"
+  },
+  "quran.label.e3b1207c78e5": {
+    "ar": "معاني الكلمات • السراج في بيان غريب القرآن",
+    "en": "Word meanings • As-Siraj fi Bayan Gharib Al-Quran (Arabic)"
+  },
+  "quran.label.deb174793feb": {
+    "ar": "تعذّر تحميل المحتوى",
+    "en": "Could not load this content"
+  },
+  "quran.label.b3bf02b7d747": {
+    "ar": "المحتوى المحمّل متاح دون إنترنت لمدة سبعة أيام.",
+    "en": "Downloaded content is available offline for seven days."
+  },
+  "quran.label.9ee3d44709fa": {
+    "ar": "جارٍ تحميل التفسير والمعاني",
+    "en": "Loading tafsir and word meanings"
+  },
+  "quran.label.59cdfbdb7867": {
+    "ar": "لم يورد المصدر معاني كلمات لهذه الآية.",
+    "en": "The source provides no word meanings for this verse."
+  },
+  "quran.label.ef656e14e960": {
+    "ar": "نسخ المعنى",
+    "en": "Copy meaning"
+  },
+  "quran.label.cf90196b1e7a": {
+    "ar": "تم نسخ المعنى",
+    "en": "Meaning copied"
+  },
+  "quran.label.2c5bfc0d0e9d": {
+    "ar": "استماع إلى الكلمة",
+    "en": "Listen to word"
+  },
+  "quran.label.0e940c773595": {
+    "ar": "المصدر: السراج في بيان غريب القرآن • QuranEnc.com\nتُعرض المعاني التي أوردها المصدر لهذه الآية.",
+    "en": "Source: As-Siraj fi Bayan Gharib Al-Quran • QuranEnc.com\nThe word meanings are shown as provided by the source (Arabic)."
+  },
+  "quran.label.c2bf237d7df8": {
+    "ar": "لا يتوفر تسجيل منفصل لهذه الكلمة",
+    "en": "No separate recording is available for this word"
+  },
+  "quran.label.8d8bb9e642b1": {
+    "ar": "تعذّر تحميل نطق الكلمة",
+    "en": "Could not load the word recording"
+  },
+  "quran.mushafSurahSaved": {
+    "ar": "سورة {name} محفوظة",
+    "en": "Surah {name} saved"
+  },
+  "quran.mushafSurahDownload": {
+    "ar": "هذه السورة • {count} صفحة • حجم الحفظ {size}",
+    "en": "This surah • {count} pages • download size {size}"
+  },
+  "quran.mushafFullDownload": {
+    "ar": "المصحف كاملًا • {count} صفحات • حجم الحفظ {size}",
+    "en": "Full mushaf • {count} pages • download size {size}"
+  },
+  "quran.mushafSavedProgress": {
+    "en": "Saved {done} of {total} pages • {percent}",
+    "ar": "حُفظت {done} من {total} صفحة • {percent}"
+  },
+  "quran.mushafOfflineSemantics": {
+    "ar": "صفحة {page} من مصحف المدينة، محفوظة بدون إنترنت",
+    "en": "Madinah mushaf page {page}, saved offline"
+  },
+  "quran.mushafPageProgress": {
+    "ar": "الصفحة {page} من {total}",
+    "en": "Page {page} of {total}"
+  },
+  "quran.wordVerseSemantics": {
+    "ar": "{word}، الآية {ayah}",
+    "en": "{word}, verse {ayah}"
+  },
+  "quran.tafsirCoveredVerses": {
+    "ar": "يشمل هذا النص الآيات: {verses}",
+    "en": "This text covers verses: {verses}"
+  },
+  "quran.tafsirSource": {
+    "ar": "المصدر: Quran.com • {title}\nالنص كما ورد من المصدر؛ يُحفظ مؤقتًا لمدة سبعة أيام بعد فتحه.",
+    "en": "Source: Quran.com • {title}\nText is shown as provided by the source and cached for seven days after opening."
+  },
+  "quran.downloadPageFailed": {
+    "en": "Could not download page {page}. You can resume it.",
+    "ar": "تعذّر تنزيل الصفحة {page}؛ يمكنك استكمالها"
+  },
+  "quran.label.b39005625b42": {
+    "en": "This page is incomplete. Download it again.",
+    "ar": "هذه الصفحة غير مكتملة؛ أعد تنزيلها"
+  },
+  "quran.label.30faf33264b9": {
+    "en": "Could not restore the mushaf page list",
+    "ar": "تعذّر استعادة قائمة صفحات المصحف"
+  },
+  "quran.label.db23bfb57d05": {
+    "en": "Could not save the mushaf download status. Check device storage.",
+    "ar": "تعذّر حفظ حالة تنزيل المصحف؛ تحقق من مساحة الجهاز"
+  },
+  "quran.label.1054faf35a6b": {
+    "en": "The saved page is damaged. Download it again.",
+    "ar": "الصفحة المحفوظة تالفة؛ أعد تنزيلها"
   }
 }

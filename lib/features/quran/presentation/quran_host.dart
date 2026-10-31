@@ -4,6 +4,7 @@ import '../../../app_appearance.dart';
 import '../../../app_experience.dart';
 import '../../../app_loading.dart';
 import '../../../core/localization/ui_text.dart';
+import '../../../core/localization/app_localization.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
 import 'quran_reader.dart';
@@ -151,7 +152,9 @@ class QuranHostState extends State<QuranHost> {
         ).textTheme.apply(fontFamily: AppearanceScope.of(context).font.family),
       ),
       child: Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection:
+            LocalizationScope.maybeOf(context)?.language.direction ??
+            TextDirection.rtl,
         child: Scaffold(
           backgroundColor: AppPalette.of(context).dark
               ? AppPalette.of(context).background

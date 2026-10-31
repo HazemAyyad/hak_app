@@ -1,3 +1,4 @@
+import '../../../core/localization/app_localization.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../data/quran_content.dart';
 import '../data/quran_repository.dart';
+import 'quran_widgets.dart';
 
 /// A complete physical line scales together; words never wrap or get clipped.
 /// Glyph measurement is reused when only the selected ayah changes.
@@ -104,8 +106,16 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
                         widget.onOptions(verse);
                       },
                       child: Semantics(
-                        label:
-                            '${word.text}، الآية ${widget.repository.byKey[word.key]!.ayah}',
+                        label: context.tr(
+                          'quran.wordVerseSemantics',
+                          args: {
+                            'word': word.text,
+                            'ayah': quranNumber(
+                              context,
+                              widget.repository.byKey[word.key]!.ayah,
+                            ),
+                          },
+                        ),
                         button: true,
                         child: DecoratedBox(
                           decoration: BoxDecoration(

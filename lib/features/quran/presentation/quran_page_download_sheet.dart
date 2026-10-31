@@ -1,3 +1,5 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import 'package:flutter/material.dart';
 
 import '../data/quran_page_downloads.dart';
@@ -16,8 +18,10 @@ Future<void> showQuranPageDownloadSheet(
   } catch (_) {
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('تعذّر فتح ملفات المصحف؛ تحقق من مساحة الجهاز'),
+      SnackBar(
+        content: Text(
+          context.quranLabel('تعذّر فتح ملفات المصحف؛ تحقق من مساحة الجهاز'),
+        ),
       ),
     );
     return;
@@ -46,8 +50,8 @@ class _QuranPageDownloadSheet extends StatelessWidget {
   final QuranRepository repository;
   final int surahId;
 
-  String _size(int bytes) =>
-      '${(bytes / (1024 * 1024)).toStringAsFixed(1)} م.ب';
+  String _size(BuildContext context, int bytes) =>
+      '${quranNumber(context, (bytes / (1024 * 1024) * 10).round() / 10)} MB';
 
   Future<void> _run(
     BuildContext context,
@@ -58,8 +62,10 @@ class _QuranPageDownloadSheet extends StatelessWidget {
     } catch (_) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('تعذّر بدء التنزيل؛ تحقق من مساحة الجهاز'),
+        SnackBar(
+          content: Text(
+            context.quranLabel('تعذّر بدء التنزيل؛ تحقق من مساحة الجهاز'),
+          ),
         ),
       );
     }
@@ -99,13 +105,15 @@ class _QuranPageDownloadSheet extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'تنزيل صفحات المصحف',
+                    context.quranLabel('تنزيل صفحات المصحف'),
                     textAlign: TextAlign.center,
                     style: qText(context, size: 19),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'نزّل صور هذه السورة أو المصحف كاملًا لتتصفح الصفحات بدون إنترنت.',
+                    context.quranLabel(
+                      'نزّل صور هذه السورة أو المصحف كاملًا لتتصفح الصفحات بدون إنترنت.',
+                    ),
                     textAlign: TextAlign.center,
                     style: qText(context, size: 13),
                   ),
@@ -126,8 +134,21 @@ class _QuranPageDownloadSheet extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 9),
                       child: Text(
                         saved == pages.length
-                            ? 'سورة ${repository.surah(surahId).name} محفوظة'
-                            : 'هذه السورة • ${pages.length} صفحة • حجم الحفظ ${_size(currentSize)}',
+                            ? context.tr(
+                                'quran.mushafSurahSaved',
+                                args: {
+                                  'name': repository
+                                      .surah(surahId)
+                                      .localizedName(context),
+                                },
+                              )
+                            : context.tr(
+                                'quran.mushafSurahDownload',
+                                args: {
+                                  'count': quranNumber(context, pages.length),
+                                  'size': _size(context, currentSize),
+                                },
+                              ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -145,8 +166,14 @@ class _QuranPageDownloadSheet extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 9),
                       child: Text(
                         downloads.completed == 604
-                            ? 'المصحف كاملًا محفوظ'
-                            : 'المصحف كاملًا • 604 صفحات • حجم الحفظ ${_size(allSize)}',
+                            ? context.quranLabel('المصحف كاملًا محفوظ')
+                            : context.tr(
+                                'quran.mushafFullDownload',
+                                args: {
+                                  'count': quranNumber(context, 604),
+                                  'size': _size(context, allSize),
+                                },
+                              ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -161,15 +188,23 @@ class _QuranPageDownloadSheet extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'حُفظت ${downloads.completed} من ${downloads.total} صفحة'
-                      ' • ${(downloads.progress * 100).floor()}٪',
+                      context.tr(
+                        'quran.mushafSavedProgress',
+                        args: {
+                          'done': quranNumber(context, downloads.completed),
+                          'total': quranNumber(context, downloads.total),
+                          'percent': quranFormats(
+                            context,
+                          ).percent(downloads.progress),
+                        },
+                      ),
                       style: qText(context, size: 12),
                       textAlign: TextAlign.center,
                     ),
                     if (downloads.error != null) ...[
                       const SizedBox(height: 8),
                       Text(
-                        downloads.error!,
+                        quranPageDownloadError(context, downloads.error!),
                         textAlign: TextAlign.center,
                         style: qText(
                           context,
@@ -182,24 +217,30 @@ class _QuranPageDownloadSheet extends StatelessWidget {
                       TextButton.icon(
                         onPressed: () => _run(context, downloads.pauseAll),
                         icon: const Icon(Icons.pause_circle_outline),
-                        label: const Text('إيقاف التنزيل'),
+                        label: Text(context.quranLabel('إيقاف التنزيل')),
                       )
                     else if (downloads.hasPending)
                       TextButton.icon(
                         onPressed: () => _run(context, downloads.resumeAll),
                         icon: const Icon(Icons.play_circle_outline),
-                        label: const Text('استكمال التنزيل'),
+                        label: Text(context.quranLabel('استكمال التنزيل')),
                       ),
                   ],
                   const SizedBox(height: 10),
                   Text(
-                    'صور مصحف المدينة • مجمع الملك فهد / Quran.ws',
+                    context.quranLabel(
+                      'صور مصحف المدينة • مجمع الملك فهد / Quran.ws',
+                    ),
                     textAlign: TextAlign.center,
                     style: qText(context, size: 10),
                   ),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text(downloads.total == 0 ? 'لاحقًا' : 'إغلاق'),
+                    child: Text(
+                      downloads.total == 0
+                          ? context.quranLabel('لاحقًا')
+                          : context.quranLabel('إغلاق'),
+                    ),
                   ),
                 ],
               ),

@@ -1,3 +1,5 @@
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -41,7 +43,10 @@ class QuranOfflinePage extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'الصفحة ${data.page}',
+                  context.tr(
+                    'quran.pageLabel',
+                    args: {'page': quranNumber(context, data.page)},
+                  ),
                   style: qText(context, size: 12, color: ink),
                 ),
                 const SizedBox(height: 12),
@@ -78,8 +83,10 @@ class QuranOfflinePage extends StatelessWidget {
                             data.displaySvg,
                             fit: BoxFit.fill,
                             colorFilter: ColorFilter.mode(ink, BlendMode.srcIn),
-                            semanticsLabel:
-                                'صفحة ${data.page} من مصحف المدينة، محفوظة بدون إنترنت',
+                            semanticsLabel: context.tr(
+                              'quran.mushafOfflineSemantics',
+                              args: {'page': quranNumber(context, data.page)},
+                            ),
                           ),
                         ),
                       ],
@@ -98,7 +105,7 @@ class QuranOfflinePage extends StatelessWidget {
                     const SizedBox(width: 4),
                     Flexible(
                       child: Text(
-                        'متاحة بدون إنترنت',
+                        context.quranLabel('متاحة بدون إنترنت'),
                         style: qText(context, size: 10, color: ink),
                       ),
                     ),
