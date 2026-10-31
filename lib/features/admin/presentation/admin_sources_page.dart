@@ -1,19 +1,10 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../../core/localization/app_localization.dart';
 import '../../../core/localization/published_meaning_card.dart';
 import '../../account/data/app_session.dart';
 import 'admin_page.dart' show AdminSessionBoundary, adminError;
-
-String _requestId() {
-  final random = Random.secure();
-  final bytes = List<int>.generate(16, (_) => random.nextInt(256));
-  bytes[6] = (bytes[6] & 15) | 64;
-  bytes[8] = (bytes[8] & 63) | 128;
-  final hex = bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
-  return '${hex.substring(0, 8)}-${hex.substring(8, 12)}-${hex.substring(12, 16)}-${hex.substring(16, 20)}-${hex.substring(20)}';
-}
+import 'source_request_id.dart';
 
 class AdminSourcesPage extends StatefulWidget {
   const AdminSourcesPage({
@@ -85,7 +76,7 @@ class _AdminSourcesPageState extends State<AdminSourcesPage> {
       final request =
           _pending[sourceKey] ??
           preferences?.getString(storageKey) ??
-          _requestId();
+          sourceRequestId();
       _pending[sourceKey] = request;
       if (preferences != null &&
           !await preferences.setString(storageKey, request)) {

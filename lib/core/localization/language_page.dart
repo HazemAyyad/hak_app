@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'app_localization.dart';
 import 'published_meaning_card.dart';
+import 'published_hadith_card.dart';
 
 class LanguagePage extends StatefulWidget {
   const LanguagePage({super.key, this.onContinue, this.contentOnly = false});
@@ -210,8 +211,13 @@ class _LanguagePageState extends State<LanguagePage> {
 
 /// The Arabic original is rendered by the existing reader, never replaced.
 class ContentTranslationCard extends StatelessWidget {
-  const ContentTranslationCard({super.key, required this.contentId});
+  const ContentTranslationCard({
+    super.key,
+    required this.contentId,
+    this.originalText,
+  });
   final String contentId;
+  final String? originalText;
   @override
   Widget build(BuildContext context) {
     final localization = LocalizationScope.maybeOf(context);
@@ -219,6 +225,18 @@ class ContentTranslationCard extends StatelessWidget {
       return const SizedBox.shrink();
     }
     final translation = localization.content(contentId);
+    if (originalText != null &&
+        localization.installed[localization.contentCode]?.hadithSource
+                ?.forContent(contentId, originalText!) !=
+            null) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: PublishedHadithCard(
+          contentId: contentId,
+          originalText: originalText!,
+        ),
+      );
+    }
     final published = localization
         .installed[localization.contentCode]
         ?.quranSource

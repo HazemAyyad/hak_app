@@ -85,7 +85,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
         padding: EdgeInsets.zero,
         key: PageStorageKey('religious-details-${item.id}'),
         children: [
-          ContentTranslationCard(contentId: item.id),
+          ContentTranslationCard(contentId: item.id, originalText: item.text),
           ReligiousHeader(
             title: item.title,
             subtitle: name

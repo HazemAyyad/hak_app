@@ -14,6 +14,7 @@ import 'bundled_localization.dart';
 import 'quran_translation_source.dart';
 import 'locale_formats.dart';
 import 'interface_messages.dart';
+import 'hadith_translation_source.dart';
 
 final _bundledInterface = jsonDecode(bundledUiJson) as Map;
 
@@ -51,12 +52,14 @@ class LanguagePackage {
     this.strings,
     this.content, {
     this.quranSource,
+    this.hadithSource,
   });
   final String locale;
   final int version;
   final Map<String, String> strings;
   final Map<String, dynamic> content;
   final QuranTranslationSource? quranSource;
+  final HadithTranslationSource? hadithSource;
 
   static Future<LanguagePackage> verify(
     Map<String, dynamic> envelope,
@@ -133,6 +136,12 @@ class LanguagePackage {
           ? null
           : QuranTranslationSource.verify(
               data['quran_source'] as Map,
+              expectedLocale,
+            ),
+      hadithSource: data['hadith_source'] == null
+          ? null
+          : HadithTranslationSource.verify(
+              data['hadith_source'] as Map,
               expectedLocale,
             ),
     );

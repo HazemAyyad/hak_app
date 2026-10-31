@@ -4102,5 +4102,89 @@
   "reminder.actionFailed": {
     "ar": "تعذّر تنفيذ الطلب على الجهاز؛ تحقق من الصلاحيات.",
     "en": "Could not complete the device action. Check permissions."
+  },
+  "hadith.sources": {
+    "ar": "مصادر ترجمات الأحاديث",
+    "en": "Hadith translation sources"
+  },
+  "hadith.workflow": {
+    "ar": "اربط معرف كل حديث محلي بمعرفه في HadeethEnc.com، ثم اجلب سجلات الناشر كاملة للمراجعة. لا تعتمد المطابقة من العنوان وحده. الاعتماد واختيار المصدر ونشر حزمة اللغة خطوات منفصلة.",
+    "en": "Map each local hadith ID to its HadeethEnc.com ID, then import the complete publisher records for review. A matching title does not establish identity. Approval, source selection and language publication are separate steps."
+  },
+  "hadith.mapping": {
+    "ar": "مطابقة المراجع JSON",
+    "en": "Reference mapping (JSON)"
+  },
+  "hadith.invalidMapping": {
+    "ar": "أدخل كائن JSON غير فارغ: معرف حديث محلي موجود يقابله معرف HadeethEnc رقمي بين علامتي اقتباس. الحد 100 مرجع.",
+    "en": "Enter a nonempty JSON object mapping existing local hadith IDs to quoted numeric HadeethEnc IDs. Maximum 100 references."
+  },
+  "hadith.localReferences": {
+    "ar": "معرفات الأحاديث الحالية",
+    "en": "Current hadith identities"
+  },
+  "hadith.browsePublisher": {
+    "ar": "البحث لدى HadeethEnc.com",
+    "en": "Browse HadeethEnc.com"
+  },
+  "hadith.reviewInstructions": {
+    "ar": "قارن الحديث المحلي برواية الناشر العربية كاملة، ثم راجع الترجمة والشرح والفوائد والدرجة والتخريج. اختلاف الرواية أو زياداتها يحتاج تدقيقًا؛ لا تنسب ترجمة رواية إلى أخرى بمجرد تشابه الموضوع.",
+    "en": "Compare the local hadith with the publisher's complete Arabic narration, then review the translation, explanation, benefits, grade and references. Check narration variants and additions; a shared topic does not establish that two narrations are identical."
+  },
+  "hadith.localOriginal": {
+    "ar": "الأصل المحلي المحفوظ",
+    "en": "Preserved local original"
+  },
+  "hadith.confirmReference": {
+    "ar": "راجعت تطابق هذا المرجع والرواية وبيانات الناشر والترجمة كاملة.",
+    "en": "I reviewed this reference, narration and all publisher information and translated fields."
+  },
+  "hadith.confirmedCount": {
+    "ar": "مراجع تمت مراجعتها: {count} من {total}",
+    "en": "References reviewed: {count} of {total}"
+  },
+  "hadith.translation": {
+    "ar": "ترجمة حديث من مصدر منشور",
+    "en": "Hadith translation from a published source"
+  },
+  "hadith.grade": {
+    "ar": "درجة الحديث لدى المصدر",
+    "en": "Publisher's hadith grade"
+  },
+  "hadith.reference": {
+    "ar": "التخريج لدى المصدر",
+    "en": "Publisher's hadith references"
+  },
+  "hadith.explanation": {
+    "ar": "شرح المصدر",
+    "en": "Publisher's explanation"
+  },
+  "hadith.benefits": {
+    "ar": "فوائد المصدر",
+    "en": "Publisher's benefits"
+  },
+  "hadith.publisherArabic": {
+    "ar": "رواية المصدر العربي وشرحه وتخريجه",
+    "en": "Publisher's Arabic narration, explanation and references"
+  },
+  "hadith.editionNotice": {
+    "ar": "النص وشرحه وفوائده ودرجته محفوظة كما وردت من الناشر. تبقى الرواية العربية المحلية ظاهرة مستقلة.",
+    "en": "The text, explanation, benefits and grade are retained as provided by the publisher. The local Arabic narration remains separately visible."
+  },
+  "hadith.publisherLink": {
+    "ar": "فتح سجل الناشر",
+    "en": "Open publisher record"
+  },
+  "hadith.checkUpdates": {
+    "ar": "فحص تحديث إصدار المصدر",
+    "en": "Check source edition updates"
+  },
+  "hadith.policyLink": {
+    "ar": "شروط المصدر",
+    "en": "Source terms"
+  },
+  "hadith.document": {
+    "ar": "معلومات وثيقة الناشر",
+    "en": "Publisher document information"
   }
 }

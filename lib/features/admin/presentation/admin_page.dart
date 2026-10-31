@@ -6,6 +6,7 @@ import '../../../core/localization/app_localization.dart';
 import '../../account/data/app_session.dart';
 import 'admin_sources_page.dart';
 import 'admin_translation_exchange_page.dart';
+import 'admin_hadith_sources_page.dart';
 
 String adminError(Object error) =>
     error is DioException && error.response?.statusCode == 409
@@ -264,6 +265,21 @@ class _AdminPageState extends State<AdminPage> {
                           ),
                         );
                         await _load();
+                        return;
+                      }
+                      if (value == 'hadith-sources') {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (_) => AdminHadithSourcesPage(
+                              session: session,
+                              locale: language['locale'] as String,
+                              name: language['name'] as String,
+                            ),
+                          ),
+                        );
+                        await _load();
+                        return;
                       }
                       if (value == 'publish') await _publish(language);
                       if (value == 'restore') await _restore(language);
@@ -288,6 +304,10 @@ class _AdminPageState extends State<AdminPage> {
                       PopupMenuItem(
                         value: 'sources',
                         child: Text(ctx.tr('source.title')),
+                      ),
+                      PopupMenuItem(
+                        value: 'hadith-sources',
+                        child: Text(ctx.tr('hadith.sources')),
                       ),
                       if (session.can('publish'))
                         PopupMenuItem(
