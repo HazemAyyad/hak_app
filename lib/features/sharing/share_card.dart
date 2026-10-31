@@ -1,3 +1,5 @@
+import '../../core/localization/app_localization.dart';
+import '../../core/localization/ui_text.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
@@ -12,6 +14,10 @@ import '../quran/data/quran_repository.dart';
 enum ShareCardFormat { square, story }
 
 enum ShareCardTheme { ivory, navy, teal }
+
+String _sharingNumber(BuildContext context, int value) =>
+    LocalizationScope.maybeOf(context)?.formats.integer(value) ??
+    value.toString();
 
 class ShareCardContent {
   const ShareCardContent({
@@ -150,7 +156,7 @@ class ShareCardRenderer {
     TextPainter painter(String text, TextStyle textStyle) => TextPainter(
       text: TextSpan(text: text, style: textStyle),
       textAlign: TextAlign.center,
-      textDirection: TextDirection.rtl,
+      textDirection: contentTextDirection(text),
     );
     final heading = painter(
       'حق • خير أقرب إليك',
@@ -308,12 +314,12 @@ Future<void> chooseContentShare(
         children: [
           ListTile(
             leading: const Icon(Icons.text_fields),
-            title: const Text('مشاركة النص'),
+            title: Text(context.sharingLabel('مشاركة النص')),
             onTap: () => Navigator.pop(context, 'text'),
           ),
           ListTile(
             leading: const Icon(Icons.image_outlined),
-            title: const Text('مشاركة كصورة'),
+            title: Text(context.sharingLabel('مشاركة كصورة')),
             onTap: () => Navigator.pop(context, 'image'),
           ),
         ],
@@ -342,7 +348,11 @@ Future<void> chooseContentShare(
     } catch (_) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تعذّرت المشاركة؛ يمكنك نسخ النص')),
+          SnackBar(
+            content: Text(
+              context.sharingLabel('تعذّرت المشاركة؛ يمكنك نسخ النص'),
+            ),
+          ),
         );
       }
     }
@@ -424,7 +434,11 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(saved ? 'تم حفظ الصورة' : 'أُلغي حفظ الصورة'),
+              content: Text(
+                saved
+                    ? context.sharingLabel('تم حفظ الصورة')
+                    : context.sharingLabel('أُلغي حفظ الصورة'),
+              ),
             ),
           );
         }
@@ -449,9 +463,11 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
     } on MissingPluginException {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'الحفظ المباشر متاح على Android وiOS؛ يمكنك مشاركة الصورة',
+              context.sharingLabel(
+                'الحفظ المباشر متاح على Android وiOS؛ يمكنك مشاركة الصورة',
+              ),
             ),
           ),
         );
@@ -459,9 +475,11 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text(
-              'تعذّر حفظ أو مشاركة الصورة؛ تحقق من الإذن وأعد المحاولة',
+              context.sharingLabel(
+                'تعذّر حفظ أو مشاركة الصورة؛ تحقق من الإذن وأعد المحاولة',
+              ),
             ),
           ),
         );
@@ -478,20 +496,27 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
         ? null
         : repository?.byKey[content.verseKeys.first];
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection:
+          LocalizationScope.maybeOf(context)?.language.direction ??
+          TextDirection.rtl,
       child: Scaffold(
         backgroundColor: p.background,
-        appBar: AppBar(title: const Text('صورة الآية والمحتوى')),
+        appBar: AppBar(
+          title: Text(context.sharingLabel('صورة الآية والمحتوى')),
+        ),
         body: ListView(
           padding: const EdgeInsets.all(16),
           children: [
             SegmentedButton<ShareCardFormat>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: ShareCardFormat.square,
-                  label: Text('مربع'),
+                  label: Text(context.sharingLabel('مربع')),
                 ),
-                ButtonSegment(value: ShareCardFormat.story, label: Text('قصة')),
+                ButtonSegment(
+                  value: ShareCardFormat.story,
+                  label: Text(context.sharingLabel('قصة')),
+                ),
               ],
               selected: {style.format},
               onSelectionChanged: _working
@@ -501,13 +526,24 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
             const SizedBox(height: 12),
             if (first != null)
               if (widget.content.verseKeys.length > 20)
-                const Text(
-                  'اختر نطاق الآيات للصورة؛ مشاركة النص تحتفظ بالنص الكامل.',
+                Text(
+                  context.sharingLabel(
+                    'اختر نطاق الآيات للصورة؛ مشاركة النص تحتفظ بالنص الكامل.',
+                  ),
                 ),
             if (first != null)
               Row(
                 children: [
-                  Text('من الآية ${first.ayah} إلى '),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      context.tr(
+                        'sharing.verseRangeStart',
+                        args: {'start': _sharingNumber(context, first.ayah)},
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: DropdownButton<int>(
                       isExpanded: true,
@@ -522,7 +558,10 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
                               );
                           i++
                         )
-                          DropdownMenuItem(value: i, child: Text('$i')),
+                          DropdownMenuItem(
+                            value: i,
+                            child: Text(_sharingNumber(context, i)),
+                          ),
                       ],
                       onChanged: _working
                           ? null
@@ -544,7 +583,13 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
               children: [
                 for (final theme in ShareCardTheme.values)
                   ChoiceChip(
-                    label: Text(['عاجي', 'كحلي', 'فيروزي'][theme.index]),
+                    label: Text(
+                      [
+                        context.sharingLabel('عاجي'),
+                        context.sharingLabel('كحلي'),
+                        context.sharingLabel('فيروزي'),
+                      ][theme.index],
+                    ),
                     selected: style.theme == theme,
                     onSelected: _working
                         ? null
@@ -554,22 +599,25 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
             ),
             Row(
               children: [
-                const Text('الخط'),
+                Text(context.sharingLabel('الخط')),
                 const SizedBox(width: 16),
                 Expanded(
                   child: DropdownButton<String>(
                     isExpanded: true,
                     value: style.font,
-                    items: const [
+                    items: [
                       DropdownMenuItem(
                         value: 'AmiriQuran',
-                        child: Text('أميري القرآن'),
+                        child: Text(context.sharingLabel('أميري القرآن')),
                       ),
                       DropdownMenuItem(
                         value: 'QuranUI',
-                        child: Text('القاهرة'),
+                        child: Text(context.sharingLabel('القاهرة')),
                       ),
-                      DropdownMenuItem(value: 'Tajawal', child: Text('تجوال')),
+                      DropdownMenuItem(
+                        value: 'Tajawal',
+                        child: Text(context.sharingLabel('تجوال')),
+                      ),
                     ],
                     onChanged: _working
                         ? null
@@ -582,7 +630,12 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
                 ),
               ],
             ),
-            Text('حجم الخط: ${style.fontSize.round()}'),
+            Text(
+              context.tr(
+                'sharing.fontSize',
+                args: {'size': _sharingNumber(context, style.fontSize.round())},
+              ),
+            ),
             Slider(
               min: 24,
               max: 100,
@@ -597,10 +650,13 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
             if (_error != null)
               Padding(
                 padding: const EdgeInsets.all(20),
-                child: Text(_error!, style: TextStyle(color: p.heading)),
+                child: Text(
+                  context.sharingLabel(_error!),
+                  style: TextStyle(color: p.heading),
+                ),
               )
             else if (_image == null)
-              const Center(
+              Center(
                 child: Padding(
                   padding: EdgeInsets.all(32),
                   child: CircularProgressIndicator(),
@@ -611,8 +667,8 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
                 children: [
                   Semantics(
                     label: content.haqBranding
-                        ? 'معاينة صورة المحتوى بشعار حق'
-                        : 'معاينة صورة المحتوى',
+                        ? context.sharingLabel('معاينة صورة المحتوى بشعار حق')
+                        : context.sharingLabel('معاينة صورة المحتوى'),
                     image: true,
                     child: Image.memory(
                       _image!.bytes,
@@ -622,7 +678,15 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
                   ),
                   if (_image!.actualFontSize < style.fontSize)
                     Text(
-                      'صُغّر الخط تلقائيًا إلى ${_image!.actualFontSize.round()} لإظهار النص كاملًا',
+                      context.tr(
+                        'sharing.autoFontSize',
+                        args: {
+                          'size': _sharingNumber(
+                            context,
+                            _image!.actualFontSize.round(),
+                          ),
+                        },
+                      ),
                       style: TextStyle(fontSize: 12, color: p.muted),
                     ),
                 ],
@@ -638,14 +702,14 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
                       ? null
                       : () => _export(true),
                   icon: const Icon(Icons.download_outlined),
-                  label: const Text('حفظ الصورة'),
+                  label: Text(context.sharingLabel('حفظ الصورة')),
                 ),
                 OutlinedButton.icon(
                   onPressed: _working || _image == null
                       ? null
                       : () => _export(false),
                   icon: const Icon(Icons.share_outlined),
-                  label: const Text('مشاركة الصورة'),
+                  label: Text(context.sharingLabel('مشاركة الصورة')),
                 ),
               ],
             ),
@@ -653,8 +717,12 @@ class _ShareCardEditorState extends State<ShareCardEditor> {
             const SizedBox(height: 16),
             Text(
               content.haqBranding
-                  ? 'بطاقة المشاركة تحمل شعار حق، ويُحفظ النص كما هو دون إظهار المصدر.'
-                  : 'يُحفظ النص كما هو دون إظهار المصدر؛ لا يمكن تعديل نص الآية داخل المصمم.',
+                  ? context.sharingLabel(
+                      'بطاقة المشاركة تحمل شعار حق، ويُحفظ النص كما هو دون إظهار المصدر.',
+                    )
+                  : context.sharingLabel(
+                      'يُحفظ النص كما هو دون إظهار المصدر؛ لا يمكن تعديل نص الآية داخل المصمم.',
+                    ),
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 12, color: p.muted),
             ),

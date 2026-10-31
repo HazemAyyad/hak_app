@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/sharing/share_card.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -262,6 +264,89 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     },
   );
+  testWidgets(
+    'English image editor exports exact Arabic scripture and retains the image across language changes',
+    (tester) async {
+      tester.view.physicalSize = const Size(320, 1000);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      SharedPreferences.setMockInitialValues({});
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      final original = ShareCardContent.quran(repository, ['1:2']);
+      Future<ShareCardImage?>? pending;
+      ShareCardImage? rendered;
+      final saved = <MethodCall>[];
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(ShareCardExporter.channel, (call) async {
+            saved.add(call);
+            return true;
+          });
+      addTearDown(
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(ShareCardExporter.channel, null),
+      );
+      await tester.pumpWidget(
+        LocalizationScope(
+          controller: localization,
+          child: MaterialApp(
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: const TextScaler.linear(1.3)),
+              child: child!,
+            ),
+            home: ShareCardEditor(
+              content: original,
+              repository: repository,
+              renderer: (content, style) async {
+                pending = tester.runAsync(
+                  () => ShareCardRenderer.render(content, style),
+                );
+                return rendered = (await pending)!;
+              },
+            ),
+          ),
+        ),
+      );
+      Future<void> waitImage() async {
+        await pending;
+        await tester.pumpAndSettle();
+      }
+
+      await waitImage();
+      expect(find.text('Verse and content image'), findsOneWidget);
+      await tester.tap(find.text('Story'));
+      await waitImage();
+      await tester.tap(find.text('Navy'));
+      await waitImage();
+      expect(rendered!.content.text, original.text);
+      expect(rendered!.content.verseKeys, ['1:2']);
+      final bytes = rendered!.bytes;
+      await tester.scrollUntilVisible(
+        find.byKey(const ValueKey('share-card-save')),
+        200,
+        scrollable: find.byType(Scrollable).last,
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('share-card-save')));
+      await tester.pumpAndSettle();
+      expect(saved.single.arguments['bytes'], bytes);
+      expect(find.text('Image saved'), findsOneWidget);
+      await localization.select('ar');
+      await tester.pumpAndSettle();
+      expect(find.text('صورة الآية والمحتوى'), findsOneWidget);
+      expect(rendered!.bytes, same(bytes));
+      expect(rendered!.content.text, original.text);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
   if (visualAudit) {
     testWidgets(
       'visual review share editor in both appearances at normal text size',

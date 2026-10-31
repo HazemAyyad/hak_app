@@ -9026,5 +9026,121 @@
   "quran.tafsirSource.90": {
     "ar": "تفسير القرطبي",
     "en": "Al-Qurtubi (Arabic)"
+  },
+  "sharing.label.3a3adcc39364": {
+    "ar": "النص طويل لهذه البطاقة؛ اختر آيات أقل أو مقاس القصة",
+    "en": "The text is too long for this card. Choose fewer verses or the story format."
+  },
+  "sharing.label.bf2672c12808": {
+    "ar": "مشاركة النص",
+    "en": "Share text"
+  },
+  "sharing.label.7850c45d90ac": {
+    "ar": "مشاركة كصورة",
+    "en": "Share as image"
+  },
+  "sharing.label.f3e72b726c91": {
+    "ar": "تعذّرت المشاركة؛ يمكنك نسخ النص",
+    "en": "Could not share. You can copy the text."
+  },
+  "sharing.label.a7f189abe90a": {
+    "ar": "تعذّرت معاينة الصورة؛ أعد المحاولة",
+    "en": "Could not preview the image. Try again."
+  },
+  "sharing.label.87faecb56c8d": {
+    "ar": "تم حفظ الصورة",
+    "en": "Image saved"
+  },
+  "sharing.label.429a343f50ed": {
+    "ar": "أُلغي حفظ الصورة",
+    "en": "Image save canceled"
+  },
+  "sharing.label.d00b77f4716d": {
+    "ar": "الحفظ المباشر متاح على Android وiOS؛ يمكنك مشاركة الصورة",
+    "en": "Direct saving is available on Android and iOS. You can share the image."
+  },
+  "sharing.label.16684c288d44": {
+    "ar": "تعذّر حفظ أو مشاركة الصورة؛ تحقق من الإذن وأعد المحاولة",
+    "en": "Could not save or share the image. Check permissions and try again."
+  },
+  "sharing.label.23352a715cfc": {
+    "ar": "صورة الآية والمحتوى",
+    "en": "Verse and content image"
+  },
+  "sharing.label.355f5dbd0f88": {
+    "ar": "مربع",
+    "en": "Square"
+  },
+  "sharing.label.4ec62473ad5d": {
+    "ar": "قصة",
+    "en": "Story"
+  },
+  "sharing.label.a9468c646b7f": {
+    "ar": "اختر نطاق الآيات للصورة؛ مشاركة النص تحتفظ بالنص الكامل.",
+    "en": "Choose a verse range for the image. Text sharing keeps the full text."
+  },
+  "sharing.label.a00c5c48f950": {
+    "ar": "عاجي",
+    "en": "Ivory"
+  },
+  "sharing.label.2c216de971c4": {
+    "ar": "كحلي",
+    "en": "Navy"
+  },
+  "sharing.label.1ca56ea0b735": {
+    "ar": "فيروزي",
+    "en": "Teal"
+  },
+  "sharing.label.4004b5dc6406": {
+    "ar": "الخط",
+    "en": "Font"
+  },
+  "sharing.label.2f703d2fc49d": {
+    "ar": "أميري القرآن",
+    "en": "Amiri Quran"
+  },
+  "sharing.label.972ecc0cbd5b": {
+    "ar": "القاهرة",
+    "en": "Cairo"
+  },
+  "sharing.label.481fdc951fbe": {
+    "ar": "تجوال",
+    "en": "Tajawal"
+  },
+  "sharing.label.107ece477823": {
+    "ar": "معاينة صورة المحتوى بشعار حق",
+    "en": "Content image preview with Haq logo"
+  },
+  "sharing.label.da281cdbd320": {
+    "ar": "معاينة صورة المحتوى",
+    "en": "Content image preview"
+  },
+  "sharing.label.21d82bd3f3b1": {
+    "ar": "حفظ الصورة",
+    "en": "Save image"
+  },
+  "sharing.label.2cf38af51e61": {
+    "ar": "مشاركة الصورة",
+    "en": "Share image"
+  },
+  "sharing.label.0388829a6377": {
+    "ar": "بطاقة المشاركة تحمل شعار حق، ويُحفظ النص كما هو دون إظهار المصدر.",
+    "en": "The share card includes the Haq logo and keeps the text unchanged, without displaying the source."
+  },
+  "sharing.label.d0f4a1d8b001": {
+    "ar": "يُحفظ النص كما هو دون إظهار المصدر؛ لا يمكن تعديل نص الآية داخل المصمم.",
+    "en": "Text is kept unchanged without displaying the source. Verse text cannot be edited in the designer."
+  },
+  "sharing.verseRangeStart": {
+    "ar": "من الآية {start} إلى ",
+    "en": "From verse {start} to "
+  },
+  "sharing.fontSize": {
+    "ar": "حجم الخط: {size}",
+    "en": "Font size: {size}"
+  },
+  "sharing.autoFontSize": {
+    "ar": "صُغّر الخط تلقائيًا إلى {size} لإظهار النص كاملًا",
+    "en": "Font size was reduced to {size} to show the full text"
   }
 }
