@@ -8,12 +8,22 @@ import 'admin_sources_page.dart';
 import 'admin_translation_exchange_page.dart';
 import 'admin_hadith_sources_page.dart';
 
-String adminError(Object error) =>
-    error is DioException && error.response?.statusCode == 409
-    ? 'admin.conflict'
-    : error is DioException && [401, 403].contains(error.response?.statusCode)
-    ? 'admin.denied'
-    : 'common.error';
+String adminError(Object error) {
+  if (error is DioException) {
+    if (error.response?.statusCode == 409) return 'admin.conflict';
+    if ([401, 403].contains(error.response?.statusCode)) return 'admin.denied';
+    final data = error.response?.data;
+    if (error.response?.statusCode == 422 &&
+        data is Map &&
+        data['errors'] is Map) {
+      final locale = data['errors']['locale'];
+      if (locale is List && locale.contains('reviewed_content_required')) {
+        return 'admin.reviewedContentRequired';
+      }
+    }
+  }
+  return 'common.error';
+}
 
 class AdminPage extends StatefulWidget {
   const AdminPage({super.key, required this.session});
@@ -48,12 +58,15 @@ class _AdminPageState extends State<AdminPage> {
     }
   }
 
-  Future<bool> _confirm(String title) async =>
+  Future<bool> _confirm(
+    String title, {
+    String message = 'admin.publishConfirm',
+  }) async =>
       await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text(ctx.tr(title)),
-          content: Text(ctx.tr('admin.publishConfirm')),
+          content: Text(ctx.tr(message)),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx, false),
@@ -68,9 +81,22 @@ class _AdminPageState extends State<AdminPage> {
       ) ??
       false;
 
-  Future<void> _publish(Map<String, dynamic> language, {int? restore}) async {
+  Future<void> _publish(
+    Map<String, dynamic> language, {
+    int? restore,
+    bool contentOnly = false,
+  }) async {
     if (_busy ||
-        !await _confirm(restore == null ? 'admin.publish' : 'admin.restore')) {
+        !await _confirm(
+          restore != null
+              ? 'admin.restore'
+              : contentOnly
+              ? 'admin.publishContent'
+              : 'admin.publish',
+          message: contentOnly
+              ? 'admin.publishContentConfirm'
+              : 'admin.publishConfirm',
+        )) {
       return;
     }
     setState(() {
@@ -84,6 +110,7 @@ class _AdminPageState extends State<AdminPage> {
         data: {
           'revision': language['revision'],
           'restore_release_id': ?restore,
+          if (contentOnly && restore == null) 'content_only': true,
         },
       );
       await _load();
@@ -211,14 +238,31 @@ class _AdminPageState extends State<AdminPage> {
               Card(
                 child: ListTile(
                   title: Text(language['name'] as String),
-                  subtitle: Text(
-                    context.tr(
-                      'admin.coverage',
-                      args: {
-                        'reviewed': language['reviewed'] as int,
-                        'total': language['total'] as int,
-                      },
-                    ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.tr(
+                          'admin.coverage',
+                          args: {
+                            'reviewed': language['reviewed'] as int,
+                            'total': language['total'] as int,
+                          },
+                        ),
+                      ),
+                      if (language.containsKey('interface_ready'))
+                        Text(
+                          context.tr(
+                            language['interface_ready'] == true
+                                ? 'admin.interfaceReady'
+                                : 'admin.interfacePending',
+                          ),
+                        ),
+                      if (language.containsKey('ui_release_id') &&
+                          language['release_id'] != null &&
+                          language['release_id'] != language['ui_release_id'])
+                        Text(context.tr('admin.contentPublished')),
+                    ],
                   ),
                   onTap: _busy
                       ? null
@@ -282,6 +326,9 @@ class _AdminPageState extends State<AdminPage> {
                         return;
                       }
                       if (value == 'publish') await _publish(language);
+                      if (value == 'publish-content') {
+                        await _publish(language, contentOnly: true);
+                      }
                       if (value == 'restore') await _restore(language);
                       if (value == 'hide') {
                         try {
@@ -309,6 +356,11 @@ class _AdminPageState extends State<AdminPage> {
                         value: 'hadith-sources',
                         child: Text(ctx.tr('hadith.sources')),
                       ),
+                      if (session.can('publish'))
+                        PopupMenuItem(
+                          value: 'publish-content',
+                          child: Text(ctx.tr('admin.publishContent')),
+                        ),
                       if (session.can('publish'))
                         PopupMenuItem(
                           value: 'publish',

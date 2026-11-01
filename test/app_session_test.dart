@@ -23,6 +23,9 @@ void main() {
   var admin = false, deny = false;
   var conflict = false, rootOwnsSession = false;
   final requests = <RequestOptions>[];
+  final languageRows = <Map<String, dynamic>>[];
+  var permissions = <String>['admin.enter', 'translations.edit'];
+  var rejectContentPublish = false;
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     FlutterSecureStorage.setMockInitialValues({});
@@ -31,6 +34,9 @@ void main() {
     conflict = false;
     rootOwnsSession = false;
     requests.clear();
+    languageRows.clear();
+    permissions = ['admin.enter', 'translations.edit'];
+    rejectContentPublish = false;
     final personal = Dio(BaseOptions(baseUrl: 'https://backend.test/api/v1'))
       ..httpClientAdapter = StubHttp(
         (request) => ResponseBody.fromString(
@@ -62,6 +68,19 @@ void main() {
     final dio = Dio(BaseOptions(baseUrl: 'https://backend.test/api/v2'))
       ..httpClientAdapter = StubHttp((request) {
         requests.add(request);
+        if (rejectContentPublish && request.path.endsWith('/publish')) {
+          return ResponseBody.fromString(
+            jsonEncode({
+              'errors': {
+                'locale': ['reviewed_content_required'],
+              },
+            }),
+            422,
+            headers: {
+              'content-type': ['application/json'],
+            },
+          );
+        }
         if (conflict && request.method == 'PUT') {
           return ResponseBody.fromString(
             '{}',
@@ -86,7 +105,7 @@ void main() {
           'areas': ['association'],
           'account_type': 'association',
           'admin_access': admin,
-          'permissions': admin ? ['admin.enter', 'translations.edit'] : [],
+          'permissions': admin ? permissions : [],
         };
         final Object data;
         if (request.path == '/account/login') {
@@ -99,7 +118,7 @@ void main() {
             'expires_at': DateTime.now()
                 .add(const Duration(minutes: 30))
                 .toIso8601String(),
-            'permissions': ['admin.enter', 'translations.edit'],
+            'permissions': permissions,
           };
         } else if (request.path.endsWith('/translations/import')) {
           data = {
@@ -108,7 +127,7 @@ void main() {
             'status': 'draft',
           };
         } else if (request.path == '/admin/languages') {
-          data = <Object>[];
+          data = languageRows;
         } else {
           data = <String, dynamic>{};
         }
@@ -252,6 +271,82 @@ void main() {
       expect(find.byType(HomePage), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
       appearance.dispose();
+    },
+  );
+
+  testWidgets(
+    'content-only publication is explicit and reports missing reviewed content without publishing the interface',
+    (tester) async {
+      admin = true;
+      permissions.add('publish');
+      languageRows.add({
+        'locale': 'tr',
+        'name': 'Türkçe',
+        'revision': 1,
+        'reviewed': 0,
+        'total': 10,
+        'release_id': null,
+        'ui_release_id': null,
+        'interface_ready': false,
+      });
+      rejectContentPublish = true;
+      await tester.runAsync(
+        () => session.login('association', 'test@example.test', 'password'),
+      );
+      await tester.runAsync(() => session.adminRequest('GET', 'languages'));
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      await tester.pumpWidget(
+        LocalizationScope(
+          controller: localization,
+          child: MaterialApp(home: AdminPage(session: session)),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.text('A complete interface release is not available yet'),
+        findsOneWidget,
+      );
+      Future<void> publish() async {
+        await tester.tap(find.byType(PopupMenuButton<String>));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Publish content only'));
+        await tester.pumpAndSettle();
+        expect(
+          find.text(localization.text('admin.publishContentConfirm')),
+          findsOneWidget,
+        );
+        await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
+        await tester.pumpAndSettle();
+      }
+
+      expect(
+        requests.where((request) => request.path.endsWith('/publish')),
+        isEmpty,
+      );
+      await publish();
+      expect(
+        find.text(localization.text('admin.reviewedContentRequired')),
+        findsOneWidget,
+      );
+      rejectContentPublish = false;
+      await publish();
+      final sent = requests
+          .where((request) => request.path.endsWith('/publish'))
+          .toList();
+      expect(sent, hasLength(2));
+      for (final request in sent) {
+        expect(request.data, {'revision': 1, 'content_only': true});
+      }
+      expect(
+        find.text('A complete interface release is not available yet'),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
     },
   );
 

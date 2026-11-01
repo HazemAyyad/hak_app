@@ -50,6 +50,8 @@ class LanguagePackage {
     this.content, {
     this.quranSource,
     this.hadithSource,
+    this.uiComplete = true,
+    this.includesUi = true,
   });
   final String locale;
   final int version;
@@ -57,13 +59,16 @@ class LanguagePackage {
   final Map<String, dynamic> content;
   final QuranTranslationSource? quranSource;
   final HadithTranslationSource? hadithSource;
+  final bool uiComplete;
+  final bool includesUi;
 
   static Future<LanguagePackage> verify(
     Map<String, dynamic> envelope,
     Map<String, String> keys,
     Map<String, Map<String, String>> registry,
-    String expectedLocale,
-  ) async {
+    String expectedLocale, {
+    bool allowIncompleteUi = false,
+  }) async {
     final payload = envelope['payload'] as String;
     final bytes = utf8.encode(payload);
     final encodedKey = keys[envelope['key_id']];
@@ -92,10 +97,25 @@ class LanguagePackage {
       throw const FormatException('Incompatible language package');
     }
     final strings = Map<String, String>.from(data['strings'] as Map);
+    if (data.containsKey('ui_complete') && data['ui_complete'] is! bool) {
+      throw const FormatException('Invalid interface declaration');
+    }
+    final includesUi = data['ui_complete'] != false;
+    if (!includesUi && strings.isNotEmpty) {
+      throw const FormatException(
+        'Content-only release includes interface strings',
+      );
+    }
+    var completeUi = includesUi;
     for (final entry in registry.entries) {
       final value = strings[entry.key];
-      if (value == null || value.trim().isEmpty || value.length > 3000) {
+      if (value == null) {
+        completeUi = false;
+        if (allowIncompleteUi || !includesUi) continue;
         throw const FormatException('Incomplete language package');
+      }
+      if (value.trim().isEmpty || value.length > 3000) {
+        throw const FormatException('Invalid interface string');
       }
       final pattern = RegExp(r'\{([a-zA-Z][a-zA-Z0-9_]*)\}');
       List<String> variables(String text) =>
@@ -124,11 +144,19 @@ class LanguagePackage {
         throw const FormatException('Invalid translation source');
       }
     }
+    if (!includesUi &&
+        content.isEmpty &&
+        data['quran_source'] == null &&
+        data['hadith_source'] == null) {
+      throw const FormatException('Empty content-only release');
+    }
     return LanguagePackage(
       expectedLocale,
       data['version'] as int,
       strings,
       content,
+      uiComplete: completeUi,
+      includesUi: includesUi,
       quranSource: data['quran_source'] == null
           ? null
           : QuranTranslationSource.verify(
@@ -193,7 +221,11 @@ class AppLocalization extends ChangeNotifier {
     AppLanguage('en', 'English', TextDirection.ltr),
   ];
   final installed = <String, LanguagePackage>{};
+  final interfacePackages = <String, LanguagePackage>{};
   final published = <String, int>{};
+  final publishedContent = <String, int>{};
+  final _contentReleases = <String, int>{};
+  final _interfaceReleases = <String, int>{};
   String code = 'ar';
   String? error;
   bool busy = false, _disposed = false;
@@ -207,7 +239,7 @@ class AppLocalization extends ChangeNotifier {
   InterfaceMessages get messages => InterfaceMessages(code, {
     for (final entry in registry.entries)
       entry.key:
-          installed[code]?.strings[entry.key] ??
+          interfacePackages[code]?.strings[entry.key] ??
           entry.value[code] ??
           entry.value['ar']!,
   });
@@ -251,23 +283,84 @@ class AppLocalization extends ChangeNotifier {
 
   bool local(String locale) =>
       ['ar', 'en'].contains(locale) || installed.containsKey(locale);
+  bool localInterface(String locale) =>
+      ['ar', 'en'].contains(locale) ||
+      interfacePackages[locale]?.uiComplete == true ||
+      (installed[locale]?.uiComplete == true &&
+          installed[locale]!.version >=
+              (interfacePackages[locale]?.version ?? 0));
   List<AppLanguage> get available => languages
       .where(
         (v) =>
             systemSupported(v) &&
-            (local(v.code) || published.containsKey(v.code)),
+            (localInterface(v.code) || published.containsKey(v.code)),
       )
       .toList();
   List<AppLanguage> get availableContent => languages
       .where(
         (language) =>
-            local(language.code) || published.containsKey(language.code),
+            local(language.code) ||
+            publishedContent.containsKey(language.code) ||
+            published.containsKey(language.code),
       )
       .toList();
 
   static bool systemSupported(AppLanguage language) =>
       GlobalMaterialLocalizations.delegate.isSupported(language.locale) &&
       GlobalCupertinoLocalizations.delegate.isSupported(language.locale);
+
+  Map<String, int?> _storedReferences(String locale) {
+    final raw = preferences.getString('app.language.references.$locale');
+    if (raw != null) {
+      try {
+        final value = jsonDecode(raw) as Map;
+        bool valid(dynamic id) => id == null || (id is int && id > 0);
+        if (value['schema'] == 1 &&
+            value.containsKey('content') &&
+            value.containsKey('interface') &&
+            valid(value['content']) &&
+            valid(value['interface'])) {
+          return {
+            'content': value['content'] as int?,
+            'interface': value['interface'] as int?,
+          };
+        }
+      } catch (_) {
+        /* A verified legacy artifact is a safe last-known-good fallback. */
+      }
+    }
+    final old = preferences.getInt('app.language.release.$locale');
+    final release = old != null && old > 0 ? old : null;
+    return {'content': release, 'interface': release};
+  }
+
+  Future<bool> _saveReferences(
+    String locale,
+    int? content,
+    int? interfaceRelease,
+  ) => preferences.setString(
+    'app.language.references.$locale',
+    jsonEncode({
+      'schema': 1,
+      'content': content,
+      'interface': interfaceRelease,
+    }),
+  );
+
+  Future<void> _activateCachedInterface(String locale) async {
+    final candidate = installed[locale];
+    final release = _contentReleases[locale];
+    if (candidate?.uiComplete != true ||
+        release == null ||
+        candidate!.version < (interfacePackages[locale]?.version ?? 0)) {
+      throw const FormatException('Interface package is unavailable');
+    }
+    if (!await _saveReferences(locale, release, release)) {
+      throw StateError('Cannot activate interface package');
+    }
+    interfacePackages[locale] = candidate;
+    _interfaceReleases[locale] = release;
+  }
 
   Future<void> initialize() async {
     await LocaleFormats.prepare();
@@ -276,32 +369,67 @@ class AppLocalization extends ChangeNotifier {
         '${(await getApplicationSupportDirectory()).path}/haq_language_packages_v1',
       );
       await directory!.create(recursive: true);
-      for (final language in languages) {
-        final release = preferences.getInt(
-          'app.language.release.${language.code}',
-        );
-        if (release == null) continue;
+      installed.clear();
+      interfacePackages.clear();
+      _contentReleases.clear();
+      _interfaceReleases.clear();
+      Future<LanguagePackage?> readCache(String locale, int? release) async {
+        if (release == null) return null;
         try {
           final file = File('${directory!.path}/release-$release.json');
           final envelope =
               jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-          installed[language.code] = await LanguagePackage.verify(
+          if (envelope['release_id'] != release) {
+            throw const FormatException('Cached release mismatch');
+          }
+          return await LanguagePackage.verify(
             envelope,
             publicKeys,
             registry,
-            language.code,
+            locale,
+            allowIncompleteUi: true,
           );
         } catch (_) {
           /* Bundled content and another valid language remain available. */
+          return null;
+        }
+      }
+
+      for (final language in languages) {
+        final refs = _storedReferences(language.code);
+        final ui = await readCache(language.code, refs['interface']);
+        final content = refs['content'] == refs['interface']
+            ? ui
+            : await readCache(language.code, refs['content']);
+        if (ui != null && ui.includesUi) {
+          interfacePackages[language.code] = ui;
+          _interfaceReleases[language.code] = refs['interface']!;
+        }
+        if (content != null || ui != null) {
+          installed[language.code] = content ?? ui!;
+          _contentReleases[language.code] = content != null
+              ? refs['content']!
+              : refs['interface']!;
         }
       }
     } catch (_) {
       /* Public content and bundled language resources do not depend on storage plugins. */
     }
     final saved = preferences.getString('app.language.v1');
+    if (saved != null &&
+        !['ar', 'en'].contains(saved) &&
+        interfacePackages[saved]?.uiComplete != true &&
+        installed[saved]?.uiComplete == true) {
+      try {
+        await _activateCachedInterface(saved);
+      } catch (_) {
+        /* Keep the bundled interface and verified content. */
+      }
+    }
     code =
         saved != null &&
-            local(saved) &&
+            (['ar', 'en'].contains(saved) ||
+                interfacePackages[saved]?.uiComplete == true) &&
             languages.any(
               (language) => language.code == saved && systemSupported(language),
             )
@@ -316,7 +444,7 @@ class AppLocalization extends ChangeNotifier {
     Map<String, Object> args = const {},
   }) {
     final value =
-        installed[code]?.strings[key] ??
+        interfacePackages[code]?.strings[key] ??
         registry[key]?[code] ??
         registry[key]?['ar'] ??
         fallback ??
@@ -331,8 +459,12 @@ class AppLocalization extends ChangeNotifier {
 
   Future<void> select(String locale) async {
     if (!languages.any((l) => l.code == locale && systemSupported(l)) ||
-        !local(locale)) {
+        !localInterface(locale)) {
       throw const FormatException('Language needs a verified package');
+    }
+    if (!['ar', 'en'].contains(locale) &&
+        interfacePackages[locale]?.uiComplete != true) {
+      await _activateCachedInterface(locale);
     }
     if (!await preferences.setString('app.language.v1', locale) ||
         !await preferences.setBool('app.language.chosen.v1', true)) {
@@ -346,22 +478,36 @@ class AppLocalization extends ChangeNotifier {
     error = null;
     try {
       final data =
-          (await dio.get<Map<String, dynamic>>('/bootstrap')).data!['data']
+          (await dio.get<Map<String, dynamic>>(
+                '/bootstrap',
+                queryParameters: {'include_content_only': 1},
+              )).data!['data']
               as Map;
       if (data['schema'] != 1) {
         throw const FormatException('Unsupported catalog');
       }
       final next = <String, int>{};
+      final nextContent = <String, int>{};
       for (final row in data['languages'] as List) {
-        if (languages.any((l) => l.code == row['locale']) &&
-            row['release_id'] is int) {
-          next[row['locale'] as String] = row['release_id'] as int;
+        if (!languages.any((l) => l.code == row['locale'])) continue;
+        final ui = row.containsKey('interface_release_id')
+            ? row['interface_release_id']
+            : row['release_id'];
+        final content = row.containsKey('content_release_id')
+            ? row['content_release_id']
+            : row['release_id'];
+        if (ui is int && ui > 0) next[row['locale'] as String] = ui;
+        if (content is int && content > 0) {
+          nextContent[row['locale'] as String] = content;
         }
       }
       if (_disposed) return;
       published
         ..clear()
         ..addAll(next);
+      publishedContent
+        ..clear()
+        ..addAll(nextContent);
     } catch (_) {
       error = 'language.failed';
     }
@@ -371,7 +517,10 @@ class AppLocalization extends ChangeNotifier {
   void pause() => _cancel?.cancel('paused');
 
   Future<bool> install(String locale, {bool contentOnly = false}) async {
-    if (busy || directory == null || !published.containsKey(locale)) {
+    final release = contentOnly
+        ? publishedContent[locale] ?? published[locale]
+        : published[locale];
+    if (busy || directory == null || release == null) {
       return false;
     }
     if (!languages.any(
@@ -384,7 +533,6 @@ class AppLocalization extends ChangeNotifier {
     error = null;
     received = 0;
     total = 0;
-    final release = published[locale]!;
     final partial = File('${directory!.path}/release-$release.partial');
     final cancel = CancelToken();
     _cancel = cancel;
@@ -442,8 +590,23 @@ class AppLocalization extends ChangeNotifier {
         publicKeys,
         registry,
         locale,
+        allowIncompleteUi: contentOnly || ['ar', 'en'].contains(locale),
       );
-      if (pack.version < (installed[locale]?.version ?? 0)) {
+      if (!contentOnly &&
+          (!pack.includesUi ||
+              (!pack.uiComplete && !['ar', 'en'].contains(locale)))) {
+        throw const FormatException('Interface is not complete');
+      }
+      final previous = contentOnly
+          ? installed[locale]
+          : interfacePackages[locale];
+      final previousId = contentOnly
+          ? _contentReleases[locale]
+          : _interfaceReleases[locale];
+      if (pack.version < (previous?.version ?? 0) ||
+          (pack.version == previous?.version &&
+              previousId != null &&
+              previousId != release)) {
         throw const FormatException('Stale release');
       }
       if (_disposed || cancel.isCancelled) return false;
@@ -456,7 +619,16 @@ class AppLocalization extends ChangeNotifier {
         try {
           final cached =
               jsonDecode(await target.readAsString()) as Map<String, dynamic>;
-          await LanguagePackage.verify(cached, publicKeys, registry, locale);
+          if (cached['release_id'] != release) {
+            throw const FormatException('Cached release mismatch');
+          }
+          await LanguagePackage.verify(
+            cached,
+            publicKeys,
+            registry,
+            locale,
+            allowIncompleteUi: true,
+          );
           cacheValid = true;
           cachedHash = cached['sha256'] as String;
         } catch (_) {
@@ -474,10 +646,23 @@ class AppLocalization extends ChangeNotifier {
       } else {
         await staging.rename(target.path);
       }
-      if (!await preferences.setInt('app.language.release.$locale', release)) {
+      final updateContent =
+          contentOnly || pack.version >= (installed[locale]?.version ?? 0);
+      if (!await _saveReferences(
+        locale,
+        updateContent ? release : _contentReleases[locale],
+        contentOnly ? _interfaceReleases[locale] : release,
+      )) {
         throw StateError('Cannot activate language package');
       }
-      installed[locale] = pack;
+      if (updateContent) {
+        installed[locale] = pack;
+        _contentReleases[locale] = release;
+      }
+      if (!contentOnly) {
+        interfacePackages[locale] = pack;
+        _interfaceReleases[locale] = release;
+      }
       await partial.delete();
       return true;
     } catch (_) {
@@ -499,12 +684,33 @@ class AppLocalization extends ChangeNotifier {
         busy) {
       return;
     }
-    final release = preferences.getInt('app.language.release.$locale');
+    final references = _storedReferences(locale);
+    final releases = <int>{
+      ...references.values.whereType<int>(),
+      ?_contentReleases[locale],
+      ?_interfaceReleases[locale],
+      ?preferences.getInt('app.language.release.$locale'),
+    };
+    final retained = <int>{
+      for (final language in languages)
+        if (language.code != locale)
+          ..._storedReferences(language.code).values.whereType<int>(),
+    };
+    if (!await _saveReferences(locale, null, null)) {
+      error = 'language.failed';
+      _emit();
+      return;
+    }
     await preferences.remove('app.language.release.$locale');
     installed.remove(locale);
-    if (release != null && directory != null) {
-      final file = File('${directory!.path}/release-$release.json');
-      if (await file.exists()) await file.delete();
+    interfacePackages.remove(locale);
+    _contentReleases.remove(locale);
+    _interfaceReleases.remove(locale);
+    if (directory != null) {
+      for (final release in releases.difference(retained)) {
+        final file = File('${directory!.path}/release-$release.json');
+        if (await file.exists()) await file.delete();
+      }
     }
     _emit();
   }

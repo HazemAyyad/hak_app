@@ -9834,5 +9834,33 @@
   "religious.hadithSources": {
     "en": "The bundled library contains Haq's existing Nawawi's Forty Hadiths and their explanations, plus sourced Ramadan hadiths with references for each narration. Topic categories aid navigation and do not change the narration or its grading.\n\nhttps://github.com/osamayy/40-hadith-nawawi-db\nhttps://sunnah.com\n\nNarration and explanation are separate on the reading page.",
     "ar": "تحتوي المكتبة المضمّنة على أحاديث الأربعين النووية وشروحها الموجودة في حق، وأحاديث رمضان الموثقة مع إحالة المصدر لكل حديث. تصنيفات الموضوعات تساعد على التصفح ولا تغيّر المتن أو درجته.\n\nhttps://github.com/osamayy/40-hadith-nawawi-db\nhttps://sunnah.com\n\nالمتن والشرح منفصلان في صفحة القراءة."
+  },
+  "admin.publishContent": {
+    "ar": "نشر المحتوى فقط",
+    "en": "Publish content only"
+  },
+  "admin.publishContentConfirm": {
+    "ar": "سينشر المحتوى المراجع ومصادره المختارة فقط، مع إبقاء إصدار الواجهة المنشور. لن تظهر لغة واجهة جديدة دون اكتمال مراجعة مفاتيحها.",
+    "en": "Publish reviewed content and its selected sources while keeping the published interface release. A new interface language remains unavailable until all its keys are reviewed."
+  },
+  "admin.interfaceReady": {
+    "ar": "الواجهة مكتملة لهذا الإصدار من التطبيق",
+    "en": "Interface complete for this app version"
+  },
+  "admin.interfacePending": {
+    "ar": "إصدار الواجهة الكامل غير متاح حاليًا",
+    "en": "A complete interface release is not available yet"
+  },
+  "admin.contentPublished": {
+    "ar": "آخر نشر حدّث المحتوى فقط",
+    "en": "Latest release updates content only"
+  },
+  "language.contentOnlyNotice": {
+    "ar": "يمكن تنزيل ترجمات المحتوى وقراءتها مع الواجهة الحالية. تحديث المحتوى يحافظ على حزمة الواجهة المثبتة.",
+    "en": "Download and read content translations with your current interface. Content updates keep the installed interface package."
+  },
+  "admin.reviewedContentRequired": {
+    "ar": "اختر مصدرًا معتمدًا أو راجع ترجمة محتوى قبل النشر",
+    "en": "Select an approved source or review a content translation before publishing"
   }
 }

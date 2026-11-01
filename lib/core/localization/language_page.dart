@@ -26,7 +26,9 @@ class _LanguagePageState extends State<LanguagePage> {
 
   Future<void> _choose(AppLanguage language) async {
     final controller = _controller!;
-    if (!controller.local(language.code)) {
+    if (!(widget.contentOnly
+        ? controller.local(language.code)
+        : controller.localInterface(language.code))) {
       final confirm = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -119,6 +121,8 @@ class _LanguagePageState extends State<LanguagePage> {
                 Text(context.tr('language.offline')),
                 const SizedBox(height: 8),
                 Text(context.tr('language.scope')),
+                if (widget.contentOnly)
+                  Text(context.tr('language.contentOnlyNotice')),
                 if (controller.error != null) ...[
                   const SizedBox(height: 12),
                   Text(
@@ -168,7 +172,9 @@ class _LanguagePageState extends State<LanguagePage> {
                     ),
                     subtitle: Text(
                       context.tr(
-                        controller.local(language.code)
+                        (widget.contentOnly
+                                ? controller.local(language.code)
+                                : controller.localInterface(language.code))
                             ? 'language.available'
                             : 'language.download',
                       ),
@@ -183,7 +189,16 @@ class _LanguagePageState extends State<LanguagePage> {
                     onTap: controller.busy ? null : () => _choose(language),
                     trailing:
                         controller.local(language.code) &&
-                            controller.published.containsKey(language.code)
+                            (widget.contentOnly
+                                ? controller.publishedContent.containsKey(
+                                        language.code,
+                                      ) ||
+                                      controller.published.containsKey(
+                                        language.code,
+                                      )
+                                : controller.published.containsKey(
+                                    language.code,
+                                  ))
                         ? IconButton(
                             tooltip: context.tr('language.update'),
                             icon: const Icon(Icons.system_update_alt),
