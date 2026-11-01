@@ -458,6 +458,79 @@ void main() {
       await tester.pumpWidget(const SizedBox());
     },
   );
+  testWidgets(
+    'English hadith controls copy the original narration and preserve favorites through locale changes',
+    (tester) async {
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      final item = catalog.byId['nawawi-01']!;
+      final copied = <String>[];
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(SystemChannels.platform, (call) async {
+            if (call.method == 'Clipboard.setData') {
+              copied.add((call.arguments as Map)['text'] as String);
+            }
+            return null;
+          });
+      addTearDown(
+        () => TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(SystemChannels.platform, null),
+      );
+      await pump(tester, 'hadith', width: 320, localization: localization);
+      await tester.tap(find.text(item.title));
+      await settle(tester);
+      expect(find.text('Narration'), findsOneWidget);
+      expect(find.text('Explanation'), findsOneWidget);
+      final readerScroll = find
+          .descendant(
+            of: find.byKey(const PageStorageKey('religious-details-nawawi-01')),
+            matching: find.byType(Scrollable),
+          )
+          .first;
+      await tester.scrollUntilVisible(
+        find.byTooltip('Copy'),
+        180,
+        scrollable: readerScroll,
+      );
+      await settle(tester);
+      await tester.tap(find.byTooltip('Copy'));
+      await settle(tester);
+      expect(copied.single, item.copyText);
+      await tester.tap(find.byTooltip('Favorites').last);
+      await settle(tester);
+      expect(religious.favorites, contains(item.id));
+      await tester.tap(find.byTooltip('Font size'));
+      await settle(tester);
+      expect(find.text('Reading font size'), findsOneWidget);
+      await tester.drag(find.byType(Slider), const Offset(40, 0));
+      await settle(tester);
+      expect(
+        quran.preferences!.getDouble('religious.fontSize.hadith'),
+        isNotNull,
+      );
+      await tester.binding.handlePopRoute();
+      await settle(tester);
+      await tester.scrollUntilVisible(
+        find.text('Explanation'),
+        -180,
+        scrollable: readerScroll,
+      );
+      await settle(tester);
+      await tester.tap(find.text('Explanation'));
+      await settle(tester);
+      expect(find.text(item.sections.first.text), findsOneWidget);
+      await localization.select('ar');
+      await settle(tester);
+      expect(religious.favorites, contains(item.id));
+      expect(catalog.byId[item.id]!.text, item.text);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
   if (visualAudit) {
     testWidgets('Ramadan entry and its real daily content at normal size', (
       tester,

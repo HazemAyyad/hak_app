@@ -35,7 +35,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'حجم خط القراءة',
+                context.religiousLabel('حجم خط القراءة'),
                 style: rText(context, 16, weight: FontWeight.w800),
               ),
               Slider(
@@ -43,7 +43,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                 max: 34,
                 value: fontSize,
                 divisions: 10,
-                label: fontSize.round().toString(),
+                label: religiousNumber(context, fontSize.round()),
                 onChanged: (v) {
                   setState(() => fontSize = v);
                   update(() {});
@@ -55,6 +55,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
               ),
               Text(
                 item.title,
+                textDirection: contentTextDirection(item.title),
                 textAlign: TextAlign.center,
                 style: rText(context, fontSize),
               ),
@@ -89,7 +90,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
           ReligiousHeader(
             title: item.title,
             subtitle: name
-                ? 'من أسماء الله الحسنى'
+                ? context.religiousLabel('من أسماء الله الحسنى')
                 : quran
                 ? item.source
                 : item.categories.contains('nawawi')
@@ -127,15 +128,15 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: SegmentedButton<bool>(
-                      segments: const [
+                      segments: [
                         ButtonSegment(
                           value: false,
-                          label: Text('المتن'),
+                          label: Text(context.religiousLabel('المتن')),
                           icon: Icon(Icons.menu_book_outlined),
                         ),
                         ButtonSegment(
                           value: true,
-                          label: Text('الشرح'),
+                          label: Text(context.religiousLabel('الشرح')),
                           icon: Icon(Icons.article_outlined),
                         ),
                       ],
@@ -165,18 +166,22 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                               ),
                             ),
                             const SizedBox(width: 7),
-                            Text(
-                              item.type == 'sunnah'
-                                  ? 'نص السنة'
-                                  : item.type == 'hadith'
-                                  ? (widget.hadithTabs && _explanationOnly
-                                        ? 'بيانات الحديث'
-                                        : 'نص الحديث')
-                                  : 'نص الدعاء',
-                              style: rText(
-                                context,
-                                14,
-                                weight: FontWeight.w800,
+                            Expanded(
+                              child: Text(
+                                item.type == 'sunnah'
+                                    ? context.religiousLabel('نص السنة')
+                                    : item.type == 'hadith'
+                                    ? (widget.hadithTabs && _explanationOnly
+                                          ? context.religiousLabel(
+                                              'بيانات الحديث',
+                                            )
+                                          : context.religiousLabel('نص الحديث'))
+                                    : context.religiousLabel('نص الدعاء'),
+                                style: rText(
+                                  context,
+                                  14,
+                                  weight: FontWeight.w800,
+                                ),
                               ),
                             ),
                           ],
@@ -186,6 +191,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                           narration != null)
                         Text(
                           narration,
+                          textDirection: contentTextDirection(narration),
                           textAlign: TextAlign.right,
                           style: rText(
                             context,
@@ -197,6 +203,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                       if (!widget.hadithTabs || !_explanationOnly)
                         SelectableText(
                           mainText,
+                          textDirection: contentTextDirection(mainText),
                           textAlign: name || quran
                               ? TextAlign.center
                               : TextAlign.right,
@@ -214,12 +221,16 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                       if (name && item.transliteration.isNotEmpty)
                         Text(
                           item.transliteration,
+                          textDirection: contentTextDirection(
+                            item.transliteration,
+                          ),
                           textAlign: TextAlign.center,
                           style: rText(context, 11),
                         ),
                       if (name)
                         Text(
                           item.summary,
+                          textDirection: contentTextDirection(item.summary),
                           textAlign: TextAlign.center,
                           style: rText(context, 14),
                         ),
@@ -228,6 +239,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Text(
                             item.source,
+                            textDirection: contentTextDirection(item.source),
                             textAlign: TextAlign.center,
                             style: rText(
                               context,
@@ -246,7 +258,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                               height: .5,
                               color: rGold.withValues(alpha: .3),
                             ),
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.symmetric(horizontal: 5),
                               child: Icon(
                                 Icons.diamond_outlined,
@@ -270,32 +282,32 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                           _detailAction(
                             context,
                             saved ? Icons.bookmark : Icons.bookmark_border,
-                            'المفضلة',
+                            context.religiousLabel('المفضلة'),
                             () => host.controller.toggleFavorite(item.id),
                           ),
                           _detailAction(
                             context,
                             Icons.text_fields,
-                            'حجم الخط',
+                            context.religiousLabel('حجم الخط'),
                             fontSheet,
                           ),
                           _detailAction(
                             context,
                             Icons.copy_outlined,
-                            'نسخ',
+                            context.religiousLabel('نسخ'),
                             () => host.copy(context, item),
                           ),
                           _detailAction(
                             context,
                             Icons.share_outlined,
-                            'مشاركة',
+                            context.religiousLabel('مشاركة'),
                             () => host.share(context, item),
                           ),
                           if (host.controller.hasAudio(item))
                             _detailAction(
                               context,
                               Icons.play_arrow,
-                              'استماع',
+                              context.religiousLabel('استماع'),
                               () => host.play(context, item),
                               filled: true,
                             ),
@@ -317,7 +329,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return ReligiousSectionCard(
-                          title: 'تفسير الآية',
+                          title: context.religiousLabel('تفسير الآية'),
                           text: snapshot.data!.text,
                           source: snapshot.data!.title,
                         );
@@ -328,7 +340,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             Text(
-                              'تفسير الآية',
+                              context.religiousLabel('تفسير الآية'),
                               style: rText(
                                 context,
                                 14,
@@ -338,8 +350,12 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                             const SizedBox(height: 8),
                             Text(
                               snapshot.hasError
-                                  ? 'التفسير غير متاح دون اتصال؛ يمكنك إعادة المحاولة من صفحة التفسير.'
-                                  : 'جارٍ تحميل التفسير من المصدر...',
+                                  ? context.religiousLabel(
+                                      'التفسير غير متاح دون اتصال؛ يمكنك إعادة المحاولة من صفحة التفسير.',
+                                    )
+                                  : context.religiousLabel(
+                                      'جارٍ تحميل التفسير من المصدر...',
+                                    ),
                               style: rText(
                                 context,
                                 13,
@@ -349,7 +365,9 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                             TextButton(
                               onPressed: () =>
                                   host.openQuran(item, tafsir: true),
-                              child: const Text('عرض التفسير'),
+                              child: Text(
+                                context.religiousLabel('عرض التفسير'),
+                              ),
                             ),
                           ],
                         ),
@@ -357,14 +375,14 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                     },
                   ),
                   ReligiousSectionCard(
-                    title: 'مواضع ورد فيها',
+                    title: context.religiousLabel('مواضع ورد فيها'),
                     text: item.source,
                     icon: Icons.auto_stories_outlined,
                   ),
                   OutlinedButton.icon(
                     onPressed: () => host.openQuran(item),
                     icon: const Icon(Icons.menu_book_outlined),
-                    label: const Text('عرض في المصحف'),
+                    label: Text(context.religiousLabel('عرض في المصحف')),
                   ),
                 ],
                 for (final section
@@ -377,14 +395,18 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: EdgeInsets.zero,
                       child: ExpansionTile(
+                        key: PageStorageKey(
+                          'religious-section-${item.id}-${section.title}',
+                        ),
                         title: Text(
-                          section.title,
+                          context.religiousLabel(section.title),
                           style: rText(context, 14, weight: FontWeight.w800),
                         ),
                         childrenPadding: const EdgeInsets.all(12),
                         children: [
                           SelectableText(
                             section.text,
+                            textDirection: contentTextDirection(section.text),
                             style: rText(
                               context,
                               13,
@@ -392,13 +414,19 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                             ),
                           ),
                           if (section.source != null)
-                            Text(section.source!, style: rText(context, 9)),
+                            Text(
+                              section.source!,
+                              textDirection: contentTextDirection(
+                                section.source!,
+                              ),
+                              style: rText(context, 9),
+                            ),
                         ],
                       ),
                     )
                   else
                     ReligiousSectionCard(
-                      title: section.title,
+                      title: context.religiousLabel(section.title),
                       text: section.text,
                       source: section.source?.startsWith('فوائد موجزة') == true
                           ? null
@@ -412,11 +440,14 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                           : Icons.menu_book_outlined,
                     ),
                 if (item.type == 'dua')
-                  ReligiousSectionCard(title: 'المصدر', text: item.source),
+                  ReligiousSectionCard(
+                    title: context.religiousLabel('المصدر'),
+                    text: item.source,
+                  ),
                 if (name && item.related.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   Text(
-                    'أسماء ذات صلة',
+                    context.religiousLabel('أسماء ذات صلة'),
                     style: rText(context, 14, weight: FontWeight.w800),
                   ),
                   const SizedBox(height: 8),
@@ -458,11 +489,11 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                   label: Text(
                     ['dua', 'quran'].contains(item.type)
                         ? host.controller.customAdhkar.contains(item.id)
-                              ? 'إزالة من أذكاري'
-                              : 'حفظ الدعاء في أذكاري'
+                              ? context.religiousLabel('إزالة من أذكاري')
+                              : context.religiousLabel('حفظ الدعاء في أذكاري')
                         : saved
-                        ? 'إزالة من المفضلة'
-                        : 'إضافة إلى المفضلة',
+                        ? context.religiousLabel('إزالة من المفضلة')
+                        : context.religiousLabel('إضافة إلى المفضلة'),
                     style: rText(
                       context,
                       14,
@@ -532,8 +563,9 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
         children: [
           ReligiousHeader(
             title: item.title,
-            subtitle:
-                'مجموعة من الآيات والأدعية المأثورة\nللشفاء والحفظ بإذن الله',
+            subtitle: context.religiousLabel(
+              'مجموعة من الآيات والأدعية المأثورة\nللشفاء والحفظ بإذن الله',
+            ),
             image: 'ruqya',
             onBack: host.back,
             onSaved: () => host.controller.toggleFavorite(item.id),
@@ -547,9 +579,9 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                 Row(
                   children: [
                     for (final (i, title) in [
-                      'الاستماع',
-                      'القراءة',
-                      'معلومات',
+                      context.religiousLabel('الاستماع'),
+                      context.religiousLabel('القراءة'),
+                      context.religiousLabel('معلومات'),
                     ].indexed)
                       Expanded(
                         child: ReligiousPill(
@@ -581,7 +613,9 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                                   ),
                                   Text(
                                     host.controller.media.current?.reciter ??
-                                        'تلاوة الآيات المختارة',
+                                        context.religiousLabel(
+                                          'تلاوة الآيات المختارة',
+                                        ),
                                     style: rText(context, 11),
                                   ),
                                 ],
@@ -610,7 +644,9 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                                   ? () => host.play(context, item)
                                   : null,
                               icon: const Icon(Icons.play_arrow),
-                              label: const Text('بدء الاستماع'),
+                              label: Text(
+                                context.religiousLabel('بدء الاستماع'),
+                              ),
                             ),
                           ),
                       ],
@@ -621,7 +657,7 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                     _ReligiousPlayer(host: host),
                   const SizedBox(height: 16),
                   Text(
-                    'محتويات الرقية',
+                    context.religiousLabel('محتويات الرقية'),
                     style: rText(context, 15, weight: FontWeight.w800),
                   ),
                   const SizedBox(height: 8),
@@ -662,7 +698,10 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                           if (host.controller.hasAudio(part))
                             ReligiousRoundButton(
                               icon: Icons.play_arrow,
-                              label: 'تشغيل ${part.title}',
+                              label: context.tr(
+                                'religious.playItem',
+                                args: {'title': part.title},
+                              ),
                               onTap: () => host.play(context, part),
                               filled: true,
                               size: 28,
@@ -686,13 +725,15 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                         if (context.mounted) {
                           host.message(
                             context,
-                            host.controller.error ??
-                                'أضيفت الملفات إلى قائمة التنزيل',
+                            context.religiousLabel(
+                              host.controller.error ??
+                                  'أضيفت الملفات إلى قائمة التنزيل',
+                            ),
                           );
                         }
                       },
                       icon: const Icon(Icons.download_outlined),
-                      label: const Text('تحميل الرقية كاملة'),
+                      label: Text(context.religiousLabel('تحميل الرقية كاملة')),
                     ),
                   OutlinedButton.icon(
                     onPressed:
@@ -703,8 +744,8 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                     icon: const Icon(Icons.playlist_add),
                     label: Text(
                       host.controller.listeningQueue.contains(item.id)
-                          ? 'إزالة من قائمة الاستماع'
-                          : 'إضافة إلى قائمة الاستماع',
+                          ? context.religiousLabel('إزالة من قائمة الاستماع')
+                          : context.religiousLabel('إضافة إلى قائمة الاستماع'),
                     ),
                   ),
                   for (final entry in downloads.entries.values.where(
@@ -714,16 +755,31 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                   ))
                     ListTile(
                       dense: true,
-                      title: Text(entry.track.title, style: rText(context, 11)),
+                      title: Text(
+                        entry.track.localizedTitle(
+                          context,
+                          host.controller.quran.repository!,
+                        ),
+                        style: rText(context, 11),
+                      ),
                       subtitle: Text(
-                        entry.error ??
-                            const {
-                              'queued': 'في الانتظار',
-                              'downloading': 'جارٍ التحميل',
-                              'paused': 'متوقف مؤقتًا',
-                              'failed': 'تعذّر التنزيل',
-                              'complete': 'تم التنزيل',
-                            }[entry.state.name]!,
+                        entry.error != null
+                            ? context.quranLabel(entry.error!)
+                            : {
+                                'queued': context.religiousLabel('في الانتظار'),
+                                'downloading': context.religiousLabel(
+                                  'جارٍ التحميل',
+                                ),
+                                'paused': context.religiousLabel(
+                                  'متوقف مؤقتًا',
+                                ),
+                                'failed': context.religiousLabel(
+                                  'تعذّر التنزيل',
+                                ),
+                                'complete': context.religiousLabel(
+                                  'تم التنزيل',
+                                ),
+                              }[entry.state.name]!,
                         style: rText(context, 9),
                       ),
                       trailing: Row(
@@ -731,13 +787,15 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                         children: [
                           if (entry.total > 0)
                             Text(
-                              '${(entry.received / entry.total * 100).round()}%',
+                              LocalizationScope.maybeOf(context)?.formats
+                                      .percent(entry.received / entry.total) ??
+                                  '${(entry.received / entry.total * 100).round()}%',
                             ),
                           if (entry.state.name != 'complete')
                             IconButton(
                               tooltip: entry.state.name == 'downloading'
-                                  ? 'إيقاف مؤقت'
-                                  : 'إعادة المحاولة',
+                                  ? context.religiousLabel('إيقاف مؤقت')
+                                  : context.religiousLabel('إعادة المحاولة'),
                               icon: Icon(
                                 entry.state.name == 'downloading'
                                     ? Icons.pause
@@ -748,7 +806,7 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                                   : downloads.enqueue(entry.track),
                             ),
                           IconButton(
-                            tooltip: 'إزالة التنزيل',
+                            tooltip: context.religiousLabel('إزالة التنزيل'),
                             icon: const Icon(Icons.close),
                             onPressed: () => downloads.remove(entry.track.id),
                           ),
@@ -764,12 +822,12 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                     ),
                 ] else ...[
                   ReligiousSectionCard(
-                    title: 'مصدر المحتوى',
+                    title: context.religiousLabel('مصدر المحتوى'),
                     text: item.source,
                   ),
                   for (final section in item.sections)
                     ReligiousSectionCard(
-                      title: section.title,
+                      title: context.religiousLabel(section.title),
                       text: section.text,
                       source: section.source,
                     ),

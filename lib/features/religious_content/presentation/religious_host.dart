@@ -14,7 +14,7 @@ import '../../../app_refresh.dart';
 import '../../../app_loading.dart';
 import '../../quran/presentation/quran_reader.dart';
 import '../../quran/presentation/quran_audio_widgets.dart'
-    show chooseAudioTimer;
+    show chooseAudioTimer, QuranTrackInterfaceLabels;
 import '../../quran/presentation/quran_tafsir.dart';
 import '../../quran/data/quran_content.dart' show TafsirText;
 import '../data/religious_catalog.dart';
@@ -614,12 +614,15 @@ class _ReligiousPlayer extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          media.current?.title ??
+                          media.current?.localizedTitle(
+                                context,
+                                host.controller.quran.repository!,
+                              ) ??
                               context.religiousLabel('جارٍ تحميل الصوت'),
                           style: rText(context, 12, weight: FontWeight.w800),
                         ),
                         Text(
-                          media.current?.reciter ?? '',
+                          media.current?.localizedReciter(context) ?? '',
                           style: rText(
                             context,
                             10,

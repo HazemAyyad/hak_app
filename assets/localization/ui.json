@@ -9156,28 +9156,28 @@
     "ar": "المحتوى غير متاح"
   },
   "religious.label.14d5786f2e64": {
-    "en": "Try again",
-    "ar": "إعادة المحاولة"
+    "ar": "إعادة المحاولة",
+    "en": "Try again"
   },
   "religious.label.68125490b634": {
     "en": "Daily-life supplications",
     "ar": "أدعية الحياة اليومية"
   },
   "religious.label.f254c43261a8": {
-    "en": "Remove from favorites",
-    "ar": "إزالة من المفضلة"
+    "ar": "إزالة من المفضلة",
+    "en": "Remove from favorites"
   },
   "religious.label.6cc323d58539": {
-    "en": "Add to favorites",
-    "ar": "إضافة إلى المفضلة"
+    "ar": "إضافة إلى المفضلة",
+    "en": "Add to favorites"
   },
   "religious.label.bdd4487d469d": {
     "en": "Loading audio",
     "ar": "جارٍ تحميل الصوت"
   },
   "religious.label.cb7f6fd46259": {
-    "en": "Pause",
-    "ar": "إيقاف مؤقت"
+    "ar": "إيقاف مؤقت",
+    "en": "Pause"
   },
   "religious.label.8c84ce4c577f": {
     "en": "Play",
@@ -9200,12 +9200,12 @@
     "ar": "رجوع"
   },
   "religious.label.9f2908941570": {
-    "en": "Favorites",
-    "ar": "المفضلة"
+    "ar": "المفضلة",
+    "en": "Favorites"
   },
   "religious.label.ace24891cec1": {
-    "en": "Share",
-    "ar": "مشاركة"
+    "ar": "مشاركة",
+    "en": "Share"
   },
   "religious.label.5d1d149083e0": {
     "en": "Filter results",
@@ -9312,8 +9312,8 @@
     "ar": "تراجع"
   },
   "religious.label.29a0e2739a92": {
-    "en": "Copy",
-    "ar": "نسخ"
+    "ar": "نسخ",
+    "en": "Copy"
   },
   "religious.label.ef1d8fecd32d": {
     "en": "Supplication options",
@@ -9862,5 +9862,173 @@
   "admin.reviewedContentRequired": {
     "ar": "اختر مصدرًا معتمدًا أو راجع ترجمة محتوى قبل النشر",
     "en": "Select an approved source or review a content translation before publishing"
+  },
+  "religious.label.48eb16a3076a": {
+    "ar": "حجم خط القراءة",
+    "en": "Reading font size"
+  },
+  "religious.label.5991165f81e9": {
+    "ar": "من أسماء الله الحسنى",
+    "en": "One of the beautiful names of Allah"
+  },
+  "religious.label.5699a4e4a2a9": {
+    "ar": "المتن",
+    "en": "Narration"
+  },
+  "religious.label.e78e51fdadaf": {
+    "ar": "الشرح",
+    "en": "Explanation"
+  },
+  "religious.label.4117c1aa5fd1": {
+    "ar": "نص السنة",
+    "en": "Sunnah text"
+  },
+  "religious.label.c7fd37a7614a": {
+    "ar": "بيانات الحديث",
+    "en": "Hadith information"
+  },
+  "religious.label.cec3eaf46860": {
+    "ar": "نص الحديث",
+    "en": "Hadith text"
+  },
+  "religious.label.a167cba8cd03": {
+    "ar": "نص الدعاء",
+    "en": "Supplication text"
+  },
+  "religious.label.cbcf3bf7ef78": {
+    "ar": "حجم الخط",
+    "en": "Font size"
+  },
+  "religious.label.9e3c894e8c35": {
+    "ar": "استماع",
+    "en": "Listen"
+  },
+  "religious.label.7e54cec6d648": {
+    "ar": "تفسير الآية",
+    "en": "Verse tafsir"
+  },
+  "religious.label.0010d4835ba6": {
+    "ar": "التفسير غير متاح دون اتصال؛ يمكنك إعادة المحاولة من صفحة التفسير.",
+    "en": "Tafsir is unavailable offline. You can try again from the tafsir page."
+  },
+  "religious.label.a9fc5ce22186": {
+    "ar": "جارٍ تحميل التفسير من المصدر...",
+    "en": "Loading tafsir from its source…"
+  },
+  "religious.label.437a5469b8a1": {
+    "ar": "عرض التفسير",
+    "en": "View tafsir"
+  },
+  "religious.label.fed1be114056": {
+    "ar": "مواضع ورد فيها",
+    "en": "Occurrences"
+  },
+  "religious.label.ce6d834b0285": {
+    "ar": "عرض في المصحف",
+    "en": "View in mushaf"
+  },
+  "religious.label.64660bb87d89": {
+    "ar": "المصدر",
+    "en": "Source"
+  },
+  "religious.label.cc5f2817973e": {
+    "ar": "أسماء ذات صلة",
+    "en": "Related names"
+  },
+  "religious.label.5a01debdd557": {
+    "ar": "إزالة من أذكاري",
+    "en": "Remove from my adhkar"
+  },
+  "religious.label.a5f4c56bedbd": {
+    "ar": "حفظ الدعاء في أذكاري",
+    "en": "Save supplication to my adhkar"
+  },
+  "religious.label.db90e8fbbf80": {
+    "ar": "مجموعة من الآيات والأدعية المأثورة\nللشفاء والحفظ بإذن الله",
+    "en": "Selected verses and transmitted supplications\nfor healing and protection, by Allah's permission"
+  },
+  "religious.label.f02c00980f87": {
+    "ar": "الاستماع",
+    "en": "Listen"
+  },
+  "religious.label.ace946e49f3a": {
+    "ar": "القراءة",
+    "en": "Read"
+  },
+  "religious.label.9b21823220aa": {
+    "ar": "معلومات",
+    "en": "Information"
+  },
+  "religious.label.a363d6be8178": {
+    "ar": "تلاوة الآيات المختارة",
+    "en": "Recitation of selected verses"
+  },
+  "religious.label.f06eb6ba84dc": {
+    "ar": "بدء الاستماع",
+    "en": "Start listening"
+  },
+  "religious.label.1774d0f75d69": {
+    "ar": "محتويات الرقية",
+    "en": "Ruqya contents"
+  },
+  "religious.label.2c67a3425cc1": {
+    "ar": "أضيفت الملفات إلى قائمة التنزيل",
+    "en": "Files added to the download queue"
+  },
+  "religious.label.51d2b301e5cf": {
+    "ar": "تحميل الرقية كاملة",
+    "en": "Download full ruqya"
+  },
+  "religious.label.c9ed3247f1fc": {
+    "ar": "إزالة من قائمة الاستماع",
+    "en": "Remove from listening queue"
+  },
+  "religious.label.c950224e2267": {
+    "ar": "إضافة إلى قائمة الاستماع",
+    "en": "Add to listening queue"
+  },
+  "religious.label.62853165f4d5": {
+    "ar": "في الانتظار",
+    "en": "Queued"
+  },
+  "religious.label.12c29258da43": {
+    "ar": "جارٍ التحميل",
+    "en": "Downloading"
+  },
+  "religious.label.cacda677b376": {
+    "ar": "متوقف مؤقتًا",
+    "en": "Paused"
+  },
+  "religious.label.1259fce7fe10": {
+    "ar": "تعذّر التنزيل",
+    "en": "Download failed"
+  },
+  "religious.label.3e78ed445665": {
+    "ar": "تم التنزيل",
+    "en": "Downloaded"
+  },
+  "religious.label.531a334324cb": {
+    "ar": "إزالة التنزيل",
+    "en": "Remove download"
+  },
+  "religious.label.d047e2804e02": {
+    "ar": "مصدر المحتوى",
+    "en": "Content source"
+  },
+  "religious.label.c54b68beeec3": {
+    "ar": "الأدعية والمحتوى الديني",
+    "en": "Supplications and religious content"
+  },
+  "religious.label.ce5223162ef1": {
+    "ar": "الشرح المطول",
+    "en": "Full explanation"
+  },
+  "religious.label.21b256189ada": {
+    "ar": "التخريج",
+    "en": "Hadith references"
+  },
+  "religious.playItem": {
+    "ar": "تشغيل {title}",
+    "en": "Play {title}"
   }
 }

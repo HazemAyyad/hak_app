@@ -262,14 +262,18 @@ class ReligiousHeader extends StatelessWidget {
       double size,
       double maxWidth, {
       FontWeight weight = FontWeight.w500,
+      double height = 1.55,
     }) {
       final painter = TextPainter(
         text: TextSpan(
           text: text,
-          style: rText(context, size, weight: weight),
+          style: DefaultTextStyle.of(
+            context,
+          ).style.merge(rText(context, size, weight: weight, height: height)),
         ),
         textDirection: contentTextDirection(text),
         textScaler: MediaQuery.textScalerOf(context),
+        locale: Localizations.maybeLocaleOf(context),
       )..layout(maxWidth: maxWidth);
       return painter.height;
     }
@@ -278,10 +282,16 @@ class ReligiousHeader extends StatelessWidget {
         top +
         29 +
         (onBack != null || onSaved != null ? 44 : 8) +
-        measured(title, light ? 18 : 20, width * .75, weight: FontWeight.w800) +
+        measured(
+          title,
+          light ? 18 : 20,
+          width * .75,
+          weight: FontWeight.w800,
+          height: 1.5,
+        ) +
         (displaySubtitle.isEmpty
             ? 0
-            : 5 + measured(displaySubtitle, 11, width * .65)) +
+            : 5 + measured(displaySubtitle, 11, width * .65, height: 1.6)) +
         (displayBreadcrumb == null
             ? 0
             : measured(displayBreadcrumb, 9, width - 32));
@@ -603,6 +613,7 @@ class ReligiousSectionCard extends StatelessWidget {
             Expanded(
               child: Text(
                 title,
+                textDirection: contentTextDirection(title),
                 style: rText(context, 14, weight: FontWeight.w800),
               ),
             ),
@@ -611,7 +622,8 @@ class ReligiousSectionCard extends StatelessWidget {
         const SizedBox(height: 7),
         SelectableText(
           text,
-          textAlign: TextAlign.right,
+          textDirection: contentTextDirection(text),
+          textAlign: TextAlign.start,
           style: rText(
             context,
             13,
@@ -624,6 +636,7 @@ class ReligiousSectionCard extends StatelessWidget {
             padding: const EdgeInsets.only(top: 8),
             child: Text(
               source!,
+              textDirection: contentTextDirection(source!),
               style: rText(context, 9, color: ReligiousColors(context).muted),
             ),
           ),
