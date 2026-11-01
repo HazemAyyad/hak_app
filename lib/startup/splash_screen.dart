@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import '../core/localization/ui_text.dart';
 import 'package:rive/rive.dart' as rive;
 
 class SplashScreen extends StatefulWidget {
@@ -115,8 +116,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                'نورٌ لقلبك، ورفيقٌ ليومك',
+              Text(
+                context.homeLabel('نورٌ لقلبك، ورفيقٌ ليومك'),
                 style: TextStyle(
                   fontSize: 16,
                   color: Color(0xFF102A43),

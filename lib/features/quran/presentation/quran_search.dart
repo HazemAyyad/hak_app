@@ -437,7 +437,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
                             ? _surahLabel(surahId!)
                             : juzId != null
                             ? _juzLabel(juzId!)
-                            : 'كل القرآن',
+                            : context.quranLabel('كل القرآن'),
                         style: qText(
                           context,
                           size: 11,

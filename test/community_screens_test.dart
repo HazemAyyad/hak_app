@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -109,32 +111,41 @@ void main() {
     double scale = 1,
     Size size = const Size(360, 950),
     PublicPushController? push,
+    AppLocalization? localization,
   }) async {
+    Widget localized(Widget child) => localization == null
+        ? child
+        : LocalizationScope(controller: localization, child: child);
     await tester.binding.setSurfaceSize(visualSize(size));
     await tester.pumpWidget(
       AppearanceScope(
         controller: appearance,
-        child: MaterialApp(
-          theme: ThemeData(
-            brightness: dark ? Brightness.dark : Brightness.light,
-            fontFamily: 'QuranUI',
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color(0xFF2A8C82),
+        child: localized(
+          MaterialApp(
+            locale: localization?.language.locale,
+            supportedLocales: const [Locale('ar'), Locale('en')],
+            localizationsDelegates: GlobalMaterialLocalizations.delegates,
+            theme: ThemeData(
               brightness: dark ? Brightness.dark : Brightness.light,
+              fontFamily: 'QuranUI',
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: const Color(0xFF2A8C82),
+                brightness: dark ? Brightness.dark : Brightness.light,
+              ),
             ),
-          ),
-          home: MediaQuery(
-            data: MediaQueryData(
-              size: visualSize(size),
-              textScaler: TextScaler.linear(visualScale(scale)),
-            ),
-            child: RepaintBoundary(
-              key: capture,
-              child: CommunityPage(
-                religious: religious,
-                section: section,
-                controller: c,
-                push: push,
+            home: MediaQuery(
+              data: MediaQueryData(
+                size: visualSize(size),
+                textScaler: TextScaler.linear(visualScale(scale)),
+              ),
+              child: RepaintBoundary(
+                key: capture,
+                child: CommunityPage(
+                  religious: religious,
+                  section: section,
+                  controller: c,
+                  push: push,
+                ),
               ),
             ),
           ),
@@ -156,6 +167,39 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     await pump(tester);
   }
+
+  testWidgets(
+    'English community controls preserve publisher text and filter identifiers',
+    (tester) async {
+      final localization = AppLocalization(quran.preferences!);
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      final original = publicationFixture();
+      cloud.publications[0] = {...original, 'title': 'عنوان عربي من الناشر'};
+      await mount(
+        tester,
+        CommunitySection.messages,
+        localization: localization,
+        size: const Size(320, 950),
+        scale: 1.2,
+      );
+      expect(find.text('Message options'), findsOneWidget);
+      expect(find.text('Saved'), findsOneWidget);
+      expect(find.text('عنوان عربي من الناشر'), findsOneWidget);
+      expect(find.textContaining('محتوى اختبار'), findsOneWidget);
+      await tap(tester, 'Message options');
+      expect(find.text('Delete all messages from this device'), findsOneWidget);
+      await tester.binding.handlePopRoute();
+      await pump(tester);
+      await localization.select('ar');
+      await pump(tester);
+      expect(find.text('عنوان عربي من الناشر'), findsOneWidget);
+      expect(cloud.publications[0]['kind'], 'dua');
+      expect(cloud.publications[0]['content'], original['content']);
+      expect(tester.takeException(), isNull);
+      await unmount(tester);
+    },
+  );
 
   for (final dark in [false, true]) {
     testWidgets(

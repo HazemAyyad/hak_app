@@ -180,7 +180,7 @@ class _QiblaPageState extends State<QiblaPage>
                         shape: const CircleBorder(),
                         child: IconButton(
                           key: const ValueKey('qibla-adhan-settings'),
-                          tooltip: 'إعدادات الأذان',
+                          tooltip: context.prayerLabel('إعدادات الأذان'),
                           onPressed: _openAdhanSettings,
                           icon: Icon(Icons.tune_rounded, color: p.tealHeading),
                         ),
@@ -473,7 +473,7 @@ class _QiblaPageState extends State<QiblaPage>
                     const SizedBox(height: 10),
                     OutlinedButton(
                       onPressed: _openAdhanSettings,
-                      child: Text('إعدادات الأذان'),
+                      child: Text(context.prayerLabel('إعدادات الأذان')),
                     ),
                     if (place != null)
                       TextButton(

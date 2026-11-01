@@ -473,8 +473,8 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
           key: ValueKey('app-font-${AppearanceScope.of(context).font.name}'),
           initialValue: AppearanceScope.of(context).font,
           isExpanded: true,
-          decoration: const InputDecoration(
-            labelText: 'خط التطبيق',
+          decoration: InputDecoration(
+            labelText: context.settingsLabel('خط التطبيق'),
             border: OutlineInputBorder(),
           ),
           onChanged: (value) {
@@ -485,7 +485,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
               DropdownMenuItem(
                 value: font,
                 child: Text(
-                  font.label,
+                  context.settingsLabel(font.label),
                   style: TextStyle(fontFamily: font.family),
                 ),
               ),
@@ -493,7 +493,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
         ),
       ),
       _InfoBox(
-        'خط التطبيق',
+        context.settingsLabel('خط التطبيق'),
         'يُطبق الاختيار فورًا على الواجهة ويُحفظ على الجهاز. يبقى نص المصحف بخط قرآني مخصص لضبط الحركات.',
       ),
       _SectionTitle('حجم الخط'),
@@ -747,7 +747,7 @@ class _SettingsDetailPageState extends State<SettingsDetailPage> {
         icon: Icons.refresh,
         title: 'إعادة القيمة الافتراضية',
         subtitle: 'إزالة التصحيح اليدوي',
-        value: 'إعادة الضبط',
+        value: context.settingsLabel('إعادة الضبط'),
         onTap: () => _settings!.set('hijriOffset', 0),
       ),
       _SectionTitle('تطبيق التصحيح'),

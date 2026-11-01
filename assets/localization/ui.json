@@ -172,8 +172,8 @@
     "en": "Translation is incomplete; the Arabic original is shown where no translation is available."
   },
   "language.scope": {
-    "ar": "الواجهة المترجمة: التنقل وإدارة اللغات والحساب ولوحة الإدارة. بقية الشاشات قيد الترجمة.",
-    "en": "Translated interface: navigation, languages, account and administration. Other screens are still being translated."
+    "ar": "اختر لغة الواجهة ولغة المحتوى بشكل مستقل. تظهر ترجمات المحتوى المراجعة مع مصادرها عند نشرها.",
+    "en": "Choose the interface and content languages separately. Reviewed content translations appear with their sources when published."
   },
   "account.title": {
     "ar": "حساب حق",
@@ -1116,8 +1116,8 @@
     "ar": "نوع الخط"
   },
   "settings.label.5472395ab0b0": {
-    "en": "App font",
-    "ar": "خط التطبيق"
+    "ar": "خط التطبيق",
+    "en": "App font"
   },
   "settings.label.cf7cb56fbea2": {
     "en": "The selected font is applied immediately and saved on this device. Quran text keeps its dedicated font to preserve its marks.",
@@ -1296,8 +1296,8 @@
     "ar": "إزالة التصحيح اليدوي"
   },
   "settings.label.a4df1d03d650": {
-    "en": "Reset",
-    "ar": "إعادة الضبط"
+    "ar": "إعادة الضبط",
+    "en": "Reset"
   },
   "settings.label.470112e1991e": {
     "en": "Apply adjustment",
@@ -1493,7 +1493,7 @@
   },
   "quran.label.9f06a940c07d": {
     "ar": "كل القرآن",
-    "en": "All Quran"
+    "en": "Entire Quran"
   },
   "quran.label.19f9aac381a8": {
     "en": "Specific surah",
@@ -10030,5 +10030,2013 @@
   "religious.playItem": {
     "ar": "تشغيل {title}",
     "en": "Play {title}"
+  },
+  "home.label.66dcee1f4616": {
+    "ar": "الحساب",
+    "en": "Account"
+  },
+  "home.label.57f70dc6dc46": {
+    "ar": "البحث في حق",
+    "en": "Search Haq"
+  },
+  "home.label.b6ecbec8cd0a": {
+    "ar": "رسائل حق",
+    "en": "Haq messages"
+  },
+  "home.label.5a45450fb606": {
+    "ar": "مرحبًا بك",
+    "en": "Welcome"
+  },
+  "home.label.dd0d64464d45": {
+    "ar": "ضيف حق",
+    "en": "Haq guest"
+  },
+  "home.label.f926a592b335": {
+    "ar": "تقبّل الله طاعاتك.. وجعلنا وإياك من أهل القرآن",
+    "en": "May Allah accept your worship and make us among the people of the Quran"
+  },
+  "home.label.06da676520dd": {
+    "ar": "الصلاة القادمة",
+    "en": "Next prayer"
+  },
+  "home.label.2880d4cfe40d": {
+    "ar": "حدد الموقع",
+    "en": "Set location"
+  },
+  "home.label.fc321a07db4c": {
+    "ar": "ساعة   دقيقة   ثانية",
+    "en": "h   m   s"
+  },
+  "home.label.a990ccdcba91": {
+    "ar": "الموقع غير محدد",
+    "en": "Location not set"
+  },
+  "home.label.355bd9c0e166": {
+    "ar": "القرآن الكريم",
+    "en": "Quran"
+  },
+  "home.label.f1d9c371d770": {
+    "ar": "الأذكار اليومية",
+    "en": "Daily adhkar"
+  },
+  "home.label.5b17705034c3": {
+    "ar": "الختمة",
+    "en": "Quran completion"
+  },
+  "home.label.906bc6d53d5c": {
+    "ar": "العداد والتسبيح",
+    "en": "Prayer beads"
+  },
+  "home.label.478c486f3efe": {
+    "ar": "المزيد",
+    "en": "More"
+  },
+  "home.label.a21dd7f18f42": {
+    "ar": "الأدعية",
+    "en": "Supplications"
+  },
+  "home.label.e11e5019994f": {
+    "ar": "ماذا تشعر؟",
+    "en": "How do you feel?"
+  },
+  "home.label.b98ed32866c5": {
+    "ar": "القبلة",
+    "en": "Qibla"
+  },
+  "home.label.e40f0fc849bc": {
+    "ar": "أذكار الصباح",
+    "en": "Morning adhkar"
+  },
+  "home.label.0e2e265a8e76": {
+    "ar": "أذكار المساء",
+    "en": "Evening adhkar"
+  },
+  "home.label.990999885060": {
+    "ar": "ابدأ يومك بذكر الله",
+    "en": "Begin your day remembering Allah"
+  },
+  "home.label.985db01f39a8": {
+    "ar": "اختم يومك بذكر الله",
+    "en": "End your day remembering Allah"
+  },
+  "home.label.53d44df199e9": {
+    "ar": "مجموعة من الأذكار الصحيحة لبدء يومك بالبركة والطمأنينة.",
+    "en": "Authentic adhkar for a peaceful and blessed start to your day."
+  },
+  "home.label.22a8fdc71fd8": {
+    "ar": "مجموعة من الأذكار الصحيحة لمساء يملؤه الذكر والطمأنينة.",
+    "en": "Authentic adhkar for an evening of remembrance and peace."
+  },
+  "home.label.f307ef183ebb": {
+    "ar": "عرض الأذكار",
+    "en": "Read adhkar"
+  },
+  "home.label.04523ee59b56": {
+    "ar": "أكمل من حيث توقفت",
+    "en": "Continue where you left off"
+  },
+  "home.label.2c3d3165fdb8": {
+    "ar": "ابدأ رحلتك مع القرآن",
+    "en": "Begin your Quran journey"
+  },
+  "home.label.8a8af789a6dc": {
+    "ar": "سيُحفظ موضع قراءتك هنا",
+    "en": "Your reading position will be saved here"
+  },
+  "home.label.a48468ba1791": {
+    "ar": "متابعة القراءة",
+    "en": "Continue reading"
+  },
+  "home.label.627887cb1457": {
+    "ar": "محتوى اليوم",
+    "en": "Today's content"
+  },
+  "home.label.d751d1f718c1": {
+    "ar": "آية اليوم",
+    "en": "Verse of the day"
+  },
+  "home.label.f06ef241eb53": {
+    "ar": "سورة الطلاق - الآية 4",
+    "en": "Surah At-Talaq - verse 4"
+  },
+  "home.label.921da6bb152a": {
+    "ar": "سورة الطلاق — الآية 4\n\nالتفسير غير متاح حاليًا دون مصدر تفسير معتمد.",
+    "en": "Surah At-Talaq — verse 4\n\nTafsir is unavailable until an approved source is available."
+  },
+  "home.label.ca90c297b099": {
+    "ar": "إغلاق",
+    "en": "Close"
+  },
+  "home.label.437a5469b8a1": {
+    "ar": "عرض التفسير",
+    "en": "View tafsir"
+  },
+  "home.label.a2619796f3e0": {
+    "ar": "تعذّر التحميل",
+    "en": "Could not load"
+  },
+  "home.label.41595fce1b1b": {
+    "ar": "العادات",
+    "en": "Habits"
+  },
+  "home.label.0cde29a629c5": {
+    "ar": "الأذكار",
+    "en": "Adhkar"
+  },
+  "home.label.5f94862efa83": {
+    "ar": "لم تبدأ بعد",
+    "en": "Not started yet"
+  },
+  "home.label.1e983769e4a0": {
+    "ar": "محتوى خاص",
+    "en": "Featured content"
+  },
+  "home.label.f29c79564703": {
+    "ar": "يوم الجمعة",
+    "en": "Friday"
+  },
+  "home.label.32eaf0ade64a": {
+    "ar": "سورة الكهف . الصلاة على النبي ﷺ",
+    "en": "Surah Al-Kahf · Blessings upon the Prophet ﷺ"
+  },
+  "home.label.61e14785fe77": {
+    "ar": "عرض المحتوى",
+    "en": "View content"
+  },
+  "home.label.4520134cb872": {
+    "ar": "فضل صلاة الجماعة",
+    "en": "The virtue of congregational prayer"
+  },
+  "home.label.57625552649a": {
+    "ar": "فضل الصدقة في الإسلام",
+    "en": "The virtue of charity in Islam"
+  },
+  "home.label.420654bd3066": {
+    "ar": "مقالة",
+    "en": "Article"
+  },
+  "home.label.ace24891cec1": {
+    "ar": "مشاركة",
+    "en": "Share"
+  },
+  "home.label.e97e585ae2df": {
+    "ar": "رحلتك اليوم",
+    "en": "Your journey today"
+  },
+  "home.label.cc52200ebc71": {
+    "ar": "عرض الكل",
+    "en": "View all"
+  },
+  "home.label.5952a47a7cd6": {
+    "ar": "مقالات ومعلومات",
+    "en": "Articles and insights"
+  },
+  "home.label.cc141de02647": {
+    "ar": "شارك الخير مع من تحب عبر تطبيق حق",
+    "en": "Share goodness with those you love through Haq"
+  },
+  "home.label.483b5ff1b4c2": {
+    "ar": "تواصل معنا",
+    "en": "Connect with us"
+  },
+  "home.label.b2296fc48402": {
+    "ar": "تابع حسابات حق وشارك الخير مع من تحب",
+    "en": "Follow Haq and share goodness with those you love"
+  },
+  "home.label.7eed88167d57": {
+    "ar": "فيسبوك",
+    "en": "Facebook"
+  },
+  "home.label.50e865ba6a21": {
+    "ar": "إنستغرام",
+    "en": "Instagram"
+  },
+  "home.label.4414cb57cc95": {
+    "ar": "يوتيوب",
+    "en": "YouTube"
+  },
+  "home.label.607eddee8aeb": {
+    "ar": "شارك تطبيق حق",
+    "en": "Share Haq"
+  },
+  "home.label.0f82bca241dc": {
+    "ar": "ساهم في نشر الخير",
+    "en": "Help spread goodness"
+  },
+  "home.label.00f4018a4822": {
+    "ar": "ابحث عن خدمة أو آية أو محتوى…",
+    "en": "Search for a service, verse or content…"
+  },
+  "home.label.cd2643abbdd7": {
+    "ar": "خدمات حق",
+    "en": "Haq services"
+  },
+  "home.label.e383b1b12526": {
+    "ar": "المحتوى الديني",
+    "en": "Religious content"
+  },
+  "home.label.4f791645a3be": {
+    "ar": "لا توجد نتائج تطابق بحثك",
+    "en": "No results match your search"
+  },
+  "home.label.7187dd7a19cd": {
+    "ar": "من القرآن الكريم",
+    "en": "From the Quran"
+  },
+  "home.label.f54dc507e026": {
+    "ar": "تأمّل الآية، واقرأ معناها من مصدر التفسير المتاح في قارئ القرآن.",
+    "en": "Reflect on this verse and read its explanation from the tafsir source available in the Quran reader."
+  },
+  "home.label.f12190f997e7": {
+    "ar": "قراءة التفسير",
+    "en": "Read tafsir"
+  },
+  "home.label.e684d481f41e": {
+    "ar": "قريبًا في حق",
+    "en": "Coming soon to Haq"
+  },
+  "home.label.dc0dbbd7774e": {
+    "ar": "خدمة تحديد اتجاه القبلة لم تتوفر بعد. لن نعرض اتجاهًا قبل تحديد موقعك والتحقق منه.",
+    "en": "Qibla direction is not available yet. A direction will be shown once your location is determined and verified."
+  },
+  "home.label.feb767344951": {
+    "ar": "نعمل على تجهيز هذه الخدمة. يمكنك الآن الاستفادة من القرآن والأذكار والخدمات المتاحة في المزيد.",
+    "en": "This service is being prepared. You can explore the Quran, adhkar and available services in More."
+  },
+  "home.label.f0d4992c79d5": {
+    "ar": "العودة إلى الخدمات",
+    "en": "Back to services"
+  },
+  "home.ayah": {
+    "ar": "الآية {number}",
+    "en": "Verse {number}"
+  },
+  "home.habitsToday": {
+    "ar": "اليوم: {done} من {goal}",
+    "en": "Today: {done} of {goal}"
+  },
+  "home.readingsToday.zero": {
+    "ar": "{count} قراءة اليوم",
+    "en": "{count} readings today"
+  },
+  "home.readingsToday.one": {
+    "ar": "{count} قراءة اليوم",
+    "en": "{count} reading today"
+  },
+  "home.readingsToday.two": {
+    "ar": "{count} قراءة اليوم",
+    "en": "{count} readings today"
+  },
+  "home.readingsToday.few": {
+    "ar": "{count} قراءة اليوم",
+    "en": "{count} readings today"
+  },
+  "home.readingsToday.many": {
+    "ar": "{count} قراءة اليوم",
+    "en": "{count} readings today"
+  },
+  "home.readingsToday.other": {
+    "ar": "{count} قراءة اليوم",
+    "en": "{count} readings today"
+  },
+  "home.pages.zero": {
+    "ar": "{count} صفحة",
+    "en": "{count} pages"
+  },
+  "home.pages.one": {
+    "ar": "{count} صفحة",
+    "en": "{count} page"
+  },
+  "home.pages.two": {
+    "ar": "{count} صفحة",
+    "en": "{count} pages"
+  },
+  "home.pages.few": {
+    "ar": "{count} صفحة",
+    "en": "{count} pages"
+  },
+  "home.pages.many": {
+    "ar": "{count} صفحة",
+    "en": "{count} pages"
+  },
+  "home.pages.other": {
+    "ar": "{count} صفحة",
+    "en": "{count} pages"
+  },
+  "community.label.e4b28e13a0d5": {
+    "ar": "حلقات الذكر",
+    "en": "Remembrance circles"
+  },
+  "community.label.ad8aa13bc73d": {
+    "ar": "ادعُ معي",
+    "en": "Pray with me"
+  },
+  "community.label.7b556104817e": {
+    "ar": "ادع معي",
+    "en": "Pray with me"
+  },
+  "community.label.b6ecbec8cd0a": {
+    "ar": "رسائل حق",
+    "en": "Haq messages"
+  },
+  "community.label.cbf968f0bd03": {
+    "ar": "قصص حق",
+    "en": "Haq stories"
+  },
+  "community.label.b716fbb0b71a": {
+    "ar": "نجتمع على ذكر الله",
+    "en": "Together in remembrance of Allah"
+  },
+  "community.label.d69f45dc824f": {
+    "ar": "دعوة طيبة من القلب",
+    "en": "A heartfelt prayer"
+  },
+  "community.label.920994520c24": {
+    "ar": "محتوى موثق يقرّبك من الله",
+    "en": "Sourced content to bring you closer to Allah"
+  },
+  "community.label.13f26e38bf78": {
+    "ar": "سجّل الدخول للمتابعة",
+    "en": "Sign in to continue"
+  },
+  "community.label.16319e353208": {
+    "ar": "الحلقات والمشاركة تحتاج حساب حق. يمكنك متابعة بقية الأقسام كضيف.",
+    "en": "A Haq account is required to join circles and participate. You can browse the other sections as a guest."
+  },
+  "community.label.d58fabc5f51c": {
+    "ar": "تسجيل الدخول أو إنشاء حساب",
+    "en": "Sign in or create an account"
+  },
+  "community.label.679d18ea413e": {
+    "ar": "المتابعة كضيف",
+    "en": "Continue as a guest"
+  },
+  "community.label.b7a359c17a6a": {
+    "ar": "إشعارات الرسائل والتطبيق مغلق",
+    "en": "Message notifications when the app is closed"
+  },
+  "community.label.6d4757aadeba": {
+    "ar": "بانتظار تهيئة الخدمة؛ لا حاجة لتفعيلها الآن",
+    "en": "Service setup is pending; no need to enable this yet"
+  },
+  "community.label.a066a730684c": {
+    "ar": "مفعّلة على هذا الجهاز للمحتوى العام",
+    "en": "Enabled on this device for public content"
+  },
+  "community.label.ad2b2ade1c69": {
+    "ar": "اختياري • يربط الجهاز بخدمة Firebase عند التفعيل",
+    "en": "Optional · Enables public content notifications on this device"
+  },
+  "community.label.14d5786f2e64": {
+    "ar": "إعادة المحاولة",
+    "en": "Retry"
+  },
+  "community.label.b4270fb67c15": {
+    "ar": "أدعيتي",
+    "en": "My supplications"
+  },
+  "community.label.c2f0dd849fef": {
+    "ar": "الحسابات المحظورة",
+    "en": "Blocked accounts"
+  },
+  "community.label.065eaf04d69b": {
+    "ar": "المحفوظة",
+    "en": "Saved"
+  },
+  "community.label.d7c42ef1b88a": {
+    "ar": "خيارات الرسائل",
+    "en": "Message options"
+  },
+  "community.label.1e3ff9272c63": {
+    "ar": "خدمات المجتمع غير متاحة حاليًا",
+    "en": "Community services are currently unavailable"
+  },
+  "community.label.01d3ca2a17f3": {
+    "ar": "لا توجد أعداد أو منشورات تجريبية. أعد المحاولة عند تفعيل الخدمة.",
+    "en": "Counts and posts will appear when the service is available. Try again later."
+  },
+  "community.label.446ce1bc96a1": {
+    "ar": "لا حلقات منشورة حاليًا",
+    "en": "No circles have been published yet"
+  },
+  "community.label.ba4b5ece7556": {
+    "ar": "لم تشارك دعاءً بعد",
+    "en": "You have not shared a supplication yet"
+  },
+  "community.label.29122ed87a54": {
+    "ar": "لا مشاركات معتمدة حاليًا",
+    "en": "No approved posts yet"
+  },
+  "community.label.d0be08b0f718": {
+    "ar": "لا رسائل محفوظة ضمن النتائج",
+    "en": "No saved messages match these results"
+  },
+  "community.label.03dd56972e24": {
+    "ar": "لا محتوى منشور حاليًا",
+    "en": "No published content yet"
+  },
+  "community.label.4ec10c806490": {
+    "ar": "تحميل المزيد",
+    "en": "Load more"
+  },
+  "community.label.1076567a1cee": {
+    "ar": "مشاركة دعاء",
+    "en": "Share a supplication"
+  },
+  "community.label.982dfa5b2c8d": {
+    "ar": "مساهمة جماعية محفوظة على حسابك",
+    "en": "Your contribution is saved to your account"
+  },
+  "community.label.183261543b65": {
+    "ar": "الانضمام للحلقة",
+    "en": "Join circle"
+  },
+  "community.label.bde4af771fc5": {
+    "ar": "إعادة إرسال المساهمة",
+    "en": "Retry contribution"
+  },
+  "community.label.62dcbb7a460a": {
+    "ar": "مساهمة واحدة",
+    "en": "Contribute once"
+  },
+  "community.label.60640a57f75d": {
+    "ar": "مغادرة الحلقة",
+    "en": "Leave circle"
+  },
+  "community.label.384d4ca99187": {
+    "ar": "هناك مساهمة بانتظار التأكيد. إعادة المحاولة تستخدم العملية نفسها حتى لا يتضاعف العدد.",
+    "en": "A contribution is awaiting confirmation. Retrying uses the same operation to avoid counting it twice."
+  },
+  "community.label.8a59624ddb83": {
+    "ar": "إيقاف إعادة المحاولة؟",
+    "en": "Stop retrying?"
+  },
+  "community.label.43d512cfefc4": {
+    "ar": "قد تكون المساهمة وصلت للخادم. سيبقى العدد المؤكد على الخادم؛ لن تُرسل هذه العملية مجددًا.",
+    "en": "The server may have received this contribution. Confirmed counts are kept, and this operation will not be sent again."
+  },
+  "community.label.126bba53758b": {
+    "ar": "إلغاء إعادة الإرسال",
+    "en": "Cancel retry"
+  },
+  "community.label.943547e952fe": {
+    "ar": "تحديث الأعداد من الخادم",
+    "en": "Refresh counts"
+  },
+  "community.label.1989437ed29e": {
+    "ar": "خيارات المشاركة",
+    "en": "Post options"
+  },
+  "community.label.29a0e2739a92": {
+    "ar": "نسخ",
+    "en": "Copy"
+  },
+  "community.label.ace24891cec1": {
+    "ar": "مشاركة",
+    "en": "Share"
+  },
+  "community.label.0bb4d74f42c7": {
+    "ar": "حذف مشاركتي",
+    "en": "Delete my post"
+  },
+  "community.label.fe02b2039f8e": {
+    "ar": "شكاية منشور",
+    "en": "Report post"
+  },
+  "community.label.6d65e16f0083": {
+    "ar": "شكاية الحساب",
+    "en": "Report account"
+  },
+  "community.label.85e54a7a47fb": {
+    "ar": "حظر الحساب",
+    "en": "Block account"
+  },
+  "community.label.5ea8e47c2f3b": {
+    "ar": "بانتظار المراجعة",
+    "en": "Awaiting review"
+  },
+  "community.label.e698fb3a498d": {
+    "ar": "غير معتمدة للنشر",
+    "en": "Not approved for publication"
+  },
+  "community.label.9a30dc2a96b8": {
+    "ar": "إلغاء",
+    "en": "Cancel"
+  },
+  "community.label.8f7d74ac0eac": {
+    "ar": "تأكيد",
+    "en": "Confirm"
+  },
+  "community.label.738a17dba9f5": {
+    "ar": "إضافة تعليق",
+    "en": "Add comment"
+  },
+  "community.label.7bde7a41f4b9": {
+    "ar": "الدعاء",
+    "en": "Supplication"
+  },
+  "community.label.c17f4262e17f": {
+    "ar": "التعليق",
+    "en": "Comment"
+  },
+  "community.label.8d44783276ae": {
+    "ar": "تظهر المشاركة للآخرين بعد المراجعة",
+    "en": "Your post will be visible to others after review"
+  },
+  "community.label.b2592b61e00a": {
+    "ar": "المشاركة السابقة بانتظار التأكيد؛ تُرسل بنفس المعرّف.",
+    "en": "Your previous post is awaiting confirmation. Retrying uses the same identifier."
+  },
+  "community.label.d1126a861d04": {
+    "ar": "وصلت المشاركة وهي بانتظار المراجعة",
+    "en": "Your post was received and is awaiting review"
+  },
+  "community.label.28dc91b1e78a": {
+    "ar": "تم تأكيد حالة المشاركة",
+    "en": "Post status confirmed"
+  },
+  "community.label.b423142bd81e": {
+    "ar": "جارٍ الإرسال…",
+    "en": "Sending…"
+  },
+  "community.label.fab2b68a6cd7": {
+    "ar": "إرسال للمراجعة",
+    "en": "Submit for review"
+  },
+  "community.label.6ba20e13fe38": {
+    "ar": "حذف المشاركة؟",
+    "en": "Delete this post?"
+  },
+  "community.label.d20c7af4f63b": {
+    "ar": "ستُحذف مشاركتك وتعليقاتها من العرض العام.",
+    "en": "Your post and its comments will be removed from public view."
+  },
+  "community.label.d39e7c28223a": {
+    "ar": "حظر الحساب؟",
+    "en": "Block this account?"
+  },
+  "community.label.db88d875f1c3": {
+    "ar": "تختفي مشاركات هذا الحساب عنك وتتعطل المشاركة المتبادلة. يمكنك إلغاء الحظر من قائمة الحسابات المحظورة.",
+    "en": "Posts from this account will be hidden and interaction will be disabled. You can unblock it from Blocked accounts."
+  },
+  "community.label.e4674b7825f5": {
+    "ar": "سبب الشكاية",
+    "en": "Reason for reporting"
+  },
+  "community.label.38615516d748": {
+    "ar": "إرسال البلاغ",
+    "en": "Submit report"
+  },
+  "community.label.96f997dba605": {
+    "ar": "تعذّر الإرسال",
+    "en": "Could not send"
+  },
+  "community.label.2dd812b854e3": {
+    "ar": "وصل البلاغ للمراجعة",
+    "en": "Report submitted for review"
+  },
+  "community.label.5f285a4c6ade": {
+    "ar": "التعليقات",
+    "en": "Comments"
+  },
+  "community.label.b6050ee0ab79": {
+    "ar": "لا تعليقات معتمدة بعد",
+    "en": "No approved comments yet"
+  },
+  "community.label.59ca629220a6": {
+    "ar": "حذف",
+    "en": "Delete"
+  },
+  "community.label.1373f6aac0b2": {
+    "ar": "إبلاغ",
+    "en": "Report"
+  },
+  "community.label.478c486f3efe": {
+    "ar": "المزيد",
+    "en": "More"
+  },
+  "community.label.1062ed6c9eda": {
+    "ar": "لا حسابات محظورة",
+    "en": "No blocked accounts"
+  },
+  "community.label.4f23cecf177e": {
+    "ar": "إلغاء الحظر",
+    "en": "Unblock"
+  },
+  "community.label.d472763a3dfa": {
+    "ar": "إظهار الكل",
+    "en": "Show all"
+  },
+  "community.label.c87571cb7602": {
+    "ar": "قرآن",
+    "en": "Quran"
+  },
+  "community.label.ce197ad81fc4": {
+    "ar": "حديث",
+    "en": "Hadith"
+  },
+  "community.label.533db9547778": {
+    "ar": "دعاء",
+    "en": "Supplication"
+  },
+  "community.label.2f13379bf81e": {
+    "ar": "ذكر",
+    "en": "Remembrance"
+  },
+  "community.label.a9ecf1248f2f": {
+    "ar": "تسبيح",
+    "en": "Tasbih"
+  },
+  "community.label.f25f4853e0d1": {
+    "ar": "فيديو",
+    "en": "Video"
+  },
+  "community.label.ad345e6b2b7c": {
+    "ar": "رابط",
+    "en": "Link"
+  },
+  "community.label.4c6a988132d7": {
+    "ar": "تنبيه رسائل حق",
+    "en": "Haq message alert"
+  },
+  "community.label.64ae001dcbb7": {
+    "ar": "تنبيه مع صوت",
+    "en": "Sound alert"
+  },
+  "community.label.e39618859353": {
+    "ar": "صامت",
+    "en": "Silent"
+  },
+  "community.label.542e4ba2b16b": {
+    "ar": "حذف كافة الرسائل من هذا الجهاز",
+    "en": "Delete all messages from this device"
+  },
+  "community.label.eb76af7707b6": {
+    "ar": "حذف كافة الرسائل؟",
+    "en": "Delete all messages?"
+  },
+  "community.label.8e2abeb8800b": {
+    "ar": "سيُخفى كل ما سبق من الرسائل عن هذا الحساب على هذا الجهاز. لا يؤثر على رسائل الآخرين أو الرسائل الجديدة لاحقًا.",
+    "en": "Existing messages will be hidden for this account on this device. Other accounts and future messages are unaffected."
+  },
+  "community.label.836920de9193": {
+    "ar": "هذا اختيار التنبيه عند تحديث القسم وهو مفتوح. إشعارات التطبيق المغلق لها خيار مستقل أعلى صفحة الرسائل، وتحتاج تهيئة الخدمة وإذن النظام؛ تصل بصمت للمحتوى العام.",
+    "en": "This alert applies while the messages section is open. Notifications when the app is closed have a separate option at the top of the page and require service setup and device permission. Public content notifications are silent."
+  },
+  "community.label.d1abadb1ffef": {
+    "ar": "خيارات الرسالة",
+    "en": "Message options"
+  },
+  "community.label.e5bd634e0f54": {
+    "ar": "حذف الرسالة؟",
+    "en": "Delete this message?"
+  },
+  "community.label.35c073e5ebb0": {
+    "ar": "تُخفى هذه الرسالة محليًا لهذا الحساب فقط.",
+    "en": "This message will be hidden locally for this account only."
+  },
+  "community.label.22268cba6ee5": {
+    "ar": "تعذّر إكمال الإجراء المحلي",
+    "en": "Could not complete the action on this device"
+  },
+  "community.label.72c39f0cfaf0": {
+    "ar": "إلغاء الحفظ",
+    "en": "Unsave"
+  },
+  "community.label.ddfcaf9d0144": {
+    "ar": "حفظ",
+    "en": "Save"
+  },
+  "community.label.2e191bc5f690": {
+    "ar": "حذف محلي",
+    "en": "Delete locally"
+  },
+  "community.label.fc3eb31bfbac": {
+    "ar": "محتوى",
+    "en": "Content"
+  },
+  "community.label.021ea04a67aa": {
+    "ar": "تعذّر تحميل الصورة",
+    "en": "Could not load image"
+  },
+  "community.label.c084b5b73c5a": {
+    "ar": "تشغيل الفيديو",
+    "en": "Play video"
+  },
+  "community.label.da77331e6fad": {
+    "ar": "فتح الرابط",
+    "en": "Open link"
+  },
+  "community.label.4d2237aca54f": {
+    "ar": "مشاهدة القصة",
+    "en": "View story"
+  },
+  "community.label.ca90c297b099": {
+    "ar": "إغلاق",
+    "en": "Close"
+  },
+  "community.label.a9e9d067101a": {
+    "ar": "السابق",
+    "en": "Previous"
+  },
+  "community.label.322b7b613468": {
+    "ar": "متابعة",
+    "en": "Resume"
+  },
+  "community.label.cb7f6fd46259": {
+    "ar": "إيقاف مؤقت",
+    "en": "Pause"
+  },
+  "community.label.5cf7af74fd3a": {
+    "ar": "التالي",
+    "en": "Next"
+  },
+  "community.label.2e44392833d7": {
+    "ar": "تعذّر فتح الرابط على هذا الجهاز",
+    "en": "Could not open the link on this device"
+  },
+  "community.label.15cac48b449a": {
+    "ar": "هذا المشغّل متاح على Android وiOS",
+    "en": "This player is available on Android and iOS"
+  },
+  "community.label.2a85d4077c95": {
+    "ar": "تعذّر تشغيل فيديو YouTube",
+    "en": "Could not play the YouTube video"
+  },
+  "community.label.291328b3ba72": {
+    "ar": "تعذّر تحميل المشغّل؛ أعد المحاولة",
+    "en": "Could not load the player. Try again"
+  },
+  "community.label.7e0489d57c08": {
+    "ar": "لا يوجد مصدر HTTPS صالح للفيديو",
+    "en": "No valid HTTPS video source is available"
+  },
+  "community.label.ca939f3b3e2a": {
+    "ar": "تعذّر تشغيل الفيديو. تحقق من الاتصال ثم أعد المحاولة.",
+    "en": "Could not play the video. Check your connection and try again."
+  },
+  "community.label.e3fab650650c": {
+    "ar": "تعذّر تشغيل ملف الفيديو",
+    "en": "Could not play the video file"
+  },
+  "community.label.8c84ce4c577f": {
+    "ar": "تشغيل",
+    "en": "Play"
+  },
+  "community.label.aa5ebc30e485": {
+    "ar": "جارٍ التحميل…",
+    "en": "Loading…"
+  },
+  "community.label.a2031932317d": {
+    "ar": "فتح في YouTube",
+    "en": "Open in YouTube"
+  },
+  "community.label.1a658f1cdf54": {
+    "ar": "تعذّر حفظ حالة قراءة الرسائل",
+    "en": "Could not save message read status"
+  },
+  "community.label.3e5effbe7ec3": {
+    "ar": "تعذّر قراءة بيانات المجتمع المحلية؛ أعد المحاولة دون حذف البيانات.",
+    "en": "Could not read community data on this device. Try again without deleting your data."
+  },
+  "community.label.a93db0b3b424": {
+    "ar": "سجّل الدخول للمشاركة",
+    "en": "Sign in to participate"
+  },
+  "community.label.1d5a70adce7b": {
+    "ar": "تغير الحساب؛ أعد فتح القسم",
+    "en": "The account changed. Reopen this section"
+  },
+  "community.label.a2bc338c3d6b": {
+    "ar": "انتهت الجلسة؛ جدّد تسجيل الدخول",
+    "en": "Your session expired. Sign in again"
+  },
+  "community.label.9977939fb544": {
+    "ar": "المشاركة غير متاحة لهذا الحساب أو تحتاج الانضمام أولًا",
+    "en": "Participation is unavailable for this account, or you need to join first"
+  },
+  "community.label.5d20b3915432": {
+    "ar": "تغيّر هدف الحلقة أو تعارضت العملية. حدّث البيانات قبل المحاولة",
+    "en": "The circle goal changed or the operation conflicted. Refresh before trying again"
+  },
+  "community.label.563d784e98d7": {
+    "ar": "خدمات المجتمع غير متاحة على الخادم حاليًا",
+    "en": "Community services are currently unavailable on the server"
+  },
+  "community.label.0b546c99565a": {
+    "ar": "وصلت للحد المؤقت للطلبات؛ انتظر قليلًا ثم حاول",
+    "en": "Too many requests. Wait a moment and try again"
+  },
+  "community.label.56e6f16b7708": {
+    "ar": "تعذّر الاتصال. لم نعرض نجاحًا أو عددًا جماعيًا قبل تأكيد الخادم.",
+    "en": "Could not connect. Success and group counts will appear after server confirmation."
+  },
+  "community.label.589900b43605": {
+    "ar": "تعذّر حفظ العملية قبل إرسالها",
+    "en": "Could not save the operation before sending"
+  },
+  "community.label.0f6d649bdc78": {
+    "ar": "تغير الحساب",
+    "en": "The account changed"
+  },
+  "community.label.814d519f67f7": {
+    "ar": "توجد مشاركة معلقة. أعد إرسالها أو ألغها أولًا",
+    "en": "A post is pending. Retry or cancel it first"
+  },
+  "community.label.1e0be53143f0": {
+    "ar": "تعذّر الحفظ المحلي",
+    "en": "Could not save on this device"
+  },
+  "community.label.515e23440afd": {
+    "ar": "تعذّر حفظ اختيار الإشعارات على الجهاز. أعد المحاولة.",
+    "en": "Could not save your notification preference. Try again."
+  },
+  "community.label.a0fa065eb128": {
+    "ar": "إشعارات الخلفية بانتظار تهيئة الخدمة على هذا الإصدار.",
+    "en": "Background notifications are awaiting service setup for this version."
+  },
+  "community.label.6030a2808e93": {
+    "ar": "تعذّر قراءة فتح الإشعار. افتح رسائل حق من التطبيق.",
+    "en": "Could not open this notification. Open Haq messages in the app."
+  },
+  "community.label.c32f7e61e0e2": {
+    "ar": "إذن الإشعارات غير متاح. اسمح به من إعدادات الجهاز ثم أعد المحاولة.",
+    "en": "Notification permission is unavailable. Allow notifications in device settings and try again."
+  },
+  "community.label.7ea10aae47cb": {
+    "ar": "تعذّر تفعيل إشعارات الخلفية. تحقق من إذن الجهاز والاتصال وتهيئة الخدمة ثم أعد المحاولة.",
+    "en": "Could not enable background notifications. Check device permission, connection and service setup, then try again."
+  },
+  "community.label.9c2db7d9a811": {
+    "ar": "حُفظ طلب الإيقاف، لكن تعذّر تأكيد إلغاء الاشتراك. أعد المحاولة عند الاتصال.",
+    "en": "Your request to turn off notifications was saved, but cancellation could not be confirmed. Try again when connected."
+  },
+  "community.label.604ac157e602": {
+    "ar": "تعذّر حفظ فتح الإشعار. افتح رسائل حق من التطبيق.",
+    "en": "Could not save this notification action. Open Haq messages in the app."
+  },
+  "community.circleSummary": {
+    "ar": "{participants} مشاركين • {total} من {goal}",
+    "en": "Participants: {participants} · {total} of {goal}"
+  },
+  "community.total": {
+    "ar": "العدد العام {count}",
+    "en": "Total: {count}"
+  },
+  "community.participants": {
+    "ar": "المشاركون {count}",
+    "en": "Participants: {count}"
+  },
+  "community.mine": {
+    "ar": "مساهمتك {count}",
+    "en": "Your contribution: {count}"
+  },
+  "community.goal": {
+    "ar": "هدف الحلقة {count} • هدف جماعي تنظيمي",
+    "en": "Circle goal: {count} · A shared organizational target"
+  },
+  "community.participantCount.zero": {
+    "ar": "{count} مشاركين",
+    "en": "{count} participants"
+  },
+  "community.participantCount.one": {
+    "ar": "{count} مشاركين",
+    "en": "{count} participant"
+  },
+  "community.participantCount.two": {
+    "ar": "{count} مشاركين",
+    "en": "{count} participants"
+  },
+  "community.participantCount.few": {
+    "ar": "{count} مشاركين",
+    "en": "{count} participants"
+  },
+  "community.participantCount.many": {
+    "ar": "{count} مشاركين",
+    "en": "{count} participants"
+  },
+  "community.participantCount.other": {
+    "ar": "{count} مشاركين",
+    "en": "{count} participants"
+  },
+  "sakinah.label.5cd94a985c2b": {
+    "ar": "سكينة",
+    "en": "Sakinah"
+  },
+  "sakinah.label.6ac36601df32": {
+    "ar": "طمأنينة",
+    "en": "Peace"
+  },
+  "sakinah.label.7a464ef76538": {
+    "ar": "شكر",
+    "en": "Gratitude"
+  },
+  "sakinah.label.ed94570f5b45": {
+    "ar": "استغفار",
+    "en": "Seeking forgiveness"
+  },
+  "sakinah.label.6df546209fe1": {
+    "ar": "توكل",
+    "en": "Trust in Allah"
+  },
+  "sakinah.label.e52286c9916f": {
+    "ar": "مَلاذُ القلب عند الضِّيق والكرب",
+    "en": "A refuge for the heart in times of distress"
+  },
+  "sakinah.label.23b28c9f591b": {
+    "ar": "تنفُّسٌ هادئ يُسكِّن القلب",
+    "en": "Gentle breathing to calm the heart"
+  },
+  "sakinah.label.e32d48a60a15": {
+    "ar": "تأمُّلٌ في نِعَم الله بالحمد",
+    "en": "Reflect on Allah's blessings with gratitude"
+  },
+  "sakinah.label.694baccde503": {
+    "ar": "توبةٌ ورجوعٌ إلى الله",
+    "en": "Repentance and returning to Allah"
+  },
+  "sakinah.label.3af14f69d353": {
+    "ar": "تفويضُ الأمر إلى الله والاطمئنانُ إلى تدبيره",
+    "en": "Entrust your affairs to Allah and find peace in His care"
+  },
+  "sakinah.label.95739ae63905": {
+    "ar": "لحظات من الطمأنينة",
+    "en": "Moments of peace"
+  },
+  "sakinah.label.f127e5ed138f": {
+    "ar": "تعذّر فتح سكينة؛ أعد المحاولة",
+    "en": "Could not open Sakinah. Try again"
+  },
+  "sakinah.label.b5fc6a9b29a9": {
+    "ar": "اختر النمط والمدة ثم ابدأ",
+    "en": "Choose a pattern and duration, then begin"
+  },
+  "sakinah.label.bbbb3c316d6d": {
+    "ar": "تنفّس بهدوء، واختر الإيقاع والمدة المناسبين لك.",
+    "en": "Breathe gently and choose a comfortable rhythm and duration."
+  },
+  "sakinah.label.b41c48649386": {
+    "ar": "سجل الجلسات",
+    "en": "Session history"
+  },
+  "sakinah.label.cb822418a29d": {
+    "ar": "رجوع",
+    "en": "Back"
+  },
+  "sakinah.label.81a062e8c2aa": {
+    "ar": "تنفّس الاسترخاء",
+    "en": "Relaxation breathing"
+  },
+  "sakinah.label.8943c34d02d5": {
+    "ar": "التنفّس الصندوقي",
+    "en": "Box breathing"
+  },
+  "sakinah.label.5730127869de": {
+    "ar": "التنفّس المتناغم",
+    "en": "Coherent breathing"
+  },
+  "sakinah.label.6ffb2c75ffe8": {
+    "ar": "نمط مخصص",
+    "en": "Custom pattern"
+  },
+  "sakinah.label.419bc1ab6b07": {
+    "ar": "تعذّر بدء الجلسة؛ أعد المحاولة",
+    "en": "Could not start the session. Try again"
+  },
+  "sakinah.label.e5e3caa8650e": {
+    "ar": "إيقاع التنفّس",
+    "en": "Breathing rhythm"
+  },
+  "sakinah.label.f84b95106273": {
+    "ar": "اختر إيقاعك وخذ لحظة هادئة",
+    "en": "Choose your rhythm and take a quiet moment"
+  },
+  "sakinah.label.e0412a4ffd48": {
+    "ar": "شهيق 4 · حبس 7 · زفير 8",
+    "en": "Inhale 4 · Hold 7 · Exhale 8"
+  },
+  "sakinah.label.a02a870b7dfb": {
+    "ar": "4 ثوانٍ لكل مرحلة",
+    "en": "4 seconds per phase"
+  },
+  "sakinah.label.db7fd79dca6b": {
+    "ar": "شهيق 5 · زفير 5",
+    "en": "Inhale 5 · Exhale 5"
+  },
+  "sakinah.label.e3dad0b1727f": {
+    "ar": "اختر مدة كل مرحلة",
+    "en": "Choose the duration of each phase"
+  },
+  "sakinah.label.4cbe22d84a41": {
+    "ar": "4 / 7 / 8 / 0 ثوانٍ",
+    "en": "4 / 7 / 8 / 0 seconds"
+  },
+  "sakinah.label.54a6092f125a": {
+    "ar": "4 / 4 / 4 / 4 ثوانٍ",
+    "en": "4 / 4 / 4 / 4 seconds"
+  },
+  "sakinah.label.51756aeba528": {
+    "ar": "5 / 0 / 5 / 0 ثوانٍ",
+    "en": "5 / 0 / 5 / 0 seconds"
+  },
+  "sakinah.label.f96375b16d99": {
+    "ar": "عدّل مدة كل مرحلة",
+    "en": "Adjust the duration of each phase"
+  },
+  "sakinah.label.1a8b6553a926": {
+    "ar": "عن النمط",
+    "en": "About this pattern"
+  },
+  "sakinah.label.e504db9ff1f3": {
+    "ar": "الترتيب: شهيق، حبس بعد الشهيق، زفير، ثم حبس بعد الزفير. تتجاوز الجلسة أي مرحلة مدتها صفر. المدد بالثواني؛ اختر نمطًا مريحًا ويمكنك الوقف أو الإنهاء في أي وقت.",
+    "en": "The order is inhale, hold after inhaling, exhale, then hold after exhaling. Phases set to zero are skipped. Durations are in seconds. Choose a comfortable pattern; you can pause or end at any time."
+  },
+  "sakinah.label.0aa2926b402b": {
+    "ar": "المدد بالثواني: شهيق، حبس بعد الشهيق، زفير، حبس بعد الزفير. تتجاوز الجلسة المراحل ذات المدة صفر. اختر ما يناسب راحتك، ويمكنك إيقاف الجلسة في أي وقت.",
+    "en": "Durations are in seconds: inhale, hold after inhaling, exhale, then hold after exhaling. Phases set to zero are skipped. Choose a comfortable pattern; you can stop at any time."
+  },
+  "sakinah.label.3ef541b90a31": {
+    "ar": "تم",
+    "en": "Done"
+  },
+  "sakinah.label.5082b6ae8aca": {
+    "ar": "الشهيق",
+    "en": "Inhale"
+  },
+  "sakinah.label.cc686ce746eb": {
+    "ar": "حبس بعد الشهيق",
+    "en": "Hold after inhaling"
+  },
+  "sakinah.label.e0fd470ac7d4": {
+    "ar": "الزفير",
+    "en": "Exhale"
+  },
+  "sakinah.label.135b5b7856e3": {
+    "ar": "حبس بعد الزفير",
+    "en": "Hold after exhaling"
+  },
+  "sakinah.label.6377f029e069": {
+    "ar": "مدة الجلسة",
+    "en": "Session duration"
+  },
+  "sakinah.label.9a2ac6e90fe9": {
+    "ar": "تقليل الحركة",
+    "en": "Reduce motion"
+  },
+  "sakinah.label.9e1f25c4de11": {
+    "ar": "يثبّت الدائرة ويوقف التلاشي",
+    "en": "Keeps the circle still and disables fading"
+  },
+  "sakinah.label.c6706c1b3d2f": {
+    "ar": "اهتزاز عند تغير المرحلة",
+    "en": "Vibrate when the phase changes"
+  },
+  "sakinah.label.3d2536817b2d": {
+    "ar": "حفظ مدة الجلسة في سجلي",
+    "en": "Save session duration to my history"
+  },
+  "sakinah.label.860a787bde39": {
+    "ar": "الذكر اختياري، والتقدّم يتوقف عند مغادرة الجلسة.",
+    "en": "Dhikr is optional. Progress pauses when you leave the session."
+  },
+  "sakinah.label.46a5b30144b3": {
+    "ar": "جارٍ التحضير…",
+    "en": "Preparing…"
+  },
+  "sakinah.label.51efc127f2e0": {
+    "ar": "ابدأ الجلسة",
+    "en": "Start session"
+  },
+  "sakinah.label.68161215fee9": {
+    "ar": "جلسة تنفّس",
+    "en": "Breathing session"
+  },
+  "sakinah.label.0f171244b66b": {
+    "ar": "لحظاتك المحفوظة كما سجّلتها",
+    "en": "Your saved moments, as recorded"
+  },
+  "sakinah.label.779c17389c6e": {
+    "ar": "تعذّر فتح السجل؛ أعد المحاولة",
+    "en": "Could not open history. Try again"
+  },
+  "sakinah.label.f25f10ee19ea": {
+    "ar": "لا توجد جلسات محفوظة بعد.",
+    "en": "No saved sessions yet."
+  },
+  "sakinah.label.efbe5a4bcc78": {
+    "ar": "تغيّر الحساب؛ لم تحفظ الجلسة في الحساب الجديد",
+    "en": "The account changed. This session was not saved to the new account"
+  },
+  "sakinah.label.a94fc8b770c4": {
+    "ar": "تعذّر حفظ الجلسة؛ يمكنك إعادة المحاولة",
+    "en": "Could not save the session. You can try again"
+  },
+  "sakinah.label.9f5ab07966dd": {
+    "ar": "إنهاء الجلسة مبكرًا؟",
+    "en": "End the session early?"
+  },
+  "sakinah.label.d20244b96f1e": {
+    "ar": "يمكنك المتابعة من مكانك. الإنهاء المبكر يحفظ وقت التنفّس الفعلي فقط إذا اخترت الحفظ، ولا يعتبر جلسة مكتملة.",
+    "en": "You can resume where you left off. Ending early saves only your actual breathing time if recording is enabled, and does not mark the session complete."
+  },
+  "sakinah.label.844eba23c0c1": {
+    "ar": "متابعة الجلسة",
+    "en": "Resume session"
+  },
+  "sakinah.label.6e471f6147e9": {
+    "ar": "إنهاء الجلسة",
+    "en": "End session"
+  },
+  "sakinah.label.125b3c6da2a2": {
+    "ar": "اكتملت الجلسة",
+    "en": "Session complete"
+  },
+  "sakinah.label.1876435165e6": {
+    "ar": "انتهت الجلسة",
+    "en": "Session ended"
+  },
+  "sakinah.label.cacda677b376": {
+    "ar": "متوقف مؤقتًا",
+    "en": "Paused"
+  },
+  "sakinah.label.51c9a8732195": {
+    "ar": "استعد بهدوء",
+    "en": "Get comfortable"
+  },
+  "sakinah.label.3f489731e0a0": {
+    "ar": "شهيق",
+    "en": "Inhale"
+  },
+  "sakinah.label.7865543bb98e": {
+    "ar": "أمسك",
+    "en": "Hold"
+  },
+  "sakinah.label.3f043f546678": {
+    "ar": "حبس",
+    "en": "Hold"
+  },
+  "sakinah.label.bc6e37595ad3": {
+    "ar": "زفير",
+    "en": "Exhale"
+  },
+  "sakinah.label.abf0979c71f2": {
+    "ar": "إيقاف اهتزاز الجلسة",
+    "en": "Turn session vibration off"
+  },
+  "sakinah.label.06fbcdd6f89a": {
+    "ar": "تشغيل اهتزاز الجلسة",
+    "en": "Turn session vibration on"
+  },
+  "sakinah.label.c26691c8fb8d": {
+    "ar": "اهتزاز الجلسة",
+    "en": "Session vibration"
+  },
+  "sakinah.label.85cffff34495": {
+    "ar": "عند انتقال المراحل فقط؛ لا صوت أو تشغيل في الخلفية.",
+    "en": "Only at phase changes; no sound or background playback."
+  },
+  "sakinah.label.322b7b613468": {
+    "ar": "متابعة",
+    "en": "Resume"
+  },
+  "sakinah.label.cb7f6fd46259": {
+    "ar": "إيقاف مؤقت",
+    "en": "Pause"
+  },
+  "sakinah.label.bdf18726d37a": {
+    "ar": "تقبّل الله منك",
+    "en": "May Allah accept your worship"
+  },
+  "sakinah.label.80fad06dc3c4": {
+    "ar": "يمكنك العودة في وقت يناسبك",
+    "en": "Come back whenever it suits you"
+  },
+  "sakinah.label.9e7bd41c0736": {
+    "ar": "لم تحفظ هذه الجلسة حسب اختيارك.",
+    "en": "This session was not saved, as you chose."
+  },
+  "sakinah.label.1789e03835ed": {
+    "ar": "حُفظت الجلسة في سجلك.",
+    "en": "Session saved to your history."
+  },
+  "sakinah.label.f361b5dc5f98": {
+    "ar": "جارٍ حفظ الجلسة…",
+    "en": "Saving session…"
+  },
+  "sakinah.label.a8f12a11b2a4": {
+    "ar": "إعادة محاولة الحفظ",
+    "en": "Retry saving"
+  },
+  "sakinah.label.f1d6d15f76da": {
+    "ar": "مكتملة",
+    "en": "Complete"
+  },
+  "sakinah.label.e83ebbc751b9": {
+    "ar": "انتهت مبكرًا",
+    "en": "Ended early"
+  },
+  "sakinah.label.68804ead5799": {
+    "ar": "التمهيد ثلاث ثوانٍ خارج مدة الجلسة. عند مغادرة الشاشة أو انتقال التطبيق للخلفية تتوقف الجلسة، والمتابعة باختيارك. الذكر اختياري دون عدد مرتبط بالتنفّس.",
+    "en": "The three-second preparation is separate from session time. Leaving the screen or putting the app in the background pauses the session until you choose to resume. Dhikr is optional and has no count linked to breathing."
+  },
+  "sakinah.label.4b60b8a3b565": {
+    "ar": "عند انتقال التطبيق للخلفية تتوقف الجلسة حتى تختار المتابعة.",
+    "en": "The session pauses when the app is in the background until you choose to resume."
+  },
+  "home.label.9ed031e4ec0d": {
+    "ar": "نورٌ لقلبك، ورفيقٌ ليومك",
+    "en": "Light for your heart, a companion for your day"
+  },
+  "home.label.59c59b63599d": {
+    "ar": "نعمل على تجهيز هذه الخدمة. يمكنك الآن الاستفادة من القرآن والأدعية والمحتوى الديني.",
+    "en": "This service is being prepared. You can explore the Quran, supplications and religious content."
+  },
+  "settings.label.211be81f7e6e": {
+    "ar": "تعذّر تجهيز الإعدادات",
+    "en": "Could not load settings"
+  },
+  "settings.label.e5b4c2f92882": {
+    "ar": "أعد المحاولة لتحميل إعدادات الحساب وجدولة تذكيراته.",
+    "en": "Try again to load your account settings and schedule reminders."
+  },
+  "settings.label.14d5786f2e64": {
+    "ar": "إعادة المحاولة",
+    "en": "Retry"
+  },
+  "settings.label.1876e24b76b1": {
+    "ar": "يُحفظ الاختيار فوراً",
+    "en": "Changes are saved immediately"
+  },
+  "settings.label.e3d1ca2748c0": {
+    "ar": "حالة الجهاز",
+    "en": "Device status"
+  },
+  "settings.label.d9d50d1c291e": {
+    "ar": "الجدولة غير متاحة في بيئة العرض الحالية. التفضيلات تبقى محفوظة.",
+    "en": "Scheduling is unavailable in this environment. Your preferences are still saved."
+  },
+  "settings.label.79e7d615e90d": {
+    "ar": "الإشعارات غير مسموحة. امنح الإذن من الزر أدناه.",
+    "en": "Notifications are not allowed. Use the button below to grant permission."
+  },
+  "settings.label.296749d7557f": {
+    "ar": "المواعيد المحددة مجدولة بدقة",
+    "en": "Reminders are scheduled at their exact times"
+  },
+  "settings.label.5c01c451c007": {
+    "ar": "قد تتأخر المواعيد حتى تسمح بالتنبيه الدقيق",
+    "en": "Reminders may be delayed until you allow exact alarms"
+  },
+  "settings.label.55218b3cf3f2": {
+    "ar": "تنبيهات iOS المحلية",
+    "en": "Local iOS notifications"
+  },
+  "settings.label.ebd7bb3427d5": {
+    "ar": "الجدولة تحتاج متابعة",
+    "en": "Reminder scheduling needs attention"
+  },
+  "settings.label.c3b294060054": {
+    "ar": "طلب إذن الإشعارات",
+    "en": "Allow notifications"
+  },
+  "settings.label.32a046b303a3": {
+    "ar": "إعدادات الإشعارات في الجهاز",
+    "en": "Device notification settings"
+  },
+  "settings.label.3f6d8208f614": {
+    "ar": "تحديث الحالة والجدولة",
+    "en": "Refresh status and schedule"
+  },
+  "settings.label.bc5f305b5325": {
+    "ar": "تفعيل التذكيرات",
+    "en": "Enable reminders"
+  },
+  "settings.label.621b28836cfb": {
+    "ar": "لا يُطلب الإذن إلا باختيارك",
+    "en": "Permission is requested only when you choose"
+  },
+  "settings.label.59f7f3838c22": {
+    "ar": "منبّه أذكار الصباح والمساء والنوم",
+    "en": "Morning, evening and bedtime adhkar alarm"
+  },
+  "settings.label.dbf1f20277af": {
+    "ar": "يظهر بشاشة مثل الأذان، ثم تبدأ تسجيلات أذكار المجموعة تلقائيًا بعد النداء. يمكنك فتح الأذكار ومتابعة الاستماع، أو إيقافه وتأجيله من الإشعار.",
+    "en": "An adhan-style screen opens, followed by the group's recorded adhkar. Open the reader to keep listening, or stop or snooze from the notification."
+  },
+  "settings.label.60532a15c619": {
+    "ar": "السماح بالتنبيه في الموعد",
+    "en": "Allow exact alarms"
+  },
+  "settings.label.ebd3fcabba1a": {
+    "ar": "السماح بشاشة التذكير عند القفل",
+    "en": "Allow reminders on the lock screen"
+  },
+  "settings.label.e16e6c6e6cca": {
+    "ar": "صوت التذكيرات",
+    "en": "Reminder sound"
+  },
+  "settings.label.b0488c40d66d": {
+    "ar": "نداء عربي مولّد ثم تسجيلات حصن المسلم، محفوظة دون إنترنت",
+    "en": "An Arabic call followed by Hisn al-Muslim recordings, available offline"
+  },
+  "settings.label.2de96579218a": {
+    "ar": "القراءة الصوتية",
+    "en": "Audio reading"
+  },
+  "settings.label.c91f9a08a91a": {
+    "ar": "يُقرأ كل تسجيل من المصدر مرة واحدة، وأعداد التكرار ظاهرة في القارئ. الاستماع لا يسجّل إنجازًا تلقائيًا، ويستمر عند إطفاء الشاشة حتى توقفه.",
+    "en": "Each source recording plays once; repetition counts appear in the reader. Listening does not mark completion automatically. Playback continues with the screen off until you stop it."
+  },
+  "settings.label.3059cea1e1b9": {
+    "ar": "تذكيرات الأذكار",
+    "en": "Adhkar reminders"
+  },
+  "settings.label.e40f0fc849bc": {
+    "ar": "أذكار الصباح",
+    "en": "Morning adhkar"
+  },
+  "settings.label.0e2e265a8e76": {
+    "ar": "أذكار المساء",
+    "en": "Evening adhkar"
+  },
+  "settings.label.7d5b6952f451": {
+    "ar": "أذكار النوم",
+    "en": "Bedtime adhkar"
+  },
+  "settings.label.424201dcea76": {
+    "ar": "تذكير يومي اختياري",
+    "en": "Optional daily reminder"
+  },
+  "settings.label.29d0e567d403": {
+    "ar": "أذكار ما بعد الصلاة",
+    "en": "Adhkar after prayer"
+  },
+  "settings.label.d4b8842666e9": {
+    "ar": "تحتاج مواقيت محسوبة للموقع؛ تُربط في مرحلة الصلاة والقبلة.",
+    "en": "Calculated prayer times for your location are required before these reminders can be scheduled."
+  },
+  "settings.label.10f7ac629dd3": {
+    "ar": "الورد والختمة والمحتوى",
+    "en": "Daily reading, Quran completion and content"
+  },
+  "settings.label.f7c9bb7bc3d2": {
+    "ar": "الورد اليومي",
+    "en": "Daily reading"
+  },
+  "settings.label.f0eff7040402": {
+    "ar": "تذكير الجمعة",
+    "en": "Friday reminder"
+  },
+  "settings.label.1e3059dd8019": {
+    "ar": "المحتوى الإيماني",
+    "en": "Religious content"
+  },
+  "settings.label.7c36052ba956": {
+    "ar": "يوم الجمعة فقط",
+    "en": "Fridays only"
+  },
+  "settings.label.bfe0a93e5a58": {
+    "ar": "تذكير يومي بزيارة المحتوى المحفوظ",
+    "en": "A daily reminder to visit saved content"
+  },
+  "settings.label.7778b422b525": {
+    "ar": "تذكير الختمة",
+    "en": "Quran completion reminder"
+  },
+  "settings.label.328972a5fb04": {
+    "ar": "يُضبط الموعد من كل ختمة. تُلغى تذكيرات الختمة عند إكمالها أو أرشفتها أو حذفها، ويجب تفعيل التذكيرات العامة هنا.",
+    "en": "Set a time in each Quran completion plan. Its reminders stop when the plan is completed, archived or deleted. General reminders must be enabled here."
+  },
+  "settings.label.569727b54fac": {
+    "ar": "اختبار التذكيرات على الجهاز",
+    "en": "Test reminders on this device"
+  },
+  "settings.label.95aa77d7fffd": {
+    "ar": "اختبار بعد 10 ثوانٍ",
+    "en": "Test in 10 seconds"
+  },
+  "settings.label.80ebf0760f4c": {
+    "ar": "يمكنك قفل الشاشة أو تصغير التطبيق. الاختبار لا يغيّر مواعيدك أو يفعّل التذكيرات المعطلة، ولا يسجل إنجازًا.",
+    "en": "You can lock the screen or minimize the app. This test keeps your schedule and disabled reminders unchanged, and does not record progress."
+  },
+  "settings.label.04d5401d1ca2": {
+    "ar": "الصباح",
+    "en": "Morning"
+  },
+  "settings.label.3886059dc4d2": {
+    "ar": "المساء",
+    "en": "Evening"
+  },
+  "settings.label.0031f4fc4051": {
+    "ar": "النوم",
+    "en": "Bedtime"
+  },
+  "settings.label.5070a8821ff8": {
+    "ar": "الورد",
+    "en": "Daily reading"
+  },
+  "settings.label.fa35e221b844": {
+    "ar": "الجمعة",
+    "en": "Friday"
+  },
+  "settings.label.5b17705034c3": {
+    "ar": "الختمة",
+    "en": "Quran completion"
+  },
+  "settings.label.220ebb667ee1": {
+    "ar": "تحقق من إذن الإشعارات والتنبيه الدقيق",
+    "en": "Check notification and exact alarm permissions"
+  },
+  "settings.label.7cf64aa492ee": {
+    "ar": "إلغاء الاختبار وإزالة إشعاراته",
+    "en": "Cancel test and remove its notifications"
+  },
+  "settings.label.0f7ea30de2fa": {
+    "ar": "هذا تذكير محلي لفتح المكتبة؛ إشعارات الرسائل الجديدة من الخادم تُنفذ في مرحلة الرسائل.",
+    "en": "This local reminder opens the library. Notifications for new messages are configured separately."
+  },
+  "settings.label.e671a44808cc": {
+    "ar": "استعادة التذكيرات بعد تشغيل الجهاز",
+    "en": "Restore reminders after restarting the device"
+  },
+  "settings.label.3ff7ec1feebd": {
+    "ar": "Android: يعيد الجدولة دون تشغيل التنبيه العائم تلقائياً",
+    "en": "Android reschedules reminders without automatically starting floating alerts"
+  },
+  "settings.label.872e74a3242d": {
+    "ar": "المفتاح العام لتذكيرات حق",
+    "en": "Master switch for Haq reminders"
+  },
+  "settings.label.6bcadfad309e": {
+    "ar": "تفعيل الأذكار المتكررة",
+    "en": "Enable recurring adhkar"
+  },
+  "settings.label.09a720bf2335": {
+    "ar": "أذكار تختارها وتتكرر خلال اليوم",
+    "en": "Choose adhkar to repeat throughout the day"
+  },
+  "settings.label.f6e0a3f4a233": {
+    "ar": "محتوى التنبيهات",
+    "en": "Reminder content"
+  },
+  "settings.label.2930a5ee5034": {
+    "ar": "اختر الأذكار أو حدّدها كلها",
+    "en": "Choose adhkar or select all"
+  },
+  "settings.label.00b9a978a9d9": {
+    "ar": "تكرار ظهور الذكر",
+    "en": "Reminder frequency"
+  },
+  "settings.label.d8ec9d1acd97": {
+    "ar": "كل ساعة",
+    "en": "Every hour"
+  },
+  "settings.label.8a40487e8f7f": {
+    "ar": "مكان التنبيه",
+    "en": "Reminder location"
+  },
+  "settings.label.3b38d3184491": {
+    "ar": "مركز الإشعارات",
+    "en": "Notification center"
+  },
+  "settings.label.5ed9d885a57d": {
+    "ar": "فوق التطبيقات • Android",
+    "en": "Over other apps · Android"
+  },
+  "settings.label.614caa5b4e5c": {
+    "ar": "عرض الأذكار بالترتيب",
+    "en": "Show adhkar in order"
+  },
+  "settings.label.0cfa8180b1f3": {
+    "ar": "أوقفه للاختيار العشوائي على Android",
+    "en": "Turn off for random order on Android"
+  },
+  "settings.label.73371e71130f": {
+    "ar": "تصل الأذكار كإشعارات عادية، دون خدمة عائمة أو إشعار تشغيل ثابت.",
+    "en": "Adhkar appear as regular notifications, without a floating service or an ongoing notification."
+  },
+  "settings.label.671cc9f0a989": {
+    "ar": "السماح بالظهور فوق التطبيقات",
+    "en": "Allow display over other apps"
+  },
+  "settings.label.20fd7c22d613": {
+    "ar": "إذن مطلوب لعرض فقاعة الذكر",
+    "en": "Permission is required to show floating adhkar"
+  },
+  "settings.label.c88407178bf2": {
+    "ar": "إعادة بدء التنبيه العائم",
+    "en": "Restart floating reminders"
+  },
+  "settings.label.465bd61779a3": {
+    "ar": "بدء التنبيه العائم",
+    "en": "Start floating reminders"
+  },
+  "settings.label.87c89429ccaa": {
+    "ar": "إيقاف",
+    "en": "Stop"
+  },
+  "settings.label.925b2446a786": {
+    "ar": "التشغيل العائم يحتاج إشعار خدمة صامتًا من Android مع زر إيقاف. يمكنك إدارة ظهوره من إعدادات قناته. لا يظهر الذكر فوق شاشة القفل.",
+    "en": "Floating reminders require a silent ongoing Android notification with a Stop button. Manage its visibility in channel settings. Adhkar are not displayed over the lock screen."
+  },
+  "settings.label.2e79ab556873": {
+    "ar": "خيارات إشعار التشغيل في الجهاز",
+    "en": "Ongoing notification settings"
+  },
+  "settings.label.96b8258f9f76": {
+    "ar": "متاح على Android فقط",
+    "en": "Available on Android only"
+  },
+  "settings.label.246ad5397f7b": {
+    "ar": "يستخدم iPhone مركز الإشعارات بالنص الأول المحدد، دون نافذة فوق التطبيقات أو نطق في الخلفية.",
+    "en": "iPhone uses the notification center with the first selected text, without floating alerts or background speech."
+  },
+  "settings.label.e3b231dbc8ab": {
+    "ar": "مظهر الذكر العائم",
+    "en": "Floating reminder appearance"
+  },
+  "settings.label.348e0c7ee5ad": {
+    "ar": "الموضع، مدة الظهور، الخط والألوان",
+    "en": "Position, duration, font and colors"
+  },
+  "settings.label.48b9bf827729": {
+    "ar": "موضع التنبيه العائم",
+    "en": "Floating reminder position"
+  },
+  "settings.label.ada6f0245bf9": {
+    "ar": "أعلى الشاشة",
+    "en": "Top of screen"
+  },
+  "settings.label.0751c3bf1eb4": {
+    "ar": "وسط الشاشة",
+    "en": "Center of screen"
+  },
+  "settings.label.d295a381ecc7": {
+    "ar": "أسفل الشاشة",
+    "en": "Bottom of screen"
+  },
+  "settings.label.cdd5ffe02b3a": {
+    "ar": "إخفاء الذكر تلقائياً",
+    "en": "Hide adhkar automatically"
+  },
+  "settings.label.87b5848cec75": {
+    "ar": "حسب عدد الكلمات",
+    "en": "Based on word count"
+  },
+  "settings.label.25f12acc3b4f": {
+    "ar": "بالضغط فقط",
+    "en": "Only when tapped"
+  },
+  "settings.label.2438fe8dd6ad": {
+    "ar": "5 ثوانٍ",
+    "en": "5 seconds"
+  },
+  "settings.label.67bbde91f9b9": {
+    "ar": "10 ثوانٍ",
+    "en": "10 seconds"
+  },
+  "settings.label.cb24b2dfb628": {
+    "ar": "20 ثانية",
+    "en": "20 seconds"
+  },
+  "settings.label.19bbb432a4be": {
+    "ar": "30 ثانية",
+    "en": "30 seconds"
+  },
+  "settings.label.f7327d4fa33d": {
+    "ar": "شفافية الخلفية",
+    "en": "Background transparency"
+  },
+  "settings.label.8764f6e9b2d3": {
+    "ar": "مع بقاء الإطار والنص",
+    "en": "Keeps the border and text visible"
+  },
+  "settings.label.8a9e34ec531a": {
+    "ar": "حجم خط التنبيه",
+    "en": "Reminder text size"
+  },
+  "settings.label.dac7641861e3": {
+    "ar": "خط التنبيه",
+    "en": "Reminder font"
+  },
+  "settings.label.972ecc0cbd5b": {
+    "ar": "القاهرة",
+    "en": "Cairo"
+  },
+  "settings.label.481fdc951fbe": {
+    "ar": "تجوال",
+    "en": "Tajawal"
+  },
+  "settings.label.589c3fbd999d": {
+    "ar": "أميري",
+    "en": "Amiri"
+  },
+  "settings.label.bd9f9d3c94aa": {
+    "ar": "لون الخلفية",
+    "en": "Background color"
+  },
+  "settings.label.a773f59d295c": {
+    "ar": "لون الإطار",
+    "en": "Border color"
+  },
+  "settings.label.9e296c12bee0": {
+    "ar": "لون النص",
+    "en": "Text color"
+  },
+  "settings.label.1ca56ea0b735": {
+    "ar": "فيروزي",
+    "en": "Teal"
+  },
+  "settings.label.2c216de971c4": {
+    "ar": "كحلي",
+    "en": "Navy"
+  },
+  "settings.label.aee14105c221": {
+    "ar": "ذهبي",
+    "en": "Gold"
+  },
+  "settings.label.a00c5c48f950": {
+    "ar": "عاجي",
+    "en": "Ivory"
+  },
+  "settings.label.d1c237155864": {
+    "ar": "حركة الظهور",
+    "en": "Entrance animation"
+  },
+  "settings.label.c643687b8ecb": {
+    "ar": "يمكن إيقافها لعرض ثابت",
+    "en": "Turn off for a static display"
+  },
+  "settings.label.1749a8ff00bc": {
+    "ar": "نوع الحركة",
+    "en": "Animation type"
+  },
+  "settings.label.15f1283d3665": {
+    "ar": "تكبير",
+    "en": "Zoom"
+  },
+  "settings.label.093504742cdb": {
+    "ar": "تلاشي",
+    "en": "Fade"
+  },
+  "settings.label.1944b0d0b08f": {
+    "ar": "امتداد طولي",
+    "en": "Vertical expansion"
+  },
+  "settings.label.c7d3ac568026": {
+    "ar": "امتداد عرضي",
+    "en": "Horizontal expansion"
+  },
+  "settings.label.2d73fc8effba": {
+    "ar": "انزلاق عمودي",
+    "en": "Vertical slide"
+  },
+  "settings.label.6235b8deffc9": {
+    "ar": "انزلاق أفقي",
+    "en": "Horizontal slide"
+  },
+  "settings.label.07650e633261": {
+    "ar": "ارتداد",
+    "en": "Bounce"
+  },
+  "settings.label.9d6f3422b86c": {
+    "ar": "الصوت والتفاعل",
+    "en": "Sound and interaction"
+  },
+  "settings.label.a7acdfcbd351": {
+    "ar": "يتبع أيضًا إعدادات قنوات الجهاز",
+    "en": "Also follows device notification channel settings"
+  },
+  "settings.label.8303c9f101bd": {
+    "ar": "نطق الذكر العائم",
+    "en": "Read floating adhkar aloud"
+  },
+  "settings.label.5c1b3102f2cc": {
+    "ar": "يحتاج صوتًا عربيًا مثبتًا على الجهاز",
+    "en": "Requires an Arabic voice installed on this device"
+  },
+  "settings.label.ee32d75e2e85": {
+    "ar": "التأجيل السريع",
+    "en": "Quick snooze"
+  },
+  "settings.label.72d753b2d389": {
+    "ar": "إرسال إشعار معاينة للجهاز",
+    "en": "Send a preview notification"
+  },
+  "settings.label.50063210b1c8": {
+    "ar": "حالة الجهاز والأذونات",
+    "en": "Device status and permissions"
+  },
+  "settings.label.5bf5571fe93e": {
+    "ar": "الإشعارات مسموحة",
+    "en": "Notifications are allowed"
+  },
+  "settings.label.067333623b76": {
+    "ar": "تحقق من إذن الإشعارات",
+    "en": "Check notification permission"
+  },
+  "settings.label.5cf79ab1c632": {
+    "ar": "معاينة تنبيه حق — اختر محتوى التنبيهات",
+    "en": "Haq reminder preview — choose reminder content"
+  },
+  "settings.label.e0bfd3702b9e": {
+    "ar": "الظهور فوق التطبيقات",
+    "en": "Display over other apps"
+  },
+  "settings.label.7b1284439233": {
+    "ar": "إذن مستقل عن إذن الإشعارات",
+    "en": "This permission is separate from notification permission"
+  },
+  "settings.label.f6f59037a24c": {
+    "ar": "غير متاح على iOS",
+    "en": "Unavailable on iOS"
+  },
+  "settings.label.bf8a50847a9c": {
+    "ar": "مسموح",
+    "en": "Allowed"
+  },
+  "settings.label.0addcf839185": {
+    "ar": "غير مسموح",
+    "en": "Not allowed"
+  },
+  "settings.label.a7c69b3e0b60": {
+    "ar": "إعدادات البطارية",
+    "en": "Battery settings"
+  },
+  "settings.label.b0aa2f7998d4": {
+    "ar": "افتح إعدادات النظام إذا تأخرت التذكيرات",
+    "en": "Open system settings if reminders are delayed"
+  },
+  "settings.label.af548f807bfd": {
+    "ar": "الصلاحيات بيدك",
+    "en": "You control permissions"
+  },
+  "settings.label.b635bf89bb46": {
+    "ar": "فتح إعدادات الجهاز لا يمنح الإذن تلقائياً. يمكن استخدام التطبيق مع رفض الإشعارات أو الظهور فوق التطبيقات. لا تُرسل أذكارك الشخصية إلى الخادم من هذا القسم.",
+    "en": "Opening device settings does not grant permission automatically. You can use the app without notifications or floating alerts. This section does not send your personal adhkar to the server."
+  },
+  "settings.label.4f4113c3f59c": {
+    "ar": "الإعدادات والحساب",
+    "en": "Settings and account"
+  },
+  "settings.label.f91b3181ad24": {
+    "ar": "تُحفظ تفضيلات التذكير لكل حساب على الجهاز. عند تغيير الحساب تُستبدل خطته وتُزال تنبيهاته القديمة. إعدادات القرآن والمظهر تستخدم مخازنها الحالية.",
+    "en": "Reminder preferences are saved separately for each account on this device. Switching accounts replaces the schedule and removes old notifications. Quran and appearance settings keep their existing storage."
+  },
+  "settings.label.3d7b111bfc64": {
+    "ar": "إعادة إعدادات التذكير؟",
+    "en": "Reset reminder settings?"
+  },
+  "settings.label.1af81c74401d": {
+    "ar": "تلغي التذكيرات وتخصيصاتها لهذا الحساب فقط. تبقى الأذكار والتقدم وإعدادات القرآن محفوظة.",
+    "en": "This resets reminders and their customizations for this account only. Your adhkar, progress and Quran settings are kept."
+  },
+  "settings.label.9a30dc2a96b8": {
+    "ar": "إلغاء",
+    "en": "Cancel"
+  },
+  "settings.label.5216b7259fd4": {
+    "ar": "إعادة ضبط إعدادات التذكير",
+    "en": "Reset reminder settings"
+  },
+  "settings.label.dac87fd7d2c0": {
+    "ar": "إلغاء الاختيار",
+    "en": "Clear selection"
+  },
+  "settings.label.a6e90016c763": {
+    "ar": "ابحث في الأذكار",
+    "en": "Search adhkar"
+  },
+  "settings.label.2e58b72edf70": {
+    "ar": "مسح البحث",
+    "en": "Clear search"
+  },
+  "settings.label.b24ff0a7db4c": {
+    "ar": "إلغاء تحديد الكل",
+    "en": "Deselect all"
+  },
+  "settings.label.adb77f09539d": {
+    "ar": "إلغاء تحديد النتائج",
+    "en": "Deselect results"
+  },
+  "settings.label.cf79723bb808": {
+    "ar": "تحديد الكل",
+    "en": "Select all"
+  },
+  "settings.label.b4ea93fa6cc9": {
+    "ar": "تحديد كل النتائج",
+    "en": "Select all results"
+  },
+  "settings.label.4356cc6c6ea3": {
+    "ar": "لا توجد أذكار تطابق البحث",
+    "en": "No adhkar match your search"
+  },
+  "sakinah.patternInfo": {
+    "ar": "عن النمط: {name}",
+    "en": "About pattern: {name}"
+  },
+  "sakinah.reduceStep": {
+    "ar": "تقليل المرحلة {number}",
+    "en": "Reduce phase {number}"
+  },
+  "sakinah.increaseStep": {
+    "ar": "زيادة المرحلة {number}",
+    "en": "Increase phase {number}"
+  },
+  "sakinah.cycles": {
+    "ar": "الدورات المكتملة: {count}",
+    "en": "Completed cycles: {count}"
+  },
+  "sakinah.elapsed": {
+    "ar": "{count} ثانية من التنفّس الفعلي",
+    "en": "Active breathing time: {count} s"
+  },
+  "sakinah.sessionTitle": {
+    "ar": "جلسة {name}",
+    "en": "{name} session"
+  },
+  "sakinah.historyEntry": {
+    "ar": "{day} • {count} ثانية • {status}",
+    "en": "{day} · {count} s · {status}"
+  },
+  "settings.selectionCount": {
+    "ar": "{selected} محدد من {total}",
+    "en": "{selected} selected of {total}"
+  },
+  "settings.saveSelection": {
+    "ar": "حفظ الاختيار ({count})",
+    "en": "Save selection ({count})"
+  },
+  "settings.reminderTime": {
+    "ar": "موعد {name}",
+    "en": "{name} time"
+  },
+  "settings.testReminder": {
+    "ar": "اختبار {name}",
+    "en": "Test {name}"
+  },
+  "settings.testReminderScheduled": {
+    "ar": "اختبار {name} بعد 10 ثوانٍ",
+    "en": "Testing {name} in 10 seconds"
+  },
+  "sakinah.minutes.zero": {
+    "ar": "{count} دقائق",
+    "en": "{count} minutes"
+  },
+  "sakinah.minutes.one": {
+    "ar": "{count} دقيقة",
+    "en": "{count} minute"
+  },
+  "sakinah.minutes.two": {
+    "ar": "{count} دقائق",
+    "en": "{count} minutes"
+  },
+  "sakinah.minutes.few": {
+    "ar": "{count} دقائق",
+    "en": "{count} minutes"
+  },
+  "sakinah.minutes.many": {
+    "ar": "{count} دقائق",
+    "en": "{count} minutes"
+  },
+  "sakinah.minutes.other": {
+    "ar": "{count} دقائق",
+    "en": "{count} minutes"
+  },
+  "home.label.5c9475ee45e8": {
+    "ar": "تعذّر التحديث؛ بياناتك المحفوظة ما زالت متاحة",
+    "en": "Could not refresh. Your saved data is still available"
+  },
+  "quran.label.6814c8485744": {
+    "ar": "مصادر القرآن وحقوقه",
+    "en": "Quran sources and licensing"
+  },
+  "religious.dailyDuaReference": {
+    "ar": "{surah} • {ayah}",
+    "en": "{surah} · {ayah}"
+  },
+  "settings.scheduleStatus": {
+    "ar": "{count} تذكير في الخطة • {status}",
+    "en": "Scheduled reminders: {count} · {status}"
+  },
+  "settings.selectedCount": {
+    "ar": "{count} محدد",
+    "en": "{count} selected"
+  },
+  "settings.everyMinutes.zero": {
+    "ar": "كل {count} دقيقة",
+    "en": "Every {count} minutes"
+  },
+  "settings.everyHours.zero": {
+    "ar": "كل {count} ساعات",
+    "en": "Every {count} hours"
+  },
+  "settings.minutes.zero": {
+    "ar": "{count} دقيقة",
+    "en": "{count} minutes"
+  },
+  "settings.everyMinutes.one": {
+    "ar": "كل {count} دقيقة",
+    "en": "Every {count} minute"
+  },
+  "settings.everyHours.one": {
+    "ar": "كل {count} ساعات",
+    "en": "Every {count} hour"
+  },
+  "settings.minutes.one": {
+    "ar": "{count} دقيقة",
+    "en": "{count} minute"
+  },
+  "settings.everyMinutes.two": {
+    "ar": "كل {count} دقيقة",
+    "en": "Every {count} minutes"
+  },
+  "settings.everyHours.two": {
+    "ar": "كل {count} ساعات",
+    "en": "Every {count} hours"
+  },
+  "settings.minutes.two": {
+    "ar": "{count} دقيقة",
+    "en": "{count} minutes"
+  },
+  "settings.everyMinutes.few": {
+    "ar": "كل {count} دقيقة",
+    "en": "Every {count} minutes"
+  },
+  "settings.everyHours.few": {
+    "ar": "كل {count} ساعات",
+    "en": "Every {count} hours"
+  },
+  "settings.minutes.few": {
+    "ar": "{count} دقيقة",
+    "en": "{count} minutes"
+  },
+  "settings.everyMinutes.many": {
+    "ar": "كل {count} دقيقة",
+    "en": "Every {count} minutes"
+  },
+  "settings.everyHours.many": {
+    "ar": "كل {count} ساعات",
+    "en": "Every {count} hours"
+  },
+  "settings.minutes.many": {
+    "ar": "{count} دقيقة",
+    "en": "{count} minutes"
+  },
+  "settings.everyMinutes.other": {
+    "ar": "كل {count} دقيقة",
+    "en": "Every {count} minutes"
+  },
+  "settings.everyHours.other": {
+    "ar": "كل {count} ساعات",
+    "en": "Every {count} hours"
+  },
+  "settings.minutes.other": {
+    "ar": "{count} دقيقة",
+    "en": "{count} minutes"
+  },
+  "prayer.label.1f95bcdab035": {
+    "ar": "المعاينة بدون صوت",
+    "en": "Preview is silent"
   }
 }

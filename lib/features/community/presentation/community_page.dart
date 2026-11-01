@@ -10,9 +10,15 @@ import '../../religious_content/data/religious_controller.dart';
 import '../data/community_controller.dart';
 import '../data/public_push.dart';
 import 'community_media.dart';
+import '../../../core/localization/ui_text.dart';
+import '../../../core/localization/app_localization.dart';
 
 part 'community_forms.dart';
 part 'community_publications.dart';
+
+String communityNumber(BuildContext context, num value) =>
+    LocalizationScope.maybeOf(context)?.formats.number(value) ??
+    value.toString();
 
 String communityTitle(CommunitySection section) => switch (section) {
   CommunitySection.circles => 'حلقات الذكر',
@@ -73,7 +79,9 @@ class _CommunityPageState extends State<CommunityPage> {
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
@@ -229,11 +237,15 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
               padding: const EdgeInsets.only(bottom: 30),
               children: [
                 DirectoryHeader(
-                  title: communityTitle(widget.section),
+                  title: context.communityLabel(communityTitle(widget.section)),
                   subtitle: switch (widget.section) {
-                    CommunitySection.circles => 'نجتمع على ذكر الله',
-                    CommunitySection.prayers => 'دعوة طيبة من القلب',
-                    _ => 'محتوى موثق يقرّبك من الله',
+                    CommunitySection.circles => context.communityLabel(
+                      'نجتمع على ذكر الله',
+                    ),
+                    CommunitySection.prayers => context.communityLabel(
+                      'دعوة طيبة من القلب',
+                    ),
+                    _ => context.communityLabel('محتوى موثق يقرّبك من الله'),
                   },
                   onBack: widget.onClose,
                 ),
@@ -252,16 +264,18 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                                 size: 42,
                               ),
                               const SizedBox(height: 12),
-                              const Text(
-                                'سجّل الدخول للمتابعة',
+                              Text(
+                                context.communityLabel('سجّل الدخول للمتابعة'),
                                 style: TextStyle(
                                   fontSize: 21,
                                   fontWeight: FontWeight.w800,
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              const Text(
-                                'الحلقات والمشاركة تحتاج حساب حق. يمكنك متابعة بقية الأقسام كضيف.',
+                              Text(
+                                context.communityLabel(
+                                  'الحلقات والمشاركة تحتاج حساب حق. يمكنك متابعة بقية الأقسام كضيف.',
+                                ),
                               ),
                               const SizedBox(height: 16),
                               FilledButton(
@@ -280,11 +294,17 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                                         ),
                                       ),
                                     ),
-                                child: const Text('تسجيل الدخول أو إنشاء حساب'),
+                                child: Text(
+                                  context.communityLabel(
+                                    'تسجيل الدخول أو إنشاء حساب',
+                                  ),
+                                ),
                               ),
                               TextButton(
                                 onPressed: widget.onClose,
-                                child: const Text('المتابعة كضيف'),
+                                child: Text(
+                                  context.communityLabel('المتابعة كضيف'),
+                                ),
                               ),
                             ],
                           ),
@@ -301,15 +321,23 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                                   children: [
                                     SwitchListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      title: const Text(
-                                        'إشعارات الرسائل والتطبيق مغلق',
+                                      title: Text(
+                                        context.communityLabel(
+                                          'إشعارات الرسائل والتطبيق مغلق',
+                                        ),
                                       ),
                                       subtitle: Text(
                                         !push.available
-                                            ? 'بانتظار تهيئة الخدمة؛ لا حاجة لتفعيلها الآن'
+                                            ? context.communityLabel(
+                                                'بانتظار تهيئة الخدمة؛ لا حاجة لتفعيلها الآن',
+                                              )
                                             : push.active
-                                            ? 'مفعّلة على هذا الجهاز للمحتوى العام'
-                                            : 'اختياري • يربط الجهاز بخدمة Firebase عند التفعيل',
+                                            ? context.communityLabel(
+                                                'مفعّلة على هذا الجهاز للمحتوى العام',
+                                              )
+                                            : context.communityLabel(
+                                                'اختياري • يربط الجهاز بخدمة Firebase عند التفعيل',
+                                              ),
                                       ),
                                       value: push.wanted,
                                       onChanged: push.busy || !push.available
@@ -317,14 +345,21 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                                           : (value) => push.setEnabled(value),
                                     ),
                                     if (push.error case final error?)
-                                      Text(error, textAlign: TextAlign.center),
+                                      Text(
+                                        context.communityLabel(error),
+                                        textAlign: TextAlign.center,
+                                      ),
                                     if (push.available && push.error != null)
                                       TextButton(
                                         onPressed: push.busy
                                             ? null
                                             : () =>
                                                   push.setEnabled(push.wanted),
-                                        child: const Text('إعادة المحاولة'),
+                                        child: Text(
+                                          context.communityLabel(
+                                            'إعادة المحاولة',
+                                          ),
+                                        ),
                                       ),
                                   ],
                                 );
@@ -337,7 +372,7 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                             runSpacing: 8,
                             children: [
                               ChoiceChip(
-                                label: const Text('ادع معي'),
+                                label: Text(context.communityLabel('ادع معي')),
                                 selected: !mine,
                                 onSelected: (_) {
                                   setState(() => mine = false);
@@ -345,7 +380,7 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                                 },
                               ),
                               ChoiceChip(
-                                label: const Text('أدعيتي'),
+                                label: Text(context.communityLabel('أدعيتي')),
                                 selected: mine,
                                 onSelected: (_) {
                                   setState(() => mine = true);
@@ -353,7 +388,9 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                                 },
                               ),
                               ActionChip(
-                                label: const Text('الحسابات المحظورة'),
+                                label: Text(
+                                  context.communityLabel('الحسابات المحظورة'),
+                                ),
                                 onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute<void>(
@@ -374,7 +411,9 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                                       end: 8,
                                     ),
                                     child: ChoiceChip(
-                                      label: Text(kind.value),
+                                      label: Text(
+                                        context.communityLabel(kind.value),
+                                      ),
                                       selected: filter == kind.key,
                                       onSelected: (_) {
                                         setState(() => filter = kind.key);
@@ -389,7 +428,7 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                             spacing: 8,
                             children: [
                               FilterChip(
-                                label: const Text('المحفوظة'),
+                                label: Text(context.communityLabel('المحفوظة')),
                                 selected: savedOnly,
                                 onSelected: (v) {
                                   setState(() => savedOnly = v);
@@ -400,7 +439,9 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                                 onPressed: () =>
                                     _messageOptions(context, c, refresh),
                                 icon: const Icon(Icons.more_horiz),
-                                label: const Text('خيارات الرسائل'),
+                                label: Text(
+                                  context.communityLabel('خيارات الرسائل'),
+                                ),
                               ),
                             ],
                           ),
@@ -415,14 +456,22 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                                   size: 40,
                                 ),
                                 const SizedBox(height: 12),
-                                const Text('خدمات المجتمع غير متاحة حاليًا'),
+                                Text(
+                                  context.communityLabel(
+                                    'خدمات المجتمع غير متاحة حاليًا',
+                                  ),
+                                ),
                                 const SizedBox(height: 8),
-                                const Text(
-                                  'لا توجد أعداد أو منشورات تجريبية. أعد المحاولة عند تفعيل الخدمة.',
+                                Text(
+                                  context.communityLabel(
+                                    'لا توجد أعداد أو منشورات تجريبية. أعد المحاولة عند تفعيل الخدمة.',
+                                  ),
                                 ),
                                 TextButton(
                                   onPressed: refresh,
-                                  child: const Text('إعادة المحاولة'),
+                                  child: Text(
+                                    context.communityLabel('إعادة المحاولة'),
+                                  ),
                                 ),
                               ],
                             ),
@@ -443,15 +492,25 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                           _CommunityCard(
                             child: Text(switch (widget.section) {
                               CommunitySection.circles =>
-                                'لا حلقات منشورة حاليًا',
+                                context.communityLabel(
+                                  'لا حلقات منشورة حاليًا',
+                                ),
                               CommunitySection.prayers =>
                                 mine
-                                    ? 'لم تشارك دعاءً بعد'
-                                    : 'لا مشاركات معتمدة حاليًا',
+                                    ? context.communityLabel(
+                                        'لم تشارك دعاءً بعد',
+                                      )
+                                    : context.communityLabel(
+                                        'لا مشاركات معتمدة حاليًا',
+                                      ),
                               _ =>
                                 savedOnly
-                                    ? 'لا رسائل محفوظة ضمن النتائج'
-                                    : 'لا محتوى منشور حاليًا',
+                                    ? context.communityLabel(
+                                        'لا رسائل محفوظة ضمن النتائج',
+                                      )
+                                    : context.communityLabel(
+                                        'لا محتوى منشور حاليًا',
+                                      ),
                             }, textAlign: TextAlign.center),
                           ),
                         for (final row in entries)
@@ -507,7 +566,7 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                             onPressed: c.loading
                                 ? null
                                 : () => refresh(more: true),
-                            child: const Text('تحميل المزيد'),
+                            child: Text(context.communityLabel('تحميل المزيد')),
                           ),
                         if (widget.section == CommunitySection.prayers &&
                             c.enabled == true)
@@ -516,7 +575,7 @@ class _CommunityDirectoryState extends State<_CommunityDirectory>
                                 ? null
                                 : () => _compose(context, c, onSent: refresh),
                             icon: const Icon(Icons.add),
-                            label: const Text('مشاركة دعاء'),
+                            label: Text(context.communityLabel('مشاركة دعاء')),
                           ),
                         if (notice != null) _CommunityNotice(notice!),
                       ],
@@ -570,12 +629,15 @@ class _CommunityNotice extends StatelessWidget {
     child: Column(
       children: [
         Text(
-          text,
+          context.communityLabel(text),
           textAlign: TextAlign.center,
           style: TextStyle(color: AppPalette.of(context).heading, height: 1.7),
         ),
         if (onRetry != null)
-          TextButton(onPressed: onRetry, child: const Text('إعادة المحاولة')),
+          TextButton(
+            onPressed: onRetry,
+            child: Text(context.communityLabel('إعادة المحاولة')),
+          ),
       ],
     ),
   );
@@ -607,13 +669,24 @@ class _CircleCard extends StatelessWidget {
               children: [
                 Text(
                   row['title'] as String,
+                  textDirection: contentTextDirection(row['title'] as String),
                   style: const TextStyle(
                     fontSize: 21,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
-                  '${row['participants']} مشاركين • ${row['total']} من ${row['goal']}',
+                  context.tr(
+                    'community.circleSummary',
+                    args: {
+                      'participants': communityNumber(
+                        context,
+                        row['participants'] as num,
+                      ),
+                      'total': communityNumber(context, row['total'] as num),
+                      'goal': communityNumber(context, row['goal'] as num),
+                    },
+                  ),
                   style: TextStyle(color: p.muted, fontSize: 12),
                 ),
                 const SizedBox(height: 10),
@@ -694,7 +767,9 @@ class _CircleReaderState extends State<_CircleReader> {
             children: [
               DirectoryHeader(
                 title: row['title'] as String,
-                subtitle: 'مساهمة جماعية محفوظة على حسابك',
+                subtitle: context.communityLabel(
+                  'مساهمة جماعية محفوظة على حسابك',
+                ),
                 onBack: () => Navigator.pop(context),
               ),
               Padding(
@@ -710,8 +785,28 @@ class _CircleReaderState extends State<_CircleReader> {
                             spacing: 16,
                             runSpacing: 8,
                             children: [
-                              Text('العدد العام ${row['total']}'),
-                              Text('المشاركون ${row['participants']}'),
+                              Text(
+                                context.tr(
+                                  'community.total',
+                                  args: {
+                                    'count': communityNumber(
+                                      context,
+                                      row['total'] as num,
+                                    ),
+                                  },
+                                ),
+                              ),
+                              Text(
+                                context.tr(
+                                  'community.participants',
+                                  args: {
+                                    'count': communityNumber(
+                                      context,
+                                      row['participants'] as num,
+                                    ),
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                           const Divider(height: 28),
@@ -732,14 +827,30 @@ class _CircleReaderState extends State<_CircleReader> {
                           ),
                           const SizedBox(height: 24),
                           Text(
-                            'مساهمتك ${row['mine']}',
+                            context.tr(
+                              'community.mine',
+                              args: {
+                                'count': communityNumber(
+                                  context,
+                                  row['mine'] as num,
+                                ),
+                              },
+                            ),
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
                           Text(
-                            'هدف الحلقة ${row['goal']} • هدف جماعي تنظيمي',
+                            context.tr(
+                              'community.goal',
+                              args: {
+                                'count': communityNumber(
+                                  context,
+                                  row['goal'] as num,
+                                ),
+                              },
+                            ),
                             style: TextStyle(color: p.muted, fontSize: 12),
                           ),
                           const SizedBox(height: 20),
@@ -751,7 +862,9 @@ class _CircleReaderState extends State<_CircleReader> {
                                       () => c.membership(widget.id, true),
                                     ),
                               icon: const Icon(Icons.group_add_outlined),
-                              label: const Text('الانضمام للحلقة'),
+                              label: Text(
+                                context.communityLabel('الانضمام للحلقة'),
+                              ),
                             )
                           else ...[
                             SizedBox(
@@ -787,8 +900,12 @@ class _CircleReaderState extends State<_CircleReader> {
                                           ),
                                           Text(
                                             pending
-                                                ? 'إعادة إرسال المساهمة'
-                                                : 'مساهمة واحدة',
+                                                ? context.communityLabel(
+                                                    'إعادة إرسال المساهمة',
+                                                  )
+                                                : context.communityLabel(
+                                                    'مساهمة واحدة',
+                                                  ),
                                           ),
                                         ],
                                       ),
@@ -800,12 +917,16 @@ class _CircleReaderState extends State<_CircleReader> {
                                   : () => mutate(
                                       () => c.membership(widget.id, false),
                                     ),
-                              child: const Text('مغادرة الحلقة'),
+                              child: Text(
+                                context.communityLabel('مغادرة الحلقة'),
+                              ),
                             ),
                           ],
                           if (pending)
-                            const Text(
-                              'هناك مساهمة بانتظار التأكيد. إعادة المحاولة تستخدم العملية نفسها حتى لا يتضاعف العدد.',
+                            Text(
+                              context.communityLabel(
+                                'هناك مساهمة بانتظار التأكيد. إعادة المحاولة تستخدم العملية نفسها حتى لا يتضاعف العدد.',
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           if (pending)
@@ -815,15 +936,21 @@ class _CircleReaderState extends State<_CircleReader> {
                                   : () async {
                                       final confirmed = await _confirm(
                                         context,
-                                        'إيقاف إعادة المحاولة؟',
-                                        'قد تكون المساهمة وصلت للخادم. سيبقى العدد المؤكد على الخادم؛ لن تُرسل هذه العملية مجددًا.',
+                                        context.communityLabel(
+                                          'إيقاف إعادة المحاولة؟',
+                                        ),
+                                        context.communityLabel(
+                                          'قد تكون المساهمة وصلت للخادم. سيبقى العدد المؤكد على الخادم؛ لن تُرسل هذه العملية مجددًا.',
+                                        ),
                                       );
                                       if (confirmed) {
                                         await c.discard('count:${widget.id}');
                                         await refresh();
                                       }
                                     },
-                              child: const Text('إلغاء إعادة الإرسال'),
+                              child: Text(
+                                context.communityLabel('إلغاء إعادة الإرسال'),
+                              ),
                             ),
                         ],
                       ),
@@ -832,7 +959,9 @@ class _CircleReaderState extends State<_CircleReader> {
                     OutlinedButton.icon(
                       onPressed: c.working || refreshing ? null : refresh,
                       icon: const Icon(Icons.refresh),
-                      label: const Text('تحديث الأعداد من الخادم'),
+                      label: Text(
+                        context.communityLabel('تحديث الأعداد من الخادم'),
+                      ),
                     ),
                   ],
                 ),
@@ -872,29 +1001,35 @@ class _PrayerCard extends StatelessWidget {
                 ),
               ),
               PopupMenuButton<String>(
-                tooltip: 'خيارات المشاركة',
+                tooltip: context.communityLabel('خيارات المشاركة'),
                 onSelected: (value) =>
                     _entryAction(context, c, row, value, onChanged),
                 itemBuilder: (_) => [
-                  const PopupMenuItem(value: 'copy', child: Text('نسخ')),
-                  const PopupMenuItem(value: 'share', child: Text('مشاركة')),
+                  PopupMenuItem(
+                    value: 'copy',
+                    child: Text(context.communityLabel('نسخ')),
+                  ),
+                  PopupMenuItem(
+                    value: 'share',
+                    child: Text(context.communityLabel('مشاركة')),
+                  ),
                   if (row['mine'] == true)
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'delete',
-                      child: Text('حذف مشاركتي'),
+                      child: Text(context.communityLabel('حذف مشاركتي')),
                     )
                   else ...[
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'report',
-                      child: Text('شكاية منشور'),
+                      child: Text(context.communityLabel('شكاية منشور')),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'reportAccount',
-                      child: Text('شكاية الحساب'),
+                      child: Text(context.communityLabel('شكاية الحساب')),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
                       value: 'block',
-                      child: Text('حظر الحساب'),
+                      child: Text(context.communityLabel('حظر الحساب')),
                     ),
                   ],
                 ],
@@ -904,14 +1039,15 @@ class _PrayerCard extends StatelessWidget {
           if (row['status'] != 'approved')
             Text(
               row['status'] == 'pending'
-                  ? 'بانتظار المراجعة'
-                  : 'غير معتمدة للنشر',
+                  ? context.communityLabel('بانتظار المراجعة')
+                  : context.communityLabel('غير معتمدة للنشر'),
               style: TextStyle(color: p.gold, fontSize: 12),
             ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 22),
             child: Text(
               row['body'] as String,
+              textDirection: contentTextDirection(row['body'] as String),
               style: TextStyle(fontSize: 22, height: 1.9, color: p.tealHeading),
             ),
           ),
@@ -933,7 +1069,7 @@ class _PrayerCard extends StatelessWidget {
                 icon: Icon(
                   row['liked'] == true ? Icons.favorite : Icons.favorite_border,
                 ),
-                label: Text('${row['likes']}'),
+                label: Text(communityNumber(context, row['likes'] as num)),
               ),
               TextButton.icon(
                 onPressed: row['status'] != 'approved'
@@ -945,14 +1081,14 @@ class _PrayerCard extends StatelessWidget {
                         ),
                       ),
                 icon: const Icon(Icons.chat_bubble_outline),
-                label: Text('${row['comments']}'),
+                label: Text(communityNumber(context, row['comments'] as num)),
               ),
               IconButton(
                 onPressed: () => chooseContentShare(
                   context,
                   ShareCardContent.message(row['body'] as String),
                 ),
-                tooltip: 'مشاركة',
+                tooltip: context.communityLabel('مشاركة'),
                 icon: const Icon(Icons.share_outlined),
               ),
             ],

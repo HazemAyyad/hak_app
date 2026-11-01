@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../../core/localization/ui_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -25,7 +26,11 @@ Future<void> openCommunityLink(BuildContext context, String value) async {
   } catch (_) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تعذّر فتح الرابط على هذا الجهاز')),
+        SnackBar(
+          content: Text(
+            context.communityLabel('تعذّر فتح الرابط على هذا الجهاز'),
+          ),
+        ),
       );
     }
   }
@@ -74,7 +79,9 @@ class _CommunityMediaViewState extends State<CommunityMediaView>
     bool current() => mounted && _foreground && attempt == _attempt;
     VideoPlayerController? preparing;
     try {
-      if (!supported) throw StateError('هذا المشغّل متاح على Android وiOS');
+      if (!supported) {
+        throw StateError('هذا المشغّل متاح على Android وiOS');
+      }
       await widget.beforePlay?.call();
       if (!current()) return;
       final youtube = widget.row['youtube_id'] as String?;
@@ -210,7 +217,10 @@ class _CommunityMediaViewState extends State<CommunityMediaView>
     children: [
       if (loading) const LinearProgressIndicator(),
       if (error != null)
-        Padding(padding: const EdgeInsets.all(14), child: Text(error!)),
+        Padding(
+          padding: const EdgeInsets.all(14),
+          child: Text(context.communityLabel(error!)),
+        ),
       if (web != null)
         AspectRatio(
           aspectRatio: 16 / 9,
@@ -226,7 +236,9 @@ class _CommunityMediaViewState extends State<CommunityMediaView>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              tooltip: player!.value.isPlaying ? 'إيقاف مؤقت' : 'تشغيل',
+              tooltip: player!.value.isPlaying
+                  ? context.communityLabel('إيقاف مؤقت')
+                  : context.communityLabel('تشغيل'),
               onPressed: () async {
                 if (player!.value.isPlaying) {
                   await player!.pause();
@@ -250,7 +262,11 @@ class _CommunityMediaViewState extends State<CommunityMediaView>
         FilledButton.icon(
           onPressed: loading ? null : start,
           icon: const Icon(Icons.play_circle_outline),
-          label: Text(loading ? 'جارٍ التحميل…' : 'تشغيل الفيديو'),
+          label: Text(
+            loading
+                ? context.communityLabel('جارٍ التحميل…')
+                : context.communityLabel('تشغيل الفيديو'),
+          ),
         ),
       if (widget.row['youtube_id'] != null)
         TextButton(
@@ -258,7 +274,7 @@ class _CommunityMediaViewState extends State<CommunityMediaView>
             context,
             'https://www.youtube.com/watch?v=${widget.row['youtube_id']}',
           ),
-          child: const Text('فتح في YouTube'),
+          child: Text(context.communityLabel('فتح في YouTube')),
         ),
     ],
   );

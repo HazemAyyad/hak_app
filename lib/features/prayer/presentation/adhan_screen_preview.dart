@@ -121,7 +121,7 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                               ),
                             ),
                             IconButton(
-                              tooltip: 'إعدادات الأذان',
+                              tooltip: context.prayerLabel('إعدادات الأذان'),
                               onPressed: () => open('prayer-settings'),
                               icon: const Icon(Icons.tune, color: Colors.white),
                             ),
@@ -263,7 +263,9 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                           ),
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
-                            child: Text('أذكار بعد الصلاة'),
+                            child: Text(
+                              context.prayerLabel('أذكار بعد الصلاة'),
+                            ),
                           ),
                         ),
                       ),
@@ -319,7 +321,7 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          'المعاينة بدون صوت',
+                          context.prayerLabel('المعاينة بدون صوت'),
                           style: TextStyle(color: Colors.white70, fontSize: 11),
                         ),
                       ),

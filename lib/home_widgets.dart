@@ -3,6 +3,29 @@ part of 'main.dart';
 const _homeTeal = Color(0xFF00818B);
 const _homeGold = Color(0xFFCAA15D);
 
+String _homePlural(BuildContext context, String key, int count) =>
+    LocalizationScope.maybeOf(context)?.pluralText('home.$key', count) ??
+    (key == 'pages' ? '$count صفحة' : '$count قراءة اليوم');
+
+String _homeHijri(BuildContext context, PrayerController? controller) {
+  if (controller != null) return prayerHijriInterfaceLabel(context, controller);
+  final localization = LocalizationScope.maybeOf(context);
+  final now = DateTime.now();
+  if (localization == null || localization.code == 'ar') {
+    return prayerHijriDate(now);
+  }
+  final parts = prayerHijriParts(now);
+  if (parts == null) return prayerHijriDate(now);
+  return localization.text(
+    'prayer.hijriDate',
+    args: {
+      'day': localization.formats.integer(parts.day),
+      'month': localization.text('prayer.hijriMonth.${parts.month}'),
+      'year': localization.formats.integer(parts.year),
+    },
+  );
+}
+
 TextStyle _homeText(
   BuildContext context,
   double size, {
@@ -19,15 +42,22 @@ class _HeroHeader extends StatelessWidget {
   const _HeroHeader({
     required this.name,
     required this.onAccount,
+    required this.onLanguage,
     required this.onSearch,
     required this.onNotifications,
   });
   final String name;
-  final VoidCallback onAccount, onSearch, onNotifications;
+  final VoidCallback onAccount, onLanguage, onSearch, onNotifications;
   @override
   Widget build(BuildContext context) {
     final dark = AppPalette.of(context).dark;
     final top = MediaQuery.paddingOf(context).top;
+    final greetingBackground =
+        (LocalizationScope.maybeOf(context)?.code ?? 'ar') == 'ar'
+        ? null
+        : dark
+        ? const Color(0xE6102D3A)
+        : const Color(0xE6FFFCF7);
     return Container(
       height: 238 + top + (MediaQuery.textScalerOf(context).scale(1) - 1) * 80,
       padding: EdgeInsets.fromLTRB(22, top + 22, 22, 20),
@@ -47,13 +77,19 @@ class _HeroHeader extends StatelessWidget {
               _RoundButton(
                 icon: Icons.person_outline,
                 onTap: onAccount,
-                tooltip: 'الحساب',
+                tooltip: context.homeLabel('الحساب'),
+              ),
+              const SizedBox(width: 10),
+              _RoundButton(
+                icon: Icons.language,
+                onTap: onLanguage,
+                tooltip: context.tr('language.title', fallback: 'لغة التطبيق'),
               ),
               const Spacer(),
               _RoundButton(
                 icon: Icons.search,
                 onTap: onSearch,
-                tooltip: 'البحث في حق',
+                tooltip: context.homeLabel('البحث في حق'),
               ),
               const SizedBox(width: 10),
               Stack(
@@ -62,7 +98,7 @@ class _HeroHeader extends StatelessWidget {
                   _RoundButton(
                     icon: Icons.notifications_none,
                     onTap: onNotifications,
-                    tooltip: 'رسائل حق',
+                    tooltip: context.homeLabel('رسائل حق'),
                   ),
                 ],
               ),
@@ -73,7 +109,10 @@ class _HeroHeader extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 4),
               child: SizedBox.square(
-                dimension: 100,
+                dimension: math.min(
+                  100,
+                  MediaQuery.sizeOf(context).width - 244,
+                ),
                 child: Stack(
                   children: [
                     Image.asset(
@@ -95,22 +134,38 @@ class _HeroHeader extends StatelessWidget {
             ),
           ),
           Align(
-            alignment: Alignment.bottomRight,
+            alignment: AlignmentDirectional.bottomStart,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('مرحبًا بك', style: _homeText(context, 13)),
+                Text(
+                  context.homeLabel('مرحبًا بك'),
+                  style: _homeText(
+                    context,
+                    13,
+                  ).copyWith(backgroundColor: greetingBackground),
+                ),
                 Text(
                   name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: _homeText(context, 21, weight: FontWeight.w800),
+                  style: _homeText(
+                    context,
+                    21,
+                    weight: FontWeight.w800,
+                  ).copyWith(backgroundColor: greetingBackground),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'تقبّل الله طاعاتك.. وجعلنا وإياك من أهل القرآن',
-                  style: _homeText(context, 10, weight: FontWeight.w500),
+                  context.homeLabel(
+                    'تقبّل الله طاعاتك.. وجعلنا وإياك من أهل القرآن',
+                  ),
+                  style: _homeText(
+                    context,
+                    10,
+                    weight: FontWeight.w500,
+                  ).copyWith(backgroundColor: greetingBackground),
                 ),
               ],
             ),
@@ -205,12 +260,15 @@ class PrayerCard extends StatelessWidget {
   );
   Widget _content(BuildContext context) {
     final palette = AppPalette.of(context);
-    String time(PrayerName name) =>
-        controller?.today?.moments
-            .where((m) => m.name == name)
-            .firstOrNull
-            ?.label ??
-        '--:--';
+    String time(PrayerName name) {
+      final moment = controller?.today?.moments
+          .where((m) => m.name == name)
+          .firstOrNull;
+      return moment == null
+          ? '--:--'
+          : quranFormats(context).clock24(moment.time);
+    }
+
     final prayers = [
       ('الفجر', time(PrayerName.fajr), Icons.wb_sunny_outlined),
       ('الظهر', time(PrayerName.dhuhr), Icons.light_mode_outlined),
@@ -252,11 +310,12 @@ class PrayerCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'الصلاة القادمة',
+                        context.homeLabel('الصلاة القادمة'),
                         style: _homeText(context, 10, weight: FontWeight.w800),
                       ),
                       Text(
-                        controller?.upcoming?.name.label ?? 'حدد الموقع',
+                        controller?.upcoming?.name.displayLabel(context) ??
+                            context.homeLabel('حدد الموقع'),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: _homeText(context, 18, weight: FontWeight.w800),
@@ -272,7 +331,7 @@ class PrayerCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'ساعة   دقيقة   ثانية',
+                        context.homeLabel('ساعة   دقيقة   ثانية'),
                         style: _homeText(context, 8, color: palette.muted),
                       ),
                     ],
@@ -283,8 +342,7 @@ class PrayerCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        controller?.hijriLabel ??
-                            prayerHijriDate(DateTime.now()),
+                        _homeHijri(context, controller),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: _homeText(context, 10, color: palette.muted),
@@ -302,7 +360,7 @@ class PrayerCard extends StatelessWidget {
                           Flexible(
                             child: Text(
                               controller?.config.location?.label ??
-                                  'الموقع غير محدد',
+                                  context.homeLabel('الموقع غير محدد'),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: _homeText(
@@ -382,7 +440,7 @@ class PrayerCard extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              prayer.$1,
+                              context.prayerLabel(prayer.$1),
                               style: _homeText(context, 11, color: color),
                             ),
                             const SizedBox(height: 3),
@@ -444,6 +502,9 @@ class QuickServices extends StatelessWidget {
       ('ماذا تشعر؟', Icons.favorite, 'heart'),
       ('القبلة', Icons.article, 'qibla'),
     ];
+    final translated =
+        (LocalizationScope.maybeOf(context)?.code ?? 'ar') != 'ar';
+    final scale = MediaQuery.textScalerOf(context).scale(1);
     return LayoutBuilder(
       builder: (context, constraints) => GridView.builder(
         padding: EdgeInsets.zero,
@@ -453,10 +514,10 @@ class QuickServices extends StatelessWidget {
           crossAxisCount: 4,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
-          mainAxisExtent:
-              (constraints.maxWidth - 30) /
-              4 *
-              MediaQuery.textScalerOf(context).scale(1),
+          mainAxisExtent: math.max(
+            (constraints.maxWidth - 30) / 4 * scale,
+            translated ? 32 + 7 + 29 * scale + 6 : 0,
+          ),
         ),
         itemCount: items.length,
         itemBuilder: (context, index) {
@@ -517,8 +578,9 @@ class QuickServices extends StatelessWidget {
                   ),
                   const SizedBox(height: 7),
                   Text(
-                    items[index].$1,
-                    maxLines: 1,
+                    context.homeLabel(items[index].$1),
+                    maxLines: translated ? 2 : 1,
+                    textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
                     style: _homeText(
                       context,
@@ -542,8 +604,12 @@ class DhikrCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final day = AppearanceScope.of(context).isDaytime;
-    final title = day ? 'أذكار الصباح' : 'أذكار المساء';
-    final invitation = day ? 'ابدأ يومك بذكر الله' : 'اختم يومك بذكر الله';
+    final title = day
+        ? context.homeLabel('أذكار الصباح')
+        : context.homeLabel('أذكار المساء');
+    final invitation = day
+        ? context.homeLabel('ابدأ يومك بذكر الله')
+        : context.homeLabel('اختم يومك بذكر الله');
     return _PhotoCard(
       image: day ? 'assets/home/dawn.png' : 'assets/home/lantern.png',
       height: 180,
@@ -577,12 +643,20 @@ class DhikrCard extends StatelessWidget {
                 const SizedBox(height: 9),
                 Text(
                   day
-                      ? 'مجموعة من الأذكار الصحيحة لبدء يومك بالبركة والطمأنينة.'
-                      : 'مجموعة من الأذكار الصحيحة لمساء يملؤه الذكر والطمأنينة.',
+                      ? context.homeLabel(
+                          'مجموعة من الأذكار الصحيحة لبدء يومك بالبركة والطمأنينة.',
+                        )
+                      : context.homeLabel(
+                          'مجموعة من الأذكار الصحيحة لمساء يملؤه الذكر والطمأنينة.',
+                        ),
                   style: _homeText(context, 10, weight: FontWeight.w500),
                 ),
                 const Spacer(),
-                _HomeButton(label: 'عرض الأذكار', gold: true, onPressed: onTap),
+                _HomeButton(
+                  label: context.homeLabel('عرض الأذكار'),
+                  gold: true,
+                  onPressed: onTap,
+                ),
               ],
             ),
           ),
@@ -626,18 +700,23 @@ class ReadingCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'أكمل من حيث توقفت',
+                  context.homeLabel('أكمل من حيث توقفت'),
                   style: _homeText(context, 14, weight: FontWeight.w800),
                 ),
                 const Spacer(),
                 Text(
-                  surah == null ? 'ابدأ رحلتك مع القرآن' : 'سورة ${surah.name}',
+                  surah == null
+                      ? context.homeLabel('ابدأ رحلتك مع القرآن')
+                      : surah.localizedTitle(context),
                   style: _homeText(context, 14, weight: FontWeight.w800),
                 ),
                 Text(
                   verse == null
-                      ? 'سيُحفظ موضع قراءتك هنا'
-                      : 'الآية ${verse.ayah}',
+                      ? context.homeLabel('سيُحفظ موضع قراءتك هنا')
+                      : context.tr(
+                          'home.ayah',
+                          args: {'number': quranNumber(context, verse.ayah)},
+                        ),
                   style: _homeText(
                     context,
                     11,
@@ -656,7 +735,7 @@ class ReadingCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 _HomeButton(
-                  label: 'متابعة القراءة',
+                  label: context.homeLabel('متابعة القراءة'),
                   onPressed: onContinue,
                   arrow: true,
                 ),
@@ -687,7 +766,7 @@ class DailyVerseCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'محتوى اليوم',
+                  context.homeLabel('محتوى اليوم'),
                   style: _homeText(context, 14, weight: FontWeight.w800),
                 ),
                 const SizedBox(height: 7),
@@ -703,7 +782,7 @@ class DailyVerseCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    'آية اليوم',
+                    context.homeLabel('آية اليوم'),
                     style: _homeText(
                       context,
                       10,
@@ -716,6 +795,7 @@ class DailyVerseCard extends StatelessWidget {
                 const SizedBox(height: 9),
                 Text(
                   '$verse ﴿٤﴾',
+                  textDirection: TextDirection.rtl,
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     fontFamily: 'AmiriQuran',
@@ -726,7 +806,7 @@ class DailyVerseCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'سورة الطلاق - الآية 4',
+                  context.homeLabel('سورة الطلاق - الآية 4'),
                   style: _homeText(context, 10, color: palette.tealHeading),
                 ),
                 const SizedBox(height: 9),
@@ -736,14 +816,16 @@ class DailyVerseCard extends StatelessWidget {
                       () => showDialog<void>(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: const Text('آية اليوم'),
-                          content: const Text(
-                            'سورة الطلاق — الآية 4\n\nالتفسير غير متاح حاليًا دون مصدر تفسير معتمد.',
+                          title: Text(context.homeLabel('آية اليوم')),
+                          content: Text(
+                            context.homeLabel(
+                              'سورة الطلاق — الآية 4\n\nالتفسير غير متاح حاليًا دون مصدر تفسير معتمد.',
+                            ),
                           ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: const Text('إغلاق'),
+                              child: Text(context.homeLabel('إغلاق')),
                             ),
                           ],
                         ),
@@ -758,7 +840,7 @@ class DailyVerseCard extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'عرض التفسير',
+                    context.homeLabel('عرض التفسير'),
                     style: _homeText(context, 10, weight: FontWeight.w800),
                   ),
                 ),
@@ -824,29 +906,39 @@ class JourneyCards extends StatelessWidget {
               (sum, s) => sum + s.targets.values.fold<int>(0, (a, b) => a + b),
             ) ??
         0;
-    final unavailable = failed ? 'تعذّر التحميل' : '—';
+    final unavailable = failed ? context.homeLabel('تعذّر التحميل') : '—';
     final items = [
       (
-        'العادات',
-        c == null ? unavailable : 'اليوم: $done من $goal',
+        context.homeLabel('العادات'),
+        c == null
+            ? unavailable
+            : context.tr(
+                'home.habitsToday',
+                args: {
+                  'done': quranNumber(context, done),
+                  'goal': quranNumber(context, goal),
+                },
+              ),
         Icons.spa_outlined,
         'leaf',
         goal == 0 ? 0.0 : done / goal,
       ),
       (
-        'الأذكار',
-        c == null ? unavailable : '${totals!.adhkar} قراءة اليوم',
+        context.homeLabel('الأذكار'),
+        c == null
+            ? unavailable
+            : _homePlural(context, 'readingsToday', totals!.adhkar),
         Icons.radio_button_checked,
         'beads',
         adhkarGoal == 0 ? 0.0 : (totals!.adhkar / adhkarGoal).clamp(0.0, 1.0),
       ),
       (
-        'الختمة',
+        context.homeLabel('الختمة'),
         c == null
             ? unavailable
             : active == null
-            ? 'لم تبدأ بعد'
-            : '${c.readPages(active).length} صفحة',
+            ? context.homeLabel('لم تبدأ بعد')
+            : _homePlural(context, 'pages', c.readPages(active).length),
         Icons.menu_book_outlined,
         'book',
         active == null ? 0.0 : c!.fraction(active),
@@ -938,22 +1030,27 @@ class FridayCard extends StatelessWidget {
                     color: appAccent(context, AppPalette.of(context).heading),
                   ),
                   const SizedBox(width: 8),
-                  Text('محتوى خاص', style: _homeText(context, 10)),
+                  Flexible(
+                    child: Text(
+                      context.homeLabel('محتوى خاص'),
+                      style: _homeText(context, 10),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 7),
               Text(
-                'يوم الجمعة',
+                context.homeLabel('يوم الجمعة'),
                 style: _homeText(context, 16, weight: FontWeight.w800),
               ),
               const SizedBox(height: 4),
               Text(
-                'سورة الكهف . الصلاة على النبي ﷺ',
+                context.homeLabel('سورة الكهف . الصلاة على النبي ﷺ'),
                 style: _homeText(context, 10),
               ),
               const Spacer(),
               _HomeButton(
-                label: 'عرض المحتوى',
+                label: context.homeLabel('عرض المحتوى'),
                 gold: true,
                 onPressed: onTap ?? () {},
               ),
@@ -975,7 +1072,7 @@ class ArticlesRow extends StatelessWidget {
       Expanded(
         child: _ArticleCard(
           onTap: onCongregation,
-          title: 'فضل صلاة الجماعة',
+          title: context.homeLabel('فضل صلاة الجماعة'),
           image: 'assets/home/header_dark.png',
         ),
       ),
@@ -983,7 +1080,7 @@ class ArticlesRow extends StatelessWidget {
       Expanded(
         child: _ArticleCard(
           onTap: onCharity,
-          title: 'فضل الصدقة في الإسلام',
+          title: context.homeLabel('فضل الصدقة في الإسلام'),
           image: 'assets/home/lantern.png',
         ),
       ),
@@ -999,7 +1096,9 @@ class _ArticleCard extends StatelessWidget {
   Widget build(BuildContext context) => GestureDetector(
     onTap: onTap,
     child: Container(
-      height: 104 * MediaQuery.textScalerOf(context).scale(1),
+      constraints: BoxConstraints(
+        minHeight: 104 * MediaQuery.textScalerOf(context).scale(1),
+      ),
       padding: const EdgeInsets.all(9),
       decoration: BoxDecoration(
         image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
@@ -1017,7 +1116,7 @@ class _ArticleCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(7),
             ),
             child: Text(
-              'مقالة',
+              context.homeLabel('مقالة'),
               style: _homeText(context, 10, color: Colors.white),
             ),
           ),
@@ -1085,9 +1184,11 @@ class _PhotoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = AppPalette.of(context).dark;
     return Container(
-      height: math.max(
-        minimumHeight,
-        height * MediaQuery.textScalerOf(context).scale(1),
+      constraints: BoxConstraints(
+        minHeight: math.max(
+          minimumHeight,
+          height * MediaQuery.textScalerOf(context).scale(1),
+        ),
       ),
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
@@ -1104,34 +1205,44 @@ class _PhotoCard extends StatelessWidget {
                 ),
               ],
       ),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset(image, fit: BoxFit.cover, alignment: imageAlignment),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                stops: const [0, .44, .68, 1],
-                colors: dark
-                    ? const [
-                        Color(0x00102D3A),
-                        Color(0x20102D3A),
-                        Color(0xED102D3A),
-                        Color(0xFF102D3A),
-                      ]
-                    : const [
-                        Color(0x00FFFCF7),
-                        Color(0x99FFFCF7),
-                        Color(0xF5FFFCF7),
-                        Color(0xFFFFFCF7),
-                      ],
+      child: IntrinsicHeight(
+        child: Stack(
+          fit: StackFit.passthrough,
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                image,
+                fit: BoxFit.cover,
+                alignment: imageAlignment,
               ),
             ),
-          ),
-          Padding(padding: const EdgeInsets.all(13), child: child),
-        ],
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: AlignmentDirectional.centerEnd,
+                    end: AlignmentDirectional.centerStart,
+                    stops: const [0, .44, .68, 1],
+                    colors: dark
+                        ? const [
+                            Color(0x00102D3A),
+                            Color(0x20102D3A),
+                            Color(0xED102D3A),
+                            Color(0xFF102D3A),
+                          ]
+                        : const [
+                            Color(0x00FFFCF7),
+                            Color(0x99FFFCF7),
+                            Color(0xF5FFFCF7),
+                            Color(0xFFFFFCF7),
+                          ],
+                  ),
+                ),
+              ),
+            ),
+            Padding(padding: const EdgeInsets.all(13), child: child),
+          ],
+        ),
       ),
     );
   }
@@ -1163,14 +1274,24 @@ class _HomeButton extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
+          Flexible(
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: const TextStyle(
+                fontSize: 11,
+                height: 1.1,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
           ),
           if (arrow) ...[
             const SizedBox(width: 10),
-            const Icon(
-              Icons.chevron_left,
+            Icon(
+              Directionality.of(context) == TextDirection.rtl
+                  ? Icons.chevron_left
+                  : Icons.chevron_right,
               size: 18,
               textDirection: TextDirection.ltr,
             ),
@@ -1189,7 +1310,7 @@ class _ShareButton extends StatelessWidget {
     color: const Color(0xEEFFFFFF),
     shape: const CircleBorder(),
     child: IconButton(
-      tooltip: 'مشاركة',
+      tooltip: context.homeLabel('مشاركة'),
       constraints: const BoxConstraints.tightFor(width: 30, height: 30),
       padding: EdgeInsets.zero,
       icon: Icon(

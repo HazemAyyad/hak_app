@@ -30,6 +30,10 @@ import 'features/account/data/app_session.dart';
 import 'features/admin/presentation/admin_page.dart';
 import 'core/localization/app_localization.dart';
 import 'core/localization/interface_messages.dart';
+import 'core/localization/language_page.dart';
+import 'core/localization/ui_text.dart';
+import 'features/quran/presentation/quran_widgets.dart';
+import 'features/prayer/presentation/prayer_labels.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'features/community/data/community_controller.dart';
 import 'features/community/data/public_push.dart';
@@ -882,7 +886,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             _pushFeature(
               feature,
               (routeContext) => Directionality(
-                textDirection: TextDirection.rtl,
+                textDirection: Directionality.of(routeContext),
                 child: Scaffold(
                   body: ReligiousHost(
                     controller: _religious,
@@ -918,8 +922,22 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         .isNotEmpty ==
                     true
                 ? (_quran.account.profile!['name'] as String).trim()
-                : 'ضيف حق',
+                : context.homeLabel('ضيف حق'),
             onAccount: _openQuranAccount,
+            onLanguage: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                settings: const BottomNavigationRouteSettings(
+                  name: '/settings/language',
+                ),
+                builder: (_) => Scaffold(
+                  body: const LanguagePage(),
+                  bottomNavigationBar: AppBottomNavigation(
+                    section: _section,
+                    onSelected: _selectDestinationFromSettings,
+                  ),
+                ),
+              ),
+            ),
             onSearch: _openHomeSearch,
             onNotifications: () => _openFeature(AppFeature.messages),
           ),
@@ -956,8 +974,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             DailyVerseCard(onTafsir: _openDailyTafsir),
             SizedBox(height: 20),
             SectionHeader(
-              title: 'رحلتك اليوم',
-              action: 'عرض الكل',
+              title: context.homeLabel('رحلتك اليوم'),
+              action: context.homeLabel('عرض الكل'),
               onTap: () => _openFeature(AppFeature.statistics),
             ),
             SizedBox(height: 10),
@@ -966,16 +984,20 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             FridayCard(onTap: () => _openReligious('friday')),
             SizedBox(height: 20),
             SectionHeader(
-              title: 'مقالات ومعلومات',
-              action: 'عرض الكل',
+              title: context.homeLabel('مقالات ومعلومات'),
+              action: context.homeLabel('عرض الكل'),
               onTap: () => _selectSection(AppSection.more),
             ),
             SizedBox(height: 10),
             ArticlesRow(
-              onCongregation: () =>
-                  _openHomeArticle('فضل صلاة الجماعة', '2:43'),
-              onCharity: () =>
-                  _openHomeArticle('فضل الصدقة في الإسلام', '2:261'),
+              onCongregation: () => _openHomeArticle(
+                context.homeLabel('فضل صلاة الجماعة'),
+                '2:43',
+              ),
+              onCharity: () => _openHomeArticle(
+                context.homeLabel('فضل الصدقة في الإسلام'),
+                '2:261',
+              ),
             ),
           ]),
         ),
@@ -1084,7 +1106,9 @@ class SocialMediaSection extends StatelessWidget {
 
   static Future<void> shareApp(BuildContext context) => chooseContentShare(
     context,
-    ShareCardContent.message('شارك الخير مع من تحب عبر تطبيق حق'),
+    ShareCardContent.message(
+      context.homeLabel('شارك الخير مع من تحب عبر تطبيق حق'),
+    ),
   );
 
   @override
@@ -1094,12 +1118,12 @@ class SocialMediaSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          'تواصل معنا',
+          context.homeLabel('تواصل معنا'),
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
         ),
         SizedBox(height: 5),
         Text(
-          'تابع حسابات حق وشارك الخير مع من تحب',
+          context.homeLabel('تابع حسابات حق وشارك الخير مع من تحب'),
           style: TextStyle(color: AppPalette.of(context).muted, fontSize: 13),
         ),
         SizedBox(height: 14),
@@ -1116,22 +1140,22 @@ class SocialMediaSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _SocialButton(
-                label: 'فيسبوك',
+                label: context.homeLabel('فيسبوك'),
                 child: Text(
                   'f',
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900),
                 ),
               ),
               _SocialButton(
-                label: 'إنستغرام',
+                label: context.homeLabel('إنستغرام'),
                 child: Icon(Icons.camera_alt_outlined, size: 29),
               ),
               _SocialButton(
-                label: 'يوتيوب',
+                label: context.homeLabel('يوتيوب'),
                 child: Icon(Icons.play_arrow_rounded, size: 34),
               ),
               _SocialButton(
-                label: 'مشاركة',
+                label: context.homeLabel('مشاركة'),
                 onTap: () => shareApp(context),
                 child: Icon(Icons.share_outlined, size: 28),
               ),
@@ -1159,7 +1183,7 @@ class SocialMediaSection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'شارك تطبيق حق',
+                          context.homeLabel('شارك تطبيق حق'),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 17,
@@ -1167,7 +1191,7 @@ class SocialMediaSection extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'ساهم في نشر الخير',
+                          context.homeLabel('ساهم في نشر الخير'),
                           style: TextStyle(color: Colors.white70, fontSize: 12),
                         ),
                       ],
@@ -1184,7 +1208,7 @@ class SocialMediaSection extends StatelessWidget {
                         vertical: 10,
                       ),
                       child: Text(
-                        'مشاركة',
+                        context.homeLabel('مشاركة'),
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,

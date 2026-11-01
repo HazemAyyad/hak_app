@@ -583,7 +583,7 @@ class QuranHomePage extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      'مصادر القرآن وحقوقه',
+                      context.quranLabel('مصادر القرآن وحقوقه'),
                       style: qText(
                         context,
                         size: 10,

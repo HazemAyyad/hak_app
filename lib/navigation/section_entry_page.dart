@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../app_appearance.dart';
 import 'feature_routes.dart';
+import '../core/localization/ui_text.dart';
 export '../features/adhkar/presentation/adhkar_host.dart'
     show AdhkarSectionPage, AdhkarSectionPageState;
 
@@ -26,7 +27,7 @@ class FeaturePreparationPage extends StatelessWidget {
             Icon(feature.icon, color: palette.tealHeading, size: 64),
             const SizedBox(height: 24),
             Text(
-              feature.title,
+              feature.localizedTitle(context),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: palette.heading,
@@ -36,7 +37,7 @@ class FeaturePreparationPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'قريبًا في حق',
+              context.homeLabel('قريبًا في حق'),
               style: TextStyle(
                 color: palette.gold,
                 fontSize: 18,
@@ -46,8 +47,12 @@ class FeaturePreparationPage extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               feature == AppFeature.qibla
-                  ? 'خدمة تحديد اتجاه القبلة لم تتوفر بعد. لن نعرض اتجاهًا قبل تحديد موقعك والتحقق منه.'
-                  : 'نعمل على تجهيز هذه الخدمة. يمكنك الآن الاستفادة من القرآن والأدعية والمحتوى الديني.',
+                  ? context.homeLabel(
+                      'خدمة تحديد اتجاه القبلة لم تتوفر بعد. لن نعرض اتجاهًا قبل تحديد موقعك والتحقق منه.',
+                    )
+                  : context.homeLabel(
+                      'نعمل على تجهيز هذه الخدمة. يمكنك الآن الاستفادة من القرآن والأدعية والمحتوى الديني.',
+                    ),
               textAlign: TextAlign.center,
               style: TextStyle(color: palette.muted, height: 1.8),
             ),
@@ -56,7 +61,7 @@ class FeaturePreparationPage extends StatelessWidget {
               OutlinedButton.icon(
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.arrow_back),
-                label: const Text('العودة إلى الخدمات'),
+                label: Text(context.homeLabel('العودة إلى الخدمات')),
               ),
             ],
           ],
@@ -65,10 +70,10 @@ class FeaturePreparationPage extends StatelessWidget {
     );
     if (embedded) return ColoredBox(color: palette.background, child: content);
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: Directionality.of(context),
       child: Scaffold(
         backgroundColor: palette.background,
-        appBar: AppBar(title: Text(feature.title)),
+        appBar: AppBar(title: Text(feature.localizedTitle(context))),
         body: content,
       ),
     );

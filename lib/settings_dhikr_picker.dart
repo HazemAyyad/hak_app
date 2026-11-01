@@ -47,7 +47,7 @@ class _DhikrContentPickerState extends State<_DhikrContentPicker> {
                     MediaQuery.viewInsetsOf(context).bottom)
                 .clamp(240, 1000),
         child: Directionality(
-          textDirection: TextDirection.rtl,
+          textDirection: Directionality.of(context),
           child: Column(
             children: [
               Padding(
@@ -56,7 +56,7 @@ class _DhikrContentPickerState extends State<_DhikrContentPicker> {
                   children: [
                     Expanded(
                       child: Text(
-                        'محتوى التنبيهات',
+                        context.settingsLabel('محتوى التنبيهات'),
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
@@ -65,7 +65,7 @@ class _DhikrContentPickerState extends State<_DhikrContentPicker> {
                       ),
                     ),
                     IconButton(
-                      tooltip: 'إلغاء الاختيار',
+                      tooltip: context.settingsLabel('إلغاء الاختيار'),
                       onPressed: () => Navigator.pop(context),
                       icon: const Icon(Icons.close),
                     ),
@@ -79,12 +79,12 @@ class _DhikrContentPickerState extends State<_DhikrContentPicker> {
                   controller: search,
                   onChanged: (_) => setState(() {}),
                   decoration: InputDecoration(
-                    hintText: 'ابحث في الأذكار',
+                    hintText: context.settingsLabel('ابحث في الأذكار'),
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: search.text.isEmpty
                         ? null
                         : IconButton(
-                            tooltip: 'مسح البحث',
+                            tooltip: context.settingsLabel('مسح البحث'),
                             onPressed: () => setState(search.clear),
                             icon: const Icon(Icons.close),
                           ),
@@ -106,7 +106,21 @@ class _DhikrContentPickerState extends State<_DhikrContentPicker> {
                   alignment: WrapAlignment.spaceBetween,
                   children: [
                     Text(
-                      '${selected.length} محدد من ${entries.length}',
+                      context.tr(
+                        'settings.selectionCount',
+                        args: {
+                          'selected':
+                              LocalizationScope.maybeOf(
+                                context,
+                              )?.formats.integer(selected.length) ??
+                              selected.length,
+                          'total':
+                              LocalizationScope.maybeOf(
+                                context,
+                              )?.formats.integer(entries.length) ??
+                              entries.length,
+                        },
+                      ),
                       key: const ValueKey('dhikr-selection-count'),
                     ),
                     TextButton.icon(
@@ -117,11 +131,13 @@ class _DhikrContentPickerState extends State<_DhikrContentPicker> {
                       label: Text(
                         allSelected
                             ? (query.isEmpty
-                                  ? 'إلغاء تحديد الكل'
-                                  : 'إلغاء تحديد النتائج')
+                                  ? context.settingsLabel('إلغاء تحديد الكل')
+                                  : context.settingsLabel(
+                                      'إلغاء تحديد النتائج',
+                                    ))
                             : (query.isEmpty
-                                  ? 'تحديد الكل'
-                                  : 'تحديد كل النتائج'),
+                                  ? context.settingsLabel('تحديد الكل')
+                                  : context.settingsLabel('تحديد كل النتائج')),
                       ),
                       onPressed: shown.isEmpty
                           ? null
@@ -147,7 +163,11 @@ class _DhikrContentPickerState extends State<_DhikrContentPicker> {
               const Divider(height: 1),
               Expanded(
                 child: shown.isEmpty
-                    ? const Center(child: Text('لا توجد أذكار تطابق البحث'))
+                    ? Center(
+                        child: Text(
+                          context.settingsLabel('لا توجد أذكار تطابق البحث'),
+                        ),
+                      )
                     : Scrollbar(
                         child: ListView.separated(
                           key: const ValueKey('dhikr-content-list'),
@@ -201,13 +221,24 @@ class _DhikrContentPickerState extends State<_DhikrContentPicker> {
                           key: const ValueKey('save-dhikr-content'),
                           onPressed: () =>
                               Navigator.pop(context, selected.toList()),
-                          child: Text('حفظ الاختيار (${selected.length})'),
+                          child: Text(
+                            context.tr(
+                              'settings.saveSelection',
+                              args: {
+                                'count':
+                                    LocalizationScope.maybeOf(
+                                      context,
+                                    )?.formats.integer(selected.length) ??
+                                    selected.length,
+                              },
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
                       TextButton(
                         onPressed: () => Navigator.pop(context),
-                        child: const Text('إلغاء'),
+                        child: Text(context.settingsLabel('إلغاء')),
                       ),
                     ],
                   ),

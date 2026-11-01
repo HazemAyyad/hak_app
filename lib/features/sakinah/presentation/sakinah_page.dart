@@ -12,7 +12,17 @@ import '../../religious_content/data/religious_controller.dart';
 import '../data/breathing_session.dart';
 import '../data/sakinah_record.dart';
 
+import '../../../core/localization/app_localization.dart';
+import '../../../core/localization/ui_text.dart';
+
 part 'sakinah_session_page.dart';
+
+String _sNumber(BuildContext context, num value) =>
+    LocalizationScope.maybeOf(context)?.formats.number(value) ??
+    value.toString();
+String _sMinutes(BuildContext context, int count) =>
+    LocalizationScope.maybeOf(context)?.pluralText('sakinah.minutes', count) ??
+    '$count ${count == 1 ? 'دقيقة' : 'دقائق'}';
 
 class SakinahPage extends StatefulWidget {
   const SakinahPage({super.key, required this.controller, this.monotonicClock});
@@ -54,19 +64,23 @@ class _SakinahPageState extends State<SakinahPage> {
 
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection:
+        LocalizationScope.maybeOf(context)?.language.direction ??
+        TextDirection.rtl,
     child: FutureBuilder<ReligiousActivityController>(
       future: _load,
       builder: (context, snapshot) {
         final activity = snapshot.data;
         if (activity == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('سكينة')),
+            appBar: AppBar(title: Text(context.sakinahLabel('سكينة'))),
             body: Center(
               child: snapshot.hasError
                   ? TextButton(
                       onPressed: () => setState(() => _load = _prepare()),
-                      child: const Text('تعذّر فتح سكينة؛ أعد المحاولة'),
+                      child: Text(
+                        context.sakinahLabel('تعذّر فتح سكينة؛ أعد المحاولة'),
+                      ),
                     )
                   : const CircularProgressIndicator(),
             ),
@@ -79,8 +93,8 @@ class _SakinahPageState extends State<SakinahPage> {
             observers: [_routes],
             onGenerateRoute: (_) => MaterialPageRoute<void>(
               builder: (context) => _SakinahLayout(
-                title: 'سكينة',
-                subtitle: 'لحظات من الطمأنينة',
+                title: context.sakinahLabel('سكينة'),
+                subtitle: context.sakinahLabel('لحظات من الطمأنينة'),
                 onBack: () => Navigator.of(this.context).pop(),
                 children: [
                   for (var i = 0; i < sakinahPaths.length; i++)
@@ -108,7 +122,7 @@ class _SakinahPageState extends State<SakinahPage> {
                           ),
                         ),
                         title: Text(
-                          sakinahNames[i],
+                          context.sakinahLabel(sakinahNames[i]),
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -116,7 +130,7 @@ class _SakinahPageState extends State<SakinahPage> {
                           ),
                         ),
                         subtitle: Text(
-                          'اختر النمط والمدة ثم ابدأ',
+                          context.sakinahLabel('اختر النمط والمدة ثم ابدأ'),
                           style: TextStyle(
                             fontSize: 12,
                             color: AppPalette.of(context).muted,
@@ -139,10 +153,12 @@ class _SakinahPageState extends State<SakinahPage> {
                       ),
                       compact: true,
                     ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(bottom: 12),
                     child: Text(
-                      'تنفّس بهدوء، واختر الإيقاع والمدة المناسبين لك.',
+                      context.sakinahLabel(
+                        'تنفّس بهدوء، واختر الإيقاع والمدة المناسبين لك.',
+                      ),
                     ),
                   ),
                   OutlinedButton.icon(
@@ -154,7 +170,7 @@ class _SakinahPageState extends State<SakinahPage> {
                       ),
                     ),
                     icon: const Icon(Icons.history),
-                    label: const Text('سجل الجلسات'),
+                    label: Text(context.sakinahLabel('سجل الجلسات')),
                   ),
                 ],
               ),
@@ -193,7 +209,7 @@ class _SakinahLayout extends StatelessWidget {
               top: 14,
               left: 16,
               child: IconButton.filledTonal(
-                tooltip: 'رجوع',
+                tooltip: context.sakinahLabel('رجوع'),
                 onPressed: onBack ?? () => Navigator.maybePop(context),
                 icon: const Icon(Icons.arrow_forward),
               ),
@@ -347,8 +363,8 @@ class _SakinahSetupState extends State<_SakinahSetup> {
 
   @override
   Widget build(BuildContext context) => _SakinahLayout(
-    title: sakinahNames[widget.path],
-    subtitle: 'اختر إيقاعك وخذ لحظة هادئة',
+    title: context.sakinahLabel(sakinahNames[widget.path]),
+    subtitle: context.sakinahLabel('اختر إيقاعك وخذ لحظة هادئة'),
     children: [
       RadioGroup<int>(
         groupValue: _pattern,
@@ -362,15 +378,15 @@ class _SakinahSetupState extends State<_SakinahSetup> {
                   children: [
                     RadioListTile<int>(
                       contentPadding: EdgeInsets.zero,
-                      title: Text(names[i]),
+                      title: Text(context.sakinahLabel(names[i])),
                       subtitle: Text(
                         i == 0
-                            ? '4 / 7 / 8 / 0 ثوانٍ'
+                            ? context.sakinahLabel('4 / 7 / 8 / 0 ثوانٍ')
                             : i == 1
-                            ? '4 / 4 / 4 / 4 ثوانٍ'
+                            ? context.sakinahLabel('4 / 4 / 4 / 4 ثوانٍ')
                             : i == 2
-                            ? '5 / 0 / 5 / 0 ثوانٍ'
-                            : 'عدّل مدة كل مرحلة',
+                            ? context.sakinahLabel('5 / 0 / 5 / 0 ثوانٍ')
+                            : context.sakinahLabel('عدّل مدة كل مرحلة'),
                       ),
                       value: i,
                     ),
@@ -379,20 +395,22 @@ class _SakinahSetupState extends State<_SakinahSetup> {
                         context: context,
                         useRootNavigator: false,
                         builder: (context) => AlertDialog(
-                          title: Text(names[i]),
-                          content: const Text(
-                            'الترتيب: شهيق، حبس بعد الشهيق، زفير، ثم حبس بعد الزفير. تتجاوز الجلسة أي مرحلة مدتها صفر. المدد بالثواني؛ اختر نمطًا مريحًا ويمكنك الوقف أو الإنهاء في أي وقت.',
+                          title: Text(context.sakinahLabel(names[i])),
+                          content: Text(
+                            context.sakinahLabel(
+                              'الترتيب: شهيق، حبس بعد الشهيق، زفير، ثم حبس بعد الزفير. تتجاوز الجلسة أي مرحلة مدتها صفر. المدد بالثواني؛ اختر نمطًا مريحًا ويمكنك الوقف أو الإنهاء في أي وقت.',
+                            ),
                           ),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: const Text('تم'),
+                              child: Text(context.sakinahLabel('تم')),
                             ),
                           ],
                         ),
                       ),
                       icon: const Icon(Icons.info_outline),
-                      label: const Text('عن النمط'),
+                      label: Text(context.sakinahLabel('عن النمط')),
                     ),
                     if (i == 3 && _pattern == 3) ...[
                       for (var step = 0; step < 4; step++)
@@ -401,16 +419,19 @@ class _SakinahSetupState extends State<_SakinahSetup> {
                             Expanded(
                               child: Text(
                                 [
-                                  'الشهيق',
-                                  'حبس بعد الشهيق',
-                                  'الزفير',
-                                  'حبس بعد الزفير',
+                                  context.sakinahLabel('الشهيق'),
+                                  context.sakinahLabel('حبس بعد الشهيق'),
+                                  context.sakinahLabel('الزفير'),
+                                  context.sakinahLabel('حبس بعد الزفير'),
                                 ][step],
                               ),
                             ),
                             IconButton(
                               key: ValueKey('breath-minus-$step'),
-                              tooltip: 'تقليل المرحلة ${step + 1}',
+                              tooltip: context.tr(
+                                'sakinah.reduceStep',
+                                args: {'number': _sNumber(context, step + 1)},
+                              ),
                               onPressed: _custom[step] <= (step.isEven ? 1 : 0)
                                   ? null
                                   : () => setState(() => _custom[step]--),
@@ -419,7 +440,10 @@ class _SakinahSetupState extends State<_SakinahSetup> {
                             Text('${_custom[step]}'),
                             IconButton(
                               key: ValueKey('breath-plus-$step'),
-                              tooltip: 'زيادة المرحلة ${step + 1}',
+                              tooltip: context.tr(
+                                'sakinah.increaseStep',
+                                args: {'number': _sNumber(context, step + 1)},
+                              ),
                               onPressed: _custom[step] >= 20
                                   ? null
                                   : () => setState(() => _custom[step]++),
@@ -439,8 +463,8 @@ class _SakinahSetupState extends State<_SakinahSetup> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              'مدة الجلسة',
+            Text(
+              context.sakinahLabel('مدة الجلسة'),
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Wrap(
@@ -448,7 +472,7 @@ class _SakinahSetupState extends State<_SakinahSetup> {
               children: [
                 for (final minute in [1, 3, 5])
                   ChoiceChip(
-                    label: Text('$minute ${minute == 1 ? 'دقيقة' : 'دقائق'}'),
+                    label: Text(_sMinutes(context, minute)),
                     selected: _minutes == minute,
                     onSelected: (_) => setState(() => _minutes = minute),
                   ),
@@ -456,33 +480,39 @@ class _SakinahSetupState extends State<_SakinahSetup> {
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('تقليل الحركة'),
+              title: Text(context.sakinahLabel('تقليل الحركة')),
               value: _reduced,
               onChanged: (v) => setState(() => _reduced = v),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('اهتزاز عند تغير المرحلة'),
+              title: Text(context.sakinahLabel('اهتزاز عند تغير المرحلة')),
               value: _haptic,
               onChanged: (v) => setState(() => _haptic = v),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('حفظ مدة الجلسة في سجلي'),
+              title: Text(context.sakinahLabel('حفظ مدة الجلسة في سجلي')),
               value: _record,
               onChanged: (v) => setState(() => _record = v),
             ),
-            const Text(
-              'التمهيد ثلاث ثوانٍ خارج مدة الجلسة. عند مغادرة الشاشة أو انتقال التطبيق للخلفية تتوقف الجلسة، والمتابعة باختيارك. الذكر اختياري دون عدد مرتبط بالتنفّس.',
+            Text(
+              context.sakinahLabel(
+                'التمهيد ثلاث ثوانٍ خارج مدة الجلسة. عند مغادرة الشاشة أو انتقال التطبيق للخلفية تتوقف الجلسة، والمتابعة باختيارك. الذكر اختياري دون عدد مرتبط بالتنفّس.',
+              ),
             ),
           ],
         ),
       ),
-      if (_error != null) Text(_error!),
+      if (_error != null) Text(context.sakinahLabel(_error!)),
       FilledButton.icon(
         onPressed: _starting ? null : _start,
         icon: const Icon(Icons.play_arrow),
-        label: Text(_starting ? 'جارٍ التحضير…' : 'ابدأ الجلسة'),
+        label: Text(
+          _starting
+              ? context.sakinahLabel('جارٍ التحضير…')
+              : context.sakinahLabel('ابدأ الجلسة'),
+        ),
       ),
     ],
   );
@@ -505,65 +535,79 @@ class _SakinahHistoryState extends State<_SakinahHistory> {
   late Future<List<ReligiousActivityEvent>> _load = widget.activity.store
       .events(widget.scope);
   @override
-  Widget build(
-    BuildContext context,
-  ) => FutureBuilder<List<ReligiousActivityEvent>>(
-    future: _load,
-    builder: (context, snapshot) {
-      final events = snapshot.data ?? [];
-      final complete = events
-          .where(
-            (e) =>
-                e.kind == ActivityKind.complete &&
-                e.subjectId.startsWith('breathing:'),
-          )
-          .map((e) => e.sessionId)
-          .toSet();
-      final sessions =
-          events
+  Widget build(BuildContext context) =>
+      FutureBuilder<List<ReligiousActivityEvent>>(
+        future: _load,
+        builder: (context, snapshot) {
+          final events = snapshot.data ?? [];
+          final complete = events
               .where(
                 (e) =>
-                    e.kind == ActivityKind.breathing &&
+                    e.kind == ActivityKind.complete &&
                     e.subjectId.startsWith('breathing:'),
               )
-              .toList()
-            ..sort((a, b) {
-              final time = b.occurredAt.compareTo(a.occurredAt);
-              return time == 0 ? b.id.compareTo(a.id) : time;
-            });
-      return _SakinahLayout(
-        title: 'سجل الجلسات',
-        subtitle: 'لحظاتك المحفوظة كما سجّلتها',
-        children: [
-          if (snapshot.hasError)
-            TextButton(
-              onPressed: () => setState(
-                () => _load = widget.activity.store.events(widget.scope),
-              ),
-              child: const Text('تعذّر فتح السجل؛ أعد المحاولة'),
-            ),
-          if (!snapshot.hasData && !snapshot.hasError)
-            const Center(child: CircularProgressIndicator()),
-          if (snapshot.hasData && sessions.isEmpty)
-            const Text('لا توجد جلسات محفوظة بعد.'),
-          for (final e in sessions)
-            _sPanel(
-              context,
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Icon(
-                  complete.contains(e.sessionId)
-                      ? Icons.check_circle_outline
-                      : Icons.stop_circle_outlined,
+              .map((e) => e.sessionId)
+              .toSet();
+          final sessions =
+              events
+                  .where(
+                    (e) =>
+                        e.kind == ActivityKind.breathing &&
+                        e.subjectId.startsWith('breathing:'),
+                  )
+                  .toList()
+                ..sort((a, b) {
+                  final time = b.occurredAt.compareTo(a.occurredAt);
+                  return time == 0 ? b.id.compareTo(a.id) : time;
+                });
+          return _SakinahLayout(
+            title: context.sakinahLabel('سجل الجلسات'),
+            subtitle: context.sakinahLabel('لحظاتك المحفوظة كما سجّلتها'),
+            children: [
+              if (snapshot.hasError)
+                TextButton(
+                  onPressed: () => setState(
+                    () => _load = widget.activity.store.events(widget.scope),
+                  ),
+                  child: Text(
+                    context.sakinahLabel('تعذّر فتح السجل؛ أعد المحاولة'),
+                  ),
                 ),
-                title: Text(_historyTitle(e.subjectId)),
-                subtitle: Text(
-                  '${e.day} • ${e.amount} ثانية • ${complete.contains(e.sessionId) ? 'مكتملة' : 'انتهت مبكرًا'}',
+              if (!snapshot.hasData && !snapshot.hasError)
+                const Center(child: CircularProgressIndicator()),
+              if (snapshot.hasData && sessions.isEmpty)
+                Text(context.sakinahLabel('لا توجد جلسات محفوظة بعد.')),
+              for (final e in sessions)
+                _sPanel(
+                  context,
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(
+                      complete.contains(e.sessionId)
+                          ? Icons.check_circle_outline
+                          : Icons.stop_circle_outlined,
+                    ),
+                    title: Text(
+                      context.sakinahLabel(_historyTitle(e.subjectId)),
+                    ),
+                    subtitle: Text(
+                      context.tr(
+                        'sakinah.historyEntry',
+                        args: {
+                          'day': e.day,
+                          'count': _sNumber(context, e.amount),
+                          'status': context.sakinahLabel(
+                            complete.contains(e.sessionId)
+                                ? 'مكتملة'
+                                : 'انتهت مبكرًا',
+                          ),
+                        },
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-        ],
+            ],
+          );
+        },
       );
-    },
-  );
 }

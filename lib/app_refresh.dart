@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'core/localization/ui_text.dart';
 
 /// One refresh surface above the navigators. Feature pages supply their own
 /// data callback without nesting another indicator or replacing their scroll.
@@ -47,8 +48,12 @@ class _AppRefreshHostState extends State<AppRefreshHost> {
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-          const SnackBar(
-            content: Text('تعذّر التحديث؛ بياناتك المحفوظة ما زالت متاحة'),
+          SnackBar(
+            content: Text(
+              context.homeLabel(
+                'تعذّر التحديث؛ بياناتك المحفوظة ما زالت متاحة',
+              ),
+            ),
           ),
         );
       }

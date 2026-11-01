@@ -280,7 +280,16 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
                                     ),
                                   ),
                                   Text(
-                                    'البقرة • 201',
+                                    context.tr(
+                                      'religious.dailyDuaReference',
+                                      args: {
+                                        'surah': context.tr(
+                                          'quran.surah.2',
+                                          fallback: 'البقرة',
+                                        ),
+                                        'ayah': religiousNumber(context, 201),
+                                      },
+                                    ),
                                     style: rText(
                                       context,
                                       9,

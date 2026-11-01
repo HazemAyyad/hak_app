@@ -447,7 +447,10 @@ class _AdhkarIndexState extends State<_AdhkarIndex> {
                                             if (progress?.groups[group.id]
                                                 case final p?)
                                               Text(
-                                                '${p.percent}٪',
+                                                adhkarPercent(
+                                                  context,
+                                                  p.percent / 100,
+                                                ),
                                                 key: ValueKey(
                                                   'progress-percent-${group.id}',
                                                 ),

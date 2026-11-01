@@ -132,18 +132,20 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
       context: context,
       useRootNavigator: false,
       builder: (context) => AlertDialog(
-        title: const Text('إنهاء الجلسة مبكرًا؟'),
-        content: const Text(
-          'يمكنك المتابعة من مكانك. الإنهاء المبكر يحفظ وقت التنفّس الفعلي فقط إذا اخترت الحفظ، ولا يعتبر جلسة مكتملة.',
+        title: Text(context.sakinahLabel('إنهاء الجلسة مبكرًا؟')),
+        content: Text(
+          context.sakinahLabel(
+            'يمكنك المتابعة من مكانك. الإنهاء المبكر يحفظ وقت التنفّس الفعلي فقط إذا اخترت الحفظ، ولا يعتبر جلسة مكتملة.',
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('متابعة الجلسة'),
+            child: Text(context.sakinahLabel('متابعة الجلسة')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('إنهاء الجلسة'),
+            child: Text(context.sakinahLabel('إنهاء الجلسة')),
           ),
         ],
       ),
@@ -176,10 +178,13 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
     child: _SakinahLayout(
       title: session.finished
           ? session.status == BreathingStatus.completed
-                ? 'اكتملت الجلسة'
-                : 'انتهت الجلسة'
-          : 'جلسة ${sakinahNames[widget.path]}',
-      subtitle: 'لحظات من الطمأنينة',
+                ? context.sakinahLabel('اكتملت الجلسة')
+                : context.sakinahLabel('انتهت الجلسة')
+          : context.tr(
+              'sakinah.sessionTitle',
+              args: {'name': context.sakinahLabel(sakinahNames[widget.path])},
+            ),
+      subtitle: context.sakinahLabel('لحظات من الطمأنينة'),
       onBack: session.finished ? () => Navigator.pop(context) : _end,
       children: session.finished ? _closing(context) : _active(context),
     ),
@@ -217,14 +222,14 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
                       children: [
                         Text(
                           paused
-                              ? 'متوقف مؤقتًا'
+                              ? context.sakinahLabel('متوقف مؤقتًا')
                               : preparing
-                              ? 'استعد بهدوء'
+                              ? context.sakinahLabel('استعد بهدوء')
                               : [
-                                  'شهيق',
-                                  'حبس',
-                                  'زفير',
-                                  'حبس',
+                                  context.sakinahLabel('شهيق'),
+                                  context.sakinahLabel('حبس'),
+                                  context.sakinahLabel('زفير'),
+                                  context.sakinahLabel('حبس'),
                                 ][phase.phase.index],
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -264,7 +269,12 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
               ),
             ),
             const SizedBox(height: 14),
-            Text('الدورات المكتملة: ${session.cycles}'),
+            Text(
+              context.tr(
+                'sakinah.cycles',
+                args: {'count': _sNumber(context, session.cycles)},
+              ),
+            ),
             const SizedBox(height: 8),
             Text(
               sakinahWords[widget.path],
@@ -290,7 +300,11 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
                     ),
                     onPressed: paused ? session.resume : session.pause,
                     icon: Icon(paused ? Icons.play_arrow : Icons.pause),
-                    label: Text(paused ? 'متابعة' : 'إيقاف مؤقت'),
+                    label: Text(
+                      paused
+                          ? context.sakinahLabel('متابعة')
+                          : context.sakinahLabel('إيقاف مؤقت'),
+                    ),
                   ),
                   FilledButton.icon(
                     style: FilledButton.styleFrom(
@@ -303,7 +317,7 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
                     ),
                     onPressed: _end,
                     icon: const Icon(Icons.stop_outlined),
-                    label: const Text('إنهاء الجلسة'),
+                    label: Text(context.sakinahLabel('إنهاء الجلسة')),
                   ),
                 ];
                 if (constraints.maxWidth < 310 ||
@@ -330,14 +344,18 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
             FilterChip(
               key: const ValueKey('breathing-haptic'),
               avatar: const Icon(Icons.vibration),
-              label: const Text('اهتزاز الجلسة'),
+              label: Text(context.sakinahLabel('اهتزاز الجلسة')),
               selected: _hapticEnabled,
               onSelected: (v) => setState(() => _hapticEnabled = v),
             ),
           ],
         ),
       ),
-      const Text('عند انتقال التطبيق للخلفية تتوقف الجلسة حتى تختار المتابعة.'),
+      Text(
+        context.sakinahLabel(
+          'عند انتقال التطبيق للخلفية تتوقف الجلسة حتى تختار المتابعة.',
+        ),
+      ),
     ];
   }
 
@@ -359,12 +377,17 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
             const SizedBox(height: 12),
             Text(
               session.status == BreathingStatus.completed
-                  ? 'تقبّل الله منك'
-                  : 'يمكنك العودة في وقت يناسبك',
+                  ? context.sakinahLabel('تقبّل الله منك')
+                  : context.sakinahLabel('يمكنك العودة في وقت يناسبك'),
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 23, color: p.heading),
             ),
-            Text('${session.elapsed.inSeconds} ثانية من التنفّس الفعلي'),
+            Text(
+              context.tr(
+                'sakinah.elapsed',
+                args: {'count': _sNumber(context, session.elapsed.inSeconds)},
+              ),
+            ),
           ],
         ),
         tinted: true,
@@ -386,7 +409,16 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
               ),
               const SizedBox(height: 12),
               Text(
-                'سورة ${repo.surah(repo.byKey[key]!.surah).name} • الآية ${repo.byKey[key]!.ayah}',
+                context.tr(
+                  'search.verse',
+                  args: {
+                    'name': context.tr(
+                      'quran.surah.${repo.byKey[key]!.surah}',
+                      fallback: repo.surah(repo.byKey[key]!.surah).name,
+                    ),
+                    'ayah': _sNumber(context, repo.byKey[key]!.ayah),
+                  },
+                ),
                 style: TextStyle(color: p.muted),
               ),
             ],
@@ -394,12 +426,12 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
         ),
       Text(
         !widget.record
-            ? 'لم تحفظ هذه الجلسة حسب اختيارك.'
+            ? context.sakinahLabel('لم تحفظ هذه الجلسة حسب اختيارك.')
             : _saved
-            ? 'حُفظت الجلسة في سجلك.'
+            ? context.sakinahLabel('حُفظت الجلسة في سجلك.')
             : _saving
-            ? 'جارٍ حفظ الجلسة…'
-            : _error ?? '',
+            ? context.sakinahLabel('جارٍ حفظ الجلسة…')
+            : context.sakinahLabel(_error ?? ''),
       ),
       if (_error != null)
         TextButton(
@@ -409,11 +441,11 @@ class _SakinahSessionPageState extends State<_SakinahSessionPage>
                   _error = null;
                   unawaited(_save());
                 },
-          child: const Text('إعادة محاولة الحفظ'),
+          child: Text(context.sakinahLabel('إعادة محاولة الحفظ')),
         ),
       FilledButton(
         onPressed: () => Navigator.pop(context),
-        child: const Text('تم'),
+        child: Text(context.sakinahLabel('تم')),
       ),
     ];
   }

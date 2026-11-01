@@ -39,13 +39,19 @@ Future<void> _messageOptions(
         children: [
           ListTile(
             leading: const Icon(Icons.notifications_none),
-            title: const Text('تنبيه رسائل حق'),
-            subtitle: Text(c.messageSound ? 'تنبيه مع صوت' : 'صامت'),
+            title: Text(context.communityLabel('تنبيه رسائل حق')),
+            subtitle: Text(
+              c.messageSound
+                  ? context.communityLabel('تنبيه مع صوت')
+                  : context.communityLabel('صامت'),
+            ),
             onTap: () => Navigator.pop(ctx, 'sound'),
           ),
           ListTile(
             leading: const Icon(Icons.delete_outline),
-            title: const Text('حذف كافة الرسائل من هذا الجهاز'),
+            title: Text(
+              context.communityLabel('حذف كافة الرسائل من هذا الجهاز'),
+            ),
             onTap: () => Navigator.pop(ctx, 'delete'),
           ),
         ],
@@ -56,8 +62,10 @@ Future<void> _messageOptions(
   if (choice == 'delete' &&
       await _confirm(
         context,
-        'حذف كافة الرسائل؟',
-        'سيُخفى كل ما سبق من الرسائل عن هذا الحساب على هذا الجهاز. لا يؤثر على رسائل الآخرين أو الرسائل الجديدة لاحقًا.',
+        context.communityLabel('حذف كافة الرسائل؟'),
+        context.communityLabel(
+          'سيُخفى كل ما سبق من الرسائل عن هذا الحساب على هذا الجهاز. لا يؤثر على رسائل الآخرين أو الرسائل الجديدة لاحقًا.',
+        ),
       )) {
     if (current()) await c.hideAll();
   }
@@ -67,21 +75,23 @@ Future<void> _messageOptions(
       useRootNavigator: false,
       context: context,
       builder: (ctx) => SimpleDialog(
-        title: const Text('تنبيه رسائل حق'),
+        title: Text(context.communityLabel('تنبيه رسائل حق')),
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16),
             child: Text(
-              'هذا اختيار التنبيه عند تحديث القسم وهو مفتوح. إشعارات التطبيق المغلق لها خيار مستقل أعلى صفحة الرسائل، وتحتاج تهيئة الخدمة وإذن النظام؛ تصل بصمت للمحتوى العام.',
+              context.communityLabel(
+                'هذا اختيار التنبيه عند تحديث القسم وهو مفتوح. إشعارات التطبيق المغلق لها خيار مستقل أعلى صفحة الرسائل، وتحتاج تهيئة الخدمة وإذن النظام؛ تصل بصمت للمحتوى العام.',
+              ),
             ),
           ),
           SimpleDialogOption(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('صامت'),
+            child: Text(context.communityLabel('صامت')),
           ),
           SimpleDialogOption(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('تنبيه مع صوت'),
+            child: Text(context.communityLabel('تنبيه مع صوت')),
           ),
         ],
       ),
@@ -127,7 +137,7 @@ class _PublicationCard extends StatelessWidget {
                 ),
               ),
               PopupMenuButton<String>(
-                tooltip: 'خيارات الرسالة',
+                tooltip: context.communityLabel('خيارات الرسالة'),
                 onSelected: (value) async {
                   final scope = c.scope, token = c.quran.account.token;
                   try {
@@ -147,8 +157,10 @@ class _PublicationCard extends StatelessWidget {
                         context.mounted &&
                         await _confirm(
                           context,
-                          'حذف الرسالة؟',
-                          'تُخفى هذه الرسالة محليًا لهذا الحساب فقط.',
+                          context.communityLabel('حذف الرسالة؟'),
+                          context.communityLabel(
+                            'تُخفى هذه الرسالة محليًا لهذا الحساب فقط.',
+                          ),
                         )) {
                       if (context.mounted &&
                           c.scope == scope &&
@@ -159,30 +171,45 @@ class _PublicationCard extends StatelessWidget {
                   } catch (_) {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('تعذّر إكمال الإجراء المحلي'),
+                        SnackBar(
+                          content: Text(
+                            context.communityLabel(
+                              'تعذّر إكمال الإجراء المحلي',
+                            ),
+                          ),
                         ),
                       );
                     }
                   }
                 },
                 itemBuilder: (_) => [
-                  const PopupMenuItem(value: 'copy', child: Text('نسخ')),
-                  const PopupMenuItem(value: 'share', child: Text('مشاركة')),
+                  PopupMenuItem(
+                    value: 'copy',
+                    child: Text(context.communityLabel('نسخ')),
+                  ),
+                  PopupMenuItem(
+                    value: 'share',
+                    child: Text(context.communityLabel('مشاركة')),
+                  ),
                   PopupMenuItem(
                     value: 'save',
                     child: Text(
-                      c.saved.contains(row['id']) ? 'إلغاء الحفظ' : 'حفظ',
+                      c.saved.contains(row['id'])
+                          ? context.communityLabel('إلغاء الحفظ')
+                          : context.communityLabel('حفظ'),
                     ),
                   ),
-                  const PopupMenuItem(value: 'delete', child: Text('حذف محلي')),
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Text(context.communityLabel('حذف محلي')),
+                  ),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 12),
           Text(
-            publicationKinds[row['kind']] ?? 'محتوى',
+            context.communityLabel(publicationKinds[row['kind']] ?? 'محتوى'),
             style: TextStyle(
               color: row['kind'] == 'video' ? p.gold : p.muted,
               fontSize: 12,
@@ -193,6 +220,7 @@ class _PublicationCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 14),
               child: Text(
                 publicationText(row),
+                textDirection: contentTextDirection(publicationText(row)),
                 style: TextStyle(
                   fontSize: 19,
                   height: 1.9,
@@ -207,9 +235,11 @@ class _PublicationCard extends StatelessWidget {
                 row['media_url'] as String,
                 height: 190,
                 fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => const SizedBox(
+                errorBuilder: (_, _, _) => SizedBox(
                   height: 100,
-                  child: Center(child: Text('تعذّر تحميل الصورة')),
+                  child: Center(
+                    child: Text(context.communityLabel('تعذّر تحميل الصورة')),
+                  ),
                 ),
               ),
             ),
@@ -217,20 +247,20 @@ class _PublicationCard extends StatelessWidget {
             FilledButton.icon(
               onPressed: onOpen,
               icon: const Icon(Icons.play_circle_outline),
-              label: const Text('تشغيل الفيديو'),
+              label: Text(context.communityLabel('تشغيل الفيديو')),
             ),
           if (row['kind'] == 'link' && row['link'] != null)
             OutlinedButton.icon(
               onPressed: () =>
                   openCommunityLink(context, row['link'] as String),
               icon: const Icon(Icons.open_in_new),
-              label: const Text('فتح الرابط'),
+              label: Text(context.communityLabel('فتح الرابط')),
             ),
           if (story && row['kind'] != 'video')
             TextButton.icon(
               onPressed: onOpen,
               icon: const Icon(Icons.auto_stories_outlined),
-              label: const Text('مشاهدة القصة'),
+              label: Text(context.communityLabel('مشاهدة القصة')),
             ),
         ],
       ),
@@ -339,7 +369,7 @@ class _CommunityStoryPageState extends State<CommunityStoryPage>
                     ),
                   ),
                   IconButton(
-                    tooltip: 'إغلاق',
+                    tooltip: context.communityLabel('إغلاق'),
                     onPressed: () => Navigator.pop(context),
                     icon: const Icon(Icons.close),
                   ),
@@ -373,7 +403,7 @@ class _CommunityStoryPageState extends State<CommunityStoryPage>
                       Image.network(
                         row['media_url'] as String,
                         errorBuilder: (_, _, _) =>
-                            const Text('تعذّر تحميل الصورة'),
+                            Text(context.communityLabel('تعذّر تحميل الصورة')),
                       ),
                     SelectableText(
                       publicationText(row),
@@ -387,7 +417,7 @@ class _CommunityStoryPageState extends State<CommunityStoryPage>
                       OutlinedButton(
                         onPressed: () =>
                             openCommunityLink(context, row['link'] as String),
-                        child: const Text('فتح الرابط'),
+                        child: Text(context.communityLabel('فتح الرابط')),
                       ),
                   ],
                 ),
@@ -399,13 +429,15 @@ class _CommunityStoryPageState extends State<CommunityStoryPage>
               runSpacing: 4,
               children: [
                 IconButton(
-                  tooltip: 'السابق',
+                  tooltip: context.communityLabel('السابق'),
                   onPressed: index == 0 ? null : _previous,
                   icon: const Icon(Icons.skip_next),
                 ),
                 if (row['kind'] != 'video')
                   IconButton(
-                    tooltip: paused ? 'متابعة' : 'إيقاف مؤقت',
+                    tooltip: paused
+                        ? context.communityLabel('متابعة')
+                        : context.communityLabel('إيقاف مؤقت'),
                     onPressed: () {
                       setState(() => paused = !paused);
                       if (paused) {
@@ -417,12 +449,12 @@ class _CommunityStoryPageState extends State<CommunityStoryPage>
                     icon: Icon(paused ? Icons.play_arrow : Icons.pause),
                   ),
                 IconButton(
-                  tooltip: 'التالي',
+                  tooltip: context.communityLabel('التالي'),
                   onPressed: _next,
                   icon: const Icon(Icons.skip_previous),
                 ),
                 IconButton(
-                  tooltip: 'مشاركة',
+                  tooltip: context.communityLabel('مشاركة'),
                   onPressed: () async {
                     progress.stop();
                     setState(() => paused = true);

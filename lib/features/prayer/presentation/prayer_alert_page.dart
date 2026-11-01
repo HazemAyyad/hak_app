@@ -721,7 +721,7 @@ class _PrayerAlertPageState extends State<PrayerAlertPage>
                             icon: const Icon(Icons.check),
                             label: Text(
                               _saving
-                                  ? 'جارٍ الحفظ…'
+                                  ? context.prayerLabel('جارٍ الحفظ…')
                                   : context.prayerLabel('احفظ التغييرات'),
                             ),
                           ),

@@ -41,7 +41,11 @@ class _HomeSearchPageState extends State<_HomeSearchPage> {
   Widget build(BuildContext context) {
     final needle = normalizeQuranSearch(query);
     final features = AppFeature.values
-        .where((f) => normalizeQuranSearch(f.title).contains(needle))
+        .where(
+          (f) =>
+              normalizeQuranSearch(f.title).contains(needle) ||
+              normalizeQuranSearch(f.localizedTitle(context)).contains(needle),
+        )
         .toList();
     final verses = needle.isEmpty
         ? <QuranVerse>[]
@@ -54,14 +58,20 @@ class _HomeSearchPageState extends State<_HomeSearchPage> {
     final surahs = needle.isEmpty
         ? <QuranSurah>[]
         : (widget.quran.repository?.surahs
-                  .where((s) => normalizeQuranSearch(s.name).contains(needle))
+                  .where(
+                    (s) =>
+                        normalizeQuranSearch(s.name).contains(needle) ||
+                        normalizeQuranSearch(
+                          s.localizedName(context),
+                        ).contains(needle),
+                  )
                   .toList() ??
               <QuranSurah>[]);
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: Directionality.of(context),
       child: Scaffold(
         backgroundColor: AppPalette.of(context).background,
-        appBar: AppBar(title: const Text('البحث في حق')),
+        appBar: AppBar(title: Text(context.homeLabel('البحث في حق'))),
         body: Column(
           children: [
             Padding(
@@ -69,9 +79,10 @@ class _HomeSearchPageState extends State<_HomeSearchPage> {
               child: TextField(
                 key: const ValueKey('haq-global-search'),
                 controller: text,
+                textDirection: contentTextDirection(query),
                 autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: 'ابحث عن خدمة أو آية أو محتوى…',
+                decoration: InputDecoration(
+                  hintText: context.homeLabel('ابحث عن خدمة أو آية أو محتوى…'),
                   prefixIcon: Icon(Icons.search),
                 ),
                 onChanged: (v) => setState(() => query = v),
@@ -81,43 +92,52 @@ class _HomeSearchPageState extends State<_HomeSearchPage> {
               child: ListView(
                 children: [
                   if (features.isNotEmpty)
-                    const ListTile(title: Text('خدمات حق')),
+                    ListTile(title: Text(context.homeLabel('خدمات حق'))),
                   for (final f in features)
                     ListTile(
                       key: ValueKey('search-feature-${f.name}'),
                       leading: Icon(f.icon),
-                      title: Text(f.title),
+                      title: Text(f.localizedTitle(context)),
                       onTap: () => Navigator.pop(context, f),
                     ),
                   for (final surah in surahs)
                     ListTile(
-                      title: Text('سورة ${surah.name}'),
+                      title: Text(surah.localizedTitle(context)),
                       onTap: () => Navigator.pop(
                         context,
                         widget.quran.repository!.byKey['${surah.id}:1'],
                       ),
                     ),
                   if (verses.isNotEmpty)
-                    const ListTile(title: Text('القرآن الكريم')),
+                    ListTile(title: Text(context.homeLabel('القرآن الكريم'))),
                   for (final v in verses)
                     ListTile(
                       title: Text(
                         v.text,
+                        textDirection: TextDirection.rtl,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
                       subtitle: Text(
-                        'سورة ${widget.quran.repository!.surah(v.surah).name} • الآية ${v.ayah}',
+                        quranVerseTitle(
+                          context,
+                          widget.quran.repository!.surah(v.surah),
+                          v.ayah,
+                        ),
                       ),
                       onTap: () => Navigator.pop(context, v),
                     ),
                   if (items.isNotEmpty)
-                    const ListTile(title: Text('المحتوى الديني')),
+                    ListTile(title: Text(context.homeLabel('المحتوى الديني'))),
                   for (final item in items)
                     ListTile(
-                      title: Text(item.title),
+                      title: Text(
+                        item.title,
+                        textDirection: contentTextDirection(item.title),
+                      ),
                       subtitle: Text(
                         item.text,
+                        textDirection: contentTextDirection(item.text),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -127,10 +147,10 @@ class _HomeSearchPageState extends State<_HomeSearchPage> {
                       verses.isEmpty &&
                       items.isEmpty &&
                       surahs.isEmpty)
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.all(30),
                       child: Text(
-                        'لا توجد نتائج تطابق بحثك',
+                        context.homeLabel('لا توجد نتائج تطابق بحثك'),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -155,21 +175,22 @@ class _HomeArticlePage extends StatelessWidget {
   final QuranVerse verse;
   @override
   Widget build(BuildContext context) => Directionality(
-    textDirection: TextDirection.rtl,
+    textDirection: Directionality.of(context),
     child: Scaffold(
       backgroundColor: AppPalette.of(context).background,
       appBar: AppBar(title: Text(title)),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const Text(
-            'من القرآن الكريم',
+          Text(
+            context.homeLabel('من القرآن الكريم'),
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
           _Surface(
             child: Text(
               verse.text,
+              textDirection: TextDirection.rtl,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontFamily: 'AmiriQuran',
@@ -181,18 +202,29 @@ class _HomeArticlePage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'سورة $surah • الآية ${verse.ayah}',
+            context.tr(
+              'search.verse',
+              args: {
+                'name': context.tr(
+                  'quran.surah.${verse.surah}',
+                  fallback: surah,
+                ),
+                'ayah': quranNumber(context, verse.ayah),
+              },
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
-          const Text(
-            'تأمّل الآية، واقرأ معناها من مصدر التفسير المتاح في قارئ القرآن.',
+          Text(
+            context.homeLabel(
+              'تأمّل الآية، واقرأ معناها من مصدر التفسير المتاح في قارئ القرآن.',
+            ),
           ),
           const SizedBox(height: 16),
           FilledButton.icon(
             onPressed: () => Navigator.pop(context, true),
             icon: const Icon(Icons.menu_book_outlined),
-            label: const Text('قراءة التفسير'),
+            label: Text(context.homeLabel('قراءة التفسير')),
           ),
         ],
       ),

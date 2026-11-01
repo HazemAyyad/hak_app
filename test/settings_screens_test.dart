@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -129,7 +131,11 @@ void main() {
     bool dark = false,
     double scale = 1.3,
     bool root = false,
+    AppLocalization? localization,
   }) async {
+    Widget localized(Widget child) => localization == null
+        ? child
+        : LocalizationScope(controller: localization, child: child);
     tester.view.physicalSize = visualSize(const Size(360, 1000));
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -139,26 +145,31 @@ void main() {
         controller: appearance,
         child: RepaintBoundary(
           key: preview,
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              fontFamily: 'QuranUI',
-              brightness: dark ? Brightness.dark : Brightness.light,
-              colorSchemeSeed: const Color(0xFF2A8C82),
+          child: localized(
+            MaterialApp(
+              locale: localization?.language.locale,
+              supportedLocales: const [Locale('ar'), Locale('en')],
+              localizationsDelegates: GlobalMaterialLocalizations.delegates,
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                fontFamily: 'QuranUI',
+                brightness: dark ? Brightness.dark : Brightness.light,
+                colorSchemeSeed: const Color(0xFF2A8C82),
+              ),
+              builder: (context, child) => MediaQuery(
+                data: MediaQuery.of(
+                  context,
+                ).copyWith(textScaler: TextScaler.linear(visualScale(scale))),
+                child: child!,
+              ),
+              home: root
+                  ? SettingsPage(reminders: c)
+                  : SettingsDetailPage(
+                      key: ValueKey('${kind.name}.$dark'),
+                      kind: kind,
+                      reminders: c,
+                    ),
             ),
-            builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(visualScale(scale))),
-              child: child!,
-            ),
-            home: root
-                ? SettingsPage(reminders: c)
-                : SettingsDetailPage(
-                    key: ValueKey('${kind.name}.$dark'),
-                    kind: kind,
-                    reminders: c,
-                  ),
           ),
         ),
       ),
@@ -195,6 +206,37 @@ void main() {
       visualPath('build/p08-previews/$name.png'),
     );
   }
+
+  testWidgets(
+    'English reminder settings and picker retain schedule and original dhikr content',
+    (tester) async {
+      final localization = AppLocalization(quran.preferences!);
+      await localization.select('en');
+      addTearDown(localization.dispose);
+      final morning = c.settings.time('morning');
+      await pump(tester, SettingKind.appearance, localization: localization);
+      expect(find.text('Cairo'), findsOneWidget);
+      await pump(tester, SettingKind.reminders, localization: localization);
+      expect(find.text('Allow notifications'), findsOneWidget);
+      await tap(tester, 'Morning adhkar time');
+      expect(find.byType(TimePickerDialog), findsOneWidget);
+      await tester.tap(find.text('Cancel').last);
+      await settle(tester);
+      expect(c.settings.time('morning'), morning);
+      await pump(tester, SettingKind.notifications, localization: localization);
+      await tap(tester, 'Reminder content');
+      expect(find.text('Search adhkar'), findsOneWidget);
+      expect(find.text('Select all'), findsOneWidget);
+      final text = c.content.values.first;
+      expect(find.text(text), findsOneWidget);
+      await tester.tap(find.text('Cancel').last);
+      await settle(tester);
+      expect(c.content.values.first, text);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      await settle(tester);
+    },
+  );
 
   for (final loaded in [false, true]) {
     testWidgets(

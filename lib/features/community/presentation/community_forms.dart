@@ -10,11 +10,11 @@ Future<bool> _confirm(BuildContext context, String title, String body) async =>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('إلغاء'),
+            child: Text(context.communityLabel('إلغاء')),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('تأكيد'),
+            child: Text(context.communityLabel('تأكيد')),
           ),
         ],
       ),
@@ -39,7 +39,11 @@ Future<void> _compose(
       builder: (ctx, update) => PopScope(
         canPop: !busy,
         child: AlertDialog(
-          title: Text(parent == null ? 'مشاركة دعاء' : 'إضافة تعليق'),
+          title: Text(
+            parent == null
+                ? context.communityLabel('مشاركة دعاء')
+                : context.communityLabel('إضافة تعليق'),
+          ),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -52,14 +56,20 @@ Future<void> _compose(
                   maxLength: 180,
                   readOnly: pending != null,
                   decoration: InputDecoration(
-                    labelText: parent == null ? 'الدعاء' : 'التعليق',
-                    helperText: 'تظهر المشاركة للآخرين بعد المراجعة',
+                    labelText: parent == null
+                        ? context.communityLabel('الدعاء')
+                        : context.communityLabel('التعليق'),
+                    helperText: context.communityLabel(
+                      'تظهر المشاركة للآخرين بعد المراجعة',
+                    ),
                   ),
                 ),
-                if (error != null) Text(error!),
+                if (error != null) Text(context.communityLabel(error!)),
                 if (pending != null)
-                  const Text(
-                    'المشاركة السابقة بانتظار التأكيد؛ تُرسل بنفس المعرّف.',
+                  Text(
+                    context.communityLabel(
+                      'المشاركة السابقة بانتظار التأكيد؛ تُرسل بنفس المعرّف.',
+                    ),
                   ),
               ],
             ),
@@ -67,7 +77,7 @@ Future<void> _compose(
           actions: [
             TextButton(
               onPressed: busy ? null : () => Navigator.pop(ctx),
-              child: const Text('إلغاء'),
+              child: Text(context.communityLabel('إلغاء')),
             ),
             if (pending != null)
               TextButton(
@@ -77,7 +87,7 @@ Future<void> _compose(
                         await c.discard('entry:${parent ?? 0}');
                         if (ctx.mounted) Navigator.pop(ctx);
                       },
-                child: const Text('إلغاء إعادة الإرسال'),
+                child: Text(context.communityLabel('إلغاء إعادة الإرسال')),
               ),
             FilledButton(
               onPressed: busy
@@ -99,8 +109,12 @@ Future<void> _compose(
                             SnackBar(
                               content: Text(
                                 result['status'] == 'pending'
-                                    ? 'وصلت المشاركة وهي بانتظار المراجعة'
-                                    : 'تم تأكيد حالة المشاركة',
+                                    ? context.communityLabel(
+                                        'وصلت المشاركة وهي بانتظار المراجعة',
+                                      )
+                                    : context.communityLabel(
+                                        'تم تأكيد حالة المشاركة',
+                                      ),
                               ),
                             ),
                           );
@@ -114,10 +128,10 @@ Future<void> _compose(
                     },
               child: Text(
                 busy
-                    ? 'جارٍ الإرسال…'
+                    ? context.communityLabel('جارٍ الإرسال…')
                     : pending != null
-                    ? 'إعادة المحاولة'
-                    : 'إرسال للمراجعة',
+                    ? context.communityLabel('إعادة المحاولة')
+                    : context.communityLabel('إرسال للمراجعة'),
               ),
             ),
           ],
@@ -153,8 +167,8 @@ Future<void> _entryAction(
   if (action == 'delete') {
     if (await _confirm(
       context,
-      'حذف المشاركة؟',
-      'ستُحذف مشاركتك وتعليقاتها من العرض العام.',
+      context.communityLabel('حذف المشاركة؟'),
+      context.communityLabel('ستُحذف مشاركتك وتعليقاتها من العرض العام.'),
     )) {
       if (!current()) return;
       await c.mutate('DELETE', '/entries/${row['id']}');
@@ -165,8 +179,10 @@ Future<void> _entryAction(
   if (action == 'block') {
     if (await _confirm(
       context,
-      'حظر الحساب؟',
-      'تختفي مشاركات هذا الحساب عنك وتتعطل المشاركة المتبادلة. يمكنك إلغاء الحظر من قائمة الحسابات المحظورة.',
+      context.communityLabel('حظر الحساب؟'),
+      context.communityLabel(
+        'تختفي مشاركات هذا الحساب عنك وتتعطل المشاركة المتبادلة. يمكنك إلغاء الحظر من قائمة الحسابات المحظورة.',
+      ),
     )) {
       if (!current()) return;
       await c.mutate(
@@ -183,20 +199,26 @@ Future<void> _entryAction(
     context: context,
     useRootNavigator: false,
     builder: (ctx) => AlertDialog(
-      title: Text(action == 'report' ? 'شكاية منشور' : 'شكاية الحساب'),
+      title: Text(
+        action == 'report'
+            ? context.communityLabel('شكاية منشور')
+            : context.communityLabel('شكاية الحساب'),
+      ),
       content: TextFormField(
         onChanged: (value) => reason = value,
         maxLength: 180,
-        decoration: const InputDecoration(labelText: 'سبب الشكاية'),
+        decoration: InputDecoration(
+          labelText: context.communityLabel('سبب الشكاية'),
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(ctx, false),
-          child: const Text('إلغاء'),
+          child: Text(context.communityLabel('إلغاء')),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(ctx, reason.trim().isNotEmpty),
-          child: const Text('إرسال البلاغ'),
+          child: Text(context.communityLabel('إرسال البلاغ')),
         ),
       ],
     ),
@@ -215,7 +237,9 @@ Future<void> _entryAction(
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            result == null ? c.error ?? 'تعذّر الإرسال' : 'وصل البلاغ للمراجعة',
+            result == null
+                ? c.error ?? context.communityLabel('تعذّر الإرسال')
+                : context.communityLabel('وصل البلاغ للمراجعة'),
           ),
         ),
       );
@@ -275,13 +299,16 @@ class _CommentsPageState extends State<_CommentsPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: AppPalette.of(context).background,
-    appBar: AppBar(title: const Text('التعليقات')),
+    appBar: AppBar(title: Text(context.communityLabel('التعليقات'))),
     body: ListView(
       padding: const EdgeInsets.all(16),
       children: [
         _CommunityCard(
           child: Text(
             widget.parent['body'] as String,
+            textDirection: contentTextDirection(
+              widget.parent['body'] as String,
+            ),
             style: const TextStyle(fontSize: 20),
           ),
         ),
@@ -289,7 +316,9 @@ class _CommentsPageState extends State<_CommentsPage> {
         if (loading) const LinearProgressIndicator(),
         if (error != null) _CommunityNotice(error!, onRetry: load),
         if (!loading && error == null && rows.isEmpty)
-          const _CommunityCard(child: Text('لا تعليقات معتمدة بعد')),
+          _CommunityCard(
+            child: Text(context.communityLabel('لا تعليقات معتمدة بعد')),
+          ),
         for (final row in rows)
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
@@ -301,7 +330,10 @@ class _CommentsPageState extends State<_CommentsPage> {
                     row['author'] as String,
                     style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
-                  Text(row['body'] as String),
+                  Text(
+                    row['body'] as String,
+                    textDirection: contentTextDirection(row['body'] as String),
+                  ),
                   Wrap(
                     children: [
                       TextButton(
@@ -312,12 +344,16 @@ class _CommentsPageState extends State<_CommentsPage> {
                           row['mine'] == true ? 'delete' : 'report',
                           load,
                         ),
-                        child: Text(row['mine'] == true ? 'حذف' : 'إبلاغ'),
+                        child: Text(
+                          row['mine'] == true
+                              ? context.communityLabel('حذف')
+                              : context.communityLabel('إبلاغ'),
+                        ),
                       ),
                       TextButton(
                         onPressed: () =>
                             _entryAction(context, widget.c, row, 'copy', load),
-                        child: const Text('نسخ'),
+                        child: Text(context.communityLabel('نسخ')),
                       ),
                     ],
                   ),
@@ -328,7 +364,7 @@ class _CommentsPageState extends State<_CommentsPage> {
         if (next != null)
           TextButton(
             onPressed: loading ? null : () => load(more: true),
-            child: const Text('المزيد'),
+            child: Text(context.communityLabel('المزيد')),
           ),
         FilledButton.icon(
           onPressed: loading
@@ -340,7 +376,7 @@ class _CommentsPageState extends State<_CommentsPage> {
                   onSent: load,
                 ),
           icon: const Icon(Icons.add_comment_outlined),
-          label: const Text('إضافة تعليق'),
+          label: Text(context.communityLabel('إضافة تعليق')),
         ),
       ],
     ),
@@ -393,14 +429,14 @@ class _BlockedAccountsState extends State<_BlockedAccounts> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('الحسابات المحظورة')),
+    appBar: AppBar(title: Text(context.communityLabel('الحسابات المحظورة'))),
     body: ListView(
       padding: const EdgeInsets.all(16),
       children: [
         if (loading) const LinearProgressIndicator(),
         if (error != null) _CommunityNotice(error!, onRetry: load),
         if (!loading && error == null && rows.isEmpty)
-          const Text('لا حسابات محظورة'),
+          Text(context.communityLabel('لا حسابات محظورة')),
         for (final row in rows)
           ListTile(
             title: Text(row['author'] as String),
@@ -415,13 +451,13 @@ class _BlockedAccountsState extends State<_BlockedAccounts> {
                       );
                       await load();
                     },
-              child: const Text('إلغاء الحظر'),
+              child: Text(context.communityLabel('إلغاء الحظر')),
             ),
           ),
         if (next != null)
           TextButton(
             onPressed: loading ? null : () => load(more: true),
-            child: const Text('المزيد'),
+            child: Text(context.communityLabel('المزيد')),
           ),
       ],
     ),
