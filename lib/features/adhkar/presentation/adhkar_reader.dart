@@ -609,6 +609,13 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                 ),
               ),
               const SizedBox(height: 20),
+              if (!item.personal)
+                BundledSourceCard(
+                  kind: 'dhikr',
+                  contentId: item.id,
+                  originalText: item.text,
+                  showMissing: true,
+                ),
               Text(
                 item.source,
                 textDirection: adhkarTextDirection(item.source),

@@ -324,6 +324,8 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                     child: _ReligiousPlayer(host: host, compact: true),
                   ),
                 if (quran) ...[
+                  for (final key in item.verseKeys)
+                    BundledSourceCard(kind: 'tafsir', verseKey: key),
                   FutureBuilder<TafsirText>(
                     future: explanation,
                     builder: (context, snapshot) {

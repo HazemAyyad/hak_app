@@ -4,6 +4,7 @@ import 'package:html/parser.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 import 'app_localization.dart';
 import 'quran_translation_source.dart';
+import 'bundled_source_card.dart';
 
 /// Only text and inline emphasis are rendered; provider HTML cannot run code or load images.
 class PublishedTranslationText extends StatelessWidget {
@@ -19,7 +20,16 @@ class PublishedTranslationText extends StatelessWidget {
     return TextSpan(
       children: [
         for (final child in node.nodes) _span(child),
-        if (['p', 'div', 'li'].contains(node.localName))
+        if ([
+          'p',
+          'div',
+          'li',
+          'h1',
+          'h2',
+          'h3',
+          'h4',
+          'blockquote',
+        ].contains(node.localName))
           const TextSpan(text: '\n'),
       ],
       style: TextStyle(
@@ -53,11 +63,23 @@ class PublishedMeaningCard extends StatelessWidget {
     if (localization == null) return const SizedBox.shrink();
     final source =
         localization.installed[localization.contentCode]?.quranSource;
-    if (source == null) return const SizedBox.shrink();
+    if (source == null) {
+      return BundledSourceCard(
+        kind: 'quran',
+        contentId: contentId,
+        verseKey: verseKey,
+      );
+    }
     final rows = contentId != null
         ? source.forContent(contentId!)
         : <PublishedVerseMeaning>[?source.verses[verseKey]];
-    if (rows.isEmpty) return const SizedBox.shrink();
+    if (rows.isEmpty) {
+      return BundledSourceCard(
+        kind: 'quran',
+        contentId: contentId,
+        verseKey: verseKey,
+      );
+    }
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),

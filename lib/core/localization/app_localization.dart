@@ -15,6 +15,7 @@ import 'quran_translation_source.dart';
 import 'locale_formats.dart';
 import 'interface_messages.dart';
 import 'hadith_translation_source.dart';
+import 'religious_translation_library.dart';
 
 final _bundledInterface = jsonDecode(bundledUiJson) as Map;
 
@@ -253,7 +254,13 @@ class AppLocalization extends ChangeNotifier {
   }
 
   bool get chosen => preferences.getBool('app.language.chosen.v1') == true;
-  int get localPackageCount => <String>{'ar', 'en', ...installed.keys}.length;
+  int get localPackageCount => <String>{
+    'ar',
+    'en',
+    ...(ReligiousTranslationLibrary.catalog['locales'] as Map).keys
+        .cast<String>(),
+    ...installed.keys,
+  }.length;
   String? get contentSelection =>
       preferences.getString('app.content.language.v1');
   String get contentCode {
@@ -282,7 +289,9 @@ class AppLocalization extends ChangeNotifier {
   }
 
   bool local(String locale) =>
-      ['ar', 'en'].contains(locale) || installed.containsKey(locale);
+      ['ar', 'en'].contains(locale) ||
+      ReligiousTranslationLibrary.supports(locale) ||
+      installed.containsKey(locale);
   bool localInterface(String locale) =>
       ['ar', 'en'].contains(locale) ||
       interfacePackages[locale]?.uiComplete == true ||

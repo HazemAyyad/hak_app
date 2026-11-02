@@ -8,6 +8,7 @@ import '../../../app_loading.dart';
 import '../../../core/localization/app_localization.dart';
 import '../../../core/localization/quran_translation_source.dart';
 import '../../../core/localization/source_text.dart';
+import '../../../core/localization/religious_translation_library.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
 import '../data/quran_cached_search.dart';
@@ -39,6 +40,7 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
   bool searching = false;
   Map<String, QuranContentMatch> contentMatches = {};
   QuranTranslationSource? _source;
+  String? _contentLocale;
 
   String _surahLabel(int id) {
     final name = widget.controller.repository!.surah(id).localizedName(context);
@@ -65,8 +67,10 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
     final localization = LocalizationScope.maybeOf(context);
     final source =
         localization?.installed[localization.contentCode]?.quranSource;
-    if (!identical(source, _source)) {
+    if (!identical(source, _source) ||
+        _contentLocale != localization?.contentCode) {
       _source = source;
+      _contentLocale = localization?.contentCode;
       if (type == 3) _search();
     }
   }
@@ -105,8 +109,43 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
     if (type == 3) {
       final repo = widget.controller.repository!;
       final matches = <QuranContentMatch>[];
-      for (final meaning
+      final meanings = <String, PublishedVerseMeaning>{};
+      String? attribution;
+      if (ReligiousTranslationLibrary.supports(_contentLocale ?? 'ar')) {
+        try {
+          final bundled = await ReligiousTranslationLibrary.shared.load(
+            _contentLocale!,
+            'quran',
+          );
+          if (!mounted || request != generation) return;
+          final needle = normalizeMeaningSearch(executedQuery);
+          for (final entry in (bundled.data['verses'] as Map).entries) {
+            final row = entry.value as Map;
+            if (needle.isNotEmpty &&
+                normalizeMeaningSearch(
+                  plainSourceText(row['text'] as String),
+                ).contains(needle)) {
+              meanings[entry.key as String] = PublishedVerseMeaning(
+                entry.key as String,
+                row['text'] as String,
+                row['footnotes'] as String,
+              );
+            }
+          }
+          attribution =
+              '${bundled.source['provider']} — ${bundled.source['title']} — v${bundled.source['version']}';
+        } catch (_) {
+          // A verified downloaded source remains searchable independently.
+        }
+      }
+      final downloadedKeys = <String>{};
+      for (final row
           in _source?.search(executedQuery) ?? <PublishedVerseMeaning>[]) {
+        meanings[row.key] = row;
+        downloadedKeys.add(row.key);
+      }
+      if (!mounted || request != generation) return;
+      for (final meaning in meanings.values) {
         final verse = repo.byKey[meaning.key];
         if (verse == null ||
             surahId != null && verse.surah != surahId ||
@@ -117,7 +156,9 @@ class _QuranSearchPageState extends State<QuranSearchPage> {
           QuranContentMatch(
             verse,
             plainSourceText(meaning.translation),
-            _source!.attribution,
+            downloadedKeys.contains(meaning.key)
+                ? _source!.attribution
+                : attribution!,
           ),
         );
       }

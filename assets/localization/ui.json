@@ -12039,28 +12039,60 @@
     "ar": "المعاينة بدون صوت",
     "en": "Preview is silent"
   },
-  "quran.pageFont": {
-    "ar": "نوع خط صفحات المصحف",
-    "en": "Mushaf page font"
+  "source.tafsir": {
+    "ar": "تفسير منشور باللغة المختارة",
+    "en": "Published tafsir in the selected language"
   },
-  "quran.originalMushafFont": {
-    "ar": "خط المصحف الأصلي — التجويد",
-    "en": "Original Mushaf font — Tajweed"
+  "source.nameMeaning": {
+    "ar": "معنى الاسم",
+    "en": "Meaning of the name"
   },
-  "quran.pageFontHint": {
-    "ar": "تحتفظ الصفحات بتوزيع السطور مع الخط المختار. ألوان التجويد متاحة مع خط المصحف الأصلي. كبّر الصفحة بإصبعين.",
-    "en": "Pages keep their line layout with the selected font. Tajweed colors are available with the original Mushaf font. Pinch to zoom."
+  "source.publisherTranslation": {
+    "ar": "ترجمة نص المصدر",
+    "en": "Translation of the publisher's text"
   },
-  "quran.tajweedFontHint": {
-    "ar": "ألوان التجويد متاحة مع خط المصحف الأصلي؛ الخطوط البديلة أحادية اللون.",
-    "en": "Tajweed colors are available with the original Mushaf font; alternative fonts use a single color."
+  "source.localUnavailable": {
+    "ar": "تعذّر فتح الترجمة المحفوظة؛ الأصل العربي متاح.",
+    "en": "The saved translation could not be opened. The Arabic original is available."
   },
-  "quran.bundledMushafReady": {
-    "ar": "المصحف كاملًا متاح دون إنترنت",
-    "en": "The full Mushaf is available offline"
+  "source.narrationNotice": {
+    "ar": "هذه ترجمة نص المصدر؛ قد تختلف ألفاظه عن النص العربي المعروض. راجع نص المصدر للمقارنة.",
+    "en": "This translation follows the publisher's text, whose wording may differ from the Arabic text shown. See the publisher's record to compare."
   },
-  "quran.mushafAttribution": {
-    "ar": "المصحف المرفق: رواية حفص، 604 صفحات بخط QCF V4 وألوان التجويد الأصلية لمجمع الملك فهد لطباعة المصحف الشريف، عبر Quran Foundation. بيانات الكلمات والسطور: المكتبة القرآنية الشاملة QUL من ترتيل. تُحفظ الخطوط مضغوطة دون تعديل، وتُستعاد مطابقة للأصل. الخطوط البديلة مرفقة مع تراخيصها.",
-    "en": "Bundled Mushaf: Hafs, 604 pages in QCF V4 with the original Tajweed palettes of the King Fahd Glorious Quran Printing Complex, provided by Quran Foundation. Word and line metadata: Quranic Universal Library (QUL), Tarteel AI. Fonts are stored with lossless compression and restored byte for byte. Alternative fonts are bundled with their licenses."
+  "source.publisherArabic": {
+    "ar": "رواية المصدر بالعربية",
+    "en": "Publisher's Arabic narration"
+  },
+  "source.openRecord": {
+    "ar": "فتح النص عند المصدر",
+    "en": "Open this publisher record"
+  },
+  "source.openPublisher": {
+    "ar": "الناشر ومعلومات المصدر",
+    "en": "Publisher and source information"
+  },
+  "source.documentMetadata": {
+    "ar": "بيانات الوثيقة والإصدار",
+    "en": "Document and edition metadata"
+  },
+  "source.contentCoverage": {
+    "ar": "تغطية المحتوى المتاح",
+    "en": "Available content coverage"
+  },
+  "source.coverage": {
+    "ar": "معاني القرآن: {quran} آية • التفسير: {tafsir} آية • الأذكار: {dhikr} • الأسماء: {names} • روايات الحديث: {hadith}",
+    "en": "Quran meanings: {quran} verses • Tafsir: {tafsir} verses • Adhkar: {dhikr} • Names: {names} • Hadith narrations: {hadith}"
+  },
+  "source.notSeparateTafsir": {
+    "ar": "لا يقدّم المصدر شرحًا مستقلًا لهذه الآية. يمكنك قراءة تفسير السورة كاملًا للاطلاع على سياق الشرح.",
+    "en": "The publisher does not provide a separate commentary block for this ayah. Read the full chapter's tafsir for the surrounding explanation."
+  },
+  "source.readChapterTafsir": {
+    "ar": "قراءة تفسير السورة من المصدر",
+    "en": "Read the publisher's full chapter tafsir"
+  },
+  "source.fullChapter": {
+    "ar": "تفسير السورة كاملًا",
+    "en": "Full chapter tafsir"
   }
 }

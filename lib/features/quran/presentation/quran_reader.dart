@@ -1,5 +1,6 @@
 import '../../../core/localization/app_localization.dart';
 import '../../../core/localization/ui_text.dart';
+import '../../../core/localization/published_meaning_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -704,16 +705,22 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(
-                      verse.text,
-                      textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.right,
-                      style: TextStyle(
-                        fontFamily: controller.scriptFont.family,
-                        fontSize: controller.fontSize,
-                        color: _ink(context),
-                        height: 1.85,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          verse.text,
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontFamily: controller.scriptFont.family,
+                            fontSize: controller.fontSize,
+                            color: _ink(context),
+                            height: 1.85,
+                          ),
+                        ),
+                        PublishedMeaningCard(verseKey: verse.key),
+                      ],
                     ),
                   ),
                 ],
@@ -810,6 +817,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
           ),
           const SizedBox(height: 15),
           if (!fullscreen) ...[
+            PublishedMeaningCard(verseKey: verse.key),
             QuranVerseInsight(
               key: ValueKey('insight-${verse.key}'),
               controller: controller,

@@ -99,6 +99,7 @@ flutter:
 
   assets:
     - assets/localization/
+    - assets/localization/content/
     - assets/prayer/dhikr_recitations/
     - assets/prayer/reminders/
     - assets/prayer/adhans/nusuk-1/

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'app_localization.dart';
 import 'published_meaning_card.dart';
 import 'published_hadith_card.dart';
+import 'bundled_source_card.dart';
+import 'religious_translation_library.dart';
 
 class LanguagePage extends StatefulWidget {
   const LanguagePage({super.key, this.onContinue, this.contentOnly = false});
@@ -171,13 +173,38 @@ class _LanguagePageState extends State<LanguagePage> {
                       textDirection: language.direction,
                     ),
                     subtitle: Text(
-                      context.tr(
-                        (widget.contentOnly
-                                ? controller.local(language.code)
-                                : controller.localInterface(language.code))
-                            ? 'language.available'
-                            : 'language.download',
-                      ),
+                      widget.contentOnly &&
+                              ReligiousTranslationLibrary.supports(
+                                language.code,
+                              )
+                          ? context.tr(
+                              'source.coverage',
+                              args: {
+                                for (final kind in [
+                                  'quran',
+                                  'tafsir',
+                                  'dhikr',
+                                  'names',
+                                  'hadith',
+                                ])
+                                  kind: controller.formats.number(
+                                    (ReligiousTranslationLibrary.metadata(
+                                              language.code,
+                                            )[kind]
+                                            as Map)['records']
+                                        as int,
+                                  ),
+                              },
+                            )
+                          : context.tr(
+                              (widget.contentOnly
+                                      ? controller.local(language.code)
+                                      : controller.localInterface(
+                                          language.code,
+                                        ))
+                                  ? 'language.available'
+                                  : 'language.download',
+                            ),
                     ),
                     leading:
                         (widget.contentOnly
@@ -262,6 +289,15 @@ class ContentTranslationCard extends StatelessWidget {
         child: PublishedMeaningCard(contentId: contentId),
       );
     }
+    if (translation == null) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: BundledContentCard(
+          contentId: contentId,
+          originalText: originalText ?? '',
+        ),
+      );
+    }
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
@@ -276,24 +312,20 @@ class ContentTranslationCard extends StatelessWidget {
                   context.tr('content.translation'),
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                if (translation == null)
-                  Text(context.tr('content.missing'))
-                else ...[
-                  Text(
-                    translation['title'] as String,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  SelectableText(translation['text'] as String),
-                  if ((translation['summary'] as String? ?? '').isNotEmpty)
-                    Text(translation['summary'] as String),
-                  const SizedBox(height: 8),
-                  Text(translation['source'] as String),
-                  SelectableText(
-                    translation['sourceUrl'] as String,
-                    textDirection: TextDirection.ltr,
-                  ),
-                ],
+                Text(
+                  translation['title'] as String,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 8),
+                SelectableText(translation['text'] as String),
+                if ((translation['summary'] as String? ?? '').isNotEmpty)
+                  Text(translation['summary'] as String),
+                const SizedBox(height: 8),
+                Text(translation['source'] as String),
+                SelectableText(
+                  translation['sourceUrl'] as String,
+                  textDirection: TextDirection.ltr,
+                ),
               ],
             ),
           ),

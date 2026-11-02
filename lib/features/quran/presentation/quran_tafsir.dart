@@ -3,6 +3,7 @@ import '../../../core/localization/ui_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/localization/published_meaning_card.dart';
+import '../../../core/localization/bundled_source_card.dart';
 import '../../sharing/share_card.dart';
 
 import '../../../app_appearance.dart';
@@ -265,6 +266,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
           ],
         ),
         PublishedMeaningCard(verseKey: verse.key),
+        if (!meanings) BundledSourceCard(kind: 'tafsir', verseKey: verse.key),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
           child: QuranPlayerPanel(
