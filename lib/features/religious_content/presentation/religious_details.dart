@@ -86,7 +86,6 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
         padding: EdgeInsets.zero,
         key: PageStorageKey('religious-details-${item.id}'),
         children: [
-          ContentTranslationCard(contentId: item.id, originalText: item.text),
           ReligiousHeader(
             title: item.title,
             subtitle: name
@@ -218,15 +217,6 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                                 : 2,
                           ),
                         ),
-                      if (name && item.transliteration.isNotEmpty)
-                        Text(
-                          item.transliteration,
-                          textDirection: contentTextDirection(
-                            item.transliteration,
-                          ),
-                          textAlign: TextAlign.center,
-                          style: rText(context, 11),
-                        ),
                       if (name)
                         Text(
                           item.summary,
@@ -317,6 +307,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
+                ContentTranslationCard(contentId: item.id, originalText: item.text),
                 if (host.controller.hasAudio(item) &&
                     host.controller.activeItem == item.id)
                   Padding(

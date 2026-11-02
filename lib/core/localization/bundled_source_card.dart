@@ -98,14 +98,20 @@ class BundledSourceCard extends StatelessWidget {
                       child: Text(context.tr('source.readChapterTafsir')),
                     ),
                   ],
-                  for (final row in rows)
+                  for (final (index, row) in rows.indexed)
                     _SourceRecord(
+                      storageId:
+                          '$locale/$kind/${contentId ?? verseKey ?? chapter}/$index',
                       row: row,
                       source: collection.source,
                       kind: kind,
                     ),
                   if (rows.any((row) => row['source'] == null))
-                    _Attribution(source: collection.source),
+                    _Attribution(
+                      source: collection.source,
+                      storageId:
+                          '$locale/$kind/${contentId ?? verseKey ?? chapter}/source',
+                    ),
                 ],
               ),
             ),
@@ -150,12 +156,14 @@ class _MissingSource extends StatelessWidget {
 
 class _SourceRecord extends StatelessWidget {
   const _SourceRecord({
+    required this.storageId,
     required this.row,
     required this.source,
     required this.kind,
   });
   final Map<String, dynamic> row, source;
   final String kind;
+  final String storageId;
   @override
   Widget build(BuildContext context) {
     final fields = row['fields'] as Map?;
@@ -174,6 +182,7 @@ class _SourceRecord extends StatelessWidget {
           ),
           if ((row['source_arabic'] as String? ?? '').isNotEmpty)
             ExpansionTile(
+              key: PageStorageKey('bundled/$storageId/publisher-arabic'),
               tilePadding: EdgeInsets.zero,
               title: Text(context.tr('source.publisherArabic')),
               children: [
@@ -189,6 +198,7 @@ class _SourceRecord extends StatelessWidget {
         PublishedTranslationText(row['text'] as String),
         if ((row['footnotes'] as String? ?? '').isNotEmpty)
           ExpansionTile(
+            key: PageStorageKey('bundled/$storageId/footnotes'),
             tilePadding: EdgeInsets.zero,
             title: Text(context.tr('source.footnotes')),
             children: [PublishedTranslationText(row['footnotes'] as String)],
@@ -202,12 +212,16 @@ class _SourceRecord extends StatelessWidget {
           ])
             if ((fields[pair.$1] as String? ?? '').isNotEmpty)
               ExpansionTile(
+                key: PageStorageKey('bundled/$storageId/${pair.$1}'),
                 tilePadding: EdgeInsets.zero,
                 title: Text(context.tr(pair.$2)),
                 children: [PublishedTranslationText(fields[pair.$1] as String)],
               ),
         if (row['source'] is Map)
-          _Attribution(source: Map<String, dynamic>.from(row['source'] as Map))
+          _Attribution(
+            source: Map<String, dynamic>.from(row['source'] as Map),
+            storageId: '$storageId/source',
+          )
         else if (row['source_url'] is String)
           _SourceLink(
             url: row['source_url'] as String,
@@ -218,6 +232,7 @@ class _SourceRecord extends StatelessWidget {
     );
     return kind == 'tafsir'
         ? ExpansionTile(
+            key: PageStorageKey('bundled/$storageId/tafsir'),
             tilePadding: EdgeInsets.zero,
             title: Text(
               row['type'] == 'المقطع'
@@ -234,8 +249,9 @@ class _SourceRecord extends StatelessWidget {
 }
 
 class _Attribution extends StatelessWidget {
-  const _Attribution({required this.source});
+  const _Attribution({required this.source, required this.storageId});
   final Map<String, dynamic> source;
+  final String storageId;
   @override
   Widget build(BuildContext context) => Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,9 +270,15 @@ class _Attribution extends StatelessWidget {
       ),
       if (source['document'] is String)
         ExpansionTile(
+          key: PageStorageKey('bundled/$storageId/document'),
           tilePadding: EdgeInsets.zero,
           title: Text(context.tr('source.documentMetadata')),
-          children: [SelectableText(source['document'] as String)],
+          children: [
+            SelectableText(
+              source['document'] as String,
+              key: const PageStorageKey('publisher-document-text-scroll'),
+            ),
+          ],
         ),
     ],
   );

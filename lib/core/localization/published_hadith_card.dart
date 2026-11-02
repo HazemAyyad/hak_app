@@ -43,6 +43,9 @@ class PublishedHadithRecord extends StatelessWidget {
           ],
         const SizedBox(height: 12),
         ExpansionTile(
+          key: PageStorageKey(
+            'published-hadith/${record['lang']}/${record['id']}/${source['version']}/arabic',
+          ),
           initiallyExpanded: expandArabic,
           tilePadding: EdgeInsets.zero,
           title: Text(context.tr('hadith.publisherArabic')),
@@ -104,10 +107,14 @@ class PublishedHadithRecord extends StatelessWidget {
           ],
         ),
         ExpansionTile(
+          key: PageStorageKey(
+            'published-hadith/${record['lang']}/${record['id']}/${source['version']}/document',
+          ),
           tilePadding: EdgeInsets.zero,
           title: Text(context.tr('hadith.document')),
           children: [
             SelectableText(
+              key: const PageStorageKey('publisher-document-text-scroll'),
               source['document'] as String,
               textDirection: TextDirection.ltr,
             ),
@@ -128,7 +135,9 @@ class PublishedHadithCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = LocalizationScope.maybeOf(context);
-    if (localization == null) return const SizedBox.shrink();
+    if (localization == null || localization.contentCode == 'ar') {
+      return const SizedBox.shrink();
+    }
     final source =
         localization.installed[localization.contentCode]?.hadithSource;
     final record = source?.forContent(contentId, originalText);

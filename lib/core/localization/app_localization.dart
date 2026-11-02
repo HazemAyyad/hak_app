@@ -262,7 +262,9 @@ class AppLocalization extends ChangeNotifier {
     ...installed.keys,
   }.length;
   String? get contentSelection =>
-      preferences.getString('app.content.language.v1');
+      // Older releases kept this override after choosing another app language.
+      // Only a fresh, explicit content choice can override the primary choice.
+      preferences.getString('app.content.language.v2');
   String get contentCode {
     final selected = contentSelection;
     return selected != null &&
@@ -282,8 +284,8 @@ class AppLocalization extends ChangeNotifier {
       throw StateError('Content language is not installed');
     }
     final saved = locale == null
-        ? await preferences.remove('app.content.language.v1')
-        : await preferences.setString('app.content.language.v1', locale);
+        ? await preferences.remove('app.content.language.v2')
+        : await preferences.setString('app.content.language.v2', locale);
     if (!saved) throw StateError('Cannot save content language');
     if (!_disposed) notifyListeners();
   }
@@ -476,7 +478,9 @@ class AppLocalization extends ChangeNotifier {
       await _activateCachedInterface(locale);
     }
     if (!await preferences.setString('app.language.v1', locale) ||
-        !await preferences.setBool('app.language.chosen.v1', true)) {
+        !await preferences.setBool('app.language.chosen.v1', true) ||
+        !await preferences.remove('app.content.language.v2') ||
+        !await preferences.remove('app.content.language.v1')) {
       throw StateError('Cannot save language');
     }
     code = locale;

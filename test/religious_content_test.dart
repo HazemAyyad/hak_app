@@ -7,6 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:haq_app/app_appearance.dart';
+import 'package:haq_app/core/localization/app_localization.dart';
+import 'package:haq_app/core/localization/language_page.dart';
+import 'package:haq_app/core/localization/religious_translation_library.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_repository.dart';
 import 'package:haq_app/features/religious_activity/data/activity_controller.dart';
 import 'package:haq_app/features/religious_activity/data/activity_store.dart';
@@ -15,6 +18,7 @@ import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/religious_content/data/religious_catalog.dart';
 import 'package:haq_app/features/religious_content/data/religious_controller.dart';
 import 'package:haq_app/features/religious_content/presentation/religious_host.dart';
+import 'package:haq_app/features/religious_content/presentation/religious_widgets.dart';
 import 'package:haq_app/main.dart';
 import 'package:haq_app/navigation/more_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -124,6 +128,7 @@ void main() {
     double width = 426,
     double scale = 1,
     ThemeMode mode = ThemeMode.light,
+    AppLocalization? localization,
   }) async {
     tester.view.physicalSize = visualSize(Size(width, 922));
     tester.view.devicePixelRatio = 1;
@@ -154,7 +159,9 @@ void main() {
               data: MediaQuery.of(
                 context,
               ).copyWith(textScaler: TextScaler.linear(visualScale(scale))),
-              child: child!,
+              child: localization == null
+                  ? child!
+                  : LocalizationScope(controller: localization, child: child!),
             ),
             home: Directionality(
               textDirection: TextDirection.rtl,
@@ -173,6 +180,49 @@ void main() {
     );
     await tester.pumpAndSettle();
   }
+
+  testWidgets(
+    'translated name meaning follows the header and original name card',
+    (tester) async {
+      final localization = AppLocalization(appearance.preferences);
+      await localization.select('en');
+      await tester.runAsync(
+        () => ReligiousTranslationLibrary.shared.load('en', 'names'),
+      );
+      await pump(tester, localization: localization);
+      hostKey.currentState!.openItem(catalog.byId['name-01']!);
+      await tester.pumpAndSettle();
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 30)),
+      );
+      await tester.pumpAndSettle();
+      final scroll = find.byKey(
+        const PageStorageKey('religious-details-name-01'),
+      );
+      final list = tester.widget<ListView>(scroll);
+      final children =
+          (list.childrenDelegate as SliverChildListDelegate).children;
+      expect(children.first, isA<ReligiousHeader>());
+      expect(children.whereType<ContentTranslationCard>(), isEmpty);
+      final originalCard = find
+          .ancestor(
+            of: find.byType(SelectableText).first,
+            matching: find.byType(ReligiousCard),
+          )
+          .first;
+      final translation = find.byType(ContentTranslationCard);
+      expect(
+        tester.getTopLeft(translation).dy,
+        greaterThan(tester.getBottomLeft(originalCard).dy),
+      );
+      await localization.select('ar');
+      await tester.pumpAndSettle();
+      expect(find.text('Ar Rahmaan'), findsNothing);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+      localization.dispose();
+    },
+  );
 
   Future<void> capture(WidgetTester tester, String name) async {
     await prepareVisualAuditCapture(tester, previewKey);

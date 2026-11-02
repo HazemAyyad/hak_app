@@ -46,6 +46,7 @@ class PublishedTranslationText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SelectableText.rich(
+    key: const PageStorageKey('published-source-text-scroll'),
     TextSpan(
       children: [
         for (final node in html.parseFragment(text).nodes) _span(node),
@@ -60,7 +61,9 @@ class PublishedMeaningCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = LocalizationScope.maybeOf(context);
-    if (localization == null) return const SizedBox.shrink();
+    if (localization == null || localization.contentCode == 'ar') {
+      return const SizedBox.shrink();
+    }
     final source =
         localization.installed[localization.contentCode]?.quranSource;
     if (source == null) {
