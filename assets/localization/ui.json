@@ -12038,5 +12038,29 @@
   "prayer.label.1f95bcdab035": {
     "ar": "المعاينة بدون صوت",
     "en": "Preview is silent"
+  },
+  "quran.pageFont": {
+    "ar": "نوع خط صفحات المصحف",
+    "en": "Mushaf page font"
+  },
+  "quran.originalMushafFont": {
+    "ar": "خط المصحف الأصلي — التجويد",
+    "en": "Original Mushaf font — Tajweed"
+  },
+  "quran.pageFontHint": {
+    "ar": "تحتفظ الصفحات بتوزيع السطور مع الخط المختار. ألوان التجويد متاحة مع خط المصحف الأصلي. كبّر الصفحة بإصبعين.",
+    "en": "Pages keep their line layout with the selected font. Tajweed colors are available with the original Mushaf font. Pinch to zoom."
+  },
+  "quran.tajweedFontHint": {
+    "ar": "ألوان التجويد متاحة مع خط المصحف الأصلي؛ الخطوط البديلة أحادية اللون.",
+    "en": "Tajweed colors are available with the original Mushaf font; alternative fonts use a single color."
+  },
+  "quran.bundledMushafReady": {
+    "ar": "المصحف كاملًا متاح دون إنترنت",
+    "en": "The full Mushaf is available offline"
+  },
+  "quran.mushafAttribution": {
+    "ar": "المصحف المرفق: رواية حفص، 604 صفحات بخط QCF V4 وألوان التجويد الأصلية لمجمع الملك فهد لطباعة المصحف الشريف، عبر Quran Foundation. بيانات الكلمات والسطور: المكتبة القرآنية الشاملة QUL من ترتيل. تُحفظ الخطوط مضغوطة دون تعديل، وتُستعاد مطابقة للأصل. الخطوط البديلة مرفقة مع تراخيصها.",
+    "en": "Bundled Mushaf: Hafs, 604 pages in QCF V4 with the original Tajweed palettes of the King Fahd Glorious Quran Printing Complex, provided by Quran Foundation. Word and line metadata: Quranic Universal Library (QUL), Tarteel AI. Fonts are stored with lossless compression and restored byte for byte. Alternative fonts are bundled with their licenses."
   }
 }

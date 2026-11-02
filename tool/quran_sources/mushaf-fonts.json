@@ -1,0 +1,3626 @@
+[
+  {
+    "page": 1,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p1.ttf",
+    "bytes": 81796,
+    "sha256": "c698d2ba6b326a0d4a6b00c40581149127cd357092f2cd34f2d216fb8123462a"
+  },
+  {
+    "page": 2,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p2.ttf",
+    "bytes": 95072,
+    "sha256": "2b78f60cf63bc97e8b5407d55360346ff02b4e0a982ae20765fcd05ac3444b51"
+  },
+  {
+    "page": 3,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p3.ttf",
+    "bytes": 301868,
+    "sha256": "f5c29d0d054aad67f39ee2ee0f47ef13ede9f2435c2427862d9adbd65553f63c"
+  },
+  {
+    "page": 4,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p4.ttf",
+    "bytes": 304256,
+    "sha256": "5b32da709896f1181e9ee4b37a7e8590007b3809f20eaf0a2ef4aa3a660b1afe"
+  },
+  {
+    "page": 5,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p5.ttf",
+    "bytes": 255184,
+    "sha256": "898956c4d639887011347819b6e3160110b3700dd32c295c126aec54feca6b19"
+  },
+  {
+    "page": 6,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p6.ttf",
+    "bytes": 281276,
+    "sha256": "f2315ce305d66f09eccd5df159d07dfb2bf5979d5fda9bedc250f9161940dabd"
+  },
+  {
+    "page": 7,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p7.ttf",
+    "bytes": 328784,
+    "sha256": "da98fb6e120ebb2e1d0a63aebb3fa90c23c7f1b52e880e494e89bd313e963c42"
+  },
+  {
+    "page": 8,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p8.ttf",
+    "bytes": 277932,
+    "sha256": "07654822e10fb13f09095dc83ca424e3ed79a1fe864fc629a7f25738e42f0567"
+  },
+  {
+    "page": 9,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p9.ttf",
+    "bytes": 279080,
+    "sha256": "076caa06f29c4d8e6c9d5061064484c0a7a71924966530dbd2a582bdc3d436e2"
+  },
+  {
+    "page": 10,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p10.ttf",
+    "bytes": 295052,
+    "sha256": "1060c4e1141ca9139e01859cf57cde2f8108a8b622690a5a992a3279156d1c9b"
+  },
+  {
+    "page": 11,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p11.ttf",
+    "bytes": 285004,
+    "sha256": "790a46992e41a716acfa1da63888bff440ae591a19b84be36e6f338017fef6ca"
+  },
+  {
+    "page": 12,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p12.ttf",
+    "bytes": 255312,
+    "sha256": "af33337a07cf6f93c12661f840fa6860d8d184334657011c0807ed28195aa419"
+  },
+  {
+    "page": 13,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p13.ttf",
+    "bytes": 275668,
+    "sha256": "9eec7b1a7aa968c8cd999d8fade018e9704102505f33a30cb7463bd8aa4b3bfc"
+  },
+  {
+    "page": 14,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p14.ttf",
+    "bytes": 255212,
+    "sha256": "bc72b805aa838acaef45e8e134c1cf0cd167edf5b82e05b86a72fa6dbca2d3cd"
+  },
+  {
+    "page": 15,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p15.ttf",
+    "bytes": 264268,
+    "sha256": "98ae5070dfe2b11ff0e5aa0dd778af42a285dfa300494ebb5552bd9f09f02e8a"
+  },
+  {
+    "page": 16,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p16.ttf",
+    "bytes": 241952,
+    "sha256": "0209293f0a60795b88816d9235cac09259f247ff26ad21b5571f00bce3cfd22d"
+  },
+  {
+    "page": 17,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p17.ttf",
+    "bytes": 255380,
+    "sha256": "79d1d6bd219d82c73c6927bec25b2457821e32d59fa8145963bfbe987435b5b3"
+  },
+  {
+    "page": 18,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p18.ttf",
+    "bytes": 276732,
+    "sha256": "65fa747c1679540c5c99dabff273e8c59b6f361c04e409637633419e45b755d8"
+  },
+  {
+    "page": 19,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p19.ttf",
+    "bytes": 301428,
+    "sha256": "7b7bdda35a9def1c4e2870f97209650cfc71556f71afe42ab3f659506c6e3774"
+  },
+  {
+    "page": 20,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p20.ttf",
+    "bytes": 276448,
+    "sha256": "64fa63c98175499e7d2159cc7eaa3c323abaee4c9ff8d5cf8ed2ae54371e1422"
+  },
+  {
+    "page": 21,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p21.ttf",
+    "bytes": 266400,
+    "sha256": "a02fc83bc6b5da67291dd592fb94f78a48d8db560b0be8b16083a34bbe157d1a"
+  },
+  {
+    "page": 22,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p22.ttf",
+    "bytes": 272168,
+    "sha256": "5143526f8b6fdede09503a7964582189c1f357f8df85048c022d3f11a62309db"
+  },
+  {
+    "page": 23,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p23.ttf",
+    "bytes": 276340,
+    "sha256": "71e78fa8eff39d71fb280f08dff510cb8b206e1ddbd40c63f404b6546021df8a"
+  },
+  {
+    "page": 24,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p24.ttf",
+    "bytes": 301516,
+    "sha256": "f7bfa8f83fa99b58bde0ce86e3428e0af3f8cdc72caa31094581670b2e1b58b4"
+  },
+  {
+    "page": 25,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p25.ttf",
+    "bytes": 287764,
+    "sha256": "34e02e1992e2f1a8759913677dca4d07f3b79a1f8c9c582b3e0c3fc328727f84"
+  },
+  {
+    "page": 26,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p26.ttf",
+    "bytes": 269340,
+    "sha256": "99696f4308ed03117f4f75b4a5d39fc683cc4a19cd49f4eb130cd4b5fb2eb1b3"
+  },
+  {
+    "page": 27,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p27.ttf",
+    "bytes": 298868,
+    "sha256": "5bb1fb36ab7a41a7da02a28d035081670f29f0e25cee7ae4269a09af0c1e95b8"
+  },
+  {
+    "page": 28,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p28.ttf",
+    "bytes": 246908,
+    "sha256": "88267fdaa61e64e4c9ce8078061ff334d38e977296ddbcaadb6adcaa97b48c26"
+  },
+  {
+    "page": 29,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p29.ttf",
+    "bytes": 273536,
+    "sha256": "d51936baf4249b940a1946d72d8e8221f0a03e48d2e873c965200ffe37e21de3"
+  },
+  {
+    "page": 30,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p30.ttf",
+    "bytes": 341356,
+    "sha256": "bc3d5641046aa2ad1b5014086778c7ed001edc8adca47dd5a5f4e7604a64c223"
+  },
+  {
+    "page": 31,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p31.ttf",
+    "bytes": 245908,
+    "sha256": "e317b23dc5d62850ce24747fc1a8feb794fe39803dfa65898e9cf4765e64ef36"
+  },
+  {
+    "page": 32,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p32.ttf",
+    "bytes": 270300,
+    "sha256": "78257049a0a1d2d05f9590177c04eb41cd2c267ae6e18146709e1535d7427684"
+  },
+  {
+    "page": 33,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p33.ttf",
+    "bytes": 302096,
+    "sha256": "b0c9e2ccae41d9cb66317dc49760c80a85a56a620490f510407c46c97d1ce64f"
+  },
+  {
+    "page": 34,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p34.ttf",
+    "bytes": 267412,
+    "sha256": "56375dad495dcc8bfafdbb72ee35eb40d02bbab7499be4c6fd2127cdd33dacdd"
+  },
+  {
+    "page": 35,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p35.ttf",
+    "bytes": 298004,
+    "sha256": "3fe3f935a9618244df85d7f51acd9ce9aea6746a4839296d88e0f2c34a64bedb"
+  },
+  {
+    "page": 36,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p36.ttf",
+    "bytes": 314128,
+    "sha256": "efb333644e298b33c1a2a6cc571611fc99ae0849003f0ab08003abc648d3c574"
+  },
+  {
+    "page": 37,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p37.ttf",
+    "bytes": 304924,
+    "sha256": "17c372d2fe8c87f2af288c13aa3833e7c45e72f847bd524553f7e8be8162e79b"
+  },
+  {
+    "page": 38,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p38.ttf",
+    "bytes": 290060,
+    "sha256": "24f718960735efb81ddffe9916ebd314edea1068cd0efe6b38280c97008407d1"
+  },
+  {
+    "page": 39,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p39.ttf",
+    "bytes": 262384,
+    "sha256": "aef0ad845c0b8f72fd8a940512545fea223d4732b2901075339e71e60893f970"
+  },
+  {
+    "page": 40,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p40.ttf",
+    "bytes": 235244,
+    "sha256": "cb5ea754c82e61f6296487d9d8bcdd4155114f6b9ec13eccde50227ab147fbfe"
+  },
+  {
+    "page": 41,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p41.ttf",
+    "bytes": 238084,
+    "sha256": "195f82d557193d0782181508cfc921fc8032b464e547e606033cc859a33d8f12"
+  },
+  {
+    "page": 42,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p42.ttf",
+    "bytes": 293560,
+    "sha256": "75360358bc4f7ff74913e763daa049c97027ac1112d0d9342dbaeb5737242b03"
+  },
+  {
+    "page": 43,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p43.ttf",
+    "bytes": 260856,
+    "sha256": "0b734ca9ddbf22b91c2e763b10cc940a05b3c33f62862f1e65f6630fb1be2603"
+  },
+  {
+    "page": 44,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p44.ttf",
+    "bytes": 283588,
+    "sha256": "5e02f69e876f0a1b8bea74c3a938468479c3a1036fa7c140dbca6015e0bea292"
+  },
+  {
+    "page": 45,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p45.ttf",
+    "bytes": 276476,
+    "sha256": "0477927e45da1357251194f81f5c5b2cfdb46cc86e0e008c2d29c8ba0fe85ce8"
+  },
+  {
+    "page": 46,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p46.ttf",
+    "bytes": 236424,
+    "sha256": "b3f1b1336e226c2ed2d0458c6022885f7be69361a0be9ea4b882ef7713358d9a"
+  },
+  {
+    "page": 47,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p47.ttf",
+    "bytes": 284504,
+    "sha256": "d1ef1f39d88fa1077f255eca86ce34f2daebadf4430ea09c4aff5ad23204dccb"
+  },
+  {
+    "page": 48,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p48.ttf",
+    "bytes": 248880,
+    "sha256": "276bb46ffd27eee6afd0803ac71f34887aeb79822f5af49c9096777b3612f205"
+  },
+  {
+    "page": 49,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p49.ttf",
+    "bytes": 263984,
+    "sha256": "e30cf9be12417df511355b0087d52a9efbd8e88f2ebf88f37683b4a910fddfbb"
+  },
+  {
+    "page": 50,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p50.ttf",
+    "bytes": 280012,
+    "sha256": "4976bd98dc858f84b3721b6a4d8e1f0261cf832363f2dbc0129aa5fbfcaef00c"
+  },
+  {
+    "page": 51,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p51.ttf",
+    "bytes": 273316,
+    "sha256": "3836da6e87c6f184f3b98c35a5586bddd20555f7a6607ecb0027730b02b7015e"
+  },
+  {
+    "page": 52,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p52.ttf",
+    "bytes": 275576,
+    "sha256": "63b47b8f0e827a728a1fca1a754391407d6f53fa26c8078c41fc8789eebc8682"
+  },
+  {
+    "page": 53,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p53.ttf",
+    "bytes": 284376,
+    "sha256": "60f94c2900d236d6085ba3ba865aef44fe7a553ee5a0c535d58665826dfa77b6"
+  },
+  {
+    "page": 54,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p54.ttf",
+    "bytes": 297364,
+    "sha256": "7ee3e2b00276800d7e276b6649d02c41ca0fe021fd466310cb14be4ffffa1ca8"
+  },
+  {
+    "page": 55,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p55.ttf",
+    "bytes": 285784,
+    "sha256": "19754b9bc21c3ad16c87ad68f99a14d828379a4daa3a9cabc6c179a0392c929f"
+  },
+  {
+    "page": 56,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p56.ttf",
+    "bytes": 274328,
+    "sha256": "4264611911a753b6b5681c1d4ea2fcc05c63a99c52595f6b4aa0661ff396ae73"
+  },
+  {
+    "page": 57,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p57.ttf",
+    "bytes": 276412,
+    "sha256": "885a27353ebb1810239693ebe53188c84566e3587883dad2c59946745353eb4d"
+  },
+  {
+    "page": 58,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p58.ttf",
+    "bytes": 293592,
+    "sha256": "8aa036f6ff4e5320ce2fa496dfbffdb67d5f1b88dfc65ea43ab4f2905f1ecf28"
+  },
+  {
+    "page": 59,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p59.ttf",
+    "bytes": 276588,
+    "sha256": "01327cca6a9f73f9a8d5feaac7fd2cb63731ee18f6db8d4d78ee4fd0f3b70cbd"
+  },
+  {
+    "page": 60,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p60.ttf",
+    "bytes": 267436,
+    "sha256": "11513d935af2464ae85dc23fa5b5bf717656ce04f8936e72308cf184fd3710c0"
+  },
+  {
+    "page": 61,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p61.ttf",
+    "bytes": 275804,
+    "sha256": "7cb7ae9fe77d881b9cd701cb08dff98cb45ab09ae295f53fe468b1e5977aa58e"
+  },
+  {
+    "page": 62,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p62.ttf",
+    "bytes": 294744,
+    "sha256": "538eca0f2bdd71e6291f2034cfee8e037d63d569001cd57557192d631773f862"
+  },
+  {
+    "page": 63,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p63.ttf",
+    "bytes": 281260,
+    "sha256": "23b7f55f7cc56b4138f1a848e398c7fef90548bd700274839630e2d3fe1a90a4"
+  },
+  {
+    "page": 64,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p64.ttf",
+    "bytes": 271424,
+    "sha256": "f6231e536c33f92472d356c5861be2645302298b597591df26047b70bf99129b"
+  },
+  {
+    "page": 65,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p65.ttf",
+    "bytes": 262420,
+    "sha256": "4c9e1c9c0805832cf29ae05cbf114a726ae726b327e530f2ad5330479ae7cf90"
+  },
+  {
+    "page": 66,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p66.ttf",
+    "bytes": 278152,
+    "sha256": "5e0fda78aee566e1ffac04844e7534cc17d0c0480c9fa47df1c174d3ae188ba6"
+  },
+  {
+    "page": 67,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p67.ttf",
+    "bytes": 263708,
+    "sha256": "df7a3bc3c72654b08cb23d2d4c9b8018792b84e4f46e4e9b081269314fb323cb"
+  },
+  {
+    "page": 68,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p68.ttf",
+    "bytes": 271248,
+    "sha256": "39c3030d726bbbaacf8ed45e546013dc97b2c97d313356c1b68c400e23da6db4"
+  },
+  {
+    "page": 69,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p69.ttf",
+    "bytes": 218976,
+    "sha256": "42581ef7338bfb8e9457e6f74dc27aee9c63e69687e932f345311d87b9192707"
+  },
+  {
+    "page": 70,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p70.ttf",
+    "bytes": 277020,
+    "sha256": "7c451fdcbe1a8770671474272992e25f828f9320bf481e340a5284ec81dc5c3f"
+  },
+  {
+    "page": 71,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p71.ttf",
+    "bytes": 265764,
+    "sha256": "c66aaa4dbe3fd3d01839405d847de1e6056eab460b935f0afe228900bcbd5b9f"
+  },
+  {
+    "page": 72,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p72.ttf",
+    "bytes": 277344,
+    "sha256": "d9a4badf99ec32ac60df20fecba55de88014d1ccfcdf93262b85c6ed7b0e641c"
+  },
+  {
+    "page": 73,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p73.ttf",
+    "bytes": 290692,
+    "sha256": "f497ad31255ec88c796c71827e3b6034d63d4baa011c04c4bd1b7a59f068f458"
+  },
+  {
+    "page": 74,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p74.ttf",
+    "bytes": 254540,
+    "sha256": "40a60213c477b0a29ff4a3be2efab65bfb1a0b18fd721d7bbf3e71abf68e6265"
+  },
+  {
+    "page": 75,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p75.ttf",
+    "bytes": 264920,
+    "sha256": "40e1e48c3dca74375e50c545b359f9dcd7551a1886c4f253fdb9aa4bdec81369"
+  },
+  {
+    "page": 76,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p76.ttf",
+    "bytes": 247904,
+    "sha256": "9cccecb9f257deba6e8ecbb6cf9233797570eaae1fa591ada82431887c05cf7b"
+  },
+  {
+    "page": 77,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p77.ttf",
+    "bytes": 281408,
+    "sha256": "cab1184355e4800841e4243340a7e20b6a06ade390ff43976f7f75ef396a3b3f"
+  },
+  {
+    "page": 78,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p78.ttf",
+    "bytes": 269824,
+    "sha256": "786443ca5a646f9b6997f351e893f7e767c5b390b6f6ae76672d82e84e3418c2"
+  },
+  {
+    "page": 79,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p79.ttf",
+    "bytes": 215208,
+    "sha256": "19d53467c05cdca732894607f69d323cb3f27180c845c8b875ab56b82350c395"
+  },
+  {
+    "page": 80,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p80.ttf",
+    "bytes": 242776,
+    "sha256": "3b987482c104132cceb845bf8518612f64360828f03c44bf17caf7309ee5b9fc"
+  },
+  {
+    "page": 81,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p81.ttf",
+    "bytes": 216472,
+    "sha256": "c77807b52217a4845283356da8d3f60ed520c3f2555f7e130873806e0d698af5"
+  },
+  {
+    "page": 82,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p82.ttf",
+    "bytes": 232272,
+    "sha256": "79b80af1e81c6049451e475b8e7e6b9fd8a1c3415e6443bec076ff2841961d34"
+  },
+  {
+    "page": 83,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p83.ttf",
+    "bytes": 232616,
+    "sha256": "1142c36733d100212199d6334a7eb303bcbe00453156bceb20aa2ce331fc4187"
+  },
+  {
+    "page": 84,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p84.ttf",
+    "bytes": 258916,
+    "sha256": "7e6c843f6c46ab962a8eb688997e8cb7feaf9d99d1090dc10378494e22ca5bc6"
+  },
+  {
+    "page": 85,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p85.ttf",
+    "bytes": 268344,
+    "sha256": "99ea17c052629ec51e214e6b74999bced8182f208b645cdee4c7a5c706c27207"
+  },
+  {
+    "page": 86,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p86.ttf",
+    "bytes": 275320,
+    "sha256": "405646728ad10f2ab7004f40225b14a9e782fb3f161195dc9aad56898d59955d"
+  },
+  {
+    "page": 87,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p87.ttf",
+    "bytes": 308196,
+    "sha256": "14c44ac57c7693838a881ca76868dc83d0dc2dbc723d4478ff392452f37c0701"
+  },
+  {
+    "page": 88,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p88.ttf",
+    "bytes": 247980,
+    "sha256": "f6f08240523ba9befe610afc7bd66364f1d3e89738e124e331f6d871dbc47a0b"
+  },
+  {
+    "page": 89,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p89.ttf",
+    "bytes": 276804,
+    "sha256": "eb3a88f105743ee42dbec58101ad2cecf8eca062bb7baa2b25326e619f9c5fc0"
+  },
+  {
+    "page": 90,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p90.ttf",
+    "bytes": 311836,
+    "sha256": "c76ded1b610dc8b8479ef240c1b7714e3f2c59c3590f15f186bac9926d111dd5"
+  },
+  {
+    "page": 91,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p91.ttf",
+    "bytes": 275548,
+    "sha256": "7ff5c9fd8c8c29a73384c5574c4be1207825ebb7c09872a3761aa2d7802a1444"
+  },
+  {
+    "page": 92,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p92.ttf",
+    "bytes": 276076,
+    "sha256": "233d2b44345ee2925496a4751efdcb7a994730cbc8305747645d84c40fcb0ab1"
+  },
+  {
+    "page": 93,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p93.ttf",
+    "bytes": 228860,
+    "sha256": "e85c9ae6faa36ee07b1713d165c39ca94a315c95c3f975f944dfd7d1e0fa3a44"
+  },
+  {
+    "page": 94,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p94.ttf",
+    "bytes": 318788,
+    "sha256": "06c3962bb5849496678462d3525c50454f4faeea53a1ef364f3afbff9e2b4dbf"
+  },
+  {
+    "page": 95,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p95.ttf",
+    "bytes": 250284,
+    "sha256": "7c6480153dd4cd36bf6f4fd4c0d778c899348fe0b9b7bd7c777c0cdcda0cfc90"
+  },
+  {
+    "page": 96,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p96.ttf",
+    "bytes": 258984,
+    "sha256": "21132a8e0d9ebdb32c2aa0ee3cdb45fc5787bce6eec016e6e0ad3bd39603342a"
+  },
+  {
+    "page": 97,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p97.ttf",
+    "bytes": 263180,
+    "sha256": "9082d5e3059f12728172ceeda1a4c9aa2f14f17ef742b1debb317890124c3748"
+  },
+  {
+    "page": 98,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p98.ttf",
+    "bytes": 249572,
+    "sha256": "4ea20dcafcbd47e99e02b6e5240cb50ad919e9ae98dc140be818223a135a80b9"
+  },
+  {
+    "page": 99,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p99.ttf",
+    "bytes": 258740,
+    "sha256": "a9329e6d0d04aec6b7d6da2985c77fffb3c05e68f009db004e33237afe44f03a"
+  },
+  {
+    "page": 100,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p100.ttf",
+    "bytes": 287056,
+    "sha256": "938adb5b0b80ecc71bbc21b674eacc5d38f87946f3b2d5a165a7c82e0852041f"
+  },
+  {
+    "page": 101,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p101.ttf",
+    "bytes": 271464,
+    "sha256": "e87ab04bb343f34abf31f5cbafd43c881137d6b2f876551086443b53af233c85"
+  },
+  {
+    "page": 102,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p102.ttf",
+    "bytes": 282960,
+    "sha256": "4b3a75d51ee37cd6bd5b4941888c060b1e34e0822738596529d8af81aa7c507e"
+  },
+  {
+    "page": 103,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p103.ttf",
+    "bytes": 291784,
+    "sha256": "95480c0f2a90676a4031b7d48120aa1c7b8fae43f3aa01db53746a69a2ae57b7"
+  },
+  {
+    "page": 104,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p104.ttf",
+    "bytes": 269044,
+    "sha256": "7acf2234db8dd496987fe48851fbed9521b3bc714592a580802e8bfcfa64da0f"
+  },
+  {
+    "page": 105,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p105.ttf",
+    "bytes": 267624,
+    "sha256": "1d4dfc437d6ac629d035c233625c5487b53172a0de20f2b9d351dba90aa3a61a"
+  },
+  {
+    "page": 106,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p106.ttf",
+    "bytes": 246800,
+    "sha256": "bcff4a40ed872643561588a561a31130fcb6478fce8f7baf33f81bb2feaa1263"
+  },
+  {
+    "page": 107,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p107.ttf",
+    "bytes": 285080,
+    "sha256": "a06e706e21d05c2754f88e1236d3d656851b3b0239c37366e6e10d90c229be5a"
+  },
+  {
+    "page": 108,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p108.ttf",
+    "bytes": 256288,
+    "sha256": "39341a401c863a5c53c9cc90d2972cc34f4ee64a621680fa23e29465ba322abd"
+  },
+  {
+    "page": 109,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p109.ttf",
+    "bytes": 244068,
+    "sha256": "683410fad3b8e0e1ccc498f8f4b3ad2f7ec51445266fcccfb4ae6a8d63f076fb"
+  },
+  {
+    "page": 110,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p110.ttf",
+    "bytes": 221840,
+    "sha256": "b2a33906759dca2c8b6e6677c8986dfbd0aba1d0037c04aab11e6c16ac2075a9"
+  },
+  {
+    "page": 111,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p111.ttf",
+    "bytes": 266128,
+    "sha256": "f1053c1df599889472ff24e1981616562663590a25e430723250b044cad8a487"
+  },
+  {
+    "page": 112,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p112.ttf",
+    "bytes": 271468,
+    "sha256": "2f627c551a397a75084c36e3e6dc8d1ad1bfc23cfa75abd7555f691317a44883"
+  },
+  {
+    "page": 113,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p113.ttf",
+    "bytes": 251032,
+    "sha256": "cd5a6de01cfcc833e5d7eb6e315d216ae1db8bf7811b2de058cf78507412d96d"
+  },
+  {
+    "page": 114,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p114.ttf",
+    "bytes": 251888,
+    "sha256": "0b395b03ed2f4ae99aad54773a61686906c77a0f219534025b9592337df9520d"
+  },
+  {
+    "page": 115,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p115.ttf",
+    "bytes": 260068,
+    "sha256": "47dbaa8eb6341593abbababd2c901ac41630dccafb0422f73c4b008584006c38"
+  },
+  {
+    "page": 116,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p116.ttf",
+    "bytes": 275920,
+    "sha256": "637ef5c944a72523ccc898e4c44f7011c02b831c06e0236d6c216bc6cba14cbc"
+  },
+  {
+    "page": 117,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p117.ttf",
+    "bytes": 339504,
+    "sha256": "0b177951a9cc29c00c1fb532b354ce589e1d7194381fd5a1813f134213a63400"
+  },
+  {
+    "page": 118,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p118.ttf",
+    "bytes": 315716,
+    "sha256": "4b92b03d5b079678b147845f5e3e0401d7d2f255cc10885f0ec817e5c38f4e89"
+  },
+  {
+    "page": 119,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p119.ttf",
+    "bytes": 278752,
+    "sha256": "b08fa8ca63a9898a56257e3044d771ced37ea8b38537dccc7739a514935e1c54"
+  },
+  {
+    "page": 120,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p120.ttf",
+    "bytes": 301148,
+    "sha256": "c564565f114773febaff74fd149591ef27a7bcad4e243915140603b83929c7a0"
+  },
+  {
+    "page": 121,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p121.ttf",
+    "bytes": 230096,
+    "sha256": "8dae9cda9406819626e1c4ccdc06a81a41414ed14df252a5ac7379bca2111421"
+  },
+  {
+    "page": 122,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p122.ttf",
+    "bytes": 291836,
+    "sha256": "b503c094f9e80f06ee49c7242663d79a10538c6bb11c64df8cf54d6a21f2eeaf"
+  },
+  {
+    "page": 123,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p123.ttf",
+    "bytes": 268384,
+    "sha256": "dad80c7ecb8482fa43e70f4e16c434ccdc6805469b0945bba741d003a5575f43"
+  },
+  {
+    "page": 124,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p124.ttf",
+    "bytes": 283288,
+    "sha256": "85272a17db3a493d454faf1a987c6a3583785f6b72cd5ef42a1a80eac0513d55"
+  },
+  {
+    "page": 125,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p125.ttf",
+    "bytes": 275192,
+    "sha256": "1143ae29859792cbef45d9e09f0a9cd4a4fccab8ff5c2e851a1319d744efac40"
+  },
+  {
+    "page": 126,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p126.ttf",
+    "bytes": 250432,
+    "sha256": "608e83b2aa52cc128d903be87f9ef29d45d7aabfdd3815faa3865624cd2a0703"
+  },
+  {
+    "page": 127,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p127.ttf",
+    "bytes": 299356,
+    "sha256": "b069e1ee5dc2cdc7710cb3ed451c01976840348d3dfc72aa2136b9c81a057da2"
+  },
+  {
+    "page": 128,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p128.ttf",
+    "bytes": 254276,
+    "sha256": "f8b39246f5a0d6a332c0b58d2351ad0e75ef0b300a648fba2e081989a28a33a0"
+  },
+  {
+    "page": 129,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p129.ttf",
+    "bytes": 276724,
+    "sha256": "44626da3c8337c06c9c020546695dc5d2f14e951013b37ac0e5382e979243ed0"
+  },
+  {
+    "page": 130,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p130.ttf",
+    "bytes": 317116,
+    "sha256": "34b6ea4f339bcf9cd50d75a5b19dc97128eb45071904093c356b146f4e57d815"
+  },
+  {
+    "page": 131,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p131.ttf",
+    "bytes": 295732,
+    "sha256": "b7abd09f1214c566651ff6f74724fa02aac4c6a5e2d503cbb46eb4918709c2b3"
+  },
+  {
+    "page": 132,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p132.ttf",
+    "bytes": 297336,
+    "sha256": "92638ec8b6ad6d1980cbdae962634d5ab2039b516888a0bed78a200fe1e6e2f0"
+  },
+  {
+    "page": 133,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p133.ttf",
+    "bytes": 281204,
+    "sha256": "736e1b792460df01723031efb8336f2b999fe3d7a24d20135b648b2d2fcbcd29"
+  },
+  {
+    "page": 134,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p134.ttf",
+    "bytes": 262256,
+    "sha256": "44e95e98c9cba141faed1db3f69e55abd24551c4939eb0e047f10ac351f43ce1"
+  },
+  {
+    "page": 135,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p135.ttf",
+    "bytes": 305000,
+    "sha256": "b52561bb788f44d209a0923236d5f9d7be646fe11daf62bfb16e4b663f5a57ce"
+  },
+  {
+    "page": 136,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p136.ttf",
+    "bytes": 259576,
+    "sha256": "b1d3d2f79c91e423d497768563432b7a4ee96f794593797e72f6d3a0bf8858c1"
+  },
+  {
+    "page": 137,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p137.ttf",
+    "bytes": 271884,
+    "sha256": "f96d61b7445fbb7056b845495dcde1ebd1f84638e67d562b8c6106f54c43f5cf"
+  },
+  {
+    "page": 138,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p138.ttf",
+    "bytes": 280068,
+    "sha256": "e0d7c62ba010e06c1c7796ae3af3d61ef2b6752b861e988a0e87237c77a0b66b"
+  },
+  {
+    "page": 139,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p139.ttf",
+    "bytes": 288728,
+    "sha256": "9ee61d08b3e7e41e293ac01b148c907e8e3ab4760d7d44aced87b5a5c9e85ea0"
+  },
+  {
+    "page": 140,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p140.ttf",
+    "bytes": 306852,
+    "sha256": "249132ec50e8e4e5e5177ab4b42708b07fa53eeaf51d97ea43dd01dbd4e9ad9c"
+  },
+  {
+    "page": 141,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p141.ttf",
+    "bytes": 291292,
+    "sha256": "efec5453ff098b4cea9a270f6069d3846b73bc52f0f44c1b0485718faa77c2de"
+  },
+  {
+    "page": 142,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p142.ttf",
+    "bytes": 270220,
+    "sha256": "946f45132d03948b7dfc42677d40a4196522bb60694f79c2efa8273242d8ff28"
+  },
+  {
+    "page": 143,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p143.ttf",
+    "bytes": 274984,
+    "sha256": "e5a11691df7565ea7ccb9cef299a7e54f6921fe00b299912a5d732d1489c5a26"
+  },
+  {
+    "page": 144,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p144.ttf",
+    "bytes": 268584,
+    "sha256": "02f269bdcdc719007d423d20b5f77c61e97558440463e5b6dbb31bfc46c5255d"
+  },
+  {
+    "page": 145,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p145.ttf",
+    "bytes": 238096,
+    "sha256": "e1f81f834cca47638b34d4f49b24c69144784b9b895796ff02f492e7f262e698"
+  },
+  {
+    "page": 146,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p146.ttf",
+    "bytes": 263736,
+    "sha256": "5e1972e49dd67e8f345879b867f77f27b595a1f82efef3dead73d762e68e3b42"
+  },
+  {
+    "page": 147,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p147.ttf",
+    "bytes": 261616,
+    "sha256": "fa5943e00435907e4eaa38ee26550e813cefe59ef1877c068c1d465c35fbe8d6"
+  },
+  {
+    "page": 148,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p148.ttf",
+    "bytes": 264100,
+    "sha256": "4761f6d275aa2686cd565c4b0202e69cb75e787dfae82eeba6ea5405a7e4b95f"
+  },
+  {
+    "page": 149,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p149.ttf",
+    "bytes": 281204,
+    "sha256": "4d1d011e31d968aa744a43ac28195ac15466d4527eafa3efed816441fed674a9"
+  },
+  {
+    "page": 150,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p150.ttf",
+    "bytes": 294328,
+    "sha256": "360cfc9281ecdc782c3c4ca9526710b9ad87f1ea3c5f01045ca17eae929ce626"
+  },
+  {
+    "page": 151,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p151.ttf",
+    "bytes": 263488,
+    "sha256": "1dc154e8dc471bec9bbbc32d8cf71fbec898028ef927db13268c49cafa05e5c3"
+  },
+  {
+    "page": 152,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p152.ttf",
+    "bytes": 305404,
+    "sha256": "d3399a68bc7dbae1d3179798149223bb1f6c4063a75070fd6c2fa5a926c1f670"
+  },
+  {
+    "page": 153,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p153.ttf",
+    "bytes": 288484,
+    "sha256": "1d4c0ea734cfac543e1d03a66f9bf8f60dbd653e67f053b4e47416951fa18c1f"
+  },
+  {
+    "page": 154,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p154.ttf",
+    "bytes": 301588,
+    "sha256": "0cf3c46bcfb24d1643deb219713289a122b888c596b56e665d09019070681ab8"
+  },
+  {
+    "page": 155,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p155.ttf",
+    "bytes": 289224,
+    "sha256": "c169f45d6f86c6c51631a74b6d0a8c24be4e403f82d883b210a6b4eb5eff4eff"
+  },
+  {
+    "page": 156,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p156.ttf",
+    "bytes": 303072,
+    "sha256": "b39c54c4a6a890b7551ef37aa226517045f617220e6b20757b32a2275863b0a7"
+  },
+  {
+    "page": 157,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p157.ttf",
+    "bytes": 291528,
+    "sha256": "7f8df1737f581d41dc91f27d10b62921ab44acf90254521ee44be3dfa5c79e3b"
+  },
+  {
+    "page": 158,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p158.ttf",
+    "bytes": 291428,
+    "sha256": "e9494308c7b837e75464865af427f3b1d6da30baa8150b3ff04cc4e474daadc6"
+  },
+  {
+    "page": 159,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p159.ttf",
+    "bytes": 263436,
+    "sha256": "07c1eefc4a2d27895707f6d9038526d85e9654d2793fd8f631c1928af2de06c1"
+  },
+  {
+    "page": 160,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p160.ttf",
+    "bytes": 257632,
+    "sha256": "4a554c637626d45a649be533f1e3a6ad1dd0efdc05797a1aee3d41405d3149d7"
+  },
+  {
+    "page": 161,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p161.ttf",
+    "bytes": 245540,
+    "sha256": "82f9f4bd7a20adf1b9cf0fb2823d6cab02dc87a45d682748b07ac8b235eeb82a"
+  },
+  {
+    "page": 162,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p162.ttf",
+    "bytes": 290852,
+    "sha256": "be3f8cb5ec9de9efe825944fa9f26e3fbbfb22a97d39b706893e09865a94327a"
+  },
+  {
+    "page": 163,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p163.ttf",
+    "bytes": 265092,
+    "sha256": "5dff190d3f0f4cb082788b11bcdfa9f1c100a6d2157c3351365707251ef180e0"
+  },
+  {
+    "page": 164,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p164.ttf",
+    "bytes": 298356,
+    "sha256": "b5c86a695d39696dab1fa96a5340f30cbf1e31c5ba3418f206f5e7eb57b9c0f3"
+  },
+  {
+    "page": 165,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p165.ttf",
+    "bytes": 284960,
+    "sha256": "8aafeb8077ae7f5b0b65f331e8e1809ace5bb18018dbb4eee1f43c4a2c1ced07"
+  },
+  {
+    "page": 166,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p166.ttf",
+    "bytes": 271604,
+    "sha256": "1811fe1e3d305b1711b37b7093df96edad06fe14fd0d2ff238eb4785717c98fc"
+  },
+  {
+    "page": 167,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p167.ttf",
+    "bytes": 263668,
+    "sha256": "a86cc92ccce435a050ec146e5947921b96ec921d9e1542e919bea70a9d5e1719"
+  },
+  {
+    "page": 168,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p168.ttf",
+    "bytes": 267984,
+    "sha256": "d8e88c4a3be0c994862320402b04dd10118ae595398655bd58d814a982390aab"
+  },
+  {
+    "page": 169,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p169.ttf",
+    "bytes": 286624,
+    "sha256": "ec285787e69ad5db2ae6d2051d571b2f4d31c71d17fac225cd5a8ccd8ce51857"
+  },
+  {
+    "page": 170,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p170.ttf",
+    "bytes": 258788,
+    "sha256": "c4708b5258d724468b4e3da7f6b2e8c42ec90ada9f027e5d577991d4c35ee448"
+  },
+  {
+    "page": 171,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p171.ttf",
+    "bytes": 228888,
+    "sha256": "9471f28c77379d2cf0fea26d686c71df234d6fa1ce77cc8a8b4889dc1a52bf68"
+  },
+  {
+    "page": 172,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p172.ttf",
+    "bytes": 289420,
+    "sha256": "f17fc30ad2a671edd7ca155584a47db600bfb26ece69b9f9e3724b819ee576d2"
+  },
+  {
+    "page": 173,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p173.ttf",
+    "bytes": 282780,
+    "sha256": "f72ff19143287e1ab7d3fd1edc6d0cf6f898aa0087cd05ef9e7008214bdaeeff"
+  },
+  {
+    "page": 174,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p174.ttf",
+    "bytes": 298968,
+    "sha256": "d80200bef536013392962c72dfe4402aba231e2363a03e02cc6116200068519f"
+  },
+  {
+    "page": 175,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p175.ttf",
+    "bytes": 275064,
+    "sha256": "c280f4c45f6dbf0284bae6e79224e9998001e52857ecc567d5014c44620fd694"
+  },
+  {
+    "page": 176,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p176.ttf",
+    "bytes": 296504,
+    "sha256": "e3903d2911d0242bd7f5f09deeda84a525d6337795214f3b114220db77230fa6"
+  },
+  {
+    "page": 177,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p177.ttf",
+    "bytes": 245684,
+    "sha256": "3418cd0dfd76463a7219d44cacacb99504ea674094778e1502540f06a9e98f2c"
+  },
+  {
+    "page": 178,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p178.ttf",
+    "bytes": 282408,
+    "sha256": "1c855490e446913b4606670b96b8077af8a437ffd943c3f72fb63f110cbcd385"
+  },
+  {
+    "page": 179,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p179.ttf",
+    "bytes": 275020,
+    "sha256": "5015fb067dbb38ea927f6e2a752f068029e446defd9145422c3ac279fae5b87a"
+  },
+  {
+    "page": 180,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p180.ttf",
+    "bytes": 280792,
+    "sha256": "bd082e2cc43f7c9456519b70a741acfb7cd4b1cf01b27ecee1a52ce1113c74f7"
+  },
+  {
+    "page": 181,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p181.ttf",
+    "bytes": 257720,
+    "sha256": "abc322400210735b07d42f088c67e16b3e44eb8e7e43ba7ffb828d273a62c103"
+  },
+  {
+    "page": 182,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p182.ttf",
+    "bytes": 260852,
+    "sha256": "97034f97da5461e0f3dea7c9e14195a8f386bd74a4e2aa41c12fef46791e28d3"
+  },
+  {
+    "page": 183,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p183.ttf",
+    "bytes": 259576,
+    "sha256": "81a1e6d0a26bff7d3fb5365db52187dc8a3a937f8704a3649881748200ff12ed"
+  },
+  {
+    "page": 184,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p184.ttf",
+    "bytes": 275288,
+    "sha256": "5a2b793b51eac4eab8dd25be3a594b1160900814a406d888b5253608811d1abe"
+  },
+  {
+    "page": 185,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p185.ttf",
+    "bytes": 280512,
+    "sha256": "117a33e3f06656255312e7e140921ac7dbb3ae65c8e9b280ab66314fa1a08be6"
+  },
+  {
+    "page": 186,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p186.ttf",
+    "bytes": 286832,
+    "sha256": "182410484fe1fe009ae5c164bc06c267ce60e815db64df02c66e41b849cd2803"
+  },
+  {
+    "page": 187,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p187.ttf",
+    "bytes": 274932,
+    "sha256": "33d30d769829b640b61b3e263d5c2f1ce342a44c9a2704d1c8c9379e9a6ac7c0"
+  },
+  {
+    "page": 188,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p188.ttf",
+    "bytes": 257276,
+    "sha256": "01cad2d6158c5575fee2da221b3eb170b35a759f650f407eaa5f975c6e357755"
+  },
+  {
+    "page": 189,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p189.ttf",
+    "bytes": 268808,
+    "sha256": "6c7edfd5d0ce2af01ccbb47ee8178a172b4ad57b71ff4b7bcb2182a423bf97c5"
+  },
+  {
+    "page": 190,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p190.ttf",
+    "bytes": 256344,
+    "sha256": "ad75341b1714a809e9c515cb0010f00e1f1c494316edde10e76655aead8b7493"
+  },
+  {
+    "page": 191,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p191.ttf",
+    "bytes": 237856,
+    "sha256": "afa7ad04a8e693aa8f3e415315730732267976f33ed0147b7db891edc85ceadd"
+  },
+  {
+    "page": 192,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p192.ttf",
+    "bytes": 236636,
+    "sha256": "faec75a1046c627b69a179aea16fc43de7efdcdc679782b2dd5a74487346e500"
+  },
+  {
+    "page": 193,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p193.ttf",
+    "bytes": 230928,
+    "sha256": "f6f68a0896bb95125829772947d407212ea9dc50218d301e35c0a03692c86fc4"
+  },
+  {
+    "page": 194,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p194.ttf",
+    "bytes": 247792,
+    "sha256": "7aea2e2034e5d5d53d26b25b4cf26c66c410cd64d8160d4ed9761a5e4bd18a2c"
+  },
+  {
+    "page": 195,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p195.ttf",
+    "bytes": 235100,
+    "sha256": "28d50971bc6c7eb6b83e9dd172b1a7539a905ac558bf2befdab54d8ed35bef40"
+  },
+  {
+    "page": 196,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p196.ttf",
+    "bytes": 251968,
+    "sha256": "bcb74c6fdb985b1847b8c4b4031cf994882a59e289b1e9f91e65e533566de0db"
+  },
+  {
+    "page": 197,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p197.ttf",
+    "bytes": 253516,
+    "sha256": "18f0a10167c5566bb68b5b50d1c0d7013123ebe8d8d9664771a317374e4ef823"
+  },
+  {
+    "page": 198,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p198.ttf",
+    "bytes": 259592,
+    "sha256": "9468bb87e77eea8bf16915a8f69ed119248fee0554062f48981556adcb543018"
+  },
+  {
+    "page": 199,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p199.ttf",
+    "bytes": 254092,
+    "sha256": "1ec55334a4214212c6fa9e1f337220b72bdca3b49200f76befbbc129827ddaed"
+  },
+  {
+    "page": 200,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p200.ttf",
+    "bytes": 287160,
+    "sha256": "3e705e008bee579597e220b5a65864da0b04b02e5505be1f55dab705becd624e"
+  },
+  {
+    "page": 201,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p201.ttf",
+    "bytes": 241064,
+    "sha256": "668391e52be90464fc23839f14c6bb1689cdabd3a2bf3ae62f9d746ac9e39abb"
+  },
+  {
+    "page": 202,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p202.ttf",
+    "bytes": 250860,
+    "sha256": "12c4b02dd3595b6f521ff974eebff630044654104465dfdb3938c6adc7189c78"
+  },
+  {
+    "page": 203,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p203.ttf",
+    "bytes": 264760,
+    "sha256": "e8f31da3f886118557d8149a2fae9ecc68a22711fcaa341a07cbab85293c5ec5"
+  },
+  {
+    "page": 204,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p204.ttf",
+    "bytes": 250228,
+    "sha256": "5412668d4d95de6bafc4b4cdac066a9d7abb199bdde84d81928b0a4117a213f7"
+  },
+  {
+    "page": 205,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p205.ttf",
+    "bytes": 233956,
+    "sha256": "ce7a915bedf819744cbb071005fb555f781e3fc331791daa594874955dae04e5"
+  },
+  {
+    "page": 206,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p206.ttf",
+    "bytes": 248088,
+    "sha256": "9f660f4e7418e0f827635751ce4b5bbd527703ca5388643eea2dcfa2b2e9b8ad"
+  },
+  {
+    "page": 207,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p207.ttf",
+    "bytes": 241476,
+    "sha256": "d51e19015baf4878e9b66e44ae30f707ec6b42cdaccf723b6f5f5196058c0740"
+  },
+  {
+    "page": 208,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p208.ttf",
+    "bytes": 256180,
+    "sha256": "b7e3bd38713076a38ed3b3c068720d973b2ed32f5a1225fcefbf78d866b29c6f"
+  },
+  {
+    "page": 209,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p209.ttf",
+    "bytes": 273688,
+    "sha256": "481bd36a2e038b092c1139a7838fc61fa0ac035b6b3a4cdb36547a10a47458e2"
+  },
+  {
+    "page": 210,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p210.ttf",
+    "bytes": 249920,
+    "sha256": "33ce88b273f8b930dfaaa376c75ce69134c81c6fc1ff4225f75ec04d4a9a1fde"
+  },
+  {
+    "page": 211,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p211.ttf",
+    "bytes": 299512,
+    "sha256": "78aa4ed2418bd1113ffb999ab315a5a9e05cd31e813d1ddc3d6bab181c34ffff"
+  },
+  {
+    "page": 212,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p212.ttf",
+    "bytes": 306708,
+    "sha256": "0e017856f95606c7d36565b960cf70515f5aa960dc973fa88a4b15f14f83b289"
+  },
+  {
+    "page": 213,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p213.ttf",
+    "bytes": 312120,
+    "sha256": "c9df41334230e030c051d67906d2a2abe9c7f074cc1135f06ecb3c583c989ade"
+  },
+  {
+    "page": 214,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p214.ttf",
+    "bytes": 293844,
+    "sha256": "6eb5681fa9bdd2fe8e178546ae87416d726679328c466b9bfc9da4335f98899f"
+  },
+  {
+    "page": 215,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p215.ttf",
+    "bytes": 291216,
+    "sha256": "17c6d1114a57ec4609a95491ea6b641c7c85e24e1de909a77612a8e61eeff926"
+  },
+  {
+    "page": 216,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p216.ttf",
+    "bytes": 265140,
+    "sha256": "210d74da1087e65414e9dca9e1b57d8166d4fa1fc9b2fd69178244f1e46ad258"
+  },
+  {
+    "page": 217,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p217.ttf",
+    "bytes": 290248,
+    "sha256": "7a70cd494cd6d20dfbeef366bb168c8738d4185fd8d25c59da24e2d5552bc694"
+  },
+  {
+    "page": 218,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p218.ttf",
+    "bytes": 284620,
+    "sha256": "a7b1980fe7deddf9fa66d2aab5ec1a602a696ec799d3a6a181f201c4ee0cbcb9"
+  },
+  {
+    "page": 219,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p219.ttf",
+    "bytes": 269156,
+    "sha256": "37a0a7bfc49710825ef43d2fd28eccae56e24406d845cafbe45d501b5119b4b4"
+  },
+  {
+    "page": 220,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p220.ttf",
+    "bytes": 266548,
+    "sha256": "86603aef9db8381e5f8c78a53dd231ddba1b3834dc2a64a12773de73e9c83a51"
+  },
+  {
+    "page": 221,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p221.ttf",
+    "bytes": 246980,
+    "sha256": "58a8e8fa736791427789e79431efb5b21679bae9cda5087e0d82599162411363"
+  },
+  {
+    "page": 222,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p222.ttf",
+    "bytes": 258728,
+    "sha256": "a9e9ea3417b0cde926a5d40b2c5dcebab1df72e8ca1489b4060ab213a80be51e"
+  },
+  {
+    "page": 223,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p223.ttf",
+    "bytes": 267464,
+    "sha256": "3147a823a3477a59c7eb291f94a87a5eff9a24fb75ef25e5ebd0015d13729c0b"
+  },
+  {
+    "page": 224,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p224.ttf",
+    "bytes": 267400,
+    "sha256": "d653dbfa1ef4a6c8511dec824e93b480ecbce0d200ed667ca5002b9c9ec3e0d9"
+  },
+  {
+    "page": 225,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p225.ttf",
+    "bytes": 276928,
+    "sha256": "75cf968a4c03cd0be3ed2a47db1e645e8a877404be11ff4ad4770cd4e1784f95"
+  },
+  {
+    "page": 226,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p226.ttf",
+    "bytes": 271396,
+    "sha256": "dd23e46e41ee53b585108beb134bf6e785a69515290444406b54c6fb40d10fc2"
+  },
+  {
+    "page": 227,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p227.ttf",
+    "bytes": 270508,
+    "sha256": "47d3967f7455a1004486ebf12da44d0902ff2c5ed2af693967f6258dda2fffbd"
+  },
+  {
+    "page": 228,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p228.ttf",
+    "bytes": 313440,
+    "sha256": "f925f5cdfbd529d3506135e1f4133cbaf9134b7b49c6425b897b944988a9a49c"
+  },
+  {
+    "page": 229,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p229.ttf",
+    "bytes": 280172,
+    "sha256": "42a2719e14547feefe24b6b56bd6fe47138e55ed23ffecd28bef6408dc382baf"
+  },
+  {
+    "page": 230,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p230.ttf",
+    "bytes": 298564,
+    "sha256": "6e263e4fd34b23875f157da68094ad20e55a58193b240b36b05b49d65ac5cdd6"
+  },
+  {
+    "page": 231,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p231.ttf",
+    "bytes": 262936,
+    "sha256": "6af090107797f797a9176909ee50957c85b166e7de359e5431a86c6fdf399616"
+  },
+  {
+    "page": 232,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p232.ttf",
+    "bytes": 276512,
+    "sha256": "4a60a70fe6f0e25ae99551f5fab9beba5a98abc82b4c1607cbb80c7ac0fc8711"
+  },
+  {
+    "page": 233,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p233.ttf",
+    "bytes": 295588,
+    "sha256": "ad433db115888080b7663d765c75b0eb2a7330d611ddeaaea4643b1cf2373ac7"
+  },
+  {
+    "page": 234,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p234.ttf",
+    "bytes": 276236,
+    "sha256": "1d0cd28894c9f96112d11f05981e44e87472adaa9e4ad858644008f998822327"
+  },
+  {
+    "page": 235,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p235.ttf",
+    "bytes": 253564,
+    "sha256": "aec82da12aa6910af9211a51977c2aa6c61ef3784f9d4e661efa688dfc6ea8c9"
+  },
+  {
+    "page": 236,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p236.ttf",
+    "bytes": 285696,
+    "sha256": "b02b7c37d5285691ca621c6ad76382084b383cf2b57497833d363e61c950cce4"
+  },
+  {
+    "page": 237,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p237.ttf",
+    "bytes": 280568,
+    "sha256": "ce01983e0b2527333ce2198b0a6d11c0032133469e99ee44dc249ef7587d2d68"
+  },
+  {
+    "page": 238,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p238.ttf",
+    "bytes": 270452,
+    "sha256": "146b5ea49729f0a0a5df81443d27349bb277ca68c44fa755c9fc7676cb1e3715"
+  },
+  {
+    "page": 239,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p239.ttf",
+    "bytes": 303972,
+    "sha256": "4ace20d8b584e8d5ae2b3fe4cb86006772bc6fab99dfb308e19cb1216822fa59"
+  },
+  {
+    "page": 240,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p240.ttf",
+    "bytes": 272004,
+    "sha256": "08744429e7d6fe2dbcfb8ec07701adfee0030b2cb291ad355257b31c32b53529"
+  },
+  {
+    "page": 241,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p241.ttf",
+    "bytes": 293620,
+    "sha256": "1ed21ce6b60671073a7e880914d36c914da57ba76226d5bff9868e5512709d73"
+  },
+  {
+    "page": 242,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p242.ttf",
+    "bytes": 284784,
+    "sha256": "4bd643afca1991d6741f730cc64f907d8247a6bd569a1dc5b8b5ec8af569e5bf"
+  },
+  {
+    "page": 243,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p243.ttf",
+    "bytes": 261636,
+    "sha256": "183ba7f825225111745e3fcfc081120de68bf5e70f110758e0cb6288eb62fcd9"
+  },
+  {
+    "page": 244,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p244.ttf",
+    "bytes": 263328,
+    "sha256": "6f9b8713d7e24cddb9d15ccba56a81efb4e93c36913b70cb754de52aef824a41"
+  },
+  {
+    "page": 245,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p245.ttf",
+    "bytes": 255232,
+    "sha256": "499caab8796752219cc91d55e66b0072e23f5feb199c3f3d34ec613d10a84bab"
+  },
+  {
+    "page": 246,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p246.ttf",
+    "bytes": 263132,
+    "sha256": "580ce4690f820166fe8b778ca39aa7239ce04d044be16fff6479e08da4c2937f"
+  },
+  {
+    "page": 247,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p247.ttf",
+    "bytes": 267256,
+    "sha256": "1fe35b5b42361fc1b3d8f6c732f41333c68a1981c82dcea6b19673ae0b785c59"
+  },
+  {
+    "page": 248,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p248.ttf",
+    "bytes": 256224,
+    "sha256": "dee6daaae119f630f5a687d4316dee8e118a11c70fd13764b0e53c8b86e5e0b2"
+  },
+  {
+    "page": 249,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p249.ttf",
+    "bytes": 257300,
+    "sha256": "a2d1d174450a4c5bb750a91f498f6a927832202794b755f81d7236271cb3914a"
+  },
+  {
+    "page": 250,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p250.ttf",
+    "bytes": 266776,
+    "sha256": "90b7cd361f0f0665c56fc1332e1af111c0afbaa89e6c3ea0e1f47bf487f57f81"
+  },
+  {
+    "page": 251,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p251.ttf",
+    "bytes": 302120,
+    "sha256": "8282e21b9f0e05e52aec96f343ea05d9927dcbcfe75e14e4a0725c4838599795"
+  },
+  {
+    "page": 252,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p252.ttf",
+    "bytes": 325112,
+    "sha256": "3366225994284d1b96de4007f3d7c2b31379262324e14b10be13f1cfd4fe87c5"
+  },
+  {
+    "page": 253,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p253.ttf",
+    "bytes": 271364,
+    "sha256": "afdb823ed4ad6cbd3d4eaf2ac1e36019334d308ee1b402c5fb641c644b1f633e"
+  },
+  {
+    "page": 254,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p254.ttf",
+    "bytes": 280164,
+    "sha256": "8dea88ce021200ebbb5648de59e124f68f8929df1b3edcc96dfb1d87f2916529"
+  },
+  {
+    "page": 255,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p255.ttf",
+    "bytes": 204216,
+    "sha256": "4670cce9a1f46d13359740069e678bf251191d09a3b5c55ec9277aa7641d4016"
+  },
+  {
+    "page": 256,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p256.ttf",
+    "bytes": 243532,
+    "sha256": "e6e3fe9a354149fed02caedf3e848f95b0c24ef300695621218193dc6a1e46e5"
+  },
+  {
+    "page": 257,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p257.ttf",
+    "bytes": 244524,
+    "sha256": "fc5f6422c6016458862b825dab9b2b7ed6eb4ebadc0da8b2ba69893ade7d7dcb"
+  },
+  {
+    "page": 258,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p258.ttf",
+    "bytes": 255420,
+    "sha256": "e0b03b3a894c1eb4b484417dca9719fde896bcf0fcb7cb870d2f9f361f204fbc"
+  },
+  {
+    "page": 259,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p259.ttf",
+    "bytes": 273788,
+    "sha256": "d9a00b0dfba05839325a8ae4aadbec53d72269b39dc855bcf750f184656a1acc"
+  },
+  {
+    "page": 260,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p260.ttf",
+    "bytes": 267688,
+    "sha256": "5041143adf6e54926704e0af53566651c61b883d19656b8037d4351bc7960813"
+  },
+  {
+    "page": 261,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p261.ttf",
+    "bytes": 261636,
+    "sha256": "eb847b64f820b96aa774db654c57f12ccf6641e0c7900f1057df31eb6a06cbc4"
+  },
+  {
+    "page": 262,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p262.ttf",
+    "bytes": 252500,
+    "sha256": "50a69818d5ab17355371270a4b89f27610ac79bcbc3cae7fbadb0da5949cebd3"
+  },
+  {
+    "page": 263,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p263.ttf",
+    "bytes": 298908,
+    "sha256": "16e144e27a6ccc659ed1e2e7309775f2b670db16bbb095c768dda46f7d070741"
+  },
+  {
+    "page": 264,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p264.ttf",
+    "bytes": 290836,
+    "sha256": "156ee0e2cfb2c3f3e9f4443abb0561f13c3c3309c43ee64c70788d9b477f4149"
+  },
+  {
+    "page": 265,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p265.ttf",
+    "bytes": 303416,
+    "sha256": "7d9735ca359ef67cbce54dbab3d65360951b3ce13d8c07820a5b11a4c9473698"
+  },
+  {
+    "page": 266,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p266.ttf",
+    "bytes": 310492,
+    "sha256": "055b7a25897aba03fd5059280651ca31c122186b3efe248f016d5289b14996b6"
+  },
+  {
+    "page": 267,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p267.ttf",
+    "bytes": 247376,
+    "sha256": "6634fe1983c408b60f58da423cb8837e14805ba0bb64f4b7a68c464f915948b1"
+  },
+  {
+    "page": 268,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p268.ttf",
+    "bytes": 248460,
+    "sha256": "1cf407b45b493fb140d40cde318078511d98971627432133fa4e8cd1ec90279c"
+  },
+  {
+    "page": 269,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p269.ttf",
+    "bytes": 277680,
+    "sha256": "46c51ec5a61409ca9ddf84ad845c259638b55194cb108b7a6dc69b7efbb502f7"
+  },
+  {
+    "page": 270,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p270.ttf",
+    "bytes": 285792,
+    "sha256": "10ff2f11bde55faa92bdf4bd5a65e6ed2a21f2df29ccfe6f0325018d02a49c47"
+  },
+  {
+    "page": 271,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p271.ttf",
+    "bytes": 262104,
+    "sha256": "5b35d4dac4aa7463fefeec23ff35c8d9a629d50fe9336281918f9b17d821eb21"
+  },
+  {
+    "page": 272,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p272.ttf",
+    "bytes": 288472,
+    "sha256": "af414c432c3cca5d80f53de069c3ce6251baf807b023a8178bd3614aed91eab2"
+  },
+  {
+    "page": 273,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p273.ttf",
+    "bytes": 284412,
+    "sha256": "fb26d1d78f1efe3fdc28c0490b09f38dd0873c16896c36fa6901f6babb141f55"
+  },
+  {
+    "page": 274,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p274.ttf",
+    "bytes": 297224,
+    "sha256": "e91cbd18af8f73163994663fe44e6a0850b8e99d3e9fb94c0f85969622a469af"
+  },
+  {
+    "page": 275,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p275.ttf",
+    "bytes": 250288,
+    "sha256": "00db28e15a82627d6b615382d6e01c3109b6bd3d78c713d52782e00b678fd1e5"
+  },
+  {
+    "page": 276,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p276.ttf",
+    "bytes": 242712,
+    "sha256": "03ba903cbce644d8ea28a60ec00fbe2cba811254e2cd52a339ae4a198eb59960"
+  },
+  {
+    "page": 277,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p277.ttf",
+    "bytes": 243364,
+    "sha256": "3db57cfc13739e937ad42f8ac9c6ce215dd41446622e6c407745f8a8975ef13e"
+  },
+  {
+    "page": 278,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p278.ttf",
+    "bytes": 259924,
+    "sha256": "b5b05f08f19367c1e9f50d0ad643f9d4fcc50931da2a01cf58973d04de944bcc"
+  },
+  {
+    "page": 279,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p279.ttf",
+    "bytes": 232028,
+    "sha256": "806bf7a574a3901485d73f7443803d3238c003df20d279cc7b30a373fc7478a1"
+  },
+  {
+    "page": 280,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p280.ttf",
+    "bytes": 252328,
+    "sha256": "d59c8a930fad3e42a34cef6d85b4cf41a89878182a91c753aa95d7c350b09b95"
+  },
+  {
+    "page": 281,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p281.ttf",
+    "bytes": 267932,
+    "sha256": "ef02bd7bf14f59d7072b72f56d67b2bedf1d7bb980df93b20a5665f54fb0d000"
+  },
+  {
+    "page": 282,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p282.ttf",
+    "bytes": 220204,
+    "sha256": "22e41089eaecd9098c347107f86f770fab0f3df49adf7ef4d640f6514a6991c7"
+  },
+  {
+    "page": 283,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p283.ttf",
+    "bytes": 284604,
+    "sha256": "f402394eda990917287fb4586b1ceefca391fec5d166342a69c57daad7c83af1"
+  },
+  {
+    "page": 284,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p284.ttf",
+    "bytes": 268332,
+    "sha256": "c216bc1085c6dcd2dcb0897b7c59eb6e74199bc38b5ca30032d4747d3cdf8a5d"
+  },
+  {
+    "page": 285,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p285.ttf",
+    "bytes": 296308,
+    "sha256": "8b8b4142c2d3359ff11ae4b217c4f48591836ea4ff8eb40215ce2dbe6c26ffe0"
+  },
+  {
+    "page": 286,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p286.ttf",
+    "bytes": 296452,
+    "sha256": "75ae5e34aba5829ba59c5ff7452fe1efdf5fa1df528f44cecef37c4748121248"
+  },
+  {
+    "page": 287,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p287.ttf",
+    "bytes": 283036,
+    "sha256": "5c0ff3beec4b904c54f34f5d22b5abbbf874d74d88e9346db2a355814c188b01"
+  },
+  {
+    "page": 288,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p288.ttf",
+    "bytes": 268892,
+    "sha256": "6f4e8dc7f0a3b7f44cd059a616d13691c26c0b55d3cdd8e13441eaadc8b36965"
+  },
+  {
+    "page": 289,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p289.ttf",
+    "bytes": 270456,
+    "sha256": "240989367711753346299add2b8509f63e774a43765cd58aae911e93f1b22a63"
+  },
+  {
+    "page": 290,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p290.ttf",
+    "bytes": 274068,
+    "sha256": "21ccc11996e7ffb059337afa94cd40a11c6ae52cdf516bdaa467c2cf0db8b165"
+  },
+  {
+    "page": 291,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p291.ttf",
+    "bytes": 274488,
+    "sha256": "fc486fdcedbae1b2047deacf2150329199ac5348d954edbed553932aa10576bd"
+  },
+  {
+    "page": 292,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p292.ttf",
+    "bytes": 285824,
+    "sha256": "72b51a2243d22dfa47ee368b14e2ff1439f6888fa2f01f39e2b074b4c9a20d37"
+  },
+  {
+    "page": 293,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p293.ttf",
+    "bytes": 276556,
+    "sha256": "42932dadd90b9f5dfdb8a1c9d328adae7c72ca7ec116ce5845d39ac2fa078647"
+  },
+  {
+    "page": 294,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p294.ttf",
+    "bytes": 272420,
+    "sha256": "02b9946c49e7883051b2528482e6a61c6b4e8b7a5cd7774b72d1426477af239e"
+  },
+  {
+    "page": 295,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p295.ttf",
+    "bytes": 253648,
+    "sha256": "2e64127a30bf5795643ff86e48bc47d3b85cf593d2bc5cefabd67940f1dc2f12"
+  },
+  {
+    "page": 296,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p296.ttf",
+    "bytes": 258324,
+    "sha256": "0504f44bbbf3d3321bed341833e2694d238b37360d57f50000a46350c0f24a93"
+  },
+  {
+    "page": 297,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p297.ttf",
+    "bytes": 282464,
+    "sha256": "60a9673feb82fd154effed2f82b5fd02a09d26062da236c41bfb06927241626f"
+  },
+  {
+    "page": 298,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p298.ttf",
+    "bytes": 307868,
+    "sha256": "1c85649428336b274eec3f312d0569ae5a71455b441facac34e2c73f6d7f79c7"
+  },
+  {
+    "page": 299,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p299.ttf",
+    "bytes": 284504,
+    "sha256": "f2a2fdf1efd74877b1f765cfccd4c63bfe0f469eb8d9b9cc34113633c519a30b"
+  },
+  {
+    "page": 300,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p300.ttf",
+    "bytes": 273308,
+    "sha256": "353cb4b7d5e0b95c659e8b3285e98ef41e682de3148dae00469388ff368f98a9"
+  },
+  {
+    "page": 301,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p301.ttf",
+    "bytes": 273952,
+    "sha256": "af8936db958e74967abbcf10acfefa045d6485e9e64821c51474cbb6bd7c627d"
+  },
+  {
+    "page": 302,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p302.ttf",
+    "bytes": 260740,
+    "sha256": "23e32e6eb0536e31a2d04710ce672eccd4f7d9a486524382459295b683dc9d87"
+  },
+  {
+    "page": 303,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p303.ttf",
+    "bytes": 289616,
+    "sha256": "1e5f3ae34abb8c90c5df15ec9394a8552a86b8220a343ab06ed0669462c1ae06"
+  },
+  {
+    "page": 304,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p304.ttf",
+    "bytes": 309712,
+    "sha256": "0a48345bb00c25235f0952c06685ebd1f08dff4d1525b1bd393da04746f54c3f"
+  },
+  {
+    "page": 305,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p305.ttf",
+    "bytes": 221256,
+    "sha256": "efa1fb78462f8b8f7ae177a5455af8cfc2d92435adda383e27705826e42b68a2"
+  },
+  {
+    "page": 306,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p306.ttf",
+    "bytes": 268928,
+    "sha256": "35d8b391671f1fb88ba54a6d4624e859435f6aea83a2defb6db3e19e92ec53fc"
+  },
+  {
+    "page": 307,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p307.ttf",
+    "bytes": 285672,
+    "sha256": "7d6b0699fa06ebc5dbf7a446edceff5486271ba9804a51dfe885f01f2a668875"
+  },
+  {
+    "page": 308,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p308.ttf",
+    "bytes": 285436,
+    "sha256": "2e9edb57b62da8ab8e26b4f9324bbefb53d8d79fe5ecef965d99f92037e583ed"
+  },
+  {
+    "page": 309,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p309.ttf",
+    "bytes": 288276,
+    "sha256": "fefd062b9d8d88d6b5b9e7c8bb7c71588c31f0f9fc4a9cb40bb61096d4c1d331"
+  },
+  {
+    "page": 310,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p310.ttf",
+    "bytes": 279892,
+    "sha256": "ec5108904f4731f13099570a9191ae045e53d0767194a480e5c7217b6c237d05"
+  },
+  {
+    "page": 311,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p311.ttf",
+    "bytes": 279348,
+    "sha256": "5a3b227e3122d374bbfa098742b46e26225916174b3a78b0db12102fd37c6d7e"
+  },
+  {
+    "page": 312,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p312.ttf",
+    "bytes": 244688,
+    "sha256": "7ef9d6cfaadef8be53efcb0da387e8ea4b40436f99bf8a9226a833d20b18647f"
+  },
+  {
+    "page": 313,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p313.ttf",
+    "bytes": 291416,
+    "sha256": "24644efac3a347d118a1afe2e52b531c0a4b26aeeca568680433db0ae5adaa37"
+  },
+  {
+    "page": 314,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p314.ttf",
+    "bytes": 310832,
+    "sha256": "ab32d040a572e9056f30369da85932d31900824140e2f7e61079d211d28e6468"
+  },
+  {
+    "page": 315,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p315.ttf",
+    "bytes": 278788,
+    "sha256": "fc1baa1f8866ed02dfd1c6b8ea506a9a44ff77972654689604359c6cae9a1ef8"
+  },
+  {
+    "page": 316,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p316.ttf",
+    "bytes": 302260,
+    "sha256": "f016a284439b9ea25e06bb1fae3323185973b16a644d599e0cf737e416423225"
+  },
+  {
+    "page": 317,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p317.ttf",
+    "bytes": 269592,
+    "sha256": "628b2470f96251115ed6947ead4c4e02d71e465960a7c7913a952679cab6f757"
+  },
+  {
+    "page": 318,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p318.ttf",
+    "bytes": 271544,
+    "sha256": "2ef0cf28df0f6f061ff3c6e9c5e96612cda41221f2eb23425d9f887fbad939bd"
+  },
+  {
+    "page": 319,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p319.ttf",
+    "bytes": 271820,
+    "sha256": "16da3f08b5fe832eec0be14e9cb5253c14fc21bd5193c3a1d11cf0ad7dcb59dc"
+  },
+  {
+    "page": 320,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p320.ttf",
+    "bytes": 268516,
+    "sha256": "6851f3d698d65c092dae7489bee47807f72a4d10480663cfa3621ee81c1d0463"
+  },
+  {
+    "page": 321,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p321.ttf",
+    "bytes": 293596,
+    "sha256": "9a829abc64c1c1ac6ab4be9f95ae0987afeb2a32cb02ad81ea60d0a25bef0743"
+  },
+  {
+    "page": 322,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p322.ttf",
+    "bytes": 235564,
+    "sha256": "bac7917caa382fef111d39c6ca39b593c1ef07bd9e4a3226dbbe049c09d927d6"
+  },
+  {
+    "page": 323,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p323.ttf",
+    "bytes": 287160,
+    "sha256": "7a4d075b5747e4d2eff279f5033d580c6c3b9ae0d4f258455ff9ac0fe2c866f1"
+  },
+  {
+    "page": 324,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p324.ttf",
+    "bytes": 275364,
+    "sha256": "06a34c499a0b0d599bca4f901cfd63592eb910ca19a6bd2e32b096b8a1a2cdad"
+  },
+  {
+    "page": 325,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p325.ttf",
+    "bytes": 241952,
+    "sha256": "6277b6c468df8c0c88a4251f96c80625da2cc49ae53a3bf6efb9138e4402d1f3"
+  },
+  {
+    "page": 326,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p326.ttf",
+    "bytes": 287176,
+    "sha256": "8a8510d514b57ea7a5f307faa8ae3923a97a6ea34ee719de7798de9affd5be03"
+  },
+  {
+    "page": 327,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p327.ttf",
+    "bytes": 271588,
+    "sha256": "8c4b403e492e656a9c2b152ad70f9725366908e9fdff3dde909cd4ea62e4b415"
+  },
+  {
+    "page": 328,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p328.ttf",
+    "bytes": 261180,
+    "sha256": "c6a5d48bc1a631f67e4ce2123e5dfc905de0ebcfd4c60a01a55095acc6433aec"
+  },
+  {
+    "page": 329,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p329.ttf",
+    "bytes": 243992,
+    "sha256": "c0a147b91fd6a4f097fbeee7689424e25b4d40db276307601b24180531b66d86"
+  },
+  {
+    "page": 330,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p330.ttf",
+    "bytes": 233788,
+    "sha256": "e900fc9e6a6a168e7e3ff0bf2a84f4cb9337bd8a0fb30790145a33985fe2e5a2"
+  },
+  {
+    "page": 331,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p331.ttf",
+    "bytes": 240872,
+    "sha256": "e5b6ba44b0eacbf91141c63443137c6aab775926ce664049bd61787a6bc137f8"
+  },
+  {
+    "page": 332,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p332.ttf",
+    "bytes": 232264,
+    "sha256": "8ca426c24f13fb7c096c9addd9d55895a4ffcb8cebad2d1ef2e49bf330242627"
+  },
+  {
+    "page": 333,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p333.ttf",
+    "bytes": 289140,
+    "sha256": "a8ebcbed67df73dce71a23fe546bdd764a31f93ccd651ef9b30e283205f7d90e"
+  },
+  {
+    "page": 334,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p334.ttf",
+    "bytes": 270312,
+    "sha256": "e539784cbc9bc9b16cb97d4e4994628d543ae8f70ccccc05297559343caa1af6"
+  },
+  {
+    "page": 335,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p335.ttf",
+    "bytes": 247100,
+    "sha256": "9ab9d7abe299415a8ac7f6965c3197cb56b962a8c22dd22a0456c7223072794d"
+  },
+  {
+    "page": 336,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p336.ttf",
+    "bytes": 280920,
+    "sha256": "c4da683f4a1f24799758bfc7f4fafcf0d49e6107a0cebc416884c490093ea1c9"
+  },
+  {
+    "page": 337,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p337.ttf",
+    "bytes": 269632,
+    "sha256": "d28db383b246b4a323351ecd9e69ad853311e273c944c918f216675f84e92ab3"
+  },
+  {
+    "page": 338,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p338.ttf",
+    "bytes": 277792,
+    "sha256": "c3bb5124ff706726e6fdb8ca175a8c9f41871051c319d775f1521adad93ed2cb"
+  },
+  {
+    "page": 339,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p339.ttf",
+    "bytes": 249380,
+    "sha256": "1d9d44605cf7b79fb777c455a08f50ed916b6355ab3941dd833ed002a26605a2"
+  },
+  {
+    "page": 340,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p340.ttf",
+    "bytes": 248648,
+    "sha256": "b624fe4a0580c814adbb88d1d242d35a24565921b4b3fcb94834f5b4f2e8c1ff"
+  },
+  {
+    "page": 341,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p341.ttf",
+    "bytes": 244588,
+    "sha256": "7d6115a1bb07b30ac1dd127f089269b5ba0c52e8f36bd66085219731eb642cbd"
+  },
+  {
+    "page": 342,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p342.ttf",
+    "bytes": 271640,
+    "sha256": "fd681a9e6aa4ddd90acdb2c609dc761a9c5ce08ad84b9674038e2a976a3e22ef"
+  },
+  {
+    "page": 343,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p343.ttf",
+    "bytes": 285708,
+    "sha256": "aa587dcbcd1ea610371739d781c729bee9505bd7799a6c35e8953f8fe93fed8c"
+  },
+  {
+    "page": 344,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p344.ttf",
+    "bytes": 307392,
+    "sha256": "1d2ef971fd515ee9cd8f4921300a1cb96ee0539afe4086fbbaaed88ab9c0822b"
+  },
+  {
+    "page": 345,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p345.ttf",
+    "bytes": 307580,
+    "sha256": "1e5fa093e546ef2d71315b738f6423fa986f8ae24e0739dae402fa14541cf473"
+  },
+  {
+    "page": 346,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p346.ttf",
+    "bytes": 295544,
+    "sha256": "6a3e77afe2e978691f07c7bc657562144611945f9205fff48e975d6b8ec54cc4"
+  },
+  {
+    "page": 347,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p347.ttf",
+    "bytes": 280300,
+    "sha256": "c3948577169c89cdfede5a767fb213c91e727ec2cf926d91a156764b37410f0c"
+  },
+  {
+    "page": 348,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p348.ttf",
+    "bytes": 274796,
+    "sha256": "7650284849e29f4e8484ce056a255592c4b08ee2064930f837adb4a76c2ed0f0"
+  },
+  {
+    "page": 349,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p349.ttf",
+    "bytes": 273152,
+    "sha256": "3795bc72df5a99291ec7a15fc82b3fcfdb87bae4bf1f24633bbeecc7b61c049c"
+  },
+  {
+    "page": 350,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p350.ttf",
+    "bytes": 299344,
+    "sha256": "15f8465edd2b0bc23d4f08b25e4f907c33b44d066f5f54ac718baee363cab545"
+  },
+  {
+    "page": 351,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p351.ttf",
+    "bytes": 290804,
+    "sha256": "10960df8ecbd83390efce2dfc8646b8e3766ef5f5c93c009f57a1ce84b2f98ab"
+  },
+  {
+    "page": 352,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p352.ttf",
+    "bytes": 290644,
+    "sha256": "dcbdb20a43fa5a344bab08ca60bc1df6a18f66f6a4d0da2e40b265db8b475c36"
+  },
+  {
+    "page": 353,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p353.ttf",
+    "bytes": 250320,
+    "sha256": "e96242cf9f325cf735e2e27e957f1a2efd9a090b995435f1006a902042f95a5f"
+  },
+  {
+    "page": 354,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p354.ttf",
+    "bytes": 291248,
+    "sha256": "0dd9ec9e55410d53186183b3d74960d2026ec42da0868a1713abd015d6381cd3"
+  },
+  {
+    "page": 355,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p355.ttf",
+    "bytes": 294948,
+    "sha256": "986e74961903130b9042f9950c10dc5cbcd46ca41d5631c75f43833d4f767488"
+  },
+  {
+    "page": 356,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p356.ttf",
+    "bytes": 308716,
+    "sha256": "eab42423a4321e852763d926f5eb64f1c67dafe3a5defd798c03a06abd643806"
+  },
+  {
+    "page": 357,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p357.ttf",
+    "bytes": 272528,
+    "sha256": "1aa7e69a5559f3059239b0f06f0efe9211666b357a8005070b61f4064e8744ec"
+  },
+  {
+    "page": 358,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p358.ttf",
+    "bytes": 223612,
+    "sha256": "37cf6c8c2891ba1ba6f5f1e79751765468090adc5386c8d63c0ba5e30fa0905a"
+  },
+  {
+    "page": 359,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p359.ttf",
+    "bytes": 227472,
+    "sha256": "2ed82671d4798439ba9b9b1f836d5a352e1a97f088f2d42cf802a57b3cf9957a"
+  },
+  {
+    "page": 360,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p360.ttf",
+    "bytes": 252708,
+    "sha256": "1daee6d9dd66709c282a1a1759ba15bf86c7f05d204b663fa7412f7bcac8e351"
+  },
+  {
+    "page": 361,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p361.ttf",
+    "bytes": 249012,
+    "sha256": "a06022c5c1f4121f47e2979bb6166509749a707064f5160fccea53b7c164d49f"
+  },
+  {
+    "page": 362,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p362.ttf",
+    "bytes": 277308,
+    "sha256": "5425e176c8bbed40ae30db7f89be78da5ed5b749be7e5bf97bcfbd0f9d82e33a"
+  },
+  {
+    "page": 363,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p363.ttf",
+    "bytes": 254024,
+    "sha256": "edfeb69c8c187b927ea34d273b2882d97ee55fa956f85287a5282b1322d182cf"
+  },
+  {
+    "page": 364,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p364.ttf",
+    "bytes": 263988,
+    "sha256": "7eeb3c6daa41d87b1e53f6520b4f30cf909f1d12ed1f3738b5b597eca250a5fb"
+  },
+  {
+    "page": 365,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p365.ttf",
+    "bytes": 258324,
+    "sha256": "1371018092f9526e571fb1d3f5239a44fae0232cde9850312885d902c778e852"
+  },
+  {
+    "page": 366,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p366.ttf",
+    "bytes": 235552,
+    "sha256": "9e2d9e10c43bc031a0cc9d3116f247e32e03fa16de58c394bfeb148715f666a3"
+  },
+  {
+    "page": 367,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p367.ttf",
+    "bytes": 286908,
+    "sha256": "72121d689b61d0b3f257141f8359646d19b3c914eb8f8301ed6a0474123ab563"
+  },
+  {
+    "page": 368,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p368.ttf",
+    "bytes": 307420,
+    "sha256": "8beb35dda3996f3c9c9f8ed5d7b6cc537f9b4bd029dc7f7cf7c2d2c3d396ea86"
+  },
+  {
+    "page": 369,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p369.ttf",
+    "bytes": 323116,
+    "sha256": "6fe66d1e55aaf9f0ce42c0b73cd62d7c6c14194a89725754e61595ab48a6ed91"
+  },
+  {
+    "page": 370,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p370.ttf",
+    "bytes": 316604,
+    "sha256": "16064de504ad278bfcd1e82959996fec2968e2123ecf104037b5435eb2efaf55"
+  },
+  {
+    "page": 371,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p371.ttf",
+    "bytes": 334460,
+    "sha256": "87a4939d4444f9a339fa20d1ecfe56e0bb09735de867196a8db8d9c68c32b55d"
+  },
+  {
+    "page": 372,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p372.ttf",
+    "bytes": 329348,
+    "sha256": "40b36753c8eee2af071e5e3ce1f8339b9d13c037ee469be363ae6afaba65d47e"
+  },
+  {
+    "page": 373,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p373.ttf",
+    "bytes": 318484,
+    "sha256": "d7ebc9a66e6cd19ecd30d44d8b31f87e08da31b7d22576b4e458c3bd1faa7113"
+  },
+  {
+    "page": 374,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p374.ttf",
+    "bytes": 331760,
+    "sha256": "e44937d5bd037e7295cd6c290069390589b45b2f50de94f00163c8228c3737c4"
+  },
+  {
+    "page": 375,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p375.ttf",
+    "bytes": 315652,
+    "sha256": "ae3527d6a958ba9445267a6f87b2bb681560b9eb85bc7e14e4f6327955d8b7fc"
+  },
+  {
+    "page": 376,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p376.ttf",
+    "bytes": 287088,
+    "sha256": "4bb2f8df89052ceb7d28a542dd0a9d426b354df501dea1598c27d1f870766e52"
+  },
+  {
+    "page": 377,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p377.ttf",
+    "bytes": 285980,
+    "sha256": "f3107db2eeb236e177198d9aa036994ffa56544ffd1bcde9fecd67591f9904fd"
+  },
+  {
+    "page": 378,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p378.ttf",
+    "bytes": 273880,
+    "sha256": "b1421e6bcae2eea65abc9c406febe0d95392ed20c98ce0b970355fd8534f35e2"
+  },
+  {
+    "page": 379,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p379.ttf",
+    "bytes": 294084,
+    "sha256": "9a53f6e6988a9055a8f5e388518b5dc47cea4664421bae8644f6e61bc1f9b11c"
+  },
+  {
+    "page": 380,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p380.ttf",
+    "bytes": 307360,
+    "sha256": "72a664c0e5723b0d356aa4357d38785528342a0fdb4c7d9c80bc89e0b355ed81"
+  },
+  {
+    "page": 381,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p381.ttf",
+    "bytes": 260724,
+    "sha256": "72f18522ae361409a203a092eb23ee1a89cee9088ecc29768b83a497aed75422"
+  },
+  {
+    "page": 382,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p382.ttf",
+    "bytes": 264620,
+    "sha256": "66d15ad5328401d39ab48a9f7516ca1ab46382fd6edd7b1e69ac055669b82cae"
+  },
+  {
+    "page": 383,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p383.ttf",
+    "bytes": 304464,
+    "sha256": "0734c62dae05fee35614f620ee6915981d974873b6bd3003e2202282b30f75af"
+  },
+  {
+    "page": 384,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p384.ttf",
+    "bytes": 299204,
+    "sha256": "537197a947ed335abedf6428fda0ac946a8e357ad4bf9e5f561e945b58ff84ea"
+  },
+  {
+    "page": 385,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p385.ttf",
+    "bytes": 242648,
+    "sha256": "60261901f48a62a73e455d5733ad65313e06bb0bcff75f107f6d7b209f15c89e"
+  },
+  {
+    "page": 386,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p386.ttf",
+    "bytes": 242212,
+    "sha256": "0598476ed92d60dccafbc9cedb1cc2b722942b78a1c714b0aa75b92d36ad8c95"
+  },
+  {
+    "page": 387,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p387.ttf",
+    "bytes": 298436,
+    "sha256": "d78063fc547c2088b4511568092ddc332fe7e3de85bbfba0ba5e20e02a12a7ae"
+  },
+  {
+    "page": 388,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p388.ttf",
+    "bytes": 262400,
+    "sha256": "fc2a3351bb2b23c8142c9d1e650cfcb05f732518eefc0384160e4997c587226c"
+  },
+  {
+    "page": 389,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p389.ttf",
+    "bytes": 260524,
+    "sha256": "52aebdce300559333d863518305029d1af20da2d7ce68670dd61b1a35f45a1b9"
+  },
+  {
+    "page": 390,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p390.ttf",
+    "bytes": 257940,
+    "sha256": "8e7a2efac54a26b6744eac85f65bd22413255046c843236c2e3dd36bfd58a73b"
+  },
+  {
+    "page": 391,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p391.ttf",
+    "bytes": 258312,
+    "sha256": "98e2efc8e6a7226d5e2f10e963c79b78ef6ae59221820fbb53a9f94e849d6269"
+  },
+  {
+    "page": 392,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p392.ttf",
+    "bytes": 271632,
+    "sha256": "9e40ca11956f07f2cd8f7eb8579d9678ed3b4859f3e75b3e6306031dac0b45ad"
+  },
+  {
+    "page": 393,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p393.ttf",
+    "bytes": 290440,
+    "sha256": "9c2b1fd61038f4b982e27f07c7f4a3d44497b89015cd54647a57995d4b2c8412"
+  },
+  {
+    "page": 394,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p394.ttf",
+    "bytes": 268908,
+    "sha256": "aa3a6c3923337e75f7038911ae8b97bd5035cc84e5897bfec989733836f33419"
+  },
+  {
+    "page": 395,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p395.ttf",
+    "bytes": 268864,
+    "sha256": "8444d04e54f33832834dcfb89789047912da4b94ae0867f1fb4df2502e95e9d5"
+  },
+  {
+    "page": 396,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p396.ttf",
+    "bytes": 250564,
+    "sha256": "57733f83d8e8fd22669cb7195a8495b35e66a08f996ad274340a451313675d77"
+  },
+  {
+    "page": 397,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p397.ttf",
+    "bytes": 269540,
+    "sha256": "05a6978da251c62456f301c53917b87d4bb0b735f1e7aef585b054e6fb6406f1"
+  },
+  {
+    "page": 398,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p398.ttf",
+    "bytes": 277200,
+    "sha256": "68503a84022a40fddcf2ab5fda1a429979370dfe0b9aafeb7efb7aad96a68b7b"
+  },
+  {
+    "page": 399,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p399.ttf",
+    "bytes": 249064,
+    "sha256": "b33ee495e19e32b3d463fe86a1aa833cf04cdfd49385d9f7dcb113010fcfb48c"
+  },
+  {
+    "page": 400,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p400.ttf",
+    "bytes": 248996,
+    "sha256": "36702d1209fb497cec184159f84cfd45ab023c987c50dd5bcf4e27b5e9fc2c28"
+  },
+  {
+    "page": 401,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p401.ttf",
+    "bytes": 251408,
+    "sha256": "cb13f02dd4efcc5a51ae68261d5f5b4a7940a40f003ce2abc965df3523012dfa"
+  },
+  {
+    "page": 402,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p402.ttf",
+    "bytes": 262796,
+    "sha256": "d16bae97061c155fe97f2451ff5fa27ffa59415c91487daf5e103838a16468ff"
+  },
+  {
+    "page": 403,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p403.ttf",
+    "bytes": 296284,
+    "sha256": "c51bde5d1e695208874cda8124297c1e4803c341d39c7b6b4e28bb3131a08589"
+  },
+  {
+    "page": 404,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p404.ttf",
+    "bytes": 234892,
+    "sha256": "7648a9ae86b40b1ab85ff0f5ceaca1e1a3e274f610935757874d2a37763257c4"
+  },
+  {
+    "page": 405,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p405.ttf",
+    "bytes": 284652,
+    "sha256": "f7a82c7c03e2c2e159bf7d183714a5298834ceb2a4fc359fdc8a48772178bf42"
+  },
+  {
+    "page": 406,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p406.ttf",
+    "bytes": 263476,
+    "sha256": "85545625eae477ea35419b928e3118fbead2de41a9bb6a40edef6567adec2a99"
+  },
+  {
+    "page": 407,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p407.ttf",
+    "bytes": 265852,
+    "sha256": "bf9c38eb7adfcc15d5f28e142707a6690dea24c20b7bfccfdb5a6646863559ce"
+  },
+  {
+    "page": 408,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p408.ttf",
+    "bytes": 284620,
+    "sha256": "2935a75eb232de3dfaec90c7c013f602a22af8e7b1f21b42970630700e1158b0"
+  },
+  {
+    "page": 409,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p409.ttf",
+    "bytes": 295008,
+    "sha256": "b59ab8714d53a3b97d280f3fdc2d707ff1d31a9103aabc7a94d11ffc8a50a62e"
+  },
+  {
+    "page": 410,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p410.ttf",
+    "bytes": 281400,
+    "sha256": "386141f2c618ce2530fe25a1bcc13464a785a040e4dbd359a4cd86d35e917641"
+  },
+  {
+    "page": 411,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p411.ttf",
+    "bytes": 239856,
+    "sha256": "b83725dad2c6ed9c3a419fe74bc22ac9d765de81be52261eaa8b40b51b62a9cf"
+  },
+  {
+    "page": 412,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p412.ttf",
+    "bytes": 274680,
+    "sha256": "28345f9e17dbdb39f01400c38d6034c733852e05540ee3fb4f9457af1079b5ae"
+  },
+  {
+    "page": 413,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p413.ttf",
+    "bytes": 279844,
+    "sha256": "8d9bce006dd4104a656d0cf878efe9febe4c122d56afa6819b6b13ef8521787c"
+  },
+  {
+    "page": 414,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p414.ttf",
+    "bytes": 255848,
+    "sha256": "d85bd2f63e9e8ba5efe1d62afa94cd13eece48aa31f85c1afcf59b894c580697"
+  },
+  {
+    "page": 415,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p415.ttf",
+    "bytes": 259948,
+    "sha256": "928f8e808b0663040e9bb52035315d53663c369bc0268468be736c83e2e30412"
+  },
+  {
+    "page": 416,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p416.ttf",
+    "bytes": 261844,
+    "sha256": "975325ee4c67862c89203e159ab9dda0d51209cdb09517f95ae51b6e2a1bc088"
+  },
+  {
+    "page": 417,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p417.ttf",
+    "bytes": 246064,
+    "sha256": "4b3d81c5cd528b8f77511a13f688003de5747e08386308a876042bc33f00b20e"
+  },
+  {
+    "page": 418,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p418.ttf",
+    "bytes": 245860,
+    "sha256": "cc772bafa09e10c06e0bda3ccc562a27a04efca6776a42d7a3121a0b35f0733b"
+  },
+  {
+    "page": 419,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p419.ttf",
+    "bytes": 270272,
+    "sha256": "4828686e90fafbb2ac382b0bb4d26052cb8d1947c4ba5743bbd281244b116b84"
+  },
+  {
+    "page": 420,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p420.ttf",
+    "bytes": 267852,
+    "sha256": "67c981b399552a4918d345dd4c2343edfe882fc7ba1ab671248b7b0e88b88207"
+  },
+  {
+    "page": 421,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p421.ttf",
+    "bytes": 274060,
+    "sha256": "26ec83a57200bfa2e4bffd0e47993b97ecb8cbb3650c12eb16b9ea487fb8224d"
+  },
+  {
+    "page": 422,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p422.ttf",
+    "bytes": 259620,
+    "sha256": "c442dfa13a7d5ee1e1214db4b78f2232baeb8c82c7c225116b37afccef2a3e65"
+  },
+  {
+    "page": 423,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p423.ttf",
+    "bytes": 276092,
+    "sha256": "e4306b4a2d42c367d6da49ed61d80598344576887ab7772c3940d3084e13e3cb"
+  },
+  {
+    "page": 424,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p424.ttf",
+    "bytes": 258072,
+    "sha256": "e211f9c698b578f298740b34d8fda36c5589cbdf77f6e83d872700f5ff0c0ed0"
+  },
+  {
+    "page": 425,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p425.ttf",
+    "bytes": 260624,
+    "sha256": "56ce04aefdb67dce53e948affd97e7161610572c87d24007fbd005c1563242e5"
+  },
+  {
+    "page": 426,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p426.ttf",
+    "bytes": 289112,
+    "sha256": "c48b23284729e8f1e89b4bc86535395813f9ba582ae3e538280e40e233d52f8f"
+  },
+  {
+    "page": 427,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p427.ttf",
+    "bytes": 282936,
+    "sha256": "51d74d82559425a1f30466b3208fa29162741e602e7871aef21b356f350141c9"
+  },
+  {
+    "page": 428,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p428.ttf",
+    "bytes": 226168,
+    "sha256": "cb16adcd4c1144ca9d30300dbc96e937009a188d10f9a9a74066c17f260b28ad"
+  },
+  {
+    "page": 429,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p429.ttf",
+    "bytes": 264152,
+    "sha256": "edd808bd10694f4116220def5108143cbb5954e5135560de8285f797d0796277"
+  },
+  {
+    "page": 430,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p430.ttf",
+    "bytes": 260656,
+    "sha256": "ddbe40f2c98403736c43bdcdadc88ff3a47bb0538cb0f9c826396646947a79ff"
+  },
+  {
+    "page": 431,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p431.ttf",
+    "bytes": 267988,
+    "sha256": "93ed35f98819e76575f87170f8d95d820c9d0cfef27202f740cf39599880dd2d"
+  },
+  {
+    "page": 432,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p432.ttf",
+    "bytes": 285308,
+    "sha256": "5eefc7997bf7be43b383a18599e119a07f3edf5c93558d5aadc2b0181153404d"
+  },
+  {
+    "page": 433,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p433.ttf",
+    "bytes": 283316,
+    "sha256": "be7a3758bdcb759d2eb842e8de423764dac8f025d0ae749ab27a64058d4d5422"
+  },
+  {
+    "page": 434,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p434.ttf",
+    "bytes": 246012,
+    "sha256": "ba08d522d41d6e3df5cc82dab3ca80e6aff7177144b6bd8a980cd56d68598361"
+  },
+  {
+    "page": 435,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p435.ttf",
+    "bytes": 303840,
+    "sha256": "fc11997e9de588bb6fac889b075d5f2190f30af29189162d12029b5adb539ce0"
+  },
+  {
+    "page": 436,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p436.ttf",
+    "bytes": 262100,
+    "sha256": "abbbf272c9896e8539902483d0c5136dc0d74c8975c89efd3d65a17b809112a6"
+  },
+  {
+    "page": 437,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p437.ttf",
+    "bytes": 289040,
+    "sha256": "169215dcf7ace293fa32f5acfde3a717617f750a9d1b17152ff7f523a28974fa"
+  },
+  {
+    "page": 438,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p438.ttf",
+    "bytes": 259928,
+    "sha256": "321811fb49d71513ffc6abf88637b4f71db7e0f804aafe88423d418751c894e5"
+  },
+  {
+    "page": 439,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p439.ttf",
+    "bytes": 280476,
+    "sha256": "f1ee801ee6c753a1f871829db595b1ff8fcbf6517b44a53c2f3d401517f4995a"
+  },
+  {
+    "page": 440,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p440.ttf",
+    "bytes": 238684,
+    "sha256": "52e500e6be10cea864d6d01638d82613f9a57df26d1c57abcf7ef579bab40a01"
+  },
+  {
+    "page": 441,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p441.ttf",
+    "bytes": 286276,
+    "sha256": "7cf231d8d3daf32a5cd327aee5a855598749a07e73eabdf7faac8bf6d88a956a"
+  },
+  {
+    "page": 442,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p442.ttf",
+    "bytes": 274312,
+    "sha256": "4310e54b6158161a1e989fdf01c2fd97e3f4982372b5e9b94b10be55a93cf267"
+  },
+  {
+    "page": 443,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p443.ttf",
+    "bytes": 291140,
+    "sha256": "2f720e3dc1b5a75df90c577ff9082012adcda9b1ca80c9f392843c3d80f8f25a"
+  },
+  {
+    "page": 444,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p444.ttf",
+    "bytes": 301848,
+    "sha256": "63a3442d49cea3bc2b3d2be7615d4f29386fdcd1a84cfffdbd2ebf29b6115d48"
+  },
+  {
+    "page": 445,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p445.ttf",
+    "bytes": 269348,
+    "sha256": "59751a066ac866a49095011c22be058535e5dfbf4727c3da3d67be1b9318bd4d"
+  },
+  {
+    "page": 446,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p446.ttf",
+    "bytes": 337080,
+    "sha256": "8722f05cb14ba36c6b10bfbb46df6a73e5dd92e3840ff753e4e9373c183ea3b6"
+  },
+  {
+    "page": 447,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p447.ttf",
+    "bytes": 359164,
+    "sha256": "2f620f571acff56132fc46e6293fbbaa82423979f81a2dbb83131d93ed50129c"
+  },
+  {
+    "page": 448,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p448.ttf",
+    "bytes": 332516,
+    "sha256": "53c394df5b4c9da8a86ede6237604aeb7bbebd6c311ad6d79cc5d1653f427f5f"
+  },
+  {
+    "page": 449,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p449.ttf",
+    "bytes": 339320,
+    "sha256": "b39d7f1fa402e3950e41a70820a7f0c1e9d08fb6aa5e826617bb7ab3e0ea9ee7"
+  },
+  {
+    "page": 450,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p450.ttf",
+    "bytes": 323512,
+    "sha256": "130da4d0d180ee5324d40cf45c5359290252ccc526f4a0cf7aae424dce24b4c3"
+  },
+  {
+    "page": 451,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p451.ttf",
+    "bytes": 336912,
+    "sha256": "5e31a347f9080a8edf4ffe0cc3c660de3a22533795e598bb45ebf0deb20d7dc6"
+  },
+  {
+    "page": 452,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p452.ttf",
+    "bytes": 337216,
+    "sha256": "8fc0b357abcd10c13ce88ee0280663bdc96a786a3d77d6317146ee514a1ad153"
+  },
+  {
+    "page": 453,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p453.ttf",
+    "bytes": 298792,
+    "sha256": "a9826d872a65e3fc5775ec49168127774f144e75575ac4bfd047157609b6edd1"
+  },
+  {
+    "page": 454,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p454.ttf",
+    "bytes": 311976,
+    "sha256": "f41e9c2cee6ccc3966860ae9f20217c067e9943416e47d1b9b3b703929a9f71f"
+  },
+  {
+    "page": 455,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p455.ttf",
+    "bytes": 335376,
+    "sha256": "dd4781724a5d053ab38aa1f58248837103df54065ca254de24f961cfb3b2d231"
+  },
+  {
+    "page": 456,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p456.ttf",
+    "bytes": 336880,
+    "sha256": "0399000b62b01b0f4fc1d28ac23a23b37782e1cca0541f85311b0436fc499c9c"
+  },
+  {
+    "page": 457,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p457.ttf",
+    "bytes": 341116,
+    "sha256": "a8282b993e4af0bf8d6c2ef1902785a652861c641ccfa9ac2324938d06e80b0b"
+  },
+  {
+    "page": 458,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p458.ttf",
+    "bytes": 255816,
+    "sha256": "19162c5ccc0d155ae50e7b6b21bd3166e3a3abed06473e81de52accbfbe28ab3"
+  },
+  {
+    "page": 459,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p459.ttf",
+    "bytes": 290752,
+    "sha256": "a8ef7b01e89d3a7cab57246843aceabf8be5270012afcbfbb16fa0e11db3d62c"
+  },
+  {
+    "page": 460,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p460.ttf",
+    "bytes": 322300,
+    "sha256": "7d42b91de13145a3e5982581f493e8a3b3a85bf36668a3a5b2786bebb39ecfa7"
+  },
+  {
+    "page": 461,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p461.ttf",
+    "bytes": 295940,
+    "sha256": "dc1d6dc938e883849fd099681a9b67cbcc50b3684e0c48f9cadfbce26aef1bf1"
+  },
+  {
+    "page": 462,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p462.ttf",
+    "bytes": 257180,
+    "sha256": "21c082015a4a6745976c37f8b689439ac6bbff2bd8a237fa0d75b567dac8716f"
+  },
+  {
+    "page": 463,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p463.ttf",
+    "bytes": 260176,
+    "sha256": "96cc81e4505f773b1aa15fe42ed5df1e35d978b7a07c35141a7e121fc3f70426"
+  },
+  {
+    "page": 464,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p464.ttf",
+    "bytes": 284528,
+    "sha256": "0947b79f1b0c84ab31bd11f243e84ebe48bd09a74457cf54a9eb452a9b80a877"
+  },
+  {
+    "page": 465,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p465.ttf",
+    "bytes": 277432,
+    "sha256": "238998551fc1c8ea3bca792887f963668a409348912fb17a048d4bda73509944"
+  },
+  {
+    "page": 466,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p466.ttf",
+    "bytes": 266688,
+    "sha256": "f273e704dcb4010e4175998cb3963647b7e94b4999a01d07ae57d75dd53be787"
+  },
+  {
+    "page": 467,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p467.ttf",
+    "bytes": 238196,
+    "sha256": "0741fd410d54c57451907513d3704bcd358713883ee5fbf183b36104c4b0b54f"
+  },
+  {
+    "page": 468,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p468.ttf",
+    "bytes": 277232,
+    "sha256": "68beb26f3a5ba666a52ce08fcf858c58df3a473a3c21db23006c6bedea34d32c"
+  },
+  {
+    "page": 469,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p469.ttf",
+    "bytes": 270100,
+    "sha256": "f40ceb8550bb52e093c916f52e37dbd473a2efbac43026df6439a4b64be92881"
+  },
+  {
+    "page": 470,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p470.ttf",
+    "bytes": 264812,
+    "sha256": "d15531a71958b46253d50936eff162fe32448954ecdf9c8f881d8c672eb7123a"
+  },
+  {
+    "page": 471,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p471.ttf",
+    "bytes": 256040,
+    "sha256": "0e4cdd280c99156e38dff232866434e462c45e10d76bea117a9e6ecf8c5a88c0"
+  },
+  {
+    "page": 472,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p472.ttf",
+    "bytes": 264372,
+    "sha256": "dba901474385bf8032936217d51f38ac830dec7bfb6085e789fca1436c958129"
+  },
+  {
+    "page": 473,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p473.ttf",
+    "bytes": 259000,
+    "sha256": "619640f9104b7d641d5da32a1f1e8ea32b7df09ad4365beebd68d3b02beec9cd"
+  },
+  {
+    "page": 474,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p474.ttf",
+    "bytes": 255300,
+    "sha256": "088be6ca0212b67ca00b4ec33ba009858ef4d32922046ecd016a06c7a4cf7736"
+  },
+  {
+    "page": 475,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p475.ttf",
+    "bytes": 290144,
+    "sha256": "e045747ad27fc6be4218fe50ee5abc6ae7ef2f74044691d999e2ece671031191"
+  },
+  {
+    "page": 476,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p476.ttf",
+    "bytes": 259656,
+    "sha256": "f58c341ce9ee3beef62a96fcee8ce02dead74c3fb1ad96959c9c28739be15171"
+  },
+  {
+    "page": 477,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p477.ttf",
+    "bytes": 268924,
+    "sha256": "3628d5708b1c55f362842b77261b68285be4db7a5e0ca3cee0fbc5c4993ffb39"
+  },
+  {
+    "page": 478,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p478.ttf",
+    "bytes": 296672,
+    "sha256": "ce2afe96d1b63663e7d965217fcd2bdf380772f82f6ee7733a49c7a6e52495b1"
+  },
+  {
+    "page": 479,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p479.ttf",
+    "bytes": 298468,
+    "sha256": "c44f126561467ce3c3c886018252cc4f3f2ed405bb27671acdff2faef3e4372c"
+  },
+  {
+    "page": 480,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p480.ttf",
+    "bytes": 270944,
+    "sha256": "476d8a0cfc0e0d3308324bf91bb390565ea6aa30f03012fd4bfbae6d63ba2899"
+  },
+  {
+    "page": 481,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p481.ttf",
+    "bytes": 287608,
+    "sha256": "88be6be04fc0082fb6b50e3f47ef5eac79cc41fc19136635df7de84a3b84d4bd"
+  },
+  {
+    "page": 482,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p482.ttf",
+    "bytes": 272220,
+    "sha256": "3266e81bbf74eef76afb5adb01247eb27b2e0aa851044edf443a558a1f7762e1"
+  },
+  {
+    "page": 483,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p483.ttf",
+    "bytes": 264528,
+    "sha256": "79f9616b74369a049887e18baf1d79d691f7aa7423dd9e9e99c55fe1dfd1e5bc"
+  },
+  {
+    "page": 484,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p484.ttf",
+    "bytes": 280380,
+    "sha256": "982afcae36d02d71ed30ae916c5354dc7e059814d54a2a01c0826edc6e43aaeb"
+  },
+  {
+    "page": 485,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p485.ttf",
+    "bytes": 258784,
+    "sha256": "c0cbd5980fae3165904ecef779d5892ecf547eb6ed4c1f864c3c435a046403fe"
+  },
+  {
+    "page": 486,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p486.ttf",
+    "bytes": 296628,
+    "sha256": "da0031e74a053c4c55e71edc7f6194e01ca18ab2c5e9b44ccdfe8f7762437a44"
+  },
+  {
+    "page": 487,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p487.ttf",
+    "bytes": 327560,
+    "sha256": "809da7b3a6d2466b3ac3b261c6d1cf33cb1e9c1a560ec47599987af62c264064"
+  },
+  {
+    "page": 488,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p488.ttf",
+    "bytes": 274916,
+    "sha256": "23ea9ff5221a0eac3f9f7f2c9893528d21852b6f8727b7a60f1a5707f9ae61e6"
+  },
+  {
+    "page": 489,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p489.ttf",
+    "bytes": 242496,
+    "sha256": "09482fcf7d7f30601f272a4b37c8faf99a88bb01f68a10504027d5f5d2e33113"
+  },
+  {
+    "page": 490,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p490.ttf",
+    "bytes": 297580,
+    "sha256": "651dd2d8571b72fdf8795357588a1bdf98ce68c578a9443599dd0f940464058a"
+  },
+  {
+    "page": 491,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p491.ttf",
+    "bytes": 307492,
+    "sha256": "2aa088f9f8df94a054acf9a2ba090946ce9ecc3925514724c7e5e2f2efd302a9"
+  },
+  {
+    "page": 492,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p492.ttf",
+    "bytes": 299168,
+    "sha256": "0d07f9231da07ee2b064a4ad1a8574c62d045a521896cee7bce454e146ad1414"
+  },
+  {
+    "page": 493,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p493.ttf",
+    "bytes": 276188,
+    "sha256": "479893029aa2c36446a1f4c048d2f3c0528ce5bc557d1b1c83cec971c02da196"
+  },
+  {
+    "page": 494,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p494.ttf",
+    "bytes": 296552,
+    "sha256": "63e60b0ddd44506d6766058d50e9182bdcbbf62ecd57d53d55749cef96efb7c9"
+  },
+  {
+    "page": 495,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p495.ttf",
+    "bytes": 314436,
+    "sha256": "6d5eaeeb83f53d2799c1fd536721b4d9d92f2200db3692eae17f85d8ffe36cfd"
+  },
+  {
+    "page": 496,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p496.ttf",
+    "bytes": 284932,
+    "sha256": "659a127d560f8b0329e55c81de455138be0c891dfc66b2bff1b1fa60b9c2a39b"
+  },
+  {
+    "page": 497,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p497.ttf",
+    "bytes": 332428,
+    "sha256": "31eb3448277c63866887cbe9df1a988aa68b33565fbad70cefb70b19158e4326"
+  },
+  {
+    "page": 498,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p498.ttf",
+    "bytes": 279684,
+    "sha256": "b08c6634f037634114b53ddd3ff786b9617c1a04a127a0a5d4b3cca71fc1b6c8"
+  },
+  {
+    "page": 499,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p499.ttf",
+    "bytes": 304416,
+    "sha256": "2f88a6692cbc402581e3195d433d6293e8f777a9c1d737b32a4267996457c505"
+  },
+  {
+    "page": 500,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p500.ttf",
+    "bytes": 287748,
+    "sha256": "0141abbb108e862b6a8cd92b84a29e511c07b74f5f3bb0a9fcecb9364cedfc3a"
+  },
+  {
+    "page": 501,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p501.ttf",
+    "bytes": 325116,
+    "sha256": "25e4360939edeba7007eec26a01b21c5a79bcfa8947adca52c4101bd65d0a179"
+  },
+  {
+    "page": 502,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p502.ttf",
+    "bytes": 269360,
+    "sha256": "119c994c9f1ebcc0f717f5f0be5688c96ad6892905e62bbed297e22aedf9c5b0"
+  },
+  {
+    "page": 503,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p503.ttf",
+    "bytes": 283112,
+    "sha256": "a2cbd8a20246c126144f6ffe990ac331fab4fea59ab17c2f80e78f874f4d5777"
+  },
+  {
+    "page": 504,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p504.ttf",
+    "bytes": 292076,
+    "sha256": "ee5e9bbedd2b4ec26f396278d97cb5f24d49d26ac08b310756a97772ef88a09b"
+  },
+  {
+    "page": 505,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p505.ttf",
+    "bytes": 272060,
+    "sha256": "aaa362ea7bceaabbd9ebd116e5a9c06ddf0cb9943c885c287fc90d9008a35444"
+  },
+  {
+    "page": 506,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p506.ttf",
+    "bytes": 254704,
+    "sha256": "42f4766f48f8213431aa8271bd97b67412f7d96d6bc1fa965c046025e75e4039"
+  },
+  {
+    "page": 507,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p507.ttf",
+    "bytes": 308292,
+    "sha256": "9c1960b81531d85d5fdd1b87afb93e7e7d7cba60100749127f159d017683dbe9"
+  },
+  {
+    "page": 508,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p508.ttf",
+    "bytes": 316700,
+    "sha256": "76fd56ae061d3675e826d4499823737c97aeec2911cc40625f7d42f30b3619d7"
+  },
+  {
+    "page": 509,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p509.ttf",
+    "bytes": 267528,
+    "sha256": "fd870198cf1a96d197c6e15e551ba26039a8041c2d437dfa06d3f799acd8e7df"
+  },
+  {
+    "page": 510,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p510.ttf",
+    "bytes": 299016,
+    "sha256": "18fe6dad2a13f512c118b568554f36c2440bb9e5967cfeb7e2fdaead6bd55f37"
+  },
+  {
+    "page": 511,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p511.ttf",
+    "bytes": 238484,
+    "sha256": "2bc6532d0bb8b99eeeb19c5bd0add5c7a083d740a508efdf0d5e9e79a534e3c7"
+  },
+  {
+    "page": 512,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p512.ttf",
+    "bytes": 254536,
+    "sha256": "6e4751d0f16cfae6d8e94b21c5a52317dbe0614a2b531aa5919c0064a267790c"
+  },
+  {
+    "page": 513,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p513.ttf",
+    "bytes": 269280,
+    "sha256": "1e0fcce97ac3ef026511c1ede7e21bfc27cc8689ca1d28585291152e445fd971"
+  },
+  {
+    "page": 514,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p514.ttf",
+    "bytes": 248256,
+    "sha256": "f39e753fc838b7d120105386d22496190065cc52e7747e3fc3c565f5b58c067b"
+  },
+  {
+    "page": 515,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p515.ttf",
+    "bytes": 257576,
+    "sha256": "c0fa91d448cd5cc0ca55498dfb26b7a565f28b01352ec7a18e3d1ab9596160fd"
+  },
+  {
+    "page": 516,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p516.ttf",
+    "bytes": 307668,
+    "sha256": "57e59bbbdfaca5162a2f3bdedc36d78c1709fa96279be398b2921a7c40d9ab8c"
+  },
+  {
+    "page": 517,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p517.ttf",
+    "bytes": 296624,
+    "sha256": "b9f1b9b33a69f351246249adacb9311887f4e500dba51ac61517796c05424b74"
+  },
+  {
+    "page": 518,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p518.ttf",
+    "bytes": 273408,
+    "sha256": "e459a6263d46a74bce9983093a3f178fedd8057cbe6232d221e894feb00cedb9"
+  },
+  {
+    "page": 519,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p519.ttf",
+    "bytes": 328600,
+    "sha256": "e2e9f0392a5959d6a9c23bcb8f05f96c385ac9bed35ac644ac77c37cb3ff1cca"
+  },
+  {
+    "page": 520,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p520.ttf",
+    "bytes": 254284,
+    "sha256": "601288db6c76f4cce41cf9730076ec9ef7aa5a89473f2829d5834f11324e23f1"
+  },
+  {
+    "page": 521,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p521.ttf",
+    "bytes": 343292,
+    "sha256": "cf07b969f29b25d86d0d29d6f97dd28b7765af55c8f98ba43b72a4a83b320d59"
+  },
+  {
+    "page": 522,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p522.ttf",
+    "bytes": 318928,
+    "sha256": "de6e16520bd18169107913e50d5065acbc4109b2caec178acc15b5cddf495c0c"
+  },
+  {
+    "page": 523,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p523.ttf",
+    "bytes": 287212,
+    "sha256": "ff491fc01d86badab40b1270a620cdd906029d28e65df8b5a45a4b07d0935898"
+  },
+  {
+    "page": 524,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p524.ttf",
+    "bytes": 320232,
+    "sha256": "fdf510fa4ad6bb8381f014f2d411398d7c7e2bb0dd5e229bce3c0d825cc92e75"
+  },
+  {
+    "page": 525,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p525.ttf",
+    "bytes": 311348,
+    "sha256": "572c9648677d21b4f9040e3a65b3c18b13d452caae6e7916a6c42db7b94e9e11"
+  },
+  {
+    "page": 526,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p526.ttf",
+    "bytes": 325996,
+    "sha256": "5b6bb5dfdf1f74b555f3a40b3774cee05d292612ceb87fc905d7c76fe60d5f50"
+  },
+  {
+    "page": 527,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p527.ttf",
+    "bytes": 324960,
+    "sha256": "3c8ae70773eee86679f036dfeed98e69c6aaa45f5b6236f4ab978d9d773be111"
+  },
+  {
+    "page": 528,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p528.ttf",
+    "bytes": 305028,
+    "sha256": "741ea0c0ae78736b2b6050f4f59c9802cea96cf7544925ee1c6fd5c031d22ea2"
+  },
+  {
+    "page": 529,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p529.ttf",
+    "bytes": 331860,
+    "sha256": "fc6b365fc2107b7a5e49e96fe6fa84083016affb0949c75ade1676eb8fac0b36"
+  },
+  {
+    "page": 530,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p530.ttf",
+    "bytes": 342152,
+    "sha256": "731f57053d1fbfcedff43a59157222d233874e3afd54507d129a7066097a4763"
+  },
+  {
+    "page": 531,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p531.ttf",
+    "bytes": 290168,
+    "sha256": "7bbb2eacb51453cad10cb14feb34a0380edcebb98f889169819b9eefcfeb76eb"
+  },
+  {
+    "page": 532,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p532.ttf",
+    "bytes": 338732,
+    "sha256": "08bf11acb986f4fac03d6f1d8f733b72e95396fe8f85b4536d28f436f22b731a"
+  },
+  {
+    "page": 533,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p533.ttf",
+    "bytes": 337748,
+    "sha256": "57c9472cefe10e7e39c7da624cc4916d7eed40b11f13ef78543e1a65dbbd807d"
+  },
+  {
+    "page": 534,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p534.ttf",
+    "bytes": 283172,
+    "sha256": "c7fbbacf8356fc6ff75ca646d1c0af91ebdd010d716dbbadb3b9b1d61ce685c0"
+  },
+  {
+    "page": 535,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p535.ttf",
+    "bytes": 380268,
+    "sha256": "5a96aa761a97da7cedbda699d77cb652d31eb9372584a86a8cd8ff5f5848ae3d"
+  },
+  {
+    "page": 536,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p536.ttf",
+    "bytes": 348032,
+    "sha256": "4b2f9fc31316f385b108e4b877c586087fde9f82b7b0c9f2910c1f8bb02a0fe0"
+  },
+  {
+    "page": 537,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p537.ttf",
+    "bytes": 305160,
+    "sha256": "843f526f652605c416bb89d018a6bd5d2183aa9f204e4ecde258e4f01e82af06"
+  },
+  {
+    "page": 538,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p538.ttf",
+    "bytes": 304712,
+    "sha256": "976a5b5a405e24f937c543fa952a1597e63e5691aed5770be6a387f5d177ccf8"
+  },
+  {
+    "page": 539,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p539.ttf",
+    "bytes": 311304,
+    "sha256": "4d5ab2c9bd6d63f2bde1635aeedd57ef867b46ca16885cdc7bfd0a387546207e"
+  },
+  {
+    "page": 540,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p540.ttf",
+    "bytes": 292480,
+    "sha256": "d07a430be3edb5abb88b6b8f00f52f2874c4913c517aeff0586fcfaa8f020f25"
+  },
+  {
+    "page": 541,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p541.ttf",
+    "bytes": 272480,
+    "sha256": "789adb89e27d54e001896a445153e1808b0b2687c174e14abef0b7cf2feb9f02"
+  },
+  {
+    "page": 542,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p542.ttf",
+    "bytes": 259640,
+    "sha256": "e388bc3e523ced45ea06d76ec1969b992bb4326e5ab76d46e4444e3e9227b5b5"
+  },
+  {
+    "page": 543,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p543.ttf",
+    "bytes": 276680,
+    "sha256": "be0c42a1d244b6a81d5a4466d768343395f43809c550f541d9f4a085ad686462"
+  },
+  {
+    "page": 544,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p544.ttf",
+    "bytes": 309808,
+    "sha256": "35387aa0d9471d223eb8f70675f6f078a9407ab1f331a86aa2cde4c3022ae841"
+  },
+  {
+    "page": 545,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p545.ttf",
+    "bytes": 230088,
+    "sha256": "c79c2c739a1fb8975be038c58b685961a861ad51eb7ff3f4a3dd24f96e32c83b"
+  },
+  {
+    "page": 546,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p546.ttf",
+    "bytes": 277812,
+    "sha256": "601d60ce2124bebd3e7c54083709814be95b23f719fcbd73b88639d926dda783"
+  },
+  {
+    "page": 547,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p547.ttf",
+    "bytes": 264408,
+    "sha256": "3d9284957e495fea0d43e06fe02c0d846f1a285f1d8d5df2521930a1f0a644fa"
+  },
+  {
+    "page": 548,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p548.ttf",
+    "bytes": 267372,
+    "sha256": "b88934ba48e7a56fc4c2ae3d11c540499357bccc09748af865ae7d1b202ca276"
+  },
+  {
+    "page": 549,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p549.ttf",
+    "bytes": 271608,
+    "sha256": "a25b1927ca8ce704a31fbade8e9fe0ce6c5f8dce37c9d33837e6ecb5263c9517"
+  },
+  {
+    "page": 550,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p550.ttf",
+    "bytes": 315680,
+    "sha256": "e6da9361b05e7c7bf1f61484fa02d0447e590c82ce7ec30602b8da6f415de401"
+  },
+  {
+    "page": 551,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p551.ttf",
+    "bytes": 235176,
+    "sha256": "3f9588479fd3378576790e034283a7f657bc24549d5049915dcc142311aac0e9"
+  },
+  {
+    "page": 552,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p552.ttf",
+    "bytes": 329996,
+    "sha256": "024951523a2a6ac50be29a23d9e7a47abd0f50c9a59a9240388307600825b16e"
+  },
+  {
+    "page": 553,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p553.ttf",
+    "bytes": 245404,
+    "sha256": "fd96ccfd9a03f1121c0d28c1b25c91047d854f5b995c6d079906227606b70f02"
+  },
+  {
+    "page": 554,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p554.ttf",
+    "bytes": 260992,
+    "sha256": "aafcac3b5b4fdeae926be5f29f7288697fdee0d2d1b064743258a55a47f829a9"
+  },
+  {
+    "page": 555,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p555.ttf",
+    "bytes": 248344,
+    "sha256": "9f28649a1187c4b038152ec9ea9a4829387610e21847b05f35185d6344b6ab70"
+  },
+  {
+    "page": 556,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p556.ttf",
+    "bytes": 278380,
+    "sha256": "44b490d910e9d1d76b1b2ac09629d11b37adc64f78c7d7e177c114f1069338db"
+  },
+  {
+    "page": 557,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p557.ttf",
+    "bytes": 258564,
+    "sha256": "8701c4e3763eb6c7b60939d44e203aaeffe5d83d47e73ed31d0ebb6a9b0c2d35"
+  },
+  {
+    "page": 558,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p558.ttf",
+    "bytes": 271100,
+    "sha256": "0fe211513f92d95199b4c2d3689e4bcb9a662407f8784a9e7a6ad4cabd5722db"
+  },
+  {
+    "page": 559,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p559.ttf",
+    "bytes": 303644,
+    "sha256": "116b5d52fa5f6acb7c8f77a24b523b9df604087daee1aa4f7841e69cd8e86213"
+  },
+  {
+    "page": 560,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p560.ttf",
+    "bytes": 263688,
+    "sha256": "5fefd18ee9177a53abc537e511f01282c6e9f511b8b609f39d748856faaebcbb"
+  },
+  {
+    "page": 561,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p561.ttf",
+    "bytes": 244448,
+    "sha256": "00b1de633022b65880ddc6c895b0c171c551ec0c13fff0c3e0f78d7dafe6627b"
+  },
+  {
+    "page": 562,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p562.ttf",
+    "bytes": 269980,
+    "sha256": "6d499e468820b94d3fedf7a6025ce68f2fb5c471208d76ee90677fbd1f994bc2"
+  },
+  {
+    "page": 563,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p563.ttf",
+    "bytes": 308600,
+    "sha256": "9307b8b821bec907660f4d2151fe0e476d8da2b913487a229fd69ecce1a8170d"
+  },
+  {
+    "page": 564,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p564.ttf",
+    "bytes": 275588,
+    "sha256": "7d4f26bc992bbd5a605af7f4e44e07155ff2031de6563f7022c9826ada2b15c3"
+  },
+  {
+    "page": 565,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p565.ttf",
+    "bytes": 361488,
+    "sha256": "fa8966e99afd14f12a45c92b74e78eaee5d6113618a74f841ea2c5bf48d70792"
+  },
+  {
+    "page": 566,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p566.ttf",
+    "bytes": 290584,
+    "sha256": "9ed28a45b35e29d282e1f088e96e0acd119d0142260716e4d7c9a657caf6476c"
+  },
+  {
+    "page": 567,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p567.ttf",
+    "bytes": 363328,
+    "sha256": "2ed6fb76068f1920461c5c0908ae884c6ba4be8915a1f030358b329a34d23495"
+  },
+  {
+    "page": 568,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p568.ttf",
+    "bytes": 293752,
+    "sha256": "3b41173e64cf44be6ef6e3116f4f8c367f808d24f12cdc6b1e7be307d99e97c9"
+  },
+  {
+    "page": 569,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p569.ttf",
+    "bytes": 370428,
+    "sha256": "1ee3666aff0cb57a7f4b11243dc14938262bad3150dfabdf9a2e8692681f9a48"
+  },
+  {
+    "page": 570,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p570.ttf",
+    "bytes": 272268,
+    "sha256": "3c29c3c2328480ea2e735f356aac6e17e626baa8bd5b3118b369da9526dd6059"
+  },
+  {
+    "page": 571,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p571.ttf",
+    "bytes": 308012,
+    "sha256": "61f84ea131358d847939be4ea34c0c6248aeca53b0be66ff51de0c81196d120f"
+  },
+  {
+    "page": 572,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p572.ttf",
+    "bytes": 264716,
+    "sha256": "983cde4d80ad09bdd3842847f6fa69f6a39d46d089dfcca35e9e8b7d41890da9"
+  },
+  {
+    "page": 573,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p573.ttf",
+    "bytes": 283468,
+    "sha256": "d98f4430364732a9cdd15ec43fac9855279f087357b4875645f5f764298c6ed6"
+  },
+  {
+    "page": 574,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p574.ttf",
+    "bytes": 279340,
+    "sha256": "8950aef5b19ae154f11e72a5ebd659179fda397bacc1d7ad9a45161116b37fb5"
+  },
+  {
+    "page": 575,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p575.ttf",
+    "bytes": 308100,
+    "sha256": "2d7074c255e8049d598784417e28a381ed7c35c67ca629f9fbd86fee4e307ec4"
+  },
+  {
+    "page": 576,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p576.ttf",
+    "bytes": 358608,
+    "sha256": "8afb61fed2aacb3fdcc3cce857ddca506cbdbf1796f1ec6009286b0b56b7d697"
+  },
+  {
+    "page": 577,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p577.ttf",
+    "bytes": 316756,
+    "sha256": "0550433a1a7384cee7b2b6fc90adebd59955fe1812a180cdb303bc4659ff01f7"
+  },
+  {
+    "page": 578,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p578.ttf",
+    "bytes": 310624,
+    "sha256": "2ac99ac917388170e99c2d7cff63f6a84082385d38e22b5b990c72efb3927f6d"
+  },
+  {
+    "page": 579,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p579.ttf",
+    "bytes": 338440,
+    "sha256": "063303863a7ec678fae0136afeb261e655449695924bb94949290297b4db37c6"
+  },
+  {
+    "page": 580,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p580.ttf",
+    "bytes": 288348,
+    "sha256": "44e8a0e668c782cdbfdbb726b0f57d0ec44b8d49162574af2e75e896ed52eaf5"
+  },
+  {
+    "page": 581,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p581.ttf",
+    "bytes": 364952,
+    "sha256": "5cac8e4c595f24e5f1ed351dfe92cc32e854e3fa46b1bffcc0cb3c99ddc968ad"
+  },
+  {
+    "page": 582,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p582.ttf",
+    "bytes": 281284,
+    "sha256": "d71f88254bf5609f2aec511ec8e475c6ef8cbef7d03c3ccaa5f492c34d01cb24"
+  },
+  {
+    "page": 583,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p583.ttf",
+    "bytes": 313684,
+    "sha256": "4330edabd09826527720347ee1b89769269b0240069a9f6b79352afdc6eb8338"
+  },
+  {
+    "page": 584,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p584.ttf",
+    "bytes": 329132,
+    "sha256": "1d2157b2ef79498122009a4f95afa6dd8975d586f0070f93c980e653efe6c558"
+  },
+  {
+    "page": 585,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p585.ttf",
+    "bytes": 371284,
+    "sha256": "0577b3bfd6b3e2a3813cb9806dd2ed5b8379f1ba345cb338898ce9b3ec8167de"
+  },
+  {
+    "page": 586,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p586.ttf",
+    "bytes": 310532,
+    "sha256": "7a97ed43dda3aeb8269a1795722bb94cde71f04a766d6dd91f573da8b8e88906"
+  },
+  {
+    "page": 587,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p587.ttf",
+    "bytes": 251852,
+    "sha256": "46dd9952bf256dd99cafa93ca8c6a880bdf1ec531b51981de17e5992d42c29ac"
+  },
+  {
+    "page": 588,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p588.ttf",
+    "bytes": 353448,
+    "sha256": "a9b5bd26dbe3153eef27dc235bc38980ebb4e8f35f6aefb3ad4bc3b59e553194"
+  },
+  {
+    "page": 589,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p589.ttf",
+    "bytes": 292524,
+    "sha256": "9a6344892654f9e87afb33032d0f9ffe85bb6019db08a1f6773d3d767932aa23"
+  },
+  {
+    "page": 590,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p590.ttf",
+    "bytes": 300968,
+    "sha256": "e3cc24129de40a6b0812b5b540875a470526c417352b7fa8cf9058f19cc87b6a"
+  },
+  {
+    "page": 591,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p591.ttf",
+    "bytes": 267344,
+    "sha256": "34e0cb3286146c377d364b92e7fdbb3fb4c4423ebbb1508faa162f28179d62e6"
+  },
+  {
+    "page": 592,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p592.ttf",
+    "bytes": 297372,
+    "sha256": "7e623737cecb7e5f1261847e99f5880386235f38640dca04310992acb47ddfb1"
+  },
+  {
+    "page": 593,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p593.ttf",
+    "bytes": 282192,
+    "sha256": "2e7f04068109150223fa6ddd922f59e5f01b2e50344aca7ab533d60a0a6a19d7"
+  },
+  {
+    "page": 594,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p594.ttf",
+    "bytes": 291432,
+    "sha256": "04976d4c8217c496c98b134c9501508100ea9cab688a8715b936d77d0028d91e"
+  },
+  {
+    "page": 595,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p595.ttf",
+    "bytes": 261604,
+    "sha256": "702f7248ef8a16cc7182226bd6d52141a4c9cdef4ee58efc628e32ce3aba68d1"
+  },
+  {
+    "page": 596,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p596.ttf",
+    "bytes": 240432,
+    "sha256": "96aecc040ed0d186ec6505215634016b521ca33846574643d23524083471d8b5"
+  },
+  {
+    "page": 597,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p597.ttf",
+    "bytes": 263564,
+    "sha256": "d00e55bef0baf63e368594d830cd0d6862950823fd7957a5427a4c2fec4d0065"
+  },
+  {
+    "page": 598,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p598.ttf",
+    "bytes": 245024,
+    "sha256": "29f1a2c73f7bc0c233fac84eb0c17ffd81bf9e8498eb1ec108aceeac5c019e9f"
+  },
+  {
+    "page": 599,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p599.ttf",
+    "bytes": 235464,
+    "sha256": "1c0f0dc2a0e0e26c723d273cd49049fa2efa93bb14d4921e7753a8c37f44a8dd"
+  },
+  {
+    "page": 600,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p600.ttf",
+    "bytes": 246896,
+    "sha256": "0fe47e4198ebf595b7167fe084f7084124741e31197da1048b537184418dd67f"
+  },
+  {
+    "page": 601,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p601.ttf",
+    "bytes": 186748,
+    "sha256": "4934a9883c6c7020734ccc49f9d873b2cff720d2833efcdc0552afb857dd0fbd"
+  },
+  {
+    "page": 602,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p602.ttf",
+    "bytes": 153872,
+    "sha256": "7b5d537b1a5d83877b9b5f393adaacdf8181d84f6f7d848718fdf1c136dd1e24"
+  },
+  {
+    "page": 603,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p603.ttf",
+    "bytes": 153780,
+    "sha256": "f6d7b15bea3821bf18e954a72e4d9b7defcdfff89c3b11b9a77e9cdeb34f25c9"
+  },
+  {
+    "page": 604,
+    "url": "https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p604.ttf",
+    "bytes": 135108,
+    "sha256": "9ca530676e5df5079f3d308a29024ea3cd8528bc6edbc0b5d5e798f75d5df7f3"
+  }
+]

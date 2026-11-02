@@ -71,6 +71,71 @@ void main() {
   });
 
   test(
+    'page font persists independently and legacy or unknown choices retain the original colored face',
+    () async {
+      c.setPageFont(QuranScriptFont.lateef);
+      await c.flushReading();
+      final saved =
+          jsonDecode(c.preferences!.getString('quran.state.v1')!)
+              as Map<String, dynamic>;
+      expect(saved['pageFont'], 'lateef');
+      c.restoreState(saved);
+      expect(c.pageFont, QuranScriptFont.lateef);
+      expect(c.scriptFont, QuranScriptFont.amiri);
+      expect(c.showTajweed, true);
+      c.restoreState({'pageFont': 'unknown'});
+      expect(c.pageFont, isNull);
+      c.restoreState({});
+      expect(c.pageFont, isNull);
+    },
+  );
+
+  testWidgets(
+    'page settings select five bundled faces and restore the original Tajweed choice',
+    (tester) async {
+      c.setMode(QuranReadingMode.pages);
+      await tester.pumpWidget(
+        AppearanceScope(
+          controller: appearance,
+          child: MaterialApp(
+            home: Scaffold(body: QuranReadingSettings(controller: c)),
+          ),
+        ),
+      );
+      for (final font in QuranScriptFont.values) {
+        final dropdown = find.byType(DropdownButtonFormField<String>);
+        await tester.ensureVisible(dropdown);
+        await tester.tap(dropdown);
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(font.label).last);
+        await tester.pumpAndSettle();
+        expect(c.pageFont, font);
+        expect(
+          c.showTajweed,
+          true,
+          reason: 'Changing a face must retain the original Tajweed preference',
+        );
+        expect(
+          tester
+              .widget<Text>(find.text(repo.verses.first.text))
+              .style!
+              .fontFamily,
+          font.family,
+        );
+      }
+      await tester.ensureVisible(find.byType(DropdownButtonFormField<String>));
+      await tester.tap(find.byType(DropdownButtonFormField<String>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('خط المصحف الأصلي — التجويد').last);
+      await tester.pumpAndSettle();
+      expect(c.pageFont, isNull);
+      expect(c.showTajweed, true);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
+  test(
     'legacy preferences retain original face/color defaults and unknown fields do not select an invalid font',
     () {
       c.restoreState({'mode': 'continuous', 'fontSize': 24, 'paper': 'light'});

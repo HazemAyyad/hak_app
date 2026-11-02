@@ -22,6 +22,7 @@ class QuranMushafLine extends StatefulWidget {
     required this.onSelect,
     required this.onOptions,
     this.showTajweed = true,
+    this.useUnicode = false,
   });
   final List<MushafWord> words;
   final String fontFamily;
@@ -30,6 +31,7 @@ class QuranMushafLine extends StatefulWidget {
   final bool centered;
   final QuranRepository repository;
   final bool showTajweed;
+  final bool useUnicode;
   final ValueChanged<QuranVerse> onSelect, onOptions;
 
   @override
@@ -45,6 +47,9 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
   TextStyle get style => TextStyle(
     inherit: false,
     fontFamily: widget.fontFamily,
+    // Amiri lacks the Quranic U+065E mark present in the QPC word source.
+    // Keep the source text intact and cover that cluster with the bundled face.
+    fontFamilyFallback: widget.useUnicode ? const ['UthmanicHafs'] : null,
     fontSize: widget.fontSize,
     letterSpacing: 0,
     height: 1.3,
@@ -52,7 +57,9 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
   );
 
   void _measure() {
-    final current = widget.words.map((word) => word.glyph).toList();
+    final current = widget.words
+        .map((word) => widget.useUnicode ? word.text : word.glyph)
+        .toList();
     if (family == widget.fontFamily &&
         fontSize == widget.fontSize &&
         listEquals(glyphs, current)) {
@@ -70,6 +77,9 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
       )..layout();
       naturalWidth += painter.width;
       painter.dispose();
+    }
+    if (widget.useUnicode && current.length > 1) {
+      naturalWidth += (current.length - 1) * widget.fontSize * .16;
     }
   }
 
@@ -94,7 +104,7 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
                     ? MainAxisAlignment.center
                     : MainAxisAlignment.spaceBetween,
                 children: [
-                  for (final word in widget.words)
+                  for (final word in widget.words) ...[
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () {
@@ -124,10 +134,15 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(3),
                           ),
-                          child: _glyph(word.glyph),
+                          child: _glyph(
+                            widget.useUnicode ? word.text : word.glyph,
+                          ),
                         ),
                       ),
                     ),
+                    if (widget.useUnicode && word != widget.words.last)
+                      SizedBox(width: widget.fontSize * .16),
+                  ],
                 ],
               ),
             ),
@@ -146,7 +161,7 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
     );
     // Mask only the glyph's rasterized ink, leaving selection backgrounds and
     // the original text/font bytes untouched. COLR colors ignore TextStyle.color.
-    return widget.showTajweed
+    return widget.showTajweed || widget.useUnicode
         ? text
         : ColorFiltered(
             colorFilter: const ColorFilter.mode(

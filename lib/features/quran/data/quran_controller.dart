@@ -70,6 +70,7 @@ class QuranController extends ChangeNotifier {
   QuranReadingMode mode = QuranReadingMode.continuous;
   double fontSize = 24;
   QuranScriptFont scriptFont = QuranScriptFont.amiri;
+  QuranScriptFont? pageFont;
   bool showTajweed = true;
   String paper = 'light';
   final Map<String, String> favorites = {};
@@ -120,6 +121,7 @@ class QuranController extends ChangeNotifier {
     mode = QuranReadingMode.continuous;
     fontSize = 24;
     scriptFont = QuranScriptFont.amiri;
+    pageFont = null;
     showTajweed = true;
     paper = 'light';
     final key = state['lastKey'] as String?;
@@ -138,6 +140,9 @@ class QuranController extends ChangeNotifier {
       (font) => font.name == state['font'],
       orElse: () => QuranScriptFont.amiri,
     );
+    pageFont = QuranScriptFont.values
+        .where((font) => font.name == state['pageFont'])
+        .firstOrNull;
     showTajweed = state['tajweed'] is bool ? state['tajweed'] as bool : true;
     paper = ['light', 'ivory', 'green', 'dark'].contains(state['paper'])
         ? state['paper'] as String
@@ -223,6 +228,12 @@ class QuranController extends ChangeNotifier {
     _emit();
   }
 
+  void setPageFont(QuranScriptFont? value) {
+    pageFont = value;
+    persist();
+    _emit();
+  }
+
   void setPaper(String value) {
     paper = value;
     persist();
@@ -241,6 +252,7 @@ class QuranController extends ChangeNotifier {
       'mode': mode.name,
       'fontSize': fontSize,
       'font': scriptFont.name,
+      'pageFont': pageFont?.name ?? 'original',
       'tajweed': showTajweed,
       'paper': paper,
       'favorites': favorites,

@@ -27,7 +27,11 @@ import 'package:haq_app/features/quran/presentation/quran_widgets.dart';
 class ReaderContent extends QuranContent {
   final pageRequests = <int>[];
   @override
-  Future<MushafPageData> page(int page, QuranRepository repository) async {
+  Future<MushafPageData> page(
+    int page,
+    QuranRepository repository, {
+    bool originalFont = true,
+  }) async {
     pageRequests.add(page);
     if (page == 2) {
       return MushafPageData.parse(
@@ -229,28 +233,22 @@ void main() {
     },
   );
 
-  testWidgets(
-    'English page download choice keeps the exact surah page request',
-    (tester) async {
-      await open(
-        tester,
-        '2:2',
-        QuranReadingMode.pages,
-        language: 'en',
-        width: 320,
-      );
-      expect(find.text('Download mushaf pages'), findsOneWidget);
-      expect(find.textContaining('Full mushaf • 604 pages'), findsOneWidget);
-      await tester.tap(find.textContaining('This surah •'));
-      await tester.pumpAndSettle();
-      expect(
-        pages.requested.single,
-        pages.pagesForSurah(repository, 2).toSet(),
-      );
-      expect(tester.takeException(), isNull);
-      await tester.pumpWidget(const SizedBox());
-    },
-  );
+  testWidgets('English pages open directly without a page download choice', (
+    tester,
+  ) async {
+    await open(
+      tester,
+      '2:2',
+      QuranReadingMode.pages,
+      language: 'en',
+      width: 320,
+    );
+    expect(find.text('Download mushaf pages'), findsNothing);
+    expect(pages.requested, isEmpty);
+    expect(find.byType(QuranMushaf), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
 
   testWidgets(
     'English reading settings change only the selected layout and font',
@@ -462,12 +460,8 @@ void main() {
     'page taps toggle exact ayahs, options remain available, and page swipes agree',
     (tester) async {
       await open(tester, '2:2', QuranReadingMode.pages);
-      await capture(tester, 'page-download-choice');
-      expect(find.text('تنزيل صفحات المصحف'), findsOneWidget);
-      expect(find.textContaining('هذه السورة •'), findsOneWidget);
-      expect(find.textContaining('المصحف كاملًا • 604'), findsOneWidget);
-      await tester.tap(find.text('لاحقًا'));
-      await tester.pumpAndSettle();
+      expect(find.text('تنزيل صفحات المصحف'), findsNothing);
+      expect(pages.requested, isEmpty);
       final back = find.byTooltip('رجوع').last;
       expect(tester.getCenter(back).dx, greaterThan(370));
       expect(tester.getCenter(find.byIcon(Icons.fullscreen)).dx, lessThan(100));
@@ -552,79 +546,24 @@ void main() {
   );
 
   testWidgets(
-    'download prompt requests only current surah or all 604 actual page assets',
+    'legacy monochrome SVG cannot replace the bundled colored Mushaf',
     (tester) async {
-      await open(tester, '2:2', QuranReadingMode.pages);
-      await tester.tap(find.textContaining('هذه السورة •'));
-      await tester.pumpAndSettle();
-      expect(
-        pages.requested.single,
-        pages.pagesForSurah(repository, 2).toSet(),
-      );
-      expect(pages.requested.single, isNot(contains(1)));
-      await tester.tap(find.textContaining('المصحف كاملًا • 604'));
-      await tester.pumpAndSettle();
-      expect(pages.requested.last.length, 604);
-      expect(pages.requested.last, containsAll([1, 604]));
-      expect(tester.takeException(), isNull);
-      await tester.pumpWidget(const SizedBox());
-    },
-  );
-  testWidgets(
-    'saved real SVG bypasses page fonts and its ayah polygons open exact verse options offline',
-    (tester) async {
-      final data = QuranOfflinePageData.parse(
+      pages.saved[1] = QuranOfflinePageData.parse(
         1,
         File('test/fixtures/quran/offline001.svg').readAsStringSync(),
         jsonDecode(
           File('test/fixtures/quran/offline001.json').readAsStringSync(),
         ),
       );
-      pages.saved[1] = data;
       await open(tester, '1:7', QuranReadingMode.pages);
-      await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 100)),
-      );
-      await tester.pumpAndSettle();
-      expect(find.byType(QuranOfflinePage), findsOneWidget);
-      expect(find.text('متاحة بدون إنترنت'), findsOneWidget);
-      await capture(tester, 'offline-real-mushaf');
+      expect(find.byType(QuranOfflinePage), findsNothing);
+      expect(find.byType(MushafCanvas), findsWidgets);
+      expect((controller.content as ReaderContent).pageRequests, contains(1));
       expect(find.text('تنزيل صفحات المصحف'), findsNothing);
-      expect(
-        (controller.content as ReaderContent).pageRequests,
-        isNot(contains(1)),
-      );
-      final region = data.regions.first;
-      final point = region.path.getBounds().center;
-      expect(data.verseAt(point), '1:1');
-      final image = find.byKey(const ValueKey('offline-mushaf-image-1'));
-      final box = data.displayBox;
-      Offset versePoint() {
-        final rect = tester.getRect(image);
-        return rect.topLeft +
-            Offset(
-              (point.dx - box.left) / box.width * rect.width,
-              (point.dy - box.top) / box.height * rect.height,
-            );
-      }
-
-      await tester.tapAt(versePoint());
+      final word = (await controller.content.page(1, repository)).words.first;
+      await tester.tap(find.text(word.glyph).first);
       await tester.pumpAndSettle();
-      expect(controller.lastKey, '1:1');
-      expect(
-        tester.widget<QuranOfflinePage>(find.byType(QuranOfflinePage)).selected,
-        '1:1',
-      );
-      await tester.tapAt(versePoint());
-      await tester.pumpAndSettle();
-      expect(
-        tester.widget<QuranOfflinePage>(find.byType(QuranOfflinePage)).selected,
-        isNull,
-      );
-      await tester.longPressAt(versePoint());
-      await tester.pumpAndSettle();
-      expect(find.text('سورة الفاتحة • الآية 1'), findsNWidgets(2));
-      expect(find.text('نسخ الآية'), findsOneWidget);
+      expect(controller.lastKey, word.key);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
     },

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/features/quran/data/quran_content.dart';
@@ -10,6 +9,7 @@ import 'package:haq_app/features/quran/data/quran_cached_search.dart';
 import 'quran_media_test.dart' show StubHttp;
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late Directory directory;
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('quran_content_test_');
@@ -234,60 +234,26 @@ void main() {
   );
 
   test(
-    'page request uses V4 layout, rejects monochrome fonts and retries without persistent font files',
+    'page rendering is bundled and never requests HTTP or writes a font cache',
     () async {
       final repo = QuranRepository.fromJson(
-        jsonDecode(File('assets/quran/quran.json').readAsStringSync())
-            as Map<String, dynamic>,
+        jsonDecode(File('assets/quran/quran.json').readAsStringSync()),
       );
-      final page =
-          jsonDecode(File('test/fixtures/quran/page2.json').readAsStringSync())
-              as Map<String, dynamic>;
       final requests = <String>[];
-      final bytes = Uint8List(1024);
-      ByteData.sublistView(bytes).setUint32(0, 0x00010000);
-      final dio = Dio()
-        ..httpClientAdapter = StubHttp((request) {
-          requests.add(request.uri.toString());
-          if (request.uri.path.endsWith('.ttf')) {
-            return ResponseBody.fromBytes(bytes, 200);
-          }
-          return reply({'data': page});
-        });
       final content = QuranContent(
         directory: directory,
-        dio: dio,
-        apiBase: 'https://backend.test/api',
+        dio: Dio()
+          ..httpClientAdapter = StubHttp((request) {
+            requests.add(request.uri.toString());
+            throw StateError('Offline: no HTTP request may be attempted');
+          }),
       );
-      await expectLater(content.page(2, repo), throwsFormatException);
-      expect(
-        requests.first,
-        'https://backend.test/api/v1/quran/content/pages/2',
-      );
-      expect(
-        requests.last,
-        'https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p2.ttf',
-      );
-      await expectLater(content.page(2, repo), throwsFormatException);
-      expect(requests.where((url) => url.endsWith('.ttf')).length, 2);
-      expect(
-        await directory
-            .list()
-            .where((file) => file.path.endsWith('.ttf'))
-            .toList(),
-        isEmpty,
-      );
-      final recorded =
-          jsonDecode(
-                await (await directory
-                            .list()
-                            .where((file) => file.path.endsWith('.json'))
-                            .single
-                        as File)
-                    .readAsString(),
-              )
-              as Map;
-      expect(recorded['url'], contains('mushaf=19'));
+      final page = await content.page(2, repo);
+      expect(page.words.first.key, '2:1');
+      expect(page.words.first.line, 3);
+      expect(page.fontFamily, 'QuranTajweedPage2');
+      expect(requests, isEmpty);
+      expect(await directory.list().toList(), isEmpty);
     },
   );
 }

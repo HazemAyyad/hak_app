@@ -236,8 +236,14 @@ class HaqBackup {
       } else if (key == 'preferences') {
         final v = e.value as Map;
         if (v.keys.any(
-              (k) =>
-                  !{'mode', 'paper', 'fontSize', 'font', 'tajweed'}.contains(k),
+              (k) => !{
+                'mode',
+                'paper',
+                'fontSize',
+                'font',
+                'pageFont',
+                'tajweed',
+              }.contains(k),
             ) ||
             (v.containsKey('font') &&
                 ![
@@ -247,6 +253,15 @@ class HaqBackup {
                   'noto',
                   'lateef',
                 ].contains(v['font'])) ||
+            (v.containsKey('pageFont') &&
+                ![
+                  'original',
+                  'amiri',
+                  'uthmani',
+                  'scheherazade',
+                  'noto',
+                  'lateef',
+                ].contains(v['pageFont'])) ||
             (v.containsKey('tajweed') && v['tajweed'] is! bool) ||
             !['continuous', 'ayah', 'pages'].contains(v['mode']) ||
             !['light', 'ivory', 'green', 'dark'].contains(v['paper']) ||

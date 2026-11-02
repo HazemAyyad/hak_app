@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'quran_repository.dart';
 import 'haq_api.dart';
+import 'bundled_mushaf.dart';
 
 const tafsirSources = <int, String>{
   91: 'تفسير السعدي',
@@ -124,7 +125,9 @@ class QuranContent {
     this.directory,
     this.apiBase = haqApiBase,
     DateTime Function()? now,
+    BundledMushaf? mushaf,
   }) : _now = now ?? DateTime.now,
+       mushaf = mushaf ?? BundledMushaf(),
        dio =
            dio ??
            Dio(
@@ -136,6 +139,7 @@ class QuranContent {
   static const cacheMaxAge = Duration(days: 7);
   final DateTime Function() _now;
   final Dio dio;
+  final BundledMushaf mushaf;
   final String? apiBase;
   Directory? directory;
   final _pending = <String, Future<Map<String, dynamic>>>{};
@@ -153,9 +157,8 @@ class QuranContent {
       (dir) =>
           Directory('${dir.path}/quran_content_v1').create(recursive: true),
     );
-    // Purge stale responses on the next app session rather than leaving old,
-    // unused provider copies indefinitely. Legacy persisted page fonts are no
-    // longer used; the Tajweed renderer loads official font bytes per session.
+    // Keep regular online content caches bounded. The permanent Mushaf lives
+    // in the application's assets, independently of this disposable cache.
     await for (final file in directory!.list()) {
       if (file is! File) continue;
       final name = file.uri.pathSegments.last;
@@ -276,8 +279,7 @@ class QuranContent {
   }
 
   /// Official V4 fonts retain their original per-letter Tajweed palette.
-  /// Font bytes stay in the running process only; they are not bundled or
-  /// persisted in the application's offline cache.
+  /// Restore the exact original font from the bundled lossless container.
   Future<void> pageFont(int page) {
     if (page < 1 || page > 604) throw ArgumentError.value(page);
     return _loadedFonts.putIfAbsent(
@@ -290,11 +292,7 @@ class QuranContent {
   }
 
   Future<void> _loadPageFont(int page) async {
-    final response = await dio.get<List<int>>(
-      'https://verses.quran.foundation/fonts/quran/hafs/v4/colrv1/ttf/p$page.ttf',
-      options: Options(responseType: ResponseType.bytes),
-    );
-    final bytes = Uint8List.fromList(response.data ?? const []);
+    final bytes = await mushaf.font(page);
     final data = ByteData.sublistView(bytes);
     if (bytes.length < 1000 ||
         !(data.getUint32(0) == 0x00010000 || data.getUint32(0) == 0x4F54544F)) {
@@ -325,29 +323,47 @@ class QuranContent {
     )..addFont(Future.value(data))).load();
   }
 
-  Future<MushafPageData> page(int page, QuranRepository repo) {
+  Future<MushafPageData> page(
+    int page,
+    QuranRepository repo, {
+    bool originalFont = true,
+  }) async {
     if (page < 1 || page > 604) throw ArgumentError.value(page);
-    return _pages.putIfAbsent(
+    final result = await _pages.putIfAbsent(
       page,
       () => _loadPage(page, repo).catchError((Object error) {
         _pages.remove(page);
         throw error;
       }),
     );
+    if (originalFont) await pageFont(page);
+    return result;
   }
 
   Future<MushafPageData> _loadPage(int page, QuranRepository repo) async {
-    final url =
-        'https://api.quran.com/api/v4/verses/by_page/$page?mushaf=19&words=true&word_fields=code_v2,text_qpc_hafs,page_number,line_number&per_page=50';
-    final parsed = await _validated(url, (result) {
-      if ((result['pagination'] as Map?)?['next_page'] != null) {
-        throw const FormatException('Incomplete page response');
+    final rows = await mushaf.page(page);
+    final words = <MushafWord>[];
+    for (final row in rows) {
+      final key = row[0] as String;
+      if (!repo.byKey.containsKey(key) ||
+          (row[2] as int) < 1 ||
+          (row[2] as int) > 15 ||
+          (row[3] as String).isEmpty ||
+          (row[4] as String).isEmpty) {
+        throw const FormatException('Invalid bundled Mushaf word');
       }
-      return MushafPageData.parse(page, result, repo);
-    });
-    // The provider can paginate; a partial physical page is never displayed.
-    await pageFont(page);
-    return parsed;
+      words.add(
+        MushafWord(
+          key: key,
+          position: row[1] as int,
+          line: row[2] as int,
+          glyph: row[3] as String,
+          text: row[4] as String,
+        ),
+      );
+    }
+    if (words.isEmpty) throw const FormatException('Empty bundled Mushaf page');
+    return MushafPageData(page, words);
   }
 
   Future<TafsirText> tafsir(String key, int source) async {

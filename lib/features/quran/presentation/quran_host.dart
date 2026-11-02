@@ -565,13 +565,16 @@ class QuranHomePage extends StatelessWidget {
                         title: Text(context.quranLabel('مصدر القرآن الكريم')),
                         content: SingleChildScrollView(
                           child: SelectableText(
-                            context.tr(
-                              'quran.sourceAttribution',
-                              args: {
-                                'sourceUrl': repo.sourceUrl,
-                                'license': repo.license,
-                              },
-                            ),
+                            [
+                              context.tr(
+                                'quran.sourceAttribution',
+                                args: {
+                                  'sourceUrl': repo.sourceUrl,
+                                  'license': repo.license,
+                                },
+                              ),
+                              context.tr('quran.mushafAttribution'),
+                            ].join('\n\n'),
                           ),
                         ),
                         actions: [

@@ -24,7 +24,11 @@ import 'support/visual_audit.dart';
 
 class PreviewContent extends QuranContent {
   @override
-  Future<MushafPageData> page(int page, QuranRepository repo) async {
+  Future<MushafPageData> page(
+    int page,
+    QuranRepository repo, {
+    bool originalFont = true,
+  }) async {
     if (page != 2) throw StateError('Not cached');
     return MushafPageData.parse(
       2,
@@ -249,9 +253,7 @@ void main() {
       final host = tester.state<QuranHostState>(find.byType(QuranHost));
       host.openReader(controller.repository!.byKey['2:2']!);
       await tester.pumpAndSettle();
-      expect(find.text('تنزيل صفحات المصحف'), findsOneWidget);
-      await tester.tap(find.text('لاحقًا'));
-      await tester.pumpAndSettle();
+      expect(find.text('تنزيل صفحات المصحف'), findsNothing);
       expect(find.text('الصفحة 2 من 604'), findsOneWidget);
       expect(tester.takeException(), isNull);
       await capture(tester, 'fixed-page');

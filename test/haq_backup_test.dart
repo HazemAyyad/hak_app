@@ -86,15 +86,18 @@ void main() {
     'Quran font and Tajweed preferences validate and survive backup restore',
     () async {
       quran.setScriptFont(QuranScriptFont.noto);
+      quran.setPageFont(QuranScriptFont.lateef);
       quran.setShowTajweed(false);
       await quran.flushReading();
       final archive = await backup.capture();
       backup.validate(archive);
       quran.setScriptFont(QuranScriptFont.amiri);
+      quran.setPageFont(null);
       quran.setShowTajweed(true);
       await quran.flushReading();
       await backup.restore(archive, replace: true);
       expect(quran.scriptFont, QuranScriptFont.noto);
+      expect(quran.pageFont, QuranScriptFont.lateef);
       expect(quran.showTajweed, false);
     },
   );

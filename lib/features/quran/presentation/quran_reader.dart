@@ -14,7 +14,6 @@ import 'quran_reader_player.dart';
 import 'quran_audio_widgets.dart' show chooseVerseRange;
 import 'quran_audio_pages.dart';
 import 'quran_tafsir.dart';
-import 'quran_page_download_sheet.dart';
 import '../../sharing/share_card.dart';
 
 class QuranReader extends StatefulWidget {
@@ -48,8 +47,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   late int fixedPage;
   late QuranReadingMode previousMode;
   double _ayahDrag = 0;
-  bool _pageOfferPending = false;
-  final _offeredSurahs = <int>{};
   QuranController get controller => widget.controller;
   QuranRepository get repo => controller.repository!;
 
@@ -75,7 +72,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     controller.audio.addListener(_onAudioChanged);
     positions.itemPositions.addListener(_onVisibleItems);
     WidgetsBinding.instance.addObserver(this);
-    _schedulePageDownloadOffer();
   }
 
   void _reportActiveVerse() => widget.onActiveVerseChanged?.call(active.value);
@@ -131,7 +127,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     if (controller.mode == QuranReadingMode.continuous && items.isAttached) {
       items.jumpTo(index: verse.ayah);
     }
-    _schedulePageDownloadOffer();
   }
 
   void _step(int delta) {
@@ -157,57 +152,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
       initialAlignment = 0;
       items = ItemScrollController();
       previousMode = controller.mode;
-    });
-    _schedulePageDownloadOffer();
-  }
-
-  void _schedulePageDownloadOffer() {
-    if (controller.mode != QuranReadingMode.pages ||
-        _pageOfferPending ||
-        _offeredSurahs.contains(surahId)) {
-      return;
-    }
-    _pageOfferPending = true;
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        if (!mounted ||
-            controller.mode != QuranReadingMode.pages ||
-            ModalRoute.of(context)?.isCurrent != true) {
-          return;
-        }
-        final id = surahId;
-        final downloads = controller.pageDownloads;
-        try {
-          await downloads.initialize();
-        } catch (_) {
-          if (mounted) {
-            qNotice(
-              context,
-              context.quranLabel(
-                'تعذّر فتح ملفات المصحف؛ تحقق من مساحة الجهاز',
-              ),
-            );
-          }
-          return;
-        }
-        if (!mounted ||
-            controller.mode != QuranReadingMode.pages ||
-            id != surahId ||
-            ModalRoute.of(context)?.isCurrent != true) {
-          return;
-        }
-        _offeredSurahs.add(id);
-        final pages = downloads.pagesForSurah(repo, id);
-        if (pages.every(downloads.hasPage) || downloads.isActive) return;
-        await showQuranPageDownloadSheet(
-          context,
-          downloads: downloads,
-          repository: repo,
-          surahId: id,
-        );
-      } finally {
-        _pageOfferPending = false;
-      }
     });
   }
 
@@ -382,7 +326,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                           onOptions: _options,
                           paper: _paper(context),
                           ink: _ink(context),
-                          downloads: controller.pageDownloads,
+                          fontFamily: controller.pageFont?.family,
                         )
                       : controller.mode == QuranReadingMode.continuous
                       ? _continuous(context, chapter)
@@ -469,15 +413,12 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
             ),
           ),
           if (controller.mode == QuranReadingMode.pages)
-            IconButton(
-              tooltip: context.quranLabel('تنزيل صفحات المصحف'),
-              onPressed: () => showQuranPageDownloadSheet(
-                context,
-                downloads: controller.pageDownloads,
-                repository: repo,
-                surahId: surahId,
+            Tooltip(
+              message: context.tr('quran.bundledMushafReady'),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Icon(Icons.offline_pin_outlined, size: 20),
               ),
-              icon: const Icon(Icons.download_for_offline_outlined, size: 21),
             ),
           IconButton(
             tooltip: context.quranLabel('طريقة العرض'),
@@ -1124,7 +1065,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
         ),
       ),
     );
-    if (mounted) _schedulePageDownloadOffer();
   }
 }
 
@@ -1224,33 +1164,61 @@ class QuranReadingSettings extends StatelessWidget {
                         color: AppPalette.of(context).muted,
                       ),
                     ),
-                    DropdownButtonFormField<QuranScriptFont>(
-                      key: ValueKey(
-                        'quran-script-font-${controller.scriptFont.name}',
-                      ),
-                      initialValue: controller.scriptFont,
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        labelText: context.quranLabel('نوع خط القرآن'),
-                      ),
-                      items: [
-                        for (final font in QuranScriptFont.values)
+                    if (controller.mode == QuranReadingMode.pages)
+                      DropdownButtonFormField<String>(
+                        key: ValueKey(
+                          'quran-page-font-${controller.pageFont?.name ?? 'original'}',
+                        ),
+                        initialValue: controller.pageFont?.name ?? 'original',
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          labelText: context.tr('quran.pageFont'),
+                        ),
+                        items: [
                           DropdownMenuItem(
-                            value: font,
-                            child: Text(context.quranLabel(font.label)),
+                            value: 'original',
+                            child: Text(context.tr('quran.originalMushafFont')),
                           ),
-                      ],
-                      onChanged: controller.mode == QuranReadingMode.pages
-                          ? null
-                          : (font) {
-                              if (font != null) controller.setScriptFont(font);
-                            },
-                    ),
+                          for (final font in QuranScriptFont.values)
+                            DropdownMenuItem(
+                              value: font.name,
+                              child: Text(context.quranLabel(font.label)),
+                            ),
+                        ],
+                        onChanged: (name) => controller.setPageFont(
+                          QuranScriptFont.values
+                              .where((font) => font.name == name)
+                              .firstOrNull,
+                        ),
+                      )
+                    else
+                      DropdownButtonFormField<QuranScriptFont>(
+                        key: ValueKey(
+                          'quran-script-font-${controller.scriptFont.name}',
+                        ),
+                        initialValue: controller.scriptFont,
+                        isExpanded: true,
+                        decoration: InputDecoration(
+                          labelText: context.quranLabel('نوع خط القرآن'),
+                        ),
+                        items: [
+                          for (final font in QuranScriptFont.values)
+                            DropdownMenuItem(
+                              value: font,
+                              child: Text(context.quranLabel(font.label)),
+                            ),
+                        ],
+                        onChanged: controller.mode == QuranReadingMode.pages
+                            ? null
+                            : (font) {
+                                if (font != null) {
+                                  controller.setScriptFont(font);
+                                }
+                              },
+                      ),
                     if (controller.mode == QuranReadingMode.pages)
                       Text(
-                        context.quranLabel(
-                          'نوع الخط للنص المتصل وآية بآية. صفحات المصحف بخطها الأصلي وتوزيعها الثابت؛ كبّرها بإصبعين.',
-                        ),
+                        context.tr('quran.pageFontHint'),
                         style: qText(context, size: 11),
                       ),
                     Row(
@@ -1278,7 +1246,9 @@ class QuranReadingSettings extends StatelessWidget {
                       child: Text(
                         controller.repository!.verses.first.text,
                         style: TextStyle(
-                          fontFamily: controller.scriptFont.family,
+                          fontFamily: controller.mode == QuranReadingMode.pages
+                              ? (controller.pageFont?.family ?? 'UthmanicHafs')
+                              : controller.scriptFont.family,
                           fontSize: controller.fontSize,
                           height: 1.8,
                         ),
@@ -1300,13 +1270,17 @@ class QuranReadingSettings extends StatelessWidget {
                       key: const ValueKey('quran-show-tajweed'),
                       contentPadding: EdgeInsets.zero,
                       title: Text(context.quranLabel('إظهار ألوان التجويد')),
-                      subtitle: Text(
-                        context.quranLabel(
-                          'اعرض ألوان أحكام التجويد في صفحات المصحف التي تدعمها.',
-                        ),
-                      ),
-                      value: controller.showTajweed,
-                      onChanged: controller.setShowTajweed,
+                      subtitle: Text(context.tr('quran.tajweedFontHint')),
+                      value:
+                          controller.mode == QuranReadingMode.pages &&
+                              controller.pageFont != null
+                          ? false
+                          : controller.showTajweed,
+                      onChanged:
+                          controller.mode == QuranReadingMode.pages &&
+                              controller.pageFont != null
+                          ? null
+                          : controller.setShowTajweed,
                     ),
                     Text(
                       context.quranLabel('اختر نمط القراءة المريح لعينيك'),

@@ -29,6 +29,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  brotli: 0.6.0
   flutter:
     sdk: flutter
   flutter_localizations:
@@ -111,6 +112,7 @@ flutter:
     - assets/images/mosque_sunrise.png
     - assets/images/home_header.png
     - assets/quran/
+    - assets/quran/mushaf/
     - assets/home/
     - assets/navigation/
     - assets/religious/

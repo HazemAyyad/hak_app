@@ -1,13 +1,11 @@
 import '../../../core/localization/app_localization.dart';
 import '../../../core/localization/ui_text.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app_loading.dart';
 import '../data/quran_content.dart';
 import '../data/quran_repository.dart';
 import '../data/quran_page_downloads.dart';
-import 'quran_offline_page.dart';
 import 'quran_page_viewport.dart';
 import 'quran_mushaf_line.dart';
 import 'quran_widgets.dart';
@@ -25,7 +23,8 @@ class QuranMushaf extends StatefulWidget {
     required this.onOptions,
     required this.paper,
     required this.ink,
-    required this.downloads,
+    this.downloads,
+    this.fontFamily,
     this.showTajweed = true,
   });
   final QuranContent content;
@@ -35,7 +34,8 @@ class QuranMushaf extends StatefulWidget {
   final ValueChanged<int> onPage;
   final ValueChanged<QuranVerse> onSelect, onOptions;
   final Color paper, ink;
-  final QuranPageDownloads downloads;
+  final QuranPageDownloads? downloads;
+  final String? fontFamily;
   final bool showTajweed;
   @override
   State<QuranMushaf> createState() => _QuranMushafState();
@@ -44,17 +44,13 @@ class QuranMushaf extends StatefulWidget {
 class _QuranMushafState extends State<QuranMushaf> {
   late final PageController pages;
   late int current;
-  late Future<void> offlineReady;
-  final offlinePages = <int, Future<QuranOfflinePageData?>>{};
-  Set<int> cachedVisible = {};
+  final views = <(int, bool), Future<MushafPageData>>{};
   bool zoomed = false;
   @override
   void initState() {
     super.initState();
     current = widget.page;
     pages = PageController(initialPage: current - 1, viewportFraction: .94);
-    offlineReady = widget.downloads.initialize().catchError((Object _) {});
-    widget.downloads.addListener(_onDownloadedPages);
   }
 
   @override
@@ -72,7 +68,6 @@ class _QuranMushafState extends State<QuranMushaf> {
 
   @override
   void dispose() {
-    widget.downloads.removeListener(_onDownloadedPages);
     pages.dispose();
     super.dispose();
   }
@@ -87,31 +82,6 @@ class _QuranMushafState extends State<QuranMushaf> {
       curve: Curves.easeOut,
     );
   }
-
-  Set<int> get visibleCached => {
-    for (final page in [current - 1, current, current + 1])
-      if (page >= 1 && page <= 604 && widget.downloads.hasPage(page)) page,
-  };
-
-  void _onDownloadedPages() {
-    final ready = visibleCached;
-    if (setEquals(ready, cachedVisible)) return;
-    cachedVisible = ready;
-    for (final page in [current - 1, current, current + 1]) {
-      offlinePages.remove(page);
-    }
-    if (mounted) setState(() {});
-  }
-
-  Future<QuranOfflinePageData?> _offlinePage(int page) =>
-      offlinePages.putIfAbsent(page, () async {
-        await offlineReady;
-        try {
-          return await widget.downloads.offlinePage(page);
-        } catch (_) {
-          return null;
-        }
-      });
 
   Widget _viewport(int page, Widget child) => QuranPageViewport(
     key: ValueKey('mushaf-viewport-$page'),
@@ -140,114 +110,74 @@ class _QuranMushafState extends State<QuranMushaf> {
             if (index + 1 == current) return;
             current = index + 1;
             zoomed = false;
-            cachedVisible = visibleCached;
-            for (final page in [current - 1, current, current + 1]) {
-              offlinePages.remove(page);
-            }
+            views.removeWhere((key, _) => (key.$1 - current).abs() > 2);
             widget.onPage(current);
           },
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: FutureBuilder<QuranOfflinePageData?>(
-              future: _offlinePage(index + 1),
-              builder: (context, offline) {
-                if (offline.connectionState != ConnectionState.done) {
+            child: FutureBuilder<MushafPageData>(
+              future: views.putIfAbsent(
+                (index + 1, widget.fontFamily == null),
+                () => widget.content.page(
+                  index + 1,
+                  widget.repository,
+                  originalFont: widget.fontFamily == null,
+                ),
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          context.quranLabel('تعذّر فتح صفحة المصحف'),
+                          style: qText(context, size: 16),
+                        ),
+                        QPrimaryButton(
+                          label: context.quranLabel('إعادة المحاولة'),
+                          onTap: () => setState(() {
+                            views.remove((
+                              index + 1,
+                              widget.fontFamily == null,
+                            ));
+                          }),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                if (!snapshot.hasData) {
                   return AppLoadingSkeleton(
                     label: context.quranLabel('جارٍ تحميل صفحة المصحف'),
                     lines: 10,
                   );
                 }
-                if (offline.data != null) {
-                  return _viewport(
-                    index + 1,
-                    QuranOfflinePage(
-                      data: offline.data!,
-                      selected: widget.selected,
-                      paper: widget.paper,
-                      ink: widget.ink,
-                      onSelect: (key) {
-                        final verse = widget.repository.byKey[key];
-                        if (verse == null) return;
-                        widget.onSelect(verse);
-                      },
-                      onOptions: (key) {
-                        final verse = widget.repository.byKey[key];
-                        if (verse != null) widget.onOptions(verse);
-                      },
-                    ),
-                  );
-                }
-                return FutureBuilder<MushafPageData>(
-                  future: widget.content.page(index + 1, widget.repository),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.cloud_off_outlined,
-                                color: qAccent(context),
-                                size: 34,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                context.quranLabel('تعذّر فتح صفحة المصحف'),
-                                style: qText(context, size: 16),
-                              ),
-                              Text(
-                                context.quranLabel(
-                                  'نزّل صفحات السورة أو المصحف من زر التنزيل لتصفحها بدون إنترنت. النص المتصل والآيات متاحان دائمًا.',
-                                ),
-                                textAlign: TextAlign.center,
-                                style: qText(context, size: 12),
-                              ),
-                              const SizedBox(height: 12),
-                              QPrimaryButton(
-                                label: context.quranLabel('إعادة المحاولة'),
-                                onTap: () => setState(() {}),
-                              ),
-                            ],
+                return _viewport(
+                  index + 1,
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final width = constraints.maxWidth.clamp(0.0, 560.0);
+                      return SizedBox(
+                        width: width,
+                        height: width * 1.5,
+                        child: FittedBox(
+                          fit: BoxFit.fill,
+                          child: MushafCanvas(
+                            data: snapshot.data!,
+                            repository: widget.repository,
+                            selected: widget.selected,
+                            paper: widget.paper,
+                            ink: widget.ink,
+                            fontFamily: widget.fontFamily,
+                            showTajweed: widget.showTajweed,
+                            onSelect: widget.onSelect,
+                            onOptions: widget.onOptions,
                           ),
                         ),
                       );
-                    }
-                    if (!snapshot.hasData) {
-                      return AppLoadingSkeleton(
-                        label: context.quranLabel('جارٍ تحميل صفحة المصحف'),
-                        lines: 10,
-                      );
-                    }
-                    final data = snapshot.data!;
-                    return _viewport(
-                      index + 1,
-                      LayoutBuilder(
-                        builder: (context, constraints) {
-                          final width = constraints.maxWidth.clamp(0.0, 560.0);
-                          final height = width * 1.5;
-                          return SizedBox(
-                            width: width,
-                            height: height,
-                            child: FittedBox(
-                              fit: BoxFit.fill,
-                              child: MushafCanvas(
-                                showTajweed: widget.showTajweed,
-                                data: data,
-                                repository: widget.repository,
-                                selected: widget.selected,
-                                paper: widget.paper,
-                                ink: widget.ink,
-                                onSelect: widget.onSelect,
-                                onOptions: widget.onOptions,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  },
+                    },
+                  ),
                 );
               },
             ),
@@ -307,12 +237,14 @@ class MushafCanvas extends StatelessWidget {
     required this.onSelect,
     required this.onOptions,
     this.showTajweed = true,
+    this.fontFamily,
   });
   final MushafPageData data;
   final QuranRepository repository;
   final String? selected;
   final Color paper, ink;
   final bool showTajweed;
+  final String? fontFamily;
   final ValueChanged<QuranVerse> onSelect, onOptions;
 
   @override
@@ -464,7 +396,8 @@ class MushafCanvas extends StatelessWidget {
     return QuranMushafLine(
       key: ValueKey('mushaf-line-${data.page}-${words.first.line}'),
       words: words,
-      fontFamily: data.fontFamily,
+      fontFamily: fontFamily ?? data.fontFamily,
+      useUnicode: fontFamily != null,
       fontSize: fontSize,
       centered: data.page <= 2,
       selected: selected,
