@@ -6,6 +6,19 @@ import java.util.TimeZone
 
 /** Runs the actual native calendar calculation on the JVM, without an app. */
 fun main() {
+    // Indoor prayer lookup still requests network when precise permission enables GPS.
+    check(HaqPrayerLocationPolicy.providers(true, true, true) == listOf("gps", "network"))
+    check(HaqPrayerLocationPolicy.providers(false, true, true) == listOf("network"))
+    check(HaqPrayerLocationPolicy.providers(true, false, true) == listOf("network"))
+    check(HaqPrayerLocationPolicy.providers(true, true, false) == listOf("gps"))
+    check(HaqPrayerLocationPolicy.providers(false, true, false).isEmpty())
+    check(HaqPrayerLocationPolicy.usable(true, 100f, 1000000000L))
+    check(HaqPrayerLocationPolicy.usable(true, 5000f, 300000000000L))
+    check(!HaqPrayerLocationPolicy.usable(true, 100f, 300000000001L))
+    check(!HaqPrayerLocationPolicy.usable(true, 5001f, 0L))
+    check(!HaqPrayerLocationPolicy.usable(false, 0f, 0L))
+    check(!HaqPrayerLocationPolicy.usable(true, Float.NaN, 0L))
+    check(!HaqPrayerLocationPolicy.usable(true, 100f, -1L))
     val oldPlan = JSONObject()
     check(HaqNativeText.text(oldPlan, "native.stop", "إيقاف") == "إيقاف")
     check(HaqNativeText.rtl(oldPlan))
@@ -133,5 +146,5 @@ fun main() {
     check(!HaqDhikrRules.stopOnKey(true, android.view.KeyEvent.KEYCODE_POWER))
     check(HaqDhikrRules.stopOnKey(true, android.view.KeyEvent.KEYCODE_VOLUME_DOWN))
     check(HaqDhikrRules.stopOnKey(false, android.view.KeyEvent.KEYCODE_POWER))
-    println("136 native checks passed (interface messages, playback retention, scheduling, daily occurrences, audio identifiers, ordered Hisn playlists, queue completion, screen-off playback, and face-down detection). No app built or run.")
+    println("148 native checks passed (prayer location sources and freshness, interface messages, playback retention, scheduling, daily occurrences, audio identifiers, ordered Hisn playlists, queue completion, screen-off playback, and face-down detection). No app built or run.")
 }

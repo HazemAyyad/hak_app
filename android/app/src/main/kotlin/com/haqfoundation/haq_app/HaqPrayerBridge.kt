@@ -15,6 +15,15 @@ import java.util.TimeZone
 import java.util.Locale
 import java.util.concurrent.Executors
 
+internal object HaqPrayerLocationPolicy {
+    fun providers(fine: Boolean, gps: Boolean, network: Boolean): List<String> = buildList {
+        if (fine && gps) add(LocationManager.GPS_PROVIDER)
+        if (network) add(LocationManager.NETWORK_PROVIDER)
+    }
+    fun usable(hasAccuracy: Boolean, accuracy: Float, ageNanos: Long) =
+        hasAccuracy && accuracy.isFinite() && accuracy in 0f..5000f && ageNanos in 0L..300000000000L
+}
+
 /** Foreground-only location and real orientation. System place naming is used
  * after an explicit location request, without background location grants. */
 class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel, events: EventChannel) : SensorEventListener {
@@ -25,8 +34,8 @@ class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel
     private val geocoderWorker = Executors.newSingleThreadExecutor()
     private var pending: MethodChannel.Result? = null
     private var requestRevision = 0L
-    private var cancellation: CancellationSignal? = null
-    private var listener: LocationListener? = null
+    private val cancellations = mutableListOf<CancellationSignal>()
+    private val listeners = mutableListOf<LocationListener>()
     private var sink: EventChannel.EventSink? = null
     private var declination = 0f
     private var accuracy = SensorManager.SENSOR_STATUS_UNRELIABLE
@@ -137,30 +146,49 @@ class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel
         try {
             if (!enabled()) { finishError("disabled", "Location services disabled"); return }
             val fine = activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            val provider = if (fine && locations.isProviderEnabled(LocationManager.GPS_PROVIDER)) LocationManager.GPS_PROVIDER
-                else if (locations.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) LocationManager.NETWORK_PROVIDER
-                else { finishError("disabled", "Network location unavailable"); return }
-            if (Build.VERSION.SDK_INT >= 30) {
-                val signal = CancellationSignal(); cancellation = signal
-                locations.getCurrentLocation(provider, signal, activity.mainExecutor) { location -> if (revision == requestRevision) accept(location) }
-            } else {
-                val callback = object : LocationListener {
-                    override fun onLocationChanged(location: Location) { if (revision == requestRevision) accept(location) }
-                    override fun onProviderDisabled(provider: String) { if (revision == requestRevision) finishError("disabled", "Location services disabled") }
-                    override fun onProviderEnabled(provider: String) {}
-                    @Deprecated("Legacy location callback")
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
+            val providers = HaqPrayerLocationPolicy.providers(fine,
+                locations.isProviderEnabled(LocationManager.GPS_PROVIDER),
+                locations.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+            if (providers.isEmpty()) { finishError("disabled", "Network location unavailable"); return }
+            val waiting = providers.toMutableSet()
+            fun completed(provider: String, location: Location?) {
+                if (revision != requestRevision) return
+                if (location != null && HaqPrayerLocationPolicy.usable(location.hasAccuracy(), location.accuracy,
+                        SystemClock.elapsedRealtimeNanos() - location.elapsedRealtimeNanos)) {
+                    accept(location)
+                } else {
+                    waiting.remove(provider)
+                    // A missing GPS fix must not discard a usable network fix, or vice versa.
+                    if (waiting.isEmpty()) finishError("stale", "No accurate recent location")
                 }
-                listener = callback
-                locations.requestSingleUpdate(provider, callback, Looper.getMainLooper())
+            }
+            for (provider in providers) {
+                if (revision != requestRevision) break
+                try {
+                    if (Build.VERSION.SDK_INT >= 30) {
+                        val signal = CancellationSignal(); cancellations.add(signal)
+                        locations.getCurrentLocation(provider, signal, activity.mainExecutor) { completed(provider, it) }
+                    } else {
+                        val callback = object : LocationListener {
+                            override fun onLocationChanged(location: Location) { completed(provider, location) }
+                            override fun onProviderDisabled(provider: String) { completed(provider, null) }
+                            override fun onProviderEnabled(provider: String) {}
+                            @Deprecated("Legacy location callback")
+                            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
+                        }
+                        listeners.add(callback)
+                        @Suppress("DEPRECATION")
+                        locations.requestSingleUpdate(provider, callback, Looper.getMainLooper())
+                    }
+                } catch (_: Exception) { completed(provider, null) }
             }
         } catch (_: SecurityException) { finishError("denied", "Location permission denied") }
         catch (_: Exception) { finishError("location", "Location unavailable") }
     }
     private fun accept(location: Location?) {
         val result = pending ?: return
-        if (location == null || !location.hasAccuracy() || location.accuracy > 5000 ||
-            SystemClock.elapsedRealtimeNanos() - location.elapsedRealtimeNanos > 300000000000L) {
+        if (location == null || !HaqPrayerLocationPolicy.usable(location.hasAccuracy(), location.accuracy,
+                SystemClock.elapsedRealtimeNanos() - location.elapsedRealtimeNanos)) {
             finishError("stale", "No accurate recent location"); return
         }
         pending = null; requestRevision++; cleanupLocation()
@@ -169,8 +197,11 @@ class HaqPrayerBridge(private val activity: MainActivity, channel: MethodChannel
             "precise" to (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)))
     }
     private fun cleanupLocation() {
-        handler.removeCallbacks(timeout); cancellation?.cancel(); cancellation = null
-        listener?.let { locations.removeUpdates(it) }; listener = null
+        handler.removeCallbacks(timeout)
+        val signals = cancellations.toList(); cancellations.clear()
+        val callbacks = listeners.toList(); listeners.clear()
+        signals.forEach { it.cancel() }
+        callbacks.forEach { locations.removeUpdates(it) }
     }
     private fun finishError(code: String, message: String) {
         val result = pending; pending = null; requestRevision++; cleanupLocation(); result?.error(code, message, null)
