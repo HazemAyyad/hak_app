@@ -15193,5 +15193,505 @@
     "ar": "اقترب أذان {prayer}",
     "en": "It is almost time for {prayer} prayer",
     "tr": "{prayer} vakti yaklaşıyor"
+  },
+  "source.details": {
+    "ar": "المصدر",
+    "en": "Source",
+    "tr": "Kaynak"
+  },
+  "admin.settings": {
+    "ar": "إعدادات التطبيق",
+    "en": "App settings",
+    "tr": "Uygulama ayarları"
+  },
+  "admin.showSourceLinks": {
+    "ar": "إظهار روابط مصادر الترجمة",
+    "en": "Show translation source links",
+    "tr": "Çeviri kaynağı bağlantılarını göster"
+  },
+  "admin.showSourceLinksHelp": {
+    "ar": "إظهار أزرار فتح النص عند الناشر ومعلومات المصدر للمستخدمين. الروابط مخفية افتراضيًا، وتبقى بيانات التوثيق محفوظة.",
+    "en": "Show users the publisher record and source information links. Links are hidden by default; attribution data is retained.",
+    "tr": "Kullanıcılara yayıncı kaydı ve kaynak bilgisi bağlantılarını gösterir. Bağlantılar varsayılan olarak gizlidir; kaynak bilgileri korunur."
+  },
+  "religious.category.prophetic-duas.description": {
+    "ar": "أدعية من سنة النبي ﷺ في مختلف شؤون الحياة",
+    "en": "Supplications from the Prophet’s Sunnah for everyday life",
+    "tr": "Günlük yaşam için Peygamberimizin sünnetinden dualar"
+  },
+  "religious.category.quran-duas.description": {
+    "ar": "أدعية من القرآن الكريم في مختلف المواقف والأحوال",
+    "en": "Quranic supplications for different situations",
+    "tr": "Farklı durumlar için Kur’an duaları"
+  },
+  "religious.category.friday.description": {
+    "ar": "الأعمال المستحبة في يوم الجمعة قبلها وأثناءها وبعدها",
+    "en": "Recommended practices before, during and after Friday prayer",
+    "tr": "Cuma namazından önce, namaz sırasında ve sonrasında tavsiye edilen uygulamalar"
+  },
+  "religious.category.sunnah.description": {
+    "ar": "هدي نبينا في أقواله وأفعاله وما أُثر عنه من أعمال",
+    "en": "The Prophet’s guidance in his words and actions",
+    "tr": "Peygamberimizin söz ve davranışlarındaki rehberlik"
+  },
+  "religious.category.names.description": {
+    "ar": "أسماء الله الحسنى وصفاته العلى كما وردت في القرآن الكريم والسنة النبوية",
+    "en": "The beautiful names and attributes of Allah in the Quran and Sunnah",
+    "tr": "Kur’an ve sünnette Allah’ın güzel isimleri ve yüce sıfatları"
+  },
+  "religious.category.ruqya.description": {
+    "ar": "أدعية وآيات من القرآن الكريم والسنة النبوية للشفاء والحفظ بإذن الله",
+    "en": "Quranic verses and transmitted supplications for healing and protection, by Allah’s permission",
+    "tr": "Allah’ın izniyle şifa ve korunma için Kur’an ayetleri ve rivayet edilen dualar"
+  },
+  "religious.category.nawawi.description": {
+    "ar": "أربعون حديثًا من جوامع كلم النبي ﷺ في العقيدة والعبادات والأخلاق والمعاملات",
+    "en": "Forty concise prophetic hadiths on belief, worship, ethics and dealings",
+    "tr": "İnanç, ibadet, ahlak ve insan ilişkilerine dair kırk hadis"
+  },
+  "religious.category.sunnah-prayer.description": {
+    "ar": "من هدي النبي ﷺ في الصلاة",
+    "en": "The Prophet’s guidance in prayer",
+    "tr": "Namazda Peygamberimizin rehberliği"
+  },
+  "religious.category.sunnah-recitation.description": {
+    "ar": "من هدي النبي ﷺ في قراءة القرآن",
+    "en": "The Prophet’s guidance in Quran recitation",
+    "tr": "Kur’an okumada Peygamberimizin rehberliği"
+  },
+  "religious.category.sunnah-supplication.description": {
+    "ar": "من هدي النبي ﷺ في الدعاء والذكر",
+    "en": "The Prophet’s guidance in supplication and remembrance",
+    "tr": "Dua ve zikirde Peygamberimizin rehberliği"
+  },
+  "religious.category.sunnah-fasting.description": {
+    "ar": "من هدي النبي ﷺ في الصيام",
+    "en": "The Prophet’s guidance in fasting",
+    "tr": "Oruçta Peygamberimizin rehberliği"
+  },
+  "religious.category.sunnah-pilgrimage.description": {
+    "ar": "من هدي النبي ﷺ في الحج والعمرة",
+    "en": "The Prophet’s guidance in Hajj and Umrah",
+    "tr": "Hac ve umrede Peygamberimizin rehberliği"
+  },
+  "religious.category.sunnah-manners.description": {
+    "ar": "من هدي النبي ﷺ في المعاملات",
+    "en": "The Prophet’s guidance in dealings",
+    "tr": "İnsan ilişkilerinde Peygamberimizin rehberliği"
+  },
+  "religious.category.sunnah-daily-life.description": {
+    "ar": "من هدي النبي ﷺ في الحياة اليومية",
+    "en": "The Prophet’s guidance in everyday life",
+    "tr": "Günlük yaşamda Peygamberimizin rehberliği"
+  },
+  "religious.category.sunnah-other.description": {
+    "ar": "من هدي النبي ﷺ في متفرقة",
+    "en": "Other examples of the Prophet’s guidance",
+    "tr": "Peygamberimizin rehberliğinden diğer örnekler"
+  },
+  "religious.category.ruqya-protection.description": {
+    "ar": "للتحصين من كل سوء",
+    "en": "For protection from harm",
+    "tr": "Kötülüklerden korunmak için"
+  },
+  "religious.category.ruqya-healing.description": {
+    "ar": "آيات القرآن الكريم",
+    "en": "Verses from the Holy Quran",
+    "tr": "Kur’an-ı Kerim’den ayetler"
+  },
+  "religious.category.ruqya-eye.description": {
+    "ar": "الاستعاذة بالله من الشر",
+    "en": "Seeking Allah’s protection from evil",
+    "tr": "Kötülüklerden Allah’a sığınma"
+  },
+  "religious.category.ruqya-magic.description": {
+    "ar": "آيات القرآن في إبطال السحر",
+    "en": "Quranic verses for protection against sorcery",
+    "tr": "Büyüye karşı korunmak için Kur’an ayetleri"
+  },
+  "religious.category.ruqya-children.description": {
+    "ar": "الدعاء والحفظ",
+    "en": "Supplication and protection",
+    "tr": "Dua ve korunma"
+  },
+  "religious.category.ruqya-duas.description": {
+    "ar": "من القرآن والسنة",
+    "en": "From the Quran and Sunnah",
+    "tr": "Kur’an ve sünnetten"
+  },
+  "religious.category.ruqya-various.description": {
+    "ar": "للحاجات المختلفة",
+    "en": "For different needs",
+    "tr": "Farklı ihtiyaçlar için"
+  },
+  "religious.category.feelings.description": {
+    "ar": "اختر شعورك في هذه اللحظة",
+    "en": "Choose how you feel right now",
+    "tr": "Şu anki duygunuzu seçin"
+  },
+  "religious.category.mood-happy.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-sad.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-anxiety.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-rest.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-love.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-contentment.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-anger.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-confusion.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-curiosity.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-faith.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-illness.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-impatience.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-worry.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-weakness.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-fear.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-study.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.mood-laziness.description": {
+    "ar": "دعاء وذكر يرافقان لحظتك",
+    "en": "Supplications and remembrance for this moment",
+    "tr": "Bu an için dua ve zikir"
+  },
+  "religious.category.istighfar.description": {
+    "ar": "نصوص موثقة من القرآن والسنة",
+    "en": "Sourced texts from the Quran and Sunnah",
+    "tr": "Kur’an ve sünnetten kaynakları belirtilmiş metinler"
+  },
+  "religious.category.praise.description": {
+    "ar": "نصوص موثقة من القرآن والسنة",
+    "en": "Sourced texts from the Quran and Sunnah",
+    "tr": "Kur’an ve sünnetten kaynakları belirtilmiş metinler"
+  },
+  "religious.category.glorification.description": {
+    "ar": "نصوص موثقة من القرآن والسنة",
+    "en": "Sourced texts from the Quran and Sunnah",
+    "tr": "Kur’an ve sünnetten kaynakları belirtilmiş metinler"
+  },
+  "religious.category.prophets.description": {
+    "ar": "نصوص موثقة من القرآن والسنة",
+    "en": "Sourced texts from the Quran and Sunnah",
+    "tr": "Kur’an ve sünnetten kaynakları belirtilmiş metinler"
+  },
+  "religious.category.ramadan.description": {
+    "ar": "القرآن والدعاء وأعمال الشهر",
+    "en": "Quran, supplications and practices for Ramadan",
+    "tr": "Ramazan için Kur’an, dualar ve uygulamalar"
+  },
+  "religious.category.ramadan-quran.description": {
+    "ar": "نصوص من القرآن والسنة مع المصدر",
+    "en": "Texts from the Quran and Sunnah with sources",
+    "tr": "Kaynaklarıyla Kur’an ve sünnetten metinler"
+  },
+  "religious.category.ramadan-duas.description": {
+    "ar": "نصوص من القرآن والسنة مع المصدر",
+    "en": "Texts from the Quran and Sunnah with sources",
+    "tr": "Kaynaklarıyla Kur’an ve sünnetten metinler"
+  },
+  "religious.category.ramadan-suhur.description": {
+    "ar": "نصوص من القرآن والسنة مع المصدر",
+    "en": "Texts from the Quran and Sunnah with sources",
+    "tr": "Kaynaklarıyla Kur’an ve sünnetten metinler"
+  },
+  "religious.category.ramadan-iftar.description": {
+    "ar": "نصوص من القرآن والسنة مع المصدر",
+    "en": "Texts from the Quran and Sunnah with sources",
+    "tr": "Kaynaklarıyla Kur’an ve sünnetten metinler"
+  },
+  "religious.category.ramadan-itikaf.description": {
+    "ar": "نصوص من القرآن والسنة مع المصدر",
+    "en": "Texts from the Quran and Sunnah with sources",
+    "tr": "Kaynaklarıyla Kur’an ve sünnetten metinler"
+  },
+  "religious.category.ramadan-last-ten.description": {
+    "ar": "نصوص من القرآن والسنة مع المصدر",
+    "en": "Texts from the Quran and Sunnah with sources",
+    "tr": "Kaynaklarıyla Kur’an ve sünnetten metinler"
+  },
+  "religious.category.ramadan-qadr.description": {
+    "ar": "نصوص من القرآن والسنة مع المصدر",
+    "en": "Texts from the Quran and Sunnah with sources",
+    "tr": "Kaynaklarıyla Kur’an ve sünnetten metinler"
+  },
+  "religious.category.hadith.description": {
+    "ar": "مكتبة حق الموثقة: المتن والشرح والمصدر",
+    "en": "Haq’s sourced library: narration, explanation and reference",
+    "tr": "Haq’ın kaynaklı kütüphanesi: rivayet, açıklama ve kaynak"
+  },
+  "religious.category.hadith-creed.description": {
+    "ar": "أحاديث من الكتالوج الموثق الموجود في حق",
+    "en": "Hadiths from Haq’s sourced catalog",
+    "tr": "Haq’ın kaynakları belirtilmiş kataloğundan hadisler"
+  },
+  "religious.category.hadith-worship.description": {
+    "ar": "أحاديث من الكتالوج الموثق الموجود في حق",
+    "en": "Hadiths from Haq’s sourced catalog",
+    "tr": "Haq’ın kaynakları belirtilmiş kataloğundan hadisler"
+  },
+  "religious.category.hadith-dealings.description": {
+    "ar": "أحاديث من الكتالوج الموثق الموجود في حق",
+    "en": "Hadiths from Haq’s sourced catalog",
+    "tr": "Haq’ın kaynakları belirtilmiş kataloğundan hadisler"
+  },
+  "religious.category.hadith-ethics.description": {
+    "ar": "أحاديث من الكتالوج الموثق الموجود في حق",
+    "en": "Hadiths from Haq’s sourced catalog",
+    "tr": "Haq’ın kaynakları belirtilmiş kataloğundan hadisler"
+  },
+  "religious.category.hadith-sciences.description": {
+    "ar": "أحاديث من الكتالوج الموثق الموجود في حق",
+    "en": "Hadiths from Haq’s sourced catalog",
+    "tr": "Haq’ın kaynakları belirtilmiş kataloğundan hadisler"
+  },
+  "religious.category.hadith-comprehensive.description": {
+    "ar": "أحاديث من الكتالوج الموثق الموجود في حق",
+    "en": "Hadiths from Haq’s sourced catalog",
+    "tr": "Haq’ın kaynakları belirtilmiş kataloğundan hadisler"
+  },
+  "religious.label.6a47feeebf8d": {
+    "ar": "آيات الطمأنينة",
+    "en": "Verses of reassurance",
+    "tr": "Huzur veren ayetler"
+  },
+  "religious.label.787c3ed036a2": {
+    "ar": "آية الكرسي",
+    "en": "Ayat al-Kursi",
+    "tr": "Âyetü’l-kürsî"
+  },
+  "religious.label.8e032cfbb341": {
+    "ar": "أثناء الصلاة",
+    "en": "During prayer",
+    "tr": "Namaz sırasında"
+  },
+  "religious.label.5f0ccfd0c2a7": {
+    "ar": "أدعية الاستغفار",
+    "en": "Supplications for repentance",
+    "tr": "İstiğfar duaları"
+  },
+  "religious.label.758f16a473f8": {
+    "ar": "أدعية التوفيق",
+    "en": "Supplications for success",
+    "tr": "Başarı duaları"
+  },
+  "religious.label.72029861b786": {
+    "ar": "أدعية التوكل",
+    "en": "Supplications of reliance on Allah",
+    "tr": "Tevekkül duaları"
+  },
+  "religious.label.5215effe5c71": {
+    "ar": "أدعية الذرية",
+    "en": "Supplications for offspring",
+    "tr": "Evlat için dualar"
+  },
+  "religious.label.53a5613b1cba": {
+    "ar": "أدعية الرزق",
+    "en": "Supplications for provision",
+    "tr": "Rızık duaları"
+  },
+  "religious.label.0963d356a475": {
+    "ar": "أدعية الشكر",
+    "en": "Supplications of gratitude",
+    "tr": "Şükür duaları"
+  },
+  "religious.label.570970342bc4": {
+    "ar": "أدعية الصبر",
+    "en": "Supplications for patience",
+    "tr": "Sabır duaları"
+  },
+  "religious.label.3b8e9c475248": {
+    "ar": "أدعية العلم",
+    "en": "Supplications for knowledge",
+    "tr": "İlim duaları"
+  },
+  "religious.label.34479e487d0c": {
+    "ar": "أدعية المغفرة",
+    "en": "Supplications for forgiveness",
+    "tr": "Bağışlanma duaları"
+  },
+  "religious.label.f684ff153dd5": {
+    "ar": "أدعية الهداية",
+    "en": "Supplications for guidance",
+    "tr": "Hidayet duaları"
+  },
+  "religious.label.67f5781695d7": {
+    "ar": "أدعية الوقاية",
+    "en": "Supplications for protection",
+    "tr": "Korunma duaları"
+  },
+  "religious.label.8511df00633b": {
+    "ar": "أدعية عامة",
+    "en": "General supplications",
+    "tr": "Genel dualar"
+  },
+  "religious.label.749cc17e48bd": {
+    "ar": "أدعية قرآنية",
+    "en": "Quranic supplications",
+    "tr": "Kur’an duaları"
+  },
+  "religious.label.ce86caf69171": {
+    "ar": "أدعية متفرقة",
+    "en": "Other supplications",
+    "tr": "Diğer dualar"
+  },
+  "religious.label.fff3fc4e628b": {
+    "ar": "أذكار الصباح والمساء",
+    "en": "Morning and evening remembrances",
+    "tr": "Sabah ve akşam zikirleri"
+  },
+  "religious.label.f379062c0ffe": {
+    "ar": "الأخلاق",
+    "en": "Ethics",
+    "tr": "Ahlak"
+  },
+  "religious.label.f707eb539593": {
+    "ar": "الرحمة",
+    "en": "Mercy",
+    "tr": "Rahmet"
+  },
+  "religious.label.329ab64cd8ad": {
+    "ar": "الصفات",
+    "en": "Attributes",
+    "tr": "Sıfatlar"
+  },
+  "religious.label.a2a19024f15e": {
+    "ar": "العبادات",
+    "en": "Worship",
+    "tr": "İbadet"
+  },
+  "religious.label.a4a538970b05": {
+    "ar": "العقيدة",
+    "en": "Belief",
+    "tr": "İnanç"
+  },
+  "religious.label.d825df7ce2e3": {
+    "ar": "القوة",
+    "en": "Strength",
+    "tr": "Kudret"
+  },
+  "religious.label.a9e374a7a6e6": {
+    "ar": "المعاملات",
+    "en": "Dealings",
+    "tr": "İnsan ilişkileri"
+  },
+  "religious.label.64990afeb02a": {
+    "ar": "المغفرة",
+    "en": "Forgiveness",
+    "tr": "Bağışlama"
+  },
+  "religious.label.8b6c945cd4f9": {
+    "ar": "رمضان",
+    "en": "Ramadan",
+    "tr": "Ramazan"
+  },
+  "religious.label.b7590b4f5981": {
+    "ar": "قبل الصلاة",
+    "en": "Before prayer",
+    "tr": "Namazdan önce"
+  },
+  "religious.label.7655116259aa": {
+    "ar": "قراءة القرآن",
+    "en": "Quran reading",
+    "tr": "Kur’an okuma"
+  },
+  "religious.label.95fd5a880d32": {
+    "ar": "للرقية",
+    "en": "For ruqya",
+    "tr": "Rukye için"
+  },
+  "religious.label.c88a549f3672": {
+    "ar": "للشفاء",
+    "en": "For healing",
+    "tr": "Şifa için"
+  },
+  "religious.label.74dfd09d605b": {
+    "ar": "من السحر",
+    "en": "Against sorcery",
+    "tr": "Büyüye karşı"
+  },
+  "religious.label.7add2821c923": {
+    "ar": "من الشيطان",
+    "en": "Against Satan",
+    "tr": "Şeytana karşı"
+  },
+  "religious.label.a5a5269a3ed8": {
+    "ar": "من العين والحسد",
+    "en": "Against the evil eye and envy",
+    "tr": "Nazar ve hasede karşı"
+  },
+  "religious.ruqyaPlaylistTitle": {
+    "ar": "الرقية الشرعية الكاملة",
+    "en": "Full ruqya",
+    "tr": "Tam rukye"
+  },
+  "religious.ruqyaPlaylistSource": {
+    "ar": "النص القرآني المعتمد بالتطبيق • آيات مختارة للرقية",
+    "en": "The app’s verified Quran text • Selected verses for ruqya",
+    "tr": "Uygulamanın doğrulanmış Kur’an metni • Rukye için seçilmiş ayetler"
+  },
+  "religious.ruqyaPlaylistInfo": {
+    "ar": "الرقية بالدعاء والقرآن، وهذه قائمة آيات مختارة وليست تسجيلًا واحدًا ذا مدة ثابتة. يُعرض اسم القارئ والمدة من الصوت الفعلي. الرقية لا تُغني عن الرعاية الطبية عند الحاجة.",
+    "en": "Ruqya uses supplication and Quran recitation. This is a playlist of selected verses, not a single recording with a fixed duration. The reciter and duration come from the actual audio. Ruqya does not replace medical care when needed.",
+    "tr": "Rukye, dua ve Kur’an tilavetiyle yapılır. Bu, sabit süreli tek bir kayıt değil, seçilmiş ayetlerden oluşan bir çalma listesidir. Kâri ve süre bilgisi gerçek ses kaydından alınır. Rukye, ihtiyaç duyulan tıbbi bakımın yerini tutmaz."
   }
 }

@@ -545,6 +545,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
 
   Widget _entry(BuildContext context, DhikrEntry item, {required bool list}) {
     final colors = AppPalette.of(context), remaining = c.remaining(item.id);
+    final translated = item.presentation(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -574,7 +575,7 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                 ],
               ),
               const SizedBox(height: 22),
-              if (item.preface.isNotEmpty)
+              if (item.preface.isNotEmpty && translated == null)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Text(
@@ -595,36 +596,51 @@ class _AdhkarReaderState extends State<_AdhkarReader>
                 ),
                 child: SingleChildScrollView(
                   key: ValueKey('dhikr-text-scroll-${item.id}'),
-                  child: Text(
-                    item.text,
-                    textDirection: item.contentDirection,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: c.settings.font,
-                      color: colors.tealHeading,
-                      fontSize: c.settings.size,
-                      height: 1.95,
-                    ),
-                  ),
+                  child: translated != null && !item.hasScripture
+                      ? PresentedSourceText(
+                          translated,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: colors.tealHeading,
+                            fontSize: c.settings.size,
+                            height: 1.7,
+                          ),
+                        )
+                      : Text(
+                          item.text,
+                          textDirection: item.contentDirection,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: c.settings.font,
+                            color: colors.tealHeading,
+                            fontSize: c.settings.size,
+                            height: 1.95,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 20),
-              if (!item.personal)
-                BundledSourceCard(
-                  kind: 'dhikr',
-                  contentId: item.id,
-                  originalText: item.text,
-                  showMissing: true,
+              if (translated != null && item.hasScripture)
+                PresentedSourceText(
+                  translated,
+                  style: TextStyle(
+                    color: colors.tealHeading,
+                    fontSize: c.settings.size,
+                    height: 1.7,
+                  ),
                 ),
-              Text(
-                item.source,
-                textDirection: adhkarTextDirection(item.source),
-                style: TextStyle(
-                  color: colors.muted,
-                  fontSize: 11,
-                  height: 1.8,
+              if (translated != null)
+                PresentedSourceFooter(translated)
+              else
+                Text(
+                  item.source,
+                  textDirection: adhkarTextDirection(item.source),
+                  style: TextStyle(
+                    color: colors.muted,
+                    fontSize: 11,
+                    height: 1.8,
+                  ),
                 ),
-              ),
             ],
           ),
         ),

@@ -239,6 +239,7 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
           source: item.source,
           sourceUrl: item.sourceUrl,
           haqContentId: item.id,
+          hasScripture: item.type == 'quran',
           preface:
               'علامة لإتمام قراءة البطاقة مرة واحدة، وليست عدد تكرار مسنونًا لهذا القسم.',
         );
@@ -377,23 +378,40 @@ class _MoodReadingPageState extends State<_MoodReadingPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        item.title,
-                        textDirection: contentTextDirection(item.title),
+                        item.displayTitle(context),
+                        textDirection: contentTextDirection(
+                          item.displayTitle(context),
+                        ),
                         style: rText(context, 15, weight: FontWeight.w800),
                       ),
                       const SizedBox(height: 12),
-                      SelectableText(
-                        item.text,
-                        textDirection: contentTextDirection(item.text),
-                        textAlign: TextAlign.center,
-                        style: rText(context, 22, height: 1.95),
-                      ),
+                      if (item.presentation(context) != null &&
+                          !item.hasScripture)
+                        PresentedSourceText(
+                          item.presentation(context)!,
+                          style: rText(context, 20, height: 1.7),
+                        )
+                      else
+                        SelectableText(
+                          item.text,
+                          textDirection: contentTextDirection(item.text),
+                          textAlign: TextAlign.center,
+                          style: rText(context, 22, height: 1.95),
+                        ),
                       const SizedBox(height: 14),
-                      Text(
-                        item.source,
-                        textDirection: contentTextDirection(item.source),
-                        style: rText(context, 11, color: p.muted),
-                      ),
+                      if (item.presentation(context) != null) ...[
+                        if (item.hasScripture)
+                          PresentedSourceText(
+                            item.presentation(context)!,
+                            style: rText(context, 18, height: 1.7),
+                          ),
+                        PresentedSourceFooter(item.presentation(context)!),
+                      ] else
+                        Text(
+                          item.source,
+                          textDirection: contentTextDirection(item.source),
+                          style: rText(context, 11, color: p.muted),
+                        ),
                       const SizedBox(height: 12),
                       Row(
                         children: [

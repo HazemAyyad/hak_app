@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../core/localization/app_localization.dart';
 import '../../../core/localization/ui_text.dart';
-import '../../../core/localization/bundled_source_card.dart';
+import '../../../core/localization/content_presentation.dart';
 import 'adhkar_labels.dart';
 import '../../sharing/share_card.dart';
 

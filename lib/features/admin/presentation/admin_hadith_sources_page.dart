@@ -438,6 +438,7 @@ class _AdminHadithReviewPageState extends State<AdminHadithReviewPage> {
               source: Map<String, dynamic>.from(_data!['source'] as Map),
               direction: _data!['direction'] as String,
               expandArabic: true,
+              reviewMode: widget.session.admin,
             ),
             if (widget.session.can('review') &&
                 _data!['status'] != 'reviewed') ...[

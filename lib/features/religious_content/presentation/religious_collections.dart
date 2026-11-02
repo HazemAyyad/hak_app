@@ -122,7 +122,9 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
   @override
   Widget build(BuildContext context) {
     final host = widget.host,
-        items = widget.host.catalog.search(
+        items = religiousSearch(
+          context,
+          widget.host.catalog,
           category: _category,
           query: _search.text,
         );
@@ -229,8 +231,12 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              item.title,
-                              textDirection: contentTextDirection(item.title),
+                              item.displayTitle(context),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              textDirection: contentTextDirection(
+                                item.displayTitle(context),
+                              ),
                               style: rText(
                                 context,
                                 15,
@@ -239,7 +245,7 @@ class _HadithLibraryPageState extends State<_HadithLibraryPage> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              item.source,
+                              item.displaySource(context),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: rText(

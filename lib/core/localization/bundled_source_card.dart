@@ -288,14 +288,20 @@ class _SourceLink extends StatelessWidget {
   const _SourceLink({required this.url, required this.label});
   final String url, label;
   @override
-  Widget build(BuildContext context) => TextButton.icon(
-    icon: const Icon(Icons.open_in_new, size: 16),
-    label: Text(label),
-    onPressed: () async {
-      final uri = Uri.tryParse(url);
-      if (uri?.scheme == 'https') {
-        await launchUrl(uri!, mode: LaunchMode.externalApplication);
-      }
-    },
-  );
+  Widget build(BuildContext context) =>
+      LocalizationScope.maybeOf(context)?.showSourceLinks != true
+      ? const SizedBox.shrink()
+      : TextButton.icon(
+          icon: const Icon(Icons.open_in_new, size: 16),
+          label: Text(label),
+          onPressed: () async {
+            if (LocalizationScope.maybeOf(context)?.showSourceLinks != true) {
+              return;
+            }
+            final uri = Uri.tryParse(url);
+            if (uri?.scheme == 'https') {
+              await launchUrl(uri!, mode: LaunchMode.externalApplication);
+            }
+          },
+        );
 }

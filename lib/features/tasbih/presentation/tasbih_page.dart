@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import '../../../core/localization/app_localization.dart';
 import '../../../core/localization/ui_text.dart';
 import '../../../core/localization/locale_formats.dart';
+import '../../../core/localization/content_presentation.dart';
 import '../../sharing/share_card.dart';
 import '../../../app_appearance.dart';
 import '../../../navigation/more_page.dart';
@@ -22,6 +23,78 @@ LocaleFormats _tasbihFormats(BuildContext context) =>
     LocalizationScope.maybeOf(context)?.formats ?? const LocaleFormats('ar');
 String _tasbihNumber(BuildContext context, num value) =>
     _tasbihFormats(context).number(value);
+
+PresentedSourceContent? _tasbihMeaning(
+  BuildContext context,
+  PersonalTasbih item,
+) {
+  final locale = LocalizationScope.maybeOf(context)?.contentCode ?? 'ar';
+  if (!['en', 'tr'].contains(locale)) return null;
+  final defaults = TasbihController.defaults();
+  final index = defaults.indexWhere(
+    (original) => original.id == item.id && original.text == item.text,
+  );
+  if (index < 0) {
+    return null; // Personal or edited text is never translated by matching its words.
+  }
+  final source = ContentPresentationScope.libraryOf(
+    context,
+  ).cached(locale, 'dhikr');
+  if (source == null) return null;
+  final id = ['hisn-api-091', 'hisn-api-257', 'hisn-api-241'][index];
+  final row = (source.data['entries'] as Map)[id] as Map;
+  final excerpts = locale == 'en'
+      ? [
+          'How perfect Allah is and I praise Him.',
+          'all praise is for Allah.',
+          'Allah is the greatest.',
+        ]
+      : [
+          "Allah'a hamd ederek O'nu tüm noksanlıklardan tenzih ederim.",
+          "Hamd Allah'adır.",
+          'Allah en büyüktür.',
+        ];
+  final excerpt = excerpts[index];
+  final published = (row['text'] as String).replaceAll(RegExp(r'\s+'), ' ');
+  if (!published.contains(excerpt)) return null;
+  return PresentedSourceContent(
+    locale: locale,
+    kind: 'dhikr',
+    source: source.source,
+    records: [
+      {...Map<String, dynamic>.from(row), 'text': excerpt},
+    ],
+  );
+}
+
+String _tasbihDisplayText(BuildContext context, PersonalTasbih item) =>
+    _tasbihMeaning(context, item)?.text ?? item.text;
+
+class _TasbihReadingText extends StatelessWidget {
+  const _TasbihReadingText(this.item, {required this.style});
+  final PersonalTasbih item;
+  final TextStyle style;
+  @override
+  Widget build(BuildContext context) {
+    final source = _tasbihMeaning(context, item);
+    final text = source?.text ?? item.text;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          text,
+          textDirection: contentTextDirection(text),
+          textAlign: TextAlign.center,
+          style: style,
+        ),
+        if (source != null) ...[
+          const SizedBox(height: 8),
+          PresentedSourceFooter(source),
+        ],
+      ],
+    );
+  }
+}
 
 const tasbihStyleNames = [
   'أزرار',
@@ -423,9 +496,9 @@ class _TasbihLibraryState extends State<_TasbihLibrary> {
                                   color: p.tealHeading,
                                 ),
                                 title: Text(
-                                  item.text,
+                                  _tasbihDisplayText(context, item),
                                   textDirection: contentTextDirection(
-                                    item.text,
+                                    _tasbihDisplayText(context, item),
                                   ),
                                   style: TextStyle(
                                     color: p.heading,
@@ -892,10 +965,8 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                 SizedBox(
                   height: 116,
                   child: SingleChildScrollView(
-                    child: Text(
-                      c.definition.text,
-                      textDirection: contentTextDirection(c.definition.text),
-                      textAlign: TextAlign.center,
+                    child: _TasbihReadingText(
+                      c.definition,
                       style: TextStyle(
                         color: p.tealHeading,
                         fontSize: 24,
@@ -999,10 +1070,8 @@ class _TasbihReaderPageState extends State<TasbihReaderPage>
                       vertical: 24,
                     ),
                     child: Center(
-                      child: Text(
-                        c.definition.text,
-                        textDirection: contentTextDirection(c.definition.text),
-                        textAlign: TextAlign.center,
+                      child: _TasbihReadingText(
+                        c.definition,
                         style: TextStyle(
                           color: p.tealHeading,
                           fontSize: 26,

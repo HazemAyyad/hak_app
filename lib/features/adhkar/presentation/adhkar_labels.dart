@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import '../../../core/localization/app_localization.dart';
 import '../../../core/localization/ui_text.dart';
 import '../data/adhkar_repository.dart';
+import '../../../core/localization/content_presentation.dart';
 
 String adhkarNumber(BuildContext context, num value) =>
     LocalizationScope.maybeOf(context)?.formats.number(value) ??
@@ -85,8 +86,22 @@ extension DhikrGroupInterface on DhikrGroup {
 }
 
 extension DhikrEntryInterface on DhikrEntry {
-  String displayTitle(BuildContext context) =>
-      personal ? context.adhkarLabel('ذكر شخصي') : title;
+  PresentedSourceContent? presentation(BuildContext context) => personal
+      ? null
+      : PresentedSourceContent.forContent(context, id, text, kind: 'dhikr') ??
+            (haqContentId == null
+                ? null
+                : PresentedSourceContent.forContent(
+                    context,
+                    haqContentId!,
+                    text,
+                  ));
+  String displayTitle(BuildContext context) {
+    if (personal) return context.adhkarLabel('ذكر شخصي');
+    final translated = presentation(context)?.title ?? '';
+    return translated.isEmpty ? title : translated;
+  }
+
   TextDirection get contentDirection =>
       personal ? adhkarTextDirection(text) : TextDirection.rtl;
 }

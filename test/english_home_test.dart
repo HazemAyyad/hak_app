@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/main.dart';
+import 'package:haq_app/core/localization/religious_translation_library.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,6 +17,11 @@ void main() {
   late QuranController quran;
   setUpAll(() async {
     await loadVisualAuditFonts();
+    await Future.wait([
+      for (final locale in ['en', 'tr'])
+        for (final kind in ['names', 'dhikr', 'hadith', 'quran'])
+          ReligiousTranslationLibrary.shared.load(locale, kind),
+    ]);
     repository = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,

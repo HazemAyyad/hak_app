@@ -259,6 +259,24 @@ class AppLocalization extends ChangeNotifier {
   }
 
   bool get chosen => preferences.getBool('app.language.chosen.v1') == true;
+  bool get showSourceLinks =>
+      preferences.getBool('app.source-links.v1') == true;
+  Future<void> applyPublicSettings(Map settings, {bool notify = true}) async {
+    final revision = settings['revision'];
+    if (revision is int &&
+        revision < (preferences.getInt('app.source-links.revision.v1') ?? -1)) {
+      return;
+    }
+    await preferences.setBool(
+      'app.source-links.v1',
+      settings['show_translation_source_links'] == true,
+    );
+    if (revision is int) {
+      await preferences.setInt('app.source-links.revision.v1', revision);
+    }
+    if (notify && !_disposed) notifyListeners();
+  }
+
   int get localPackageCount => <String>{
     'ar',
     'en',
@@ -504,6 +522,11 @@ class AppLocalization extends ChangeNotifier {
       if (data['schema'] != 1) {
         throw const FormatException('Unsupported catalog');
       }
+      if (_disposed) return;
+      await applyPublicSettings(
+        data['settings'] as Map? ?? const {},
+        notify: false,
+      );
       final next = <String, int>{};
       final nextContent = <String, int>{};
       for (final row in data['languages'] as List) {

@@ -2,8 +2,7 @@ import '../../../core/localization/app_localization.dart';
 import '../../../core/localization/ui_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../core/localization/published_meaning_card.dart';
-import '../../../core/localization/bundled_source_card.dart';
+import '../../../core/localization/content_presentation.dart';
 import '../../sharing/share_card.dart';
 
 import '../../../app_appearance.dart';
@@ -182,17 +181,29 @@ class _QuranExplanationState extends State<QuranExplanation> {
   int source = 91;
   late Future<Object> request;
   final scroll = ScrollController();
+  String? _contentLocale;
   QuranRepository get repo => widget.controller.repository!;
   @override
   void initState() {
     super.initState();
     verse = widget.verse;
     meanings = widget.meanings;
-    _load();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final locale = LocalizationScope.maybeOf(context)?.contentCode ?? 'ar';
+    if (_contentLocale != locale) {
+      _contentLocale = locale;
+      _load();
+    }
   }
 
   void _load() {
-    request = meanings
+    request = !meanings && _contentLocale != 'ar'
+        ? Future<Object>.value('bundled-tafsir')
+        : meanings
         ? widget.controller.content.meanings(verse.key)
         : widget.controller.content.tafsir(verse.key, source);
   }
@@ -265,8 +276,6 @@ class _QuranExplanationState extends State<QuranExplanation> {
             ),
           ],
         ),
-        PublishedMeaningCard(verseKey: verse.key),
-        if (!meanings) BundledSourceCard(kind: 'tafsir', verseKey: verse.key),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
           child: QuranPlayerPanel(
@@ -280,43 +289,49 @@ class _QuranExplanationState extends State<QuranExplanation> {
           child: Column(
             children: [
               QCard(
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    QMedallion(number: verse.ayah, size: 38),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        verse.text,
-                        textDirection: TextDirection.rtl,
-                        textAlign: TextAlign.right,
-                        style: const TextStyle(
-                          fontFamily: 'AmiriQuran',
-                          fontSize: 21,
-                          height: 1.65,
-                        ),
-                      ),
-                    ),
-                    if (widget.onPlay != null)
-                      Tooltip(
-                        message: context.quranLabel('استماع إلى الآية'),
-                        child: Material(
-                          color: qAccentFill(context),
-                          shape: const CircleBorder(),
-                          child: InkWell(
-                            customBorder: const CircleBorder(),
-                            onTap: () => widget.onPlay!(verse),
-                            child: const SizedBox(
-                              width: 34,
-                              height: 34,
-                              child: Icon(
-                                Icons.play_arrow,
-                                color: Colors.white,
-                                size: 24,
-                              ),
+                    Row(
+                      children: [
+                        QMedallion(number: verse.ayah, size: 38),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            verse.text,
+                            textDirection: TextDirection.rtl,
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(
+                              fontFamily: 'AmiriQuran',
+                              fontSize: 21,
+                              height: 1.65,
                             ),
                           ),
                         ),
-                      ),
+                        if (widget.onPlay != null)
+                          Tooltip(
+                            message: context.quranLabel('استماع إلى الآية'),
+                            child: Material(
+                              color: qAccentFill(context),
+                              shape: const CircleBorder(),
+                              child: InkWell(
+                                customBorder: const CircleBorder(),
+                                onTap: () => widget.onPlay!(verse),
+                                child: const SizedBox(
+                                  width: 34,
+                                  height: 34,
+                                  child: Icon(
+                                    Icons.play_arrow,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    VerseMeaningBody(verseKey: verse.key),
                   ],
                 ),
               ),
@@ -336,7 +351,7 @@ class _QuranExplanationState extends State<QuranExplanation> {
                 ),
               ),
               const SizedBox(height: 8),
-              if (!meanings)
+              if (!meanings && _contentLocale == 'ar')
                 QSegments(
                   labels: [
                     for (final entry in tafsirSources.entries)
@@ -362,74 +377,105 @@ class _QuranExplanationState extends State<QuranExplanation> {
                   ),
                 ),
               const SizedBox(height: 12),
-              FutureBuilder<Object>(
-                future: request,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return QCard(
-                      child: Column(
-                        children: [
-                          Icon(
-                            Icons.cloud_off_outlined,
-                            color: qAccent(context),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            context.quranLabel('تعذّر تحميل المحتوى'),
-                            style: qText(context, size: 17),
-                          ),
-                          Text(
-                            context.quranLabel(
-                              'المحتوى المحمّل متاح دون إنترنت لمدة سبعة أيام.',
+              if (!meanings && _contentLocale != 'ar')
+                QCard(child: BundledTafsirBody(verseKey: verse.key))
+              else
+                FutureBuilder<Object>(
+                  future: request,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return QCard(
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.cloud_off_outlined,
+                              color: qAccent(context),
                             ),
-                            style: qText(context, size: 11),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 10),
-                          QPrimaryButton(
-                            label: context.quranLabel('إعادة المحاولة'),
-                            onTap: () => setState(_load),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                  if (!snapshot.hasData) {
-                    return AppLoadingSkeleton(
-                      label: context.quranLabel('جارٍ تحميل التفسير والمعاني'),
-                      page: false,
-                    );
-                  }
-                  if (snapshot.data is TafsirText) {
-                    final text = snapshot.data! as TafsirText;
-                    return QCard(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.menu_book_outlined,
-                                color: qAccent(context),
+                            const SizedBox(height: 8),
+                            Text(
+                              context.quranLabel('تعذّر تحميل المحتوى'),
+                              style: qText(context, size: 17),
+                            ),
+                            Text(
+                              context.quranLabel(
+                                'المحتوى المحمّل متاح دون إنترنت لمدة سبعة أيام.',
                               ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  text.title,
-                                  style: qText(
-                                    context,
-                                    size: 18,
-                                    weight: FontWeight.w800,
+                              style: qText(context, size: 11),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            QPrimaryButton(
+                              label: context.quranLabel('إعادة المحاولة'),
+                              onTap: () => setState(_load),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    if (!snapshot.hasData) {
+                      return AppLoadingSkeleton(
+                        label: context.quranLabel(
+                          'جارٍ تحميل التفسير والمعاني',
+                        ),
+                        page: false,
+                      );
+                    }
+                    if (snapshot.data is TafsirText) {
+                      final text = snapshot.data! as TafsirText;
+                      return QCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.menu_book_outlined,
+                                  color: qAccent(context),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    text.title,
+                                    style: qText(
+                                      context,
+                                      size: 18,
+                                      weight: FontWeight.w800,
+                                    ),
                                   ),
                                 ),
+                              ],
+                            ),
+                            if (text.keys.length > 1)
+                              Text(
+                                context.tr(
+                                  'quran.tafsirCoveredVerses',
+                                  args: {'verses': text.keys.join(', ')},
+                                ),
+                                style: qText(
+                                  context,
+                                  size: 10,
+                                  color: AppPalette.of(context).muted,
+                                ),
                               ),
-                            ],
-                          ),
-                          if (text.keys.length > 1)
+                            const SizedBox(height: 14),
+                            SelectableText(
+                              text.text,
+                              textDirection: contentTextDirection(text.text),
+                              style: TextStyle(
+                                fontFamily: 'AmiriQuran',
+                                fontSize: 17,
+                                height: 1.85,
+                                fontWeight: FontWeight.w400,
+                                color: AppPalette.of(context).dark
+                                    ? AppPalette.of(context).heading
+                                    : const Color(0xFF171D28),
+                              ),
+                            ),
+                            const SizedBox(height: 14),
                             Text(
                               context.tr(
-                                'quran.tafsirCoveredVerses',
-                                args: {'verses': text.keys.join(', ')},
+                                'quran.tafsirSource',
+                                args: {'title': text.title},
                               ),
                               style: qText(
                                 context,
@@ -437,141 +483,85 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                 color: AppPalette.of(context).muted,
                               ),
                             ),
-                          const SizedBox(height: 14),
-                          SelectableText(
-                            text.text,
-                            textDirection: contentTextDirection(text.text),
-                            style: TextStyle(
-                              fontFamily: 'AmiriQuran',
-                              fontSize: 17,
-                              height: 1.85,
-                              fontWeight: FontWeight.w400,
-                              color: AppPalette.of(context).dark
-                                  ? AppPalette.of(context).heading
-                                  : const Color(0xFF171D28),
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          Text(
-                            context.tr(
-                              'quran.tafsirSource',
-                              args: {'title': text.title},
-                            ),
-                            style: qText(
-                              context,
-                              size: 10,
-                              color: AppPalette.of(context).muted,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-                  final data = snapshot.data! as VerseMeanings;
-                  return Column(
-                    children: [
-                      if (data.original.trim().isEmpty)
-                        QCard(
-                          child: Text(
-                            context.quranLabel(
-                              'لم يورد المصدر معاني كلمات لهذه الآية.',
-                            ),
-                            style: qText(context),
-                          ),
+                          ],
                         ),
-                      for (final (entryIndex, entry) in data.entries.indexed)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: QCard(
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              children: [
-                                QMedallion(number: entryIndex + 1, size: 24),
-                                const SizedBox(width: 7),
-                                if (entry.word.isNotEmpty)
-                                  Container(
-                                    width:
-                                        MediaQuery.sizeOf(context).width < 380
-                                        ? 56
-                                        : 70,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                      horizontal: 5,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppPalette.of(context).dark
-                                          ? AppPalette.of(context).paleTeal
-                                          : const [
-                                              Color(0xFFFFF0D2),
-                                              Color(0xFFEAF5E7),
-                                              Color(0xFFFDE9E6),
-                                              Color(0xFFE7F1FA),
-                                              Color(0xFFF1E9F8),
-                                            ][entryIndex % 5],
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Text(
-                                      entry.word,
-                                      textDirection: TextDirection.rtl,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontFamily: 'AmiriQuran',
-                                        fontSize: 20,
-                                        height: 1.7,
+                      );
+                    }
+                    final data = snapshot.data! as VerseMeanings;
+                    return Column(
+                      children: [
+                        if (data.original.trim().isEmpty)
+                          QCard(
+                            child: Text(
+                              context.quranLabel(
+                                'لم يورد المصدر معاني كلمات لهذه الآية.',
+                              ),
+                              style: qText(context),
+                            ),
+                          ),
+                        for (final (entryIndex, entry) in data.entries.indexed)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: QCard(
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  QMedallion(number: entryIndex + 1, size: 24),
+                                  const SizedBox(width: 7),
+                                  if (entry.word.isNotEmpty)
+                                    Container(
+                                      width:
+                                          MediaQuery.sizeOf(context).width < 380
+                                          ? 56
+                                          : 70,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12,
+                                        horizontal: 5,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppPalette.of(context).dark
+                                            ? AppPalette.of(context).paleTeal
+                                            : const [
+                                                Color(0xFFFFF0D2),
+                                                Color(0xFFEAF5E7),
+                                                Color(0xFFFDE9E6),
+                                                Color(0xFFE7F1FA),
+                                                Color(0xFFF1E9F8),
+                                              ][entryIndex % 5],
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        entry.word,
+                                        textDirection: TextDirection.rtl,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontFamily: 'AmiriQuran',
+                                          fontSize: 20,
+                                          height: 1.7,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: SelectableText(
-                                    entry.meaning,
-                                    textDirection: contentTextDirection(
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: SelectableText(
                                       entry.meaning,
-                                    ),
-                                    style: TextStyle(
-                                      fontFamily: 'AmiriQuran',
-                                      fontSize: 15,
-                                      height: 1.65,
-                                      color: AppPalette.of(context).heading,
+                                      textDirection: contentTextDirection(
+                                        entry.meaning,
+                                      ),
+                                      style: TextStyle(
+                                        fontFamily: 'AmiriQuran',
+                                        fontSize: 15,
+                                        height: 1.65,
+                                        color: AppPalette.of(context).heading,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      tooltip: context.quranLabel('نسخ المعنى'),
-                                      visualDensity: VisualDensity.compact,
-                                      padding: const EdgeInsets.all(4),
-                                      constraints: const BoxConstraints(
-                                        minWidth: 28,
-                                        minHeight: 32,
-                                      ),
-                                      onPressed: () async {
-                                        await Clipboard.setData(
-                                          ClipboardData(
-                                            text:
-                                                '${entry.word}: ${entry.meaning}',
-                                          ),
-                                        );
-                                        if (context.mounted) {
-                                          qNotice(
-                                            context,
-                                            context.quranLabel('تم نسخ المعنى'),
-                                          );
-                                        }
-                                      },
-                                      icon: const Icon(
-                                        Icons.copy_outlined,
-                                        size: 20,
-                                        color: qNavy,
-                                      ),
-                                    ),
-                                    if (widget.onWordPlay != null &&
-                                        entry.word.isNotEmpty)
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
                                       IconButton(
                                         tooltip: context.quranLabel(
-                                          'استماع إلى الكلمة',
+                                          'نسخ المعنى',
                                         ),
                                         visualDensity: VisualDensity.compact,
                                         padding: const EdgeInsets.all(4),
@@ -579,44 +569,78 @@ class _QuranExplanationState extends State<QuranExplanation> {
                                           minWidth: 28,
                                           minHeight: 32,
                                         ),
-                                        onPressed: () =>
-                                            _listenWord(entry.word),
-                                        icon: Icon(
-                                          Icons.volume_up_outlined,
-                                          size: 21,
-                                          color: qAccent(context),
+                                        onPressed: () async {
+                                          await Clipboard.setData(
+                                            ClipboardData(
+                                              text:
+                                                  '${entry.word}: ${entry.meaning}',
+                                            ),
+                                          );
+                                          if (context.mounted) {
+                                            qNotice(
+                                              context,
+                                              context.quranLabel(
+                                                'تم نسخ المعنى',
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        icon: const Icon(
+                                          Icons.copy_outlined,
+                                          size: 20,
+                                          color: qNavy,
                                         ),
                                       ),
-                                  ],
-                                ),
-                              ],
+                                      if (widget.onWordPlay != null &&
+                                          entry.word.isNotEmpty)
+                                        IconButton(
+                                          tooltip: context.quranLabel(
+                                            'استماع إلى الكلمة',
+                                          ),
+                                          visualDensity: VisualDensity.compact,
+                                          padding: const EdgeInsets.all(4),
+                                          constraints: const BoxConstraints(
+                                            minWidth: 28,
+                                            minHeight: 32,
+                                          ),
+                                          onPressed: () =>
+                                              _listenWord(entry.word),
+                                          icon: Icon(
+                                            Icons.volume_up_outlined,
+                                            size: 21,
+                                            color: qAccent(context),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      if (data.footnotes?.isNotEmpty == true)
-                        QCard(
-                          child: SelectableText(
-                            data.footnotes!,
-                            textDirection: contentTextDirection(
+                        if (data.footnotes?.isNotEmpty == true)
+                          QCard(
+                            child: SelectableText(
                               data.footnotes!,
+                              textDirection: contentTextDirection(
+                                data.footnotes!,
+                              ),
+                              style: qText(context, size: 12),
                             ),
-                            style: qText(context, size: 12),
+                          ),
+                        Text(
+                          context.quranLabel(
+                            'المصدر: السراج في بيان غريب القرآن • QuranEnc.com\nتُعرض المعاني التي أوردها المصدر لهذه الآية.',
+                          ),
+                          style: qText(
+                            context,
+                            size: 10,
+                            color: AppPalette.of(context).muted,
                           ),
                         ),
-                      Text(
-                        context.quranLabel(
-                          'المصدر: السراج في بيان غريب القرآن • QuranEnc.com\nتُعرض المعاني التي أوردها المصدر لهذه الآية.',
-                        ),
-                        style: qText(
-                          context,
-                          size: 10,
-                          color: AppPalette.of(context).muted,
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+                      ],
+                    );
+                  },
+                ),
               const SizedBox(height: 14),
               QuranVerseNavigation(
                 onPrevious: verse.key == repo.verses.first.key

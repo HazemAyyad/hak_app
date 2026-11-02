@@ -5,6 +5,7 @@ import 'features/sharing/share_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_appearance.dart';
+import 'core/localization/content_presentation.dart';
 import 'app_experience.dart';
 import 'app_refresh.dart';
 import 'settings_pages.dart';
@@ -112,6 +113,7 @@ class _HaqAppState extends State<HaqApp> {
     final localization = AppLocalization(preferences);
     _localization = localization;
     await localization.initialize();
+    if (mounted) unawaited(localization.refresh());
   }
 
   void _toggleTheme() {
@@ -171,12 +173,15 @@ class _HaqAppState extends State<HaqApp> {
                       appearance.fontScale,
                 ),
               ),
-              child: AppRefreshHost(
-                onRefresh: () =>
-                    _experience.refreshCurrent?.call() ?? Future<void>.value(),
-                child: AppExperienceOverlay(
-                  controller: _experience,
-                  child: child!,
+              child: ContentPresentationScope(
+                child: AppRefreshHost(
+                  onRefresh: () =>
+                      _experience.refreshCurrent?.call() ??
+                      Future<void>.value(),
+                  child: AppExperienceOverlay(
+                    controller: _experience,
+                    child: child!,
+                  ),
                 ),
               ),
             ),
@@ -478,6 +483,9 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _prayer?.setForeground(state == AppLifecycleState.resumed);
     if (state == AppLifecycleState.resumed) {
+      unawaited(
+        LocalizationScope.maybeOf(context)?.refresh() ?? Future<void>.value(),
+      );
       unawaited(_appSession.refresh());
       AppearanceScope.of(context).refreshTime();
       unawaited(_reminders?.reconcile(force: true) ?? Future.value());

@@ -12,11 +12,13 @@ class PublishedHadithRecord extends StatelessWidget {
     required this.source,
     required this.direction,
     this.expandArabic = false,
+    this.reviewMode = false,
   });
   final Map<String, String> record;
   final Map<String, dynamic> source;
   final String direction;
   final bool expandArabic;
+  final bool reviewMode;
 
   @override
   Widget build(BuildContext context) => Directionality(
@@ -78,34 +80,36 @@ class PublishedHadithRecord extends StatelessWidget {
           style: Theme.of(context).textTheme.labelLarge,
         ),
         Text(context.tr('hadith.editionNotice')),
-        Wrap(
-          spacing: 8,
-          runSpacing: 4,
-          children: [
-            TextButton.icon(
-              onPressed: () => launchUrl(
-                Uri.parse(record['link']!),
-                mode: LaunchMode.externalApplication,
+        if (reviewMode ||
+            LocalizationScope.maybeOf(context)?.showSourceLinks == true)
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              TextButton.icon(
+                onPressed: () => launchUrl(
+                  Uri.parse(record['link']!),
+                  mode: LaunchMode.externalApplication,
+                ),
+                icon: const Icon(Icons.open_in_new),
+                label: Text(context.tr('hadith.publisherLink')),
               ),
-              icon: const Icon(Icons.open_in_new),
-              label: Text(context.tr('hadith.publisherLink')),
-            ),
-            TextButton(
-              onPressed: () => launchUrl(
-                Uri.parse(source['update_url'] as String),
-                mode: LaunchMode.externalApplication,
+              TextButton(
+                onPressed: () => launchUrl(
+                  Uri.parse(source['update_url'] as String),
+                  mode: LaunchMode.externalApplication,
+                ),
+                child: Text(context.tr('hadith.checkUpdates')),
               ),
-              child: Text(context.tr('hadith.checkUpdates')),
-            ),
-            TextButton(
-              onPressed: () => launchUrl(
-                Uri.parse('https://hadeethenc.com/en/home'),
-                mode: LaunchMode.externalApplication,
+              TextButton(
+                onPressed: () => launchUrl(
+                  Uri.parse('https://hadeethenc.com/en/home'),
+                  mode: LaunchMode.externalApplication,
+                ),
+                child: Text(context.tr('hadith.policyLink')),
               ),
-              child: Text(context.tr('hadith.policyLink')),
-            ),
-          ],
-        ),
+            ],
+          ),
         ExpansionTile(
           key: PageStorageKey(
             'published-hadith/${record['lang']}/${record['id']}/${source['version']}/document',

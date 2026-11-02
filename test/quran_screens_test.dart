@@ -20,6 +20,9 @@ import 'package:haq_app/features/quran/presentation/quran_download_pages.dart';
 import 'package:haq_app/features/quran/presentation/quran_tafsir.dart';
 import 'package:haq_app/features/quran/presentation/quran_home_sections.dart';
 import 'package:haq_app/main.dart';
+import 'package:haq_app/core/localization/content_presentation.dart';
+import 'package:haq_app/core/localization/religious_translation_library.dart';
+import 'package:haq_app/features/quran/presentation/quran_widgets.dart';
 import 'support/visual_audit.dart';
 
 class PreviewContent extends QuranContent {
@@ -96,6 +99,11 @@ void main() {
   late Directory directory;
   final boundary = GlobalKey();
   setUpAll(() async {
+    await Future.wait([
+      for (final locale in ['en', 'tr'])
+        for (final kind in ['names', 'dhikr', 'hadith', 'quran', 'tafsir'])
+          ReligiousTranslationLibrary.shared.load(locale, kind),
+    ]);
     await loadVisualAuditFonts();
     for (final font in [
       ('QuranUI', 'assets/fonts/Cairo.ttf'),
@@ -184,7 +192,9 @@ void main() {
       }
     });
     await tester.pumpAndSettle();
-    await tester.tap(find.text(language == 'en' ? 'Quran' : 'القرآن').last);
+    await tester.tap(
+      find.text({'en': 'Quran', 'tr': 'Kur’an'}[language] ?? 'القرآن').last,
+    );
     await tester.pumpAndSettle();
   }
 
@@ -377,41 +387,61 @@ void main() {
     },
   );
 
-  testWidgets('English tafsir controls retain the exact Arabic source text', (
-    tester,
-  ) async {
-    await appearance.setFontScale(1.2);
-    await showApp(tester, size: const Size(320, 900), language: 'en');
-    final verse = controller.repository!.byKey['2:2']!;
-    final source = await controller.content.tafsir(verse.key, 15);
-    tester
-        .state<QuranHostState>(find.byType(QuranHost))
-        .openExplanation(verse: verse);
-    await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.text('At-Tabari (Arabic)'),
-      180,
-      scrollable: find.byType(Scrollable).last,
+  for (final locale in ['en', 'tr']) {
+    testWidgets(
+      '$locale tafsir occupies the existing explanation card after the intact Arabic verse',
+      (tester) async {
+        await appearance.setFontScale(1.2);
+        await showApp(tester, size: const Size(320, 900), language: locale);
+        final verse = controller.repository!.byKey['2:2']!;
+        tester
+            .state<QuranHostState>(find.byType(QuranHost))
+            .openExplanation(verse: verse);
+        await tester.pumpAndSettle();
+        final explanation = find.byType(BundledTafsirBody);
+        await tester.scrollUntilVisible(
+          explanation,
+          180,
+          scrollable: find.byType(Scrollable).last,
+        );
+        await tester.pumpAndSettle();
+        expect(explanation, findsOneWidget);
+        expect(
+          find.ancestor(of: explanation, matching: find.byType(QCard)),
+          findsOneWidget,
+        );
+        expect(find.text('At-Tabari (Arabic)'), findsNothing);
+        final sourceText = find.descendant(
+          of: explanation,
+          matching: find.byType(PresentedSourceText),
+        );
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 50)),
+        );
+        await tester.pumpAndSettle();
+        expect(sourceText, findsOneWidget);
+        expect(
+          tester.widget<PresentedSourceText>(sourceText).content.locale,
+          locale,
+        );
+        expect(controller.repository!.byKey['2:2']!.text, verse.text);
+        final scroll = find
+            .ancestor(of: explanation, matching: find.byType(Scrollable))
+            .last;
+        tester.state<ScrollableState>(scroll).position.jumpTo(0);
+        await tester.pumpAndSettle();
+        final original = find.text(verse.text);
+        expect(original, findsOneWidget);
+        final card = find.ancestor(of: original, matching: find.byType(QCard));
+        expect(
+          find.descendant(of: card, matching: find.byType(VerseMeaningBody)),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+      },
     );
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('At-Tabari (Arabic)'));
-    await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(
-      find.text(source.text),
-      180,
-      scrollable: find.byType(Scrollable).last,
-    );
-    await tester.pumpAndSettle();
-    expect(find.text(source.text), findsOneWidget);
-    expect(
-      tester.widget<EditableText>(find.text(source.text)).textDirection,
-      TextDirection.rtl,
-    );
-    expect(find.text('تفسير الطبري'), findsOneWidget);
-    expect(controller.repository!.byKey['2:2']!.text, verse.text);
-    expect(tester.takeException(), isNull);
-    await tester.pumpWidget(const SizedBox());
-  });
+  }
 
   testWidgets(
     'audio downloads reader picker and account fit a narrow enlarged RTL interface',

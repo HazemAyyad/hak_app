@@ -9,6 +9,7 @@ import '../../../app_appearance.dart';
 import '../../../navigation/more_page.dart';
 import '../../adhkar/data/adhkar_repository.dart';
 import '../../adhkar/data/adhkar_session_controller.dart';
+import '../../adhkar/presentation/adhkar_labels.dart';
 import '../../../app_experience.dart';
 import '../../../app_refresh.dart';
 import '../../../app_loading.dart';
@@ -20,8 +21,8 @@ import '../../quran/data/quran_content.dart' show TafsirText;
 import '../data/religious_catalog.dart';
 import '../data/religious_controller.dart';
 import 'religious_widgets.dart';
-import '../../../core/localization/language_page.dart';
-import '../../../core/localization/bundled_source_card.dart';
+import '../../../core/localization/content_presentation.dart';
+import '../../../core/localization/published_meaning_card.dart';
 export 'religious_widgets.dart' show ReligiousNavigationBar;
 
 part 'religious_pages.dart';
@@ -131,7 +132,13 @@ class ReligiousHostState extends State<ReligiousHost> {
   }
 
   Future<void> copy(BuildContext context, ReligiousItem item) async {
-    await Clipboard.setData(ClipboardData(text: item.copyText));
+    final translated = item.presentation(context);
+    final text = translated == null || item.type == 'quran'
+        ? item.copyText
+        : item.type == 'name'
+        ? '${item.text}\n${translated.preview}'
+        : translated.preview;
+    await Clipboard.setData(ClipboardData(text: text));
     if (context.mounted) {
       message(context, context.religiousLabel('تم نسخ النص'));
     }
@@ -210,78 +217,85 @@ class ReligiousHostState extends State<ReligiousHost> {
           if (mounted) unawaited(controller.refresh(silent: true));
         });
       }
-      return ColoredBox(
-        color: ReligiousColors(context).background,
-        child: PopScope<Object?>(
-          canPop: !widget.active,
-          onPopInvokedWithResult: (didPop, result) {
-            if (!didPop && widget.active) back();
-          },
-          child: Navigator(
-            key: navigator,
-            observers: [?_observer],
-            onGenerateInitialRoutes: (_, _) => [
-              if (!widget.initialCategoryAsRoot ||
-                  (catalog.byCategory[widget.initialCategory] == null &&
-                      widget.initialCategory != 'feelings' &&
-                      widget.initialCategory != 'personal-adhkar' &&
-                      widget.initialCategory != 'favorites' &&
-                      widget.initialCategory != 'ramadan-duas'))
-                MaterialPageRoute<void>(
-                  builder: (_) => _ReligiousHomePage(host: this),
-                ),
-              if (widget.initialCategory != null &&
-                  catalog.byCategory[widget.initialCategory] != null &&
-                  ![
-                    'feelings',
-                    'hadith',
-                    'ramadan-duas',
-                    'istighfar',
-                    'praise',
-                    'glorification',
-                  ].contains(widget.initialCategory))
-                MaterialPageRoute<void>(
-                  builder: (_) => _ReligiousCategoryPage(
-                    host: this,
-                    category: catalog.byCategory[widget.initialCategory],
+      return ContentPresentationScope(
+        child: ColoredBox(
+          color: ReligiousColors(context).background,
+          child: PopScope<Object?>(
+            canPop: !widget.active,
+            onPopInvokedWithResult: (didPop, result) {
+              if (!didPop && widget.active) back();
+            },
+            child: Navigator(
+              key: navigator,
+              observers: [?_observer],
+              onGenerateInitialRoutes: (_, _) => [
+                if (!widget.initialCategoryAsRoot ||
+                    (catalog.byCategory[widget.initialCategory] == null &&
+                        widget.initialCategory != 'feelings' &&
+                        widget.initialCategory != 'personal-adhkar' &&
+                        widget.initialCategory != 'favorites' &&
+                        widget.initialCategory != 'ramadan-duas'))
+                  MaterialPageRoute<void>(
+                    builder: (_) => _ReligiousHomePage(host: this),
                   ),
-                ),
-              if (widget.initialCategory == 'feelings')
-                MaterialPageRoute<void>(
-                  builder: (_) => _ReligiousTopicsPage(host: this),
-                ),
-              if ([
-                'istighfar',
-                'praise',
-                'glorification',
-              ].contains(widget.initialCategory))
-                MaterialPageRoute<void>(
-                  builder: (_) => _MoodReadingPage(
-                    host: this,
-                    collectionId: widget.initialCategory,
+                if (widget.initialCategory != null &&
+                    catalog.byCategory[widget.initialCategory] != null &&
+                    ![
+                      'feelings',
+                      'hadith',
+                      'ramadan-duas',
+                      'istighfar',
+                      'praise',
+                      'glorification',
+                    ].contains(widget.initialCategory))
+                  MaterialPageRoute<void>(
+                    builder: (_) => _ReligiousCategoryPage(
+                      host: this,
+                      category: catalog.byCategory[widget.initialCategory],
+                      titleOverride:
+                          widget.initialCategoryAsRoot &&
+                              widget.initialCategory == 'sunnah-daily-life'
+                          ? context.tr('feature.dailyDuas')
+                          : null,
+                    ),
                   ),
-                ),
-              if (widget.initialCategory == 'hadith')
-                MaterialPageRoute<void>(
-                  builder: (_) => _HadithLibraryPage(host: this),
-                ),
-              if (widget.initialCategory == 'ramadan-duas')
-                MaterialPageRoute<void>(
-                  builder: (_) => _RamadanDaysPage(host: this),
-                ),
-              if (widget.initialCategory == 'favorites')
-                MaterialPageRoute<void>(
-                  builder: (_) =>
-                      _ReligiousCategoryPage(host: this, saved: true),
-                ),
-              if (widget.initialCategory == 'personal-adhkar')
-                MaterialPageRoute<void>(
-                  builder: (_) =>
-                      _ReligiousCategoryPage(host: this, adhkar: true),
-                ),
-            ],
-            onGenerateRoute: (_) => MaterialPageRoute<void>(
-              builder: (_) => _ReligiousHomePage(host: this),
+                if (widget.initialCategory == 'feelings')
+                  MaterialPageRoute<void>(
+                    builder: (_) => _ReligiousTopicsPage(host: this),
+                  ),
+                if ([
+                  'istighfar',
+                  'praise',
+                  'glorification',
+                ].contains(widget.initialCategory))
+                  MaterialPageRoute<void>(
+                    builder: (_) => _MoodReadingPage(
+                      host: this,
+                      collectionId: widget.initialCategory,
+                    ),
+                  ),
+                if (widget.initialCategory == 'hadith')
+                  MaterialPageRoute<void>(
+                    builder: (_) => _HadithLibraryPage(host: this),
+                  ),
+                if (widget.initialCategory == 'ramadan-duas')
+                  MaterialPageRoute<void>(
+                    builder: (_) => _RamadanDaysPage(host: this),
+                  ),
+                if (widget.initialCategory == 'favorites')
+                  MaterialPageRoute<void>(
+                    builder: (_) =>
+                        _ReligiousCategoryPage(host: this, saved: true),
+                  ),
+                if (widget.initialCategory == 'personal-adhkar')
+                  MaterialPageRoute<void>(
+                    builder: (_) =>
+                        _ReligiousCategoryPage(host: this, adhkar: true),
+                  ),
+              ],
+              onGenerateRoute: (_) => MaterialPageRoute<void>(
+                builder: (_) => _ReligiousHomePage(host: this),
+              ),
             ),
           ),
         ),
@@ -407,7 +421,7 @@ class _CategoryTile extends StatelessWidget {
                                       ),
                                     },
                                   )
-                                : category.description,
+                                : category.interfaceDescription(context),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
@@ -511,9 +525,11 @@ class _ItemTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  verse ? item.text.replaceAll('\n', ' ') : item.title,
+                  verse
+                      ? item.text.replaceAll('\n', ' ')
+                      : item.displayTitle(context),
                   textDirection: contentTextDirection(
-                    verse ? item.text : item.title,
+                    verse ? item.text : item.displayTitle(context),
                   ),
                   maxLines: verse ? 1 : 2,
                   overflow: TextOverflow.ellipsis,
@@ -528,13 +544,16 @@ class _ItemTile extends StatelessWidget {
                 ),
                 Text(
                   verse
-                      ? item.source
-                      : item.summary.isNotEmpty
-                      ? item.summary
-                      : item.text.replaceAll('\n', ' '),
+                      ? (item.presentation(context)?.preview ?? item.source)
+                      : item.displaySummary(context).isNotEmpty
+                      ? item.displaySummary(context)
+                      : item.displayText(context).replaceAll('\n', ' '),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: !verse && item.type == 'quran'
+                  style:
+                      !verse &&
+                          item.type == 'quran' &&
+                          item.presentation(context) == null
                       ? TextStyle(
                           fontFamily: 'AmiriQuran',
                           fontSize: 16,
@@ -545,7 +564,7 @@ class _ItemTile extends StatelessWidget {
                 ),
                 if (!verse && ['dua', 'hadith', 'quran'].contains(item.type))
                   Text(
-                    item.source,
+                    item.displaySource(context),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: rText(context, 8, color: colors.muted),
@@ -577,7 +596,7 @@ class _ItemTile extends StatelessWidget {
             icon: canPlay ? Icons.play_arrow : Icons.chevron_left,
             label: context.tr(
               canPlay ? 'religious.listenItem' : 'religious.itemDetails',
-              args: {'title': item.title},
+              args: {'title': item.displayTitle(context)},
             ),
             size: verse ? 29 : 24,
             filled: canPlay,

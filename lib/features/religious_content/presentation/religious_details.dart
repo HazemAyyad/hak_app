@@ -72,7 +72,37 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
       final name = item.type == 'name';
       final quran = item.type == 'quran';
       final saved = host.controller.favorites.contains(item.id);
-      final sections = item.sections;
+      final translated = item.presentation(context);
+      final sections = translated == null
+          ? item.sections
+          : <ReligiousSection>[
+              if (translated.explanation.isNotEmpty)
+                ReligiousSection({
+                  'title': 'الشرح',
+                  'text': translated.explanation,
+                }),
+              for (final pair in const [
+                ('benefits', 'فوائد مختصرة'),
+                ('takhrij', 'التخريج'),
+              ])
+                if (translated.records
+                    .map(
+                      (row) =>
+                          (row['fields'] as Map?)?[pair.$1] as String? ?? '',
+                    )
+                    .any((text) => text.isNotEmpty))
+                  ReligiousSection({
+                    'title': pair.$2,
+                    'text': translated.records
+                        .map(
+                          (row) =>
+                              (row['fields'] as Map?)?[pair.$1] as String? ??
+                              '',
+                        )
+                        .where((text) => text.isNotEmpty)
+                        .join('\n\n'),
+                  }),
+            ];
       final narrationBreak = item.type == 'hadith'
           ? item.text.indexOf('يقول:')
           : -1;
@@ -87,14 +117,17 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
         key: PageStorageKey('religious-details-${item.id}'),
         children: [
           ReligiousHeader(
-            title: item.title,
+            title: item.displayTitle(context),
+            titleMaxLines: translated == null ? null : 2,
             subtitle: name
                 ? context.religiousLabel('من أسماء الله الحسنى')
                 : quran
-                ? item.source
+                ? item.displaySource(context)
                 : item.categories.contains('nawawi')
                 ? 'الحديث ${item.number} من الأربعين النووية'
-                : host.catalog.byCategory[item.categories.first]?.title ?? '',
+                : host.catalog.byCategory[item.categories.first]
+                          ?.interfaceTitle(context) ??
+                      '',
             breadcrumb: quran
                 ? 'الأدعية والمحتوى الديني  ‹  ${item.categories.first == 'quran-duas' ? 'الأدعية القرآنية' : 'الرقية الشرعية'}'
                 : item.categories.contains('nawawi')
@@ -187,7 +220,8 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                         ),
                       const SizedBox(height: 8),
                       if ((!widget.hadithTabs || !_explanationOnly) &&
-                          narration != null)
+                          narration != null &&
+                          translated == null)
                         Text(
                           narration,
                           textDirection: contentTextDirection(narration),
@@ -199,7 +233,15 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                             height: 1.7,
                           ),
                         ),
-                      if (!widget.hadithTabs || !_explanationOnly)
+                      if (translated != null &&
+                          !name &&
+                          !quran &&
+                          (!widget.hadithTabs || !_explanationOnly))
+                        PresentedSourceText(
+                          translated,
+                          style: rText(context, fontSize, height: 1.7),
+                        )
+                      else if (!widget.hadithTabs || !_explanationOnly)
                         SelectableText(
                           mainText,
                           textDirection: contentTextDirection(mainText),
@@ -217,19 +259,31 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                                 : 2,
                           ),
                         ),
+                      if (name &&
+                          translated != null &&
+                          translated.title.isNotEmpty)
+                        Text(
+                          translated.title,
+                          textAlign: TextAlign.center,
+                          style: rText(context, 15, weight: FontWeight.w700),
+                        ),
                       if (name)
                         Text(
-                          item.summary,
-                          textDirection: contentTextDirection(item.summary),
+                          item.displaySummary(context),
+                          textDirection: contentTextDirection(
+                            item.displaySummary(context),
+                          ),
                           textAlign: TextAlign.center,
                           style: rText(context, 14),
                         ),
-                      if (!name)
+                      if (!name && translated == null)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Text(
-                            item.source,
-                            textDirection: contentTextDirection(item.source),
+                            item.displaySource(context),
+                            textDirection: contentTextDirection(
+                              item.displaySource(context),
+                            ),
                             textAlign: TextAlign.center,
                             style: rText(
                               context,
@@ -238,6 +292,69 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                             ),
                           ),
                         ),
+                      if (quran && translated != null) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          context.tr('source.meanings'),
+                          style: rText(context, 13, weight: FontWeight.w800),
+                        ),
+                        const SizedBox(height: 8),
+                        PresentedSourceText(
+                          translated,
+                          style: rText(context, 16, height: 1.7),
+                        ),
+                      ],
+                      if (widget.hadithTabs &&
+                          _explanationOnly &&
+                          translated != null)
+                        translated.explanation.isEmpty
+                            ? Text(context.tr('content.missing'))
+                            : PublishedTranslationText(
+                                translated.explanation,
+                                style: rText(context, 16, height: 1.7),
+                              ),
+                      if (translated != null) ...[
+                        const SizedBox(height: 8),
+                        if (!quran && !name)
+                          ExpansionTile(
+                            key: PageStorageKey(
+                              'religious-original-${item.id}-${translated.locale}',
+                            ),
+                            tilePadding: EdgeInsets.zero,
+                            title: Text(
+                              context.tr('content.original'),
+                              style: rText(context, 11),
+                            ),
+                            children: [
+                              SelectableText(
+                                item.text,
+                                key: PageStorageKey(
+                                  'religious-original-scroll-${item.id}',
+                                ),
+                                textDirection: TextDirection.rtl,
+                                style: rText(context, 16),
+                              ),
+                              if (translated.records.any(
+                                (row) =>
+                                    row['alignment'] ==
+                                    'publisher_record_variant',
+                              )) ...[
+                                Text(
+                                  context.tr('source.narrationNotice'),
+                                  style: rText(context, 11),
+                                ),
+                                for (final row in translated.records)
+                                  if ((row['source_arabic'] as String? ?? '')
+                                      .isNotEmpty)
+                                    PublishedTranslationText(
+                                      row['source_arabic'] as String,
+                                      style: rText(context, 16),
+                                    ),
+                              ],
+                            ],
+                          ),
+                        PresentedSourceFooter(translated),
+                      ],
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
                         child: Row(
@@ -307,7 +424,6 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                ContentTranslationCard(contentId: item.id, originalText: item.text),
                 if (host.controller.hasAudio(item) &&
                     host.controller.activeItem == item.id)
                   Padding(
@@ -315,61 +431,69 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                     child: _ReligiousPlayer(host: host, compact: true),
                   ),
                 if (quran) ...[
-                  for (final key in item.verseKeys)
-                    BundledSourceCard(kind: 'tafsir', verseKey: key),
-                  FutureBuilder<TafsirText>(
-                    future: explanation,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return ReligiousSectionCard(
-                          title: context.religiousLabel('تفسير الآية'),
-                          text: snapshot.data!.text,
-                          source: snapshot.data!.title,
+                  if ((LocalizationScope.maybeOf(context)?.contentCode ??
+                          'ar') !=
+                      'ar')
+                    for (final key in item.verseKeys)
+                      ReligiousSectionCard(
+                        title: context.religiousLabel('تفسير الآية'),
+                        text: '',
+                        body: BundledTafsirBody(verseKey: key),
+                      )
+                  else
+                    FutureBuilder<TafsirText>(
+                      future: explanation,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ReligiousSectionCard(
+                            title: context.religiousLabel('تفسير الآية'),
+                            text: snapshot.data!.text,
+                            source: snapshot.data!.title,
+                          );
+                        }
+                        return ReligiousCard(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                context.religiousLabel('تفسير الآية'),
+                                style: rText(
+                                  context,
+                                  14,
+                                  weight: FontWeight.w800,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                snapshot.hasError
+                                    ? context.religiousLabel(
+                                        'التفسير غير متاح دون اتصال؛ يمكنك إعادة المحاولة من صفحة التفسير.',
+                                      )
+                                    : context.religiousLabel(
+                                        'جارٍ تحميل التفسير من المصدر...',
+                                      ),
+                                style: rText(
+                                  context,
+                                  13,
+                                  color: ReligiousColors(context).text,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    host.openQuran(item, tafsir: true),
+                                child: Text(
+                                  context.religiousLabel('عرض التفسير'),
+                                ),
+                              ),
+                            ],
+                          ),
                         );
-                      }
-                      return ReligiousCard(
-                        margin: const EdgeInsets.only(bottom: 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              context.religiousLabel('تفسير الآية'),
-                              style: rText(
-                                context,
-                                14,
-                                weight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              snapshot.hasError
-                                  ? context.religiousLabel(
-                                      'التفسير غير متاح دون اتصال؛ يمكنك إعادة المحاولة من صفحة التفسير.',
-                                    )
-                                  : context.religiousLabel(
-                                      'جارٍ تحميل التفسير من المصدر...',
-                                    ),
-                              style: rText(
-                                context,
-                                13,
-                                color: ReligiousColors(context).text,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () =>
-                                  host.openQuran(item, tafsir: true),
-                              child: Text(
-                                context.religiousLabel('عرض التفسير'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                      },
+                    ),
                   ReligiousSectionCard(
                     title: context.religiousLabel('مواضع ورد فيها'),
-                    text: item.source,
+                    text: item.displayReference(context),
                     icon: Icons.auto_stories_outlined,
                   ),
                   OutlinedButton.icon(
@@ -379,7 +503,8 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                   ),
                 ],
                 for (final section
-                    in !widget.hadithTabs || _explanationOnly
+                    in !widget.hadithTabs ||
+                            (_explanationOnly && translated == null)
                         ? sections
                         : <ReligiousSection>[])
                   if (section.title == 'الشرح المطول' ||
@@ -421,6 +546,12 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                     ReligiousSectionCard(
                       title: context.religiousLabel(section.title),
                       text: section.text,
+                      body: translated == null
+                          ? null
+                          : PublishedTranslationText(
+                              section.text,
+                              style: rText(context, 13, height: 1.65),
+                            ),
                       source: section.source?.startsWith('فوائد موجزة') == true
                           ? null
                           : section.source,
@@ -432,7 +563,7 @@ class _ReligiousDetailsPageState extends State<_ReligiousDetailsPage> {
                           ? Icons.spa_outlined
                           : Icons.menu_book_outlined,
                     ),
-                if (item.type == 'dua')
+                if (item.type == 'dua' && translated == null)
                   ReligiousSectionCard(
                     title: context.religiousLabel('المصدر'),
                     text: item.source,
@@ -555,7 +686,7 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
         key: const PageStorageKey('religious-listening'),
         children: [
           ReligiousHeader(
-            title: item.title,
+            title: item.displayTitle(context),
             subtitle: context.religiousLabel(
               'مجموعة من الآيات والأدعية المأثورة\nللشفاء والحفظ بإذن الله',
             ),
@@ -809,19 +940,47 @@ class _ReligiousListeningPageState extends State<_ReligiousListeningPage> {
                 ] else if (tab == 1) ...[
                   for (final part in parts)
                     ReligiousSectionCard(
-                      title: part.title,
+                      title: part.displayTitle(context),
                       text: part.text,
-                      source: part.source,
+                      body: part.presentation(context) == null
+                          ? null
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                SelectableText(
+                                  part.text,
+                                  textDirection: TextDirection.rtl,
+                                  style: rText(context, 19, height: 1.7),
+                                ),
+                                const SizedBox(height: 10),
+                                PresentedSourceText(
+                                  part.presentation(context)!,
+                                  style: rText(context, 16, height: 1.7),
+                                ),
+                                PresentedSourceFooter(
+                                  part.presentation(context)!,
+                                ),
+                              ],
+                            ),
+                      source: part.presentation(context) == null
+                          ? part.source
+                          : null,
                     ),
                 ] else ...[
                   ReligiousSectionCard(
                     title: context.religiousLabel('مصدر المحتوى'),
-                    text: item.source,
+                    text: context.tr(
+                      'religious.ruqyaPlaylistSource',
+                      fallback: item.source,
+                    ),
                   ),
                   for (final section in item.sections)
                     ReligiousSectionCard(
                       title: context.religiousLabel(section.title),
-                      text: section.text,
+                      text: context.tr(
+                        'religious.ruqyaPlaylistInfo',
+                        fallback: section.text,
+                      ),
                       source: section.source,
                     ),
                 ],

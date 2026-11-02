@@ -64,7 +64,12 @@ class _ReligiousHomePageState extends State<_ReligiousHomePage> {
         }),
       ];
       final query = search.text.trim();
-      final results = host.catalog.search(category: scope, query: query);
+      final results = religiousSearch(
+        context,
+        host.catalog,
+        category: scope,
+        query: query,
+      );
       return AppRefreshRegion(
         onRefresh: host.controller.refresh,
         color: rAccent(context),
@@ -489,7 +494,9 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
           (widget.adhkar
               ? context.religiousLabel('أذكاري')
               : context.religiousLabel('المفضلة'));
-      final items = host.catalog.search(
+      final items = religiousSearch(
+        context,
+        host.catalog,
         category: category?.id,
         query: search.text,
         tag: tag,
@@ -524,7 +531,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
             child: ReligiousHeader(
               title: title,
               subtitle:
-                  category?.description ??
+                  category?.interfaceDescription(context) ??
                   context.religiousLabel('المحتوى الذي حفظته للرجوع إليه'),
               image: category?.header ?? 'ruqya',
               light: const ['home', 'medina'].contains(category?.header),
@@ -686,7 +693,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
           ),
         ),
         Text(
-          item.summary,
+          item.displaySummary(context),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
@@ -707,7 +714,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
       children: [
         ReligiousHeader(
           title: category.interfaceTitle(context),
-          subtitle: category.description,
+          subtitle: category.interfaceDescription(context),
           image: 'ruqya',
           onBack: host.back,
           onSaved: () => host.openSaved(),
@@ -820,7 +827,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              children[i].title,
+                              children[i].interfaceTitle(context),
                               style: rText(
                                 context,
                                 11,
@@ -828,7 +835,7 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                               ),
                             ),
                             Text(
-                              children[i].description,
+                              children[i].interfaceDescription(context),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: rText(context, 10),
@@ -868,7 +875,10 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                         const Icon(Icons.queue_music, color: rGold),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(queued.title, style: rText(context, 12)),
+                          child: Text(
+                            queued.displayTitle(context),
+                            style: rText(context, 12),
+                          ),
                         ),
                         if (host.controller.hasAudio(queued))
                           ReligiousRoundButton(
@@ -892,7 +902,10 @@ class _ReligiousCategoryPageState extends State<_ReligiousCategoryPage> {
                         const Icon(Icons.history, color: rGold),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(item.title, style: rText(context, 12)),
+                          child: Text(
+                            item.displayTitle(context),
+                            style: rText(context, 12),
+                          ),
                         ),
                         Text(
                           _duration(

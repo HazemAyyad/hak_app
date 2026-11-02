@@ -26,6 +26,8 @@ void main() {
   final languageRows = <Map<String, dynamic>>[];
   var permissions = <String>['admin.enter', 'translations.edit'];
   var rejectContentPublish = false;
+  var sourceLinks = false;
+  var settingsRevision = 0;
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
     FlutterSecureStorage.setMockInitialValues({});
@@ -37,6 +39,8 @@ void main() {
     languageRows.clear();
     permissions = ['admin.enter', 'translations.edit'];
     rejectContentPublish = false;
+    sourceLinks = false;
+    settingsRevision = 0;
     final personal = Dio(BaseOptions(baseUrl: 'https://backend.test/api/v1'))
       ..httpClientAdapter = StubHttp(
         (request) => ResponseBody.fromString(
@@ -126,6 +130,17 @@ void main() {
             'dry_run': (request.data as Map)['dry_run'],
             'status': 'draft',
           };
+        } else if (request.path == '/admin/settings') {
+          if (request.method == 'PUT') {
+            expect((request.data as Map)['revision'], settingsRevision);
+            sourceLinks =
+                (request.data as Map)['show_translation_source_links'] == true;
+            settingsRevision++;
+          }
+          data = {
+            'show_translation_source_links': sourceLinks,
+            'revision': settingsRevision,
+          };
         } else if (request.path == '/admin/languages') {
           data = languageRows;
         } else {
@@ -146,6 +161,45 @@ void main() {
     if (!rootOwnsSession) session.dispose();
     quran.dispose();
   });
+
+  testWidgets(
+    'administrator changes source visibility through app settings and failed writes do not enable it',
+    (tester) async {
+      admin = true;
+      permissions = ['admin.enter', 'languages.manage'];
+      await tester.runAsync(
+        () => session.login('association', 'test@example.test', 'password'),
+      );
+      final localization = AppLocalization(
+        await SharedPreferences.getInstance(),
+      );
+      await tester.pumpWidget(
+        LocalizationScope(
+          controller: localization,
+          child: MaterialApp(home: AdminAppSettingsPage(session: session)),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final toggle = find.byKey(const ValueKey('admin-show-source-links'));
+      expect(tester.widget<SwitchListTile>(toggle).value, false);
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
+      expect(sourceLinks, true);
+      expect(localization.showSourceLinks, true);
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
+      expect(sourceLinks, false);
+      expect(localization.showSourceLinks, false);
+      deny = true;
+      await tester.tap(toggle);
+      await tester.pumpAndSettle();
+      expect(sourceLinks, false);
+      expect(localization.showSourceLinks, false);
+      expect(find.text(localization.text('admin.denied')), findsOneWidget);
+      await tester.pumpWidget(const SizedBox.shrink());
+      localization.dispose();
+    },
+  );
 
   test(
     'association-only user does not become a religious sync account or an administrator',

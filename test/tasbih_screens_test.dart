@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
 import 'package:haq_app/core/localization/app_localization.dart';
+import 'package:haq_app/core/localization/religious_translation_library.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/religious_activity/data/activity_controller.dart';
 import 'package:haq_app/features/religious_activity/data/activity_store.dart';
@@ -34,6 +35,10 @@ void main() {
   final boundary = GlobalKey();
   setUpAll(() async {
     await loadVisualAuditFonts();
+    await Future.wait([
+      for (final locale in ['en', 'tr'])
+        ReligiousTranslationLibrary.shared.load(locale, 'dhikr'),
+    ]);
     repository = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -161,7 +166,7 @@ void main() {
   }
 
   testWidgets(
-    'English narrow counter preserves Arabic remembrance, personal notes and counts across locales',
+    'translated built-in counter keeps stored Arabic, personal notes and counts across locales',
     (tester) async {
       final localization = AppLocalization(
         await SharedPreferences.getInstance(),
@@ -170,11 +175,28 @@ void main() {
       addTearDown(localization.dispose);
       final original = counter.definition.text;
       await pump(tester, width: 320, localization: localization);
-      expect(find.text(original), findsOneWidget);
       expect(
-        tester.widget<Text>(find.text(original)).textDirection,
-        TextDirection.rtl,
+        find.text('How perfect Allah is and I praise Him.'),
+        findsOneWidget,
       );
+      expect(counter.definition.text, original);
+      expect(
+        tester
+            .widget<Text>(find.text('How perfect Allah is and I praise Him.'))
+            .textDirection,
+        TextDirection.ltr,
+      );
+      await localization.select('tr');
+      await settle(tester);
+      expect(
+        find.text(
+          "Allah'a hamd ederek O'nu tüm noksanlıklardan tenzih ederim.",
+        ),
+        findsOneWidget,
+      );
+      expect(counter.definition.text, original);
+      await localization.select('en');
+      await settle(tester);
       await tester.tap(find.byKey(const ValueKey('tasbih-face')));
       await settle(tester);
       expect(counter.total, 1);

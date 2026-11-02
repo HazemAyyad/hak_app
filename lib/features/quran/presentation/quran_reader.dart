@@ -1,6 +1,6 @@
 import '../../../core/localization/app_localization.dart';
 import '../../../core/localization/ui_text.dart';
-import '../../../core/localization/published_meaning_card.dart';
+import '../../../core/localization/content_presentation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -719,7 +719,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                             height: 1.85,
                           ),
                         ),
-                        PublishedMeaningCard(verseKey: verse.key),
+                        VerseMeaningBody(verseKey: verse.key),
                       ],
                     ),
                   ),
@@ -777,6 +777,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                     color: _ink(context),
                   ),
                 ),
+                if (!fullscreen) VerseMeaningBody(verseKey: verse.key),
                 const SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -817,7 +818,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
           ),
           const SizedBox(height: 15),
           if (!fullscreen) ...[
-            PublishedMeaningCard(verseKey: verse.key),
             QuranVerseInsight(
               key: ValueKey('insight-${verse.key}'),
               controller: controller,

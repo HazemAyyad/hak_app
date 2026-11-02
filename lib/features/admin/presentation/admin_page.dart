@@ -174,6 +174,17 @@ class _AdminPageState extends State<AdminPage> {
         appBar: AppBar(
           title: Text(context.tr('admin.title')),
           actions: [
+            if (session.can('languages.manage'))
+              IconButton(
+                tooltip: context.tr('admin.settings'),
+                icon: const Icon(Icons.settings_outlined),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => AdminAppSettingsPage(session: session),
+                  ),
+                ),
+              ),
             IconButton(
               tooltip: context.tr('admin.preview'),
               onPressed: () => Navigator.pop(context),
@@ -386,6 +397,104 @@ class _AdminPageState extends State<AdminPage> {
         ),
       );
     },
+  );
+}
+
+class AdminAppSettingsPage extends StatefulWidget {
+  const AdminAppSettingsPage({super.key, required this.session});
+  final AppSession session;
+  @override
+  State<AdminAppSettingsPage> createState() => _AdminAppSettingsPageState();
+}
+
+class _AdminAppSettingsPageState extends State<AdminAppSettingsPage> {
+  bool? _visible;
+  int _revision = 0;
+  bool _busy = false;
+  String? _error;
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_load());
+  }
+
+  Future<void> _load() async {
+    try {
+      final data = await widget.session.adminRequest('GET', 'settings');
+      if (mounted) {
+        setState(() {
+          _visible = data['show_translation_source_links'] == true;
+          _revision = data['revision'] as int;
+          _error = null;
+        });
+      }
+    } catch (error) {
+      if (mounted) setState(() => _error = adminError(error));
+    }
+  }
+
+  Future<void> _save(bool visible) async {
+    if (_busy) return;
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      final data = await widget.session.adminRequest(
+        'PUT',
+        'settings',
+        data: {'revision': _revision, 'show_translation_source_links': visible},
+      );
+      if (!mounted) return;
+      await LocalizationScope.maybeOf(context)?.applyPublicSettings(data);
+      if (mounted) {
+        setState(() {
+          _visible = data['show_translation_source_links'] == true;
+          _revision = data['revision'] as int;
+        });
+      }
+    } catch (error) {
+      if (mounted) {
+        setState(() => _error = adminError(error));
+        if (error is DioException && error.response?.statusCode == 409) {
+          await _load();
+        }
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: widget.session,
+    builder: (context, _) => Scaffold(
+      appBar: AppBar(title: Text(context.tr('admin.settings'))),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          if (!widget.session.can('languages.manage'))
+            Text(context.tr('admin.denied'))
+          else ...[
+            if (_error != null) Text(context.tr(_error!)),
+            if (_visible == null)
+              TextButton(
+                onPressed: _load,
+                child: Text(context.tr('common.retry')),
+              )
+            else
+              SwitchListTile(
+                key: const ValueKey('admin-show-source-links'),
+                title: Text(context.tr('admin.showSourceLinks')),
+                subtitle: Text(context.tr('admin.showSourceLinksHelp')),
+                value: _visible!,
+                onChanged: _busy ? null : _save,
+              ),
+            if (_busy) const LinearProgressIndicator(),
+          ],
+        ],
+      ),
+    ),
   );
 }
 

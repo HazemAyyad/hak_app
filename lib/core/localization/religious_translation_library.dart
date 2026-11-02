@@ -36,7 +36,7 @@ Map<String, dynamic> _decodeSource(Map<String, dynamic> input) {
 
 /// These publisher snapshots ship inside the signed application. Downloaded
 /// language releases still follow their independent signature/review workflow.
-class ReligiousTranslationLibrary {
+class ReligiousTranslationLibrary extends ChangeNotifier {
   ReligiousTranslationLibrary({AssetBundle? bundle})
     : bundle = bundle ?? rootBundle;
 
@@ -52,6 +52,9 @@ class ReligiousTranslationLibrary {
 
   final AssetBundle bundle;
   final _cache = <String, Future<SourceCollection>>{};
+  final _loaded = <String, SourceCollection>{};
+  SourceCollection? cached(String locale, String kind) =>
+      _loaded['$locale/$kind'];
 
   Future<SourceCollection> load(String locale, String kind) {
     if (!supports(locale) || !metadata(locale).containsKey(kind)) {
@@ -72,7 +75,10 @@ class ReligiousTranslationLibrary {
           'locale': locale,
           'kind': kind,
         });
-        return SourceCollection(decoded);
+        final collection = SourceCollection(decoded);
+        _loaded['$locale/$kind'] = collection;
+        notifyListeners();
+        return collection;
       } catch (_) {
         _cache.remove('$locale/$kind');
         rethrow;

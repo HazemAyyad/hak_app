@@ -208,10 +208,12 @@ class ReligiousHeader extends StatelessWidget {
     this.onShare,
     this.breadcrumb,
     this.tall = false,
+    this.titleMaxLines,
   });
   final String title, subtitle, image;
   final String? breadcrumb;
   final bool light, tall;
+  final int? titleMaxLines;
   final VoidCallback? onBack, onSaved, onShare;
   @override
   Widget build(BuildContext context) {
@@ -263,8 +265,11 @@ class ReligiousHeader extends StatelessWidget {
       double maxWidth, {
       FontWeight weight = FontWeight.w500,
       double height = 1.55,
+      int? maxLines,
     }) {
       final painter = TextPainter(
+        maxLines: maxLines,
+        ellipsis: maxLines == null ? null : '…',
         text: TextSpan(
           text: text,
           style: DefaultTextStyle.of(
@@ -288,6 +293,7 @@ class ReligiousHeader extends StatelessWidget {
           width * .75,
           weight: FontWeight.w800,
           height: 1.5,
+          maxLines: titleMaxLines,
         ) +
         (displaySubtitle.isEmpty
             ? 0
@@ -378,6 +384,10 @@ class ReligiousHeader extends StatelessWidget {
                   ),
                   child: Text(
                     title,
+                    maxLines: titleMaxLines,
+                    overflow: titleMaxLines == null
+                        ? TextOverflow.clip
+                        : TextOverflow.ellipsis,
                     textDirection: contentTextDirection(title),
                     textAlign: TextAlign.start,
                     style: rText(
@@ -588,10 +598,12 @@ class ReligiousSectionCard extends StatelessWidget {
     required this.title,
     required this.text,
     this.source,
+    this.body,
     this.icon = Icons.menu_book_outlined,
   });
   final String title, text;
   final String? source;
+  final Widget? body;
   final IconData icon;
   @override
   Widget build(BuildContext context) => ReligiousCard(
@@ -620,17 +632,18 @@ class ReligiousSectionCard extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 7),
-        SelectableText(
-          text,
-          textDirection: contentTextDirection(text),
-          textAlign: TextAlign.start,
-          style: rText(
-            context,
-            13,
-            color: ReligiousColors(context).text,
-            height: 1.65,
-          ),
-        ),
+        body ??
+            SelectableText(
+              text,
+              textDirection: contentTextDirection(text),
+              textAlign: TextAlign.start,
+              style: rText(
+                context,
+                13,
+                color: ReligiousColors(context).text,
+                height: 1.65,
+              ),
+            ),
         if (source != null && source!.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 8),

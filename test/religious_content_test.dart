@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/core/localization/app_localization.dart';
-import 'package:haq_app/core/localization/language_page.dart';
+import 'package:haq_app/core/localization/content_presentation.dart';
 import 'package:haq_app/core/localization/religious_translation_library.dart';
 import 'package:haq_app/features/adhkar/data/adhkar_repository.dart';
 import 'package:haq_app/features/religious_activity/data/activity_controller.dart';
@@ -40,6 +40,11 @@ void main() {
   final previewKey = GlobalKey();
   setUpAll(() async {
     await loadVisualAuditFonts();
+    await Future.wait([
+      for (final locale in ['en', 'tr'])
+        for (final kind in ['names', 'dhikr', 'hadith', 'quran', 'tafsir'])
+          ReligiousTranslationLibrary.shared.load(locale, kind),
+    ]);
     quranData = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -164,7 +169,8 @@ void main() {
                   : LocalizationScope(controller: localization, child: child!),
             ),
             home: Directionality(
-              textDirection: TextDirection.rtl,
+              textDirection:
+                  localization?.language.direction ?? TextDirection.rtl,
               child: Scaffold(
                 body: ReligiousHost(
                   key: hostKey,
@@ -182,7 +188,7 @@ void main() {
   }
 
   testWidgets(
-    'translated name meaning follows the header and original name card',
+    'selected name meaning replaces Arabic meaning inside the original name card',
     (tester) async {
       final localization = AppLocalization(appearance.preferences);
       await localization.select('en');
@@ -203,18 +209,28 @@ void main() {
       final children =
           (list.childrenDelegate as SliverChildListDelegate).children;
       expect(children.first, isA<ReligiousHeader>());
-      expect(children.whereType<ContentTranslationCard>(), isEmpty);
+      expect(children.whereType<PresentedSourceFooter>(), isEmpty);
       final originalCard = find
           .ancestor(
             of: find.byType(SelectableText).first,
             matching: find.byType(ReligiousCard),
           )
           .first;
-      final translation = find.byType(ContentTranslationCard);
       expect(
-        tester.getTopLeft(translation).dy,
-        greaterThan(tester.getBottomLeft(originalCard).dy),
+        find.descendant(
+          of: originalCard,
+          matching: find.text('The Beneficent'),
+        ),
+        findsOneWidget,
       );
+      expect(
+        find.descendant(
+          of: originalCard,
+          matching: find.byType(PresentedSourceFooter),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text(catalog.byId['name-01']!.summary), findsNothing);
       await localization.select('ar');
       await tester.pumpAndSettle();
       expect(find.text('Ar Rahmaan'), findsNothing);
@@ -223,6 +239,57 @@ void main() {
       localization.dispose();
     },
   );
+
+  for (final locale in ['en', 'tr']) {
+    testWidgets(
+      'selected $locale content fills existing daily dua, hadith and ruqya cards',
+      (tester) async {
+        final localization = AppLocalization(appearance.preferences);
+        await localization.select(locale);
+        await tester.runAsync(
+          () => Future.wait([
+            for (final kind in ['names', 'dhikr', 'hadith', 'quran', 'tafsir'])
+              ReligiousTranslationLibrary.shared.load(locale, kind),
+          ]),
+        );
+        await pump(tester, width: 320, scale: 1.2, localization: localization);
+        for (final id in ['hisn-001', 'nawawi-01', 'qdua-goodness']) {
+          hostKey.currentState!.openItem(catalog.byId[id]!);
+          await tester.pumpAndSettle();
+          final body = find.byType(PresentedSourceText).first;
+          expect(body, findsOneWidget);
+          final card = find
+              .ancestor(of: body, matching: find.byType(ReligiousCard))
+              .first;
+          expect(
+            find.descendant(
+              of: card,
+              matching: find.byType(PresentedSourceFooter),
+            ),
+            findsWidgets,
+          );
+          final material = tester.widget<PresentedSourceText>(body).content;
+          expect(material.locale, locale);
+          expect(material.text, isNotEmpty);
+          if (id == 'qdua-goodness') {
+            expect(find.byType(BundledTafsirBody), findsOneWidget);
+            final tafsirCard = find.ancestor(
+              of: find.byType(BundledTafsirBody),
+              matching: find.byType(ReligiousSectionCard),
+            );
+            expect(tafsirCard, findsOneWidget);
+          } else {
+            expect(find.text(catalog.byId[id]!.title), findsNothing);
+          }
+          expect(tester.takeException(), isNull);
+          hostKey.currentState!.back();
+          await tester.pumpAndSettle();
+        }
+        await tester.pumpWidget(const SizedBox.shrink());
+        localization.dispose();
+      },
+    );
+  }
 
   Future<void> capture(WidgetTester tester, String name) async {
     await prepareVisualAuditCapture(tester, previewKey);

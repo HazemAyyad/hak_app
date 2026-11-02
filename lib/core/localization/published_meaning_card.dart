@@ -5,11 +5,19 @@ import 'package:url_launcher/url_launcher.dart';
 import 'app_localization.dart';
 import 'quran_translation_source.dart';
 import 'bundled_source_card.dart';
+import 'ui_text.dart';
 
 /// Only text and inline emphasis are rendered; provider HTML cannot run code or load images.
 class PublishedTranslationText extends StatelessWidget {
-  const PublishedTranslationText(this.text, {super.key});
+  const PublishedTranslationText(
+    this.text, {
+    super.key,
+    this.style,
+    this.textAlign = TextAlign.start,
+  });
   final String text;
+  final TextStyle? style;
+  final TextAlign textAlign;
   InlineSpan _span(dom.Node node) {
     if (node is dom.Text) return TextSpan(text: node.data);
     if (node is! dom.Element) return const TextSpan();
@@ -47,6 +55,9 @@ class PublishedTranslationText extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SelectableText.rich(
     key: const PageStorageKey('published-source-text-scroll'),
+    style: style,
+    textAlign: textAlign,
+    textDirection: contentTextDirection(text),
     TextSpan(
       children: [
         for (final node in html.parseFragment(text).nodes) _span(node),
@@ -112,14 +123,15 @@ class PublishedMeaningCard extends StatelessWidget {
                 const SizedBox(height: 12),
               ],
               Text(source.attribution),
-              TextButton.icon(
-                onPressed: () => launchUrl(
-                  Uri.https('quranenc.com', '/en/home'),
-                  mode: LaunchMode.externalApplication,
+              if (localization.showSourceLinks)
+                TextButton.icon(
+                  onPressed: () => launchUrl(
+                    Uri.https('quranenc.com', '/en/home'),
+                    mode: LaunchMode.externalApplication,
+                  ),
+                  icon: const Icon(Icons.open_in_new),
+                  label: const Text('QuranEnc.com'),
                 ),
-                icon: const Icon(Icons.open_in_new),
-                label: const Text('QuranEnc.com'),
-              ),
             ],
           ),
         ),

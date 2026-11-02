@@ -50,11 +50,13 @@ class DhikrEntry {
     this.haqContentId,
     this.personal = false,
     this.preface = '',
+    this.hasScripture = false,
   });
   final String id, title, text, source, preface;
   final int target;
   final String? sourceUrl, audioUrl, haqContentId;
   final bool personal;
+  final bool hasScripture;
 }
 
 class DhikrGroup {
@@ -123,6 +125,7 @@ class AdhkarRepository {
         sourceUrl: item['source_url'] as String,
         audioUrl: audio,
         haqContentId: item['haq_content_id'] as String,
+        hasScripture: (item['scripture'] as List).isNotEmpty,
       );
     }
     final groups = <DhikrGroup>[];
