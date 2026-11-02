@@ -158,12 +158,12 @@ private final class HaqReminderCenter {
         let recordings = ((try? FileManager.default.contentsOfDirectory(atPath: NSHomeDirectory() + "/Library/Sounds")) ?? []).compactMap { name -> String? in
           guard name.hasPrefix("haq-adhan-"), name.hasSuffix(".caf") else { return nil }
           let id = String(name.dropFirst(10).dropLast(4))
-          return id.range(of: "^reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha)$", options: .regularExpression) != nil ? id : nil
+          return id.range(of: "^reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en|pn-(current|old|intro|yarab|road|salaty|light|knock|wake))-)?(fajr|dhuhr|asr|maghrib|isha)$", options: .regularExpression) != nil ? id : nil
         }
         result(["platform": "ios", "exact": false, "fullScreen": false, "reminderRecordings": recordings])
       case "removePrayerReminder":
         guard let args = call.arguments as? [String: Any], let id = args["id"] as? String,
-              id.range(of: "^reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha)$", options: .regularExpression) != nil else { result(false); return }
+              id.range(of: "^reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en|pn-(current|old|intro|yarab|road|salaty|light|knock|wake))-)?(fajr|dhuhr|asr|maghrib|isha)$", options: .regularExpression) != nil else { result(false); return }
         do {
           let url = URL(fileURLWithPath: NSHomeDirectory() + "/Library/Sounds/haq-adhan-\(id).caf")
           if FileManager.default.fileExists(atPath: url.path) { try FileManager.default.removeItem(at: url) }
@@ -171,7 +171,7 @@ private final class HaqReminderCenter {
         } catch { result(false) }
       case "prepareAdhan", "preparePrayerReminder":
         guard let args = call.arguments as? [String: Any], let id = args["id"] as? String,
-              (id.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|nusuk-[1-9][0-9]*|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil), let path = args["path"] as? String else {
+              (id.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|nusuk-[1-9][0-9]*|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en|pn-(current|old|intro|yarab|road|salaty|light|knock|wake))-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil), let path = args["path"] as? String else {
           result(FlutterError(code: "audio", message: "Invalid voice", details: nil)); return
         }
         let shortPath = args["shortPath"] as? String
@@ -259,6 +259,19 @@ private final class HaqReminderCenter {
       }
     }
   }
+  private func bundledReminderName(_ variant: String, prayer: String) -> String? {
+    guard ["fajr", "dhuhr", "asr", "maghrib", "isha"].contains(prayer) else { return nil }
+    switch variant {
+      case "ar-ps", "ar-eg", "ar-gulf", "en", "pn-current", "pn-old":
+        return "haq-reminder-\(variant)-\(prayer)"
+      case "pn-current-friday", "pn-old-friday":
+        guard prayer == "dhuhr" else { return nil }
+        return "haq-reminder-\(variant)"
+      case "pn-intro", "pn-yarab", "pn-road", "pn-salaty", "pn-light", "pn-knock", "pn-wake":
+        return "haq-reminder-pn-general-\(variant.dropFirst(3))"
+      default: return nil
+    }
+  }
   private func content(_ job: [String: Any]) -> UNMutableNotificationContent {
     let c = UNMutableNotificationContent()
     c.title = job["title"] as? String ?? "حق"; c.body = job["body"] as? String ?? ""
@@ -267,16 +280,16 @@ private final class HaqReminderCenter {
       if mode == "silent" || mode == "vibration" { c.sound = nil }
       else if mode == "dhikr" { c.sound = (job["volume"] as? Int ?? 100) > 0 ? .default : nil }
       else if (mode == "adhan" || mode == "reminderVoice"),
-              let voice = job["voice"] as? String, voice.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|nusuk-[1-9][0-9]*|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil {
+              let voice = job["voice"] as? String, voice.range(of: "^(alafasy|nafees|mustafa|zahrani|archive-[0-9a-f]{16}|nusuk-[1-9][0-9]*|reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en|pn-(current|old|intro|yarab|road|salaty|light|knock|wake))-)?(fajr|dhuhr|asr|maghrib|isha))$", options: .regularExpression) != nil {
         let name = "haq-adhan-\(voice).caf"
         if FileManager.default.fileExists(atPath: NSHomeDirectory() + "/Library/Sounds/" + name) {
           c.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: name))
         } else if mode == "reminderVoice", let prayer = voice.split(separator: "-").last,
                   ["fajr", "dhuhr", "asr", "maghrib", "isha"].contains(String(prayer)),
                   let variant = job["reminderVariant"] as? String,
-                  ["ar-ps", "ar-eg", "ar-gulf", "en"].contains(variant),
-                  Bundle.main.url(forResource: "haq-reminder-\(variant)-\(prayer)", withExtension: "caf") != nil {
-          c.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "haq-reminder-\(variant)-\(prayer).caf"))
+                  let bundled = bundledReminderName(variant, prayer: String(prayer)),
+                  Bundle.main.url(forResource: bundled, withExtension: "caf") != nil {
+          c.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "\(bundled).caf"))
         }
       }
     }

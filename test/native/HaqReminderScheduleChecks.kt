@@ -99,6 +99,25 @@ fun main() {
     check(HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-ar-gulf-isha"))
     check(!HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-fr-fajr"))
     check(!HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-en-../fajr"))
+    for (variant in listOf("pn-current", "pn-old", "pn-intro", "pn-yarab", "pn-road", "pn-salaty", "pn-light", "pn-knock", "pn-wake")) {
+        for (prayer in listOf("fajr", "dhuhr", "asr", "maghrib", "isha")) {
+            check(HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-$variant-$prayer"))
+            check(HaqAdhanRules.reminderAsset(variant, prayer) != null)
+        }
+    }
+    check(HaqAdhanRules.reminderAsset("pn-current-friday", "dhuhr") == "pn-current/friday.mp3")
+    check(HaqAdhanRules.reminderAsset("pn-old-friday", "dhuhr") == "pn-old/friday.mp3")
+    check(HaqAdhanRules.reminderAsset("pn-light", "fajr") == "pn-general/light.wav")
+    check(HaqAdhanRules.reminderAsset("pn-knock", "isha") == "pn-general/knock.wav")
+    check(HaqAdhanRules.reminderAsset("ar-ps", "fajr") == "ar-ps/fajr.mp3")
+    check(HaqAdhanRules.reminderAsset("pn-current-friday", "asr") == null)
+    check(HaqAdhanRules.reminderAsset("pn-current", "sunrise") == null)
+    check(HaqAdhanRules.reminderAsset("../pn-current", "fajr") == null)
+    check(HaqAdhanRules.reminderAsset("pn-current", "../fajr") == null)
+    check(!HaqAdhanRules.reminderId("reminder-aabbccddeeff0011-pn-unknown-fajr"))
+    check(HaqAdhanRules.playbackLimit(true, false, false, 36540, "pn-wake") == 45000L)
+    check(HaqAdhanRules.playbackLimit(true, false, false, 60000, "pn-wake") == 30000L)
+    check(HaqAdhanRules.playbackLimit(true, false, false, 36540, "pn-current") == 30000L)
     check(HaqAdhanRules.playbackLimit(false, false, true, 29884) == 45000L) // Ali Mulla takbeer finishes at ~30s.
     check(HaqAdhanRules.playbackLimit(false, false, true, 104516) == 25000L) // Nusuk 25 contains full audio in takbeer.
     check(HaqAdhanRules.playbackLimit(false, true, true, 251193) == 360000L)

@@ -1,0 +1,164 @@
+{
+  "source": "PRAYER NOW",
+  "package": "com.AppRocks.now.prayer",
+  "version": "9.3.5",
+  "apk_sha256": "2a4af087cbd8e83511b914231797fc15508c0d9ca60321eba56adc8d7ef4d4ed",
+  "extracted_with": "REA",
+  "mapping_method": "com.AppRocks.now.prayer.generalUTILS.UTils.T(int)",
+  "note": "Original MP3/WAV bytes preserved. iOS notification copies are PCM, mono, 24 kHz, capped at 25 seconds; only wake.mp3 exceeds that limit.",
+  "ios_max_seconds": 25,
+  "clips": [
+    {
+      "original_resource": "res/raw/fagrsoon.mp3",
+      "asset": "assets/prayer/reminders/pn-current/fajr.mp3",
+      "sha256": "ee125afda476327883f1cdabfc16bebcd557a21ee92e924e324ca659417f3211",
+      "bytes": 66486,
+      "ios_sound": "haq-reminder-pn-current-fajr.caf",
+      "ios_sha256": "a196d5faa26e892ecc16f2f6bc507c996f4e81a175826a9fae14a23157d5366b"
+    },
+    {
+      "original_resource": "res/raw/zohrsoon.mp3",
+      "asset": "assets/prayer/reminders/pn-current/dhuhr.mp3",
+      "sha256": "8ccfd7fd8fad2facd614b4560cfc91b18b3a7f106ebb3996ee83ae9c45d4f84f",
+      "bytes": 71502,
+      "ios_sound": "haq-reminder-pn-current-dhuhr.caf",
+      "ios_sha256": "ae2f6a612b1054891d6ff4d3487d4a1298bc1d55fe7aecb52aef79c2e3623fdc"
+    },
+    {
+      "original_resource": "res/raw/asrsoon.mp3",
+      "asset": "assets/prayer/reminders/pn-current/asr.mp3",
+      "sha256": "403f5080f4860fbaf2b431739d9df310f313f142f4ad469685d6c3ff8585a729",
+      "bytes": 70248,
+      "ios_sound": "haq-reminder-pn-current-asr.caf",
+      "ios_sha256": "c573e454624566596e670c87435809bd5f71a82d10fe9941d61381aa9ec5d977"
+    },
+    {
+      "original_resource": "res/raw/maghribsoon.mp3",
+      "asset": "assets/prayer/reminders/pn-current/maghrib.mp3",
+      "sha256": "95b325d31ffd797859c6169e051a519bab74b86eb6c3603969699304de09f632",
+      "bytes": 65859,
+      "ios_sound": "haq-reminder-pn-current-maghrib.caf",
+      "ios_sha256": "4fbbecb2b66640159a1a7aae11f56344709cf7b9edc4099770c2fe92a1d2d6ca"
+    },
+    {
+      "original_resource": "res/raw/eshaasoon.mp3",
+      "asset": "assets/prayer/reminders/pn-current/isha.mp3",
+      "sha256": "2038ca13ab8849b6dd1b62f1db7a1a49852d54821607154587a1ffba539e9057",
+      "bytes": 93444,
+      "ios_sound": "haq-reminder-pn-current-isha.caf",
+      "ios_sha256": "768b39075af3881915a87befa44dde7f3d25535ad9d56ede9063ab40b15d8811"
+    },
+    {
+      "original_resource": "res/raw/gom3asoon.mp3",
+      "asset": "assets/prayer/reminders/pn-current/friday.mp3",
+      "sha256": "37231b13a8084d97a86310eade86811ce0cacfa476ecc31d8e3d52cd45edeab0",
+      "bytes": 71502,
+      "ios_sound": "haq-reminder-pn-current-friday.caf",
+      "ios_sha256": "68b3ed193f6f154a5e10faaa455f2adc082b5c8fa372fe9bdd23c245e3369bdb"
+    },
+    {
+      "original_resource": "res/raw/fagrsoon_old.mp3",
+      "asset": "assets/prayer/reminders/pn-old/fajr.mp3",
+      "sha256": "20fb7de7ad8bc40119d115f2faf7f8ff7ed7f108133bf2c159cb1e86a99d1c7b",
+      "bytes": 175671,
+      "ios_sound": "haq-reminder-pn-old-fajr.caf",
+      "ios_sha256": "0e1aa90f232e90c0f53649cbb03d307730fb41a0567dd0ebb90f618d416b0e13"
+    },
+    {
+      "original_resource": "res/raw/zohrsoon_old.mp3",
+      "asset": "assets/prayer/reminders/pn-old/dhuhr.mp3",
+      "sha256": "4798180b45e328e26d0ce9f398f25d276d63b80713e90cd7526e864d192825cd",
+      "bytes": 186642,
+      "ios_sound": "haq-reminder-pn-old-dhuhr.caf",
+      "ios_sha256": "ce6b7c3c2592b42b887407b2be76ee21585296a0721fa10f3f29027af64490a0"
+    },
+    {
+      "original_resource": "res/raw/asrsoon_old.mp3",
+      "asset": "assets/prayer/reminders/pn-old/asr.mp3",
+      "sha256": "9880e807c1bd45b7f619c6e9c13883b39069883661409863aa7bd0af72a59db2",
+      "bytes": 168357,
+      "ios_sound": "haq-reminder-pn-old-asr.caf",
+      "ios_sha256": "23f739eb6ca1ec91ce59f6a5ca18cf766b8ee9951df3d53860ac3d788a838e1d"
+    },
+    {
+      "original_resource": "res/raw/maghribsoon_old.mp3",
+      "asset": "assets/prayer/reminders/pn-old/maghrib.mp3",
+      "sha256": "bfa1d7d293ea06d5194aaca6343a5e897f74730beb22be4f4e6d1cc1d1c60a57",
+      "bytes": 162505,
+      "ios_sound": "haq-reminder-pn-old-maghrib.caf",
+      "ios_sha256": "48214fa4dae3b10f3edfb320b25c06754e37227ad26f88763dfc11926d2faabe"
+    },
+    {
+      "original_resource": "res/raw/eshaasoon_old.mp3",
+      "asset": "assets/prayer/reminders/pn-old/isha.mp3",
+      "sha256": "bee11998627be2844279fa32c6de4bc45f571373672a5e1cc932f92ba4dbab72",
+      "bytes": 148690,
+      "ios_sound": "haq-reminder-pn-old-isha.caf",
+      "ios_sha256": "8249c106c875288c175e111861aeebf4c7dd522a94927727aee67f8ce65a9f57"
+    },
+    {
+      "original_resource": "res/raw/gom3asoon_old.mp3",
+      "asset": "assets/prayer/reminders/pn-old/friday.mp3",
+      "sha256": "51d08f3df5cb836acf58669f3dc7fc7aaa14103b7d4a5c3b6453e71806996b79",
+      "bytes": 153728,
+      "ios_sound": "haq-reminder-pn-old-friday.caf",
+      "ios_sha256": "e2d505c5fda45a89ad7a8298dc276cd7f199e4535933f12f8657cc88b149dfad"
+    },
+    {
+      "original_resource": "res/raw/noti_intro_azan.mp3",
+      "asset": "assets/prayer/reminders/pn-general/intro.mp3",
+      "sha256": "fba65d2f2a933ef12141becf09b97be764d192de3e207fc4d5b9e5f4597029bb",
+      "bytes": 129608,
+      "ios_sound": "haq-reminder-pn-general-intro.caf",
+      "ios_sha256": "a8b7ee057268618ea4e75a3c5066d83385d60a822b195e02078b1c143961e9d1"
+    },
+    {
+      "original_resource": "res/raw/noti_yarab.mp3",
+      "asset": "assets/prayer/reminders/pn-general/yarab.mp3",
+      "sha256": "fa8b7b8ede04d25c9437379048ae18a4086c878f8493af60ad90b17fd5132da2",
+      "bytes": 73728,
+      "ios_sound": "haq-reminder-pn-general-yarab.caf",
+      "ios_sha256": "5f8489f6f15b85604134805da5089cf5eeff652355960ad94a171263f5a143d2"
+    },
+    {
+      "original_resource": "res/raw/noti_yarab_road.mp3",
+      "asset": "assets/prayer/reminders/pn-general/road.mp3",
+      "sha256": "11ba9742d34db0fe8b095ae337fccf37e3edf2d22380200f474b7241f6f1628f",
+      "bytes": 52536,
+      "ios_sound": "haq-reminder-pn-general-road.caf",
+      "ios_sha256": "a89c58eb293c9f0047ed0fa6754c0de96d3c7bcaff3626f5b4c8e4bf0879b4c2"
+    },
+    {
+      "original_resource": "res/raw/salaty.mp3",
+      "asset": "assets/prayer/reminders/pn-general/salaty.mp3",
+      "sha256": "55f6ea9287f81853173b968b02e30ce2fb4f3028f23cb0867722674426d5d4a2",
+      "bytes": 75300,
+      "ios_sound": "haq-reminder-pn-general-salaty.caf",
+      "ios_sha256": "5d860a4fcc2cdb533b5d3c76d41016e683a3f993988128b518e3816d665c2760"
+    },
+    {
+      "original_resource": "res/raw/noti_light.wav",
+      "asset": "assets/prayer/reminders/pn-general/light.wav",
+      "sha256": "dbf0a0cf73c1eef133b9905dad877bc01f3e607cf73ebbd0c69fac5819a0f634",
+      "bytes": 39502,
+      "ios_sound": "haq-reminder-pn-general-light.caf",
+      "ios_sha256": "7b3f12c9188f7cacf2acdb0387d23bc9bb87f5f4303d86930a65ddf292947af1"
+    },
+    {
+      "original_resource": "res/raw/noti_nocknock.wav",
+      "asset": "assets/prayer/reminders/pn-general/knock.wav",
+      "sha256": "b5fa05238fb2749fa22ed389c446410613f6bd59614010294deba5622532e170",
+      "bytes": 20984,
+      "ios_sound": "haq-reminder-pn-general-knock.caf",
+      "ios_sha256": "91722163b633ee33093ed016797a08f00d5c21ad21b965e3d2d3df44e72883ad"
+    },
+    {
+      "original_resource": "res/raw/alsalah_khair_mn_alnowm.mp3",
+      "asset": "assets/prayer/reminders/pn-general/wake.mp3",
+      "sha256": "abd3eedc8928ef11dd021d90ffe04b626f6ee41bee12715c89a47c84bd19d956",
+      "bytes": 585402,
+      "ios_sound": "haq-reminder-pn-general-wake.caf",
+      "ios_sha256": "f1fe8cb6a0ecb774a4e8b72cce6745cf2d24088cf0d542df325f50c07cbed726"
+    }
+  ]
+}

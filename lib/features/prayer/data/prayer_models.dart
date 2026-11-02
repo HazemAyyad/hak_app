@@ -16,6 +16,57 @@ enum PrayerReminderDialect {
   final String label, assetKey;
 }
 
+enum PrayerReminderSound {
+  defaultVoice(null),
+  prayerNow('pn-current'),
+  prayerNowOld('pn-old'),
+  intro('pn-intro'),
+  yarab('pn-yarab'),
+  yarabRoad('pn-road'),
+  salaty('pn-salaty'),
+  light('pn-light'),
+  knock('pn-knock'),
+  wake('pn-wake');
+
+  const PrayerReminderSound(this.variant);
+  final String? variant;
+}
+
+/// The same finite catalog is used by the native background audio players.
+String prayerReminderAsset(String variant, PrayerName prayer) {
+  if (prayer == PrayerName.sunrise) {
+    throw const FormatException('No sunrise recording');
+  }
+  final String relative;
+  if ([
+    'ar-ps',
+    'ar-eg',
+    'ar-gulf',
+    'en',
+    'pn-current',
+    'pn-old',
+  ].contains(variant)) {
+    relative = '$variant/${prayer.name}.mp3';
+  } else if (['pn-current-friday', 'pn-old-friday'].contains(variant) &&
+      prayer == PrayerName.dhuhr) {
+    relative = '${variant.replaceFirst('-friday', '')}/friday.mp3';
+  } else {
+    const general = {
+      'pn-intro': 'intro.mp3',
+      'pn-yarab': 'yarab.mp3',
+      'pn-road': 'road.mp3',
+      'pn-salaty': 'salaty.mp3',
+      'pn-light': 'light.wav',
+      'pn-knock': 'knock.wav',
+      'pn-wake': 'wake.mp3',
+    };
+    final file = general[variant];
+    if (file == null) throw const FormatException('Unknown reminder sound');
+    relative = 'pn-general/$file';
+  }
+  return 'assets/prayer/reminders/$relative';
+}
+
 /// Existing Palestinian-slot imports keep their ID; other languages cannot reuse them.
 String prayerReminderVoiceId(
   String scope,
@@ -152,6 +203,7 @@ class PrayerConfig {
     this.defaultAlert = const PrayerAlert(),
     this.reminderLanguage = 'auto',
     this.reminderDialect = PrayerReminderDialect.palestinian,
+    this.reminderSound = PrayerReminderSound.defaultVoice,
     Map<String, PrayerAlert> alerts = const {},
     List<String> enabledPrayers = const [
       'fajr',
@@ -196,6 +248,7 @@ class PrayerConfig {
   final PrayerAlert defaultAlert;
   final String reminderLanguage;
   final PrayerReminderDialect reminderDialect;
+  final PrayerReminderSound reminderSound;
   final List<String> enabledPrayers;
   final Map<String, PrayerAlert> alerts;
   PrayerAlert alert(PrayerName name) =>
@@ -217,6 +270,7 @@ class PrayerConfig {
     PrayerAlert? defaultAlert,
     String? reminderLanguage,
     PrayerReminderDialect? reminderDialect,
+    PrayerReminderSound? reminderSound,
     List<String>? enabledPrayers,
     Map<String, PrayerAlert>? alerts,
   }) => PrayerConfig(
@@ -234,6 +288,7 @@ class PrayerConfig {
     defaultAlert: defaultAlert ?? this.defaultAlert,
     reminderLanguage: reminderLanguage ?? this.reminderLanguage,
     reminderDialect: reminderDialect ?? this.reminderDialect,
+    reminderSound: reminderSound ?? this.reminderSound,
     enabledPrayers: enabledPrayers ?? this.enabledPrayers,
     alerts: alerts ?? this.alerts,
   );
@@ -252,6 +307,7 @@ class PrayerConfig {
     'defaultAlert': defaultAlert.toJson(),
     'reminderLanguage': reminderLanguage,
     'reminderDialect': reminderDialect.name,
+    'reminderSound': reminderSound.name,
     'prayers': enabledPrayers,
     'alerts': alerts.map((key, value) => MapEntry(key, value.toJson())),
   };
@@ -269,6 +325,9 @@ class PrayerConfig {
     reminderLanguage: data['reminderLanguage'] as String? ?? 'auto',
     reminderDialect: PrayerReminderDialect.values.byName(
       data['reminderDialect'] as String? ?? 'palestinian',
+    ),
+    reminderSound: PrayerReminderSound.values.byName(
+      data['reminderSound'] as String? ?? 'defaultVoice',
     ),
     adhanVolume: data['adhanVolume'] as int? ?? 100,
     iqamaMinutes: data['iqamaMinutes'] as int? ?? 15,

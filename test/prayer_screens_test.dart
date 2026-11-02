@@ -340,6 +340,40 @@ void main() {
     },
   );
 
+  testWidgets('PRAYER NOW picker preserves Haq choices and switches back', (
+    tester,
+  ) async {
+    await pump(tester, PrayerReminderRecordingsPage(controller: c));
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('reminder-sound-defaultVoice')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('reminder-sound-defaultVoice')));
+    await settle(tester);
+    await tester.tap(find.text('PRAYER NOW — الحالي').last);
+    await settle(tester);
+    expect(c.config.reminderSound, PrayerReminderSound.prayerNow);
+    expect(c.reminderVariant, 'pn-current');
+    expect(find.byKey(const ValueKey('reminder-language-auto')), findsNothing);
+    expect(tester.takeException(), isNull);
+    await capture(tester, 'prayer-now-reminder-voices');
+    await tester.ensureVisible(
+      find.byKey(const ValueKey('reminder-sound-prayerNow')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('reminder-sound-prayerNow')));
+    await settle(tester);
+    await tester.tap(find.text('أصوات حق الحالية').last);
+    await settle(tester);
+    expect(c.config.reminderSound, PrayerReminderSound.defaultVoice);
+    expect(
+      find.byKey(const ValueKey('reminder-language-auto')),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('Qibla top settings icon opens the shared adhan settings', (
     tester,
   ) async {

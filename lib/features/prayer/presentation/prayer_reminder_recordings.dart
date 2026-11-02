@@ -1,6 +1,6 @@
 part of 'prayer_page.dart';
 
-/// Bundled synthetic reminders, with optional human recordings supplied by the user.
+/// Offline reminder choices, with optional recordings supplied by the user.
 class PrayerReminderRecordingsPage extends StatefulWidget {
   const PrayerReminderRecordingsPage({
     super.key,
@@ -57,7 +57,9 @@ class _PrayerReminderRecordingsPageState
   }
 
   String _label(PrayerName p) =>
-      LocalizationScope.maybeOf(context)?.code == 'tr'
+      LocalizationScope.maybeOf(context)?.code == 'tr' ||
+          (variant.startsWith('pn-') &&
+              LocalizationScope.maybeOf(context)?.code == 'en')
       ? context.tr(
           'prayer.approaching',
           args: {'prayer': p.displayLabel(context)},
@@ -70,6 +72,10 @@ class _PrayerReminderRecordingsPageState
     final capturedOwner = owner,
         capturedVariant = variant,
         attempt = ++generation;
+    final previewVariant = widget.controller.reminderVariantFor(
+      prayer,
+      widget.controller.now,
+    );
     if (playing == prayer) {
       await audio.stop();
       if (mounted && attempt == generation) setState(() => playing = null);
@@ -82,12 +88,11 @@ class _PrayerReminderRecordingsPageState
     try {
       await audio.stop();
       await widget.beforeAudio?.call();
-      final bytes = await rootBundle.load(
-        'assets/prayer/reminders/$capturedVariant/${prayer.name}.mp3',
-      );
+      final asset = prayerReminderAsset(previewVariant, prayer);
+      final bytes = await rootBundle.load(asset);
       final root = await getApplicationSupportDirectory();
       final file = File(
-        '${root.path}/haq-reminder-preview-$capturedVariant-${prayer.name}.mp3',
+        '${root.path}/haq-reminder-preview-$previewVariant-${prayer.name}.${asset.split('.').last}',
       );
       await file.writeAsBytes(
         bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes),
@@ -95,7 +100,8 @@ class _PrayerReminderRecordingsPageState
       );
       if (!mounted ||
           attempt != generation ||
-          capturedOwner != widget.controller.scope) {
+          capturedOwner != widget.controller.scope ||
+          capturedVariant != widget.controller.reminderVariant) {
         return;
       }
       await audio.play(file.uri);
@@ -248,67 +254,85 @@ class _PrayerReminderRecordingsPageState
               children: [
                 _notice(
                   context,
-                  context.prayerLabel(
-                    'الصوت الافتراضي عربي مولّد اصطناعيًا، ومضمّن للعمل دون إنترنت. أضف تسجيلك البشري إذا رغبت؛ له الأولوية على الصوت المضمّن.',
-                  ),
+                  widget.controller.config.reminderSound ==
+                          PrayerReminderSound.defaultVoice
+                      ? context.prayerLabel(
+                          'الصوت الافتراضي عربي مولّد اصطناعيًا، ومضمّن للعمل دون إنترنت. أضف تسجيلك البشري إذا رغبت؛ له الأولوية على الصوت المضمّن.',
+                        )
+                      : context.tr('prayer.reminderSound.offlineNotice'),
                 ),
                 if (error != null) _notice(context, error!),
+                if (Platform.isIOS &&
+                    widget.controller.config.reminderSound ==
+                        PrayerReminderSound.wake)
+                  _notice(context, context.tr('prayer.reminderSound.iosShort')),
                 _panel(
                   context,
                   Column(
                     children: [
-                      DropdownButtonFormField<String>(
+                      DropdownButtonFormField<PrayerReminderSound>(
                         key: ValueKey(
-                          'reminder-language-${widget.controller.config.reminderLanguage}',
+                          'reminder-sound-${widget.controller.config.reminderSound.name}',
                         ),
-                        initialValue: widget.controller.config.reminderLanguage,
+                        initialValue: widget.controller.config.reminderSound,
+                        isExpanded: true,
                         decoration: InputDecoration(
-                          labelText: context.prayerLabel(
-                            'لغة التذكير / Reminder language',
-                          ),
+                          labelText: context.tr('prayer.reminderSound.title'),
                         ),
                         items: [
-                          DropdownMenuItem(
-                            value: 'auto',
-                            child: Text(
-                              context.prayerLabel('تلقائي حسب لغة التطبيق'),
+                          for (final sound in PrayerReminderSound.values)
+                            DropdownMenuItem(
+                              value: sound,
+                              child: Text(
+                                context.tr(
+                                  'prayer.reminderSound.${sound.name}',
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
-                          DropdownMenuItem(
-                            value: 'ar',
-                            child: Text(context.prayerLabel('العربية')),
-                          ),
-                          DropdownMenuItem(value: 'en', child: Text('English')),
                         ],
                         onChanged: saving || busy != null
                             ? null
-                            : (v) {
-                                if (v != null) {
+                            : (sound) {
+                                if (sound != null) {
                                   _savePreferences(
                                     widget.controller.config.copyWith(
-                                      reminderLanguage: v,
+                                      reminderSound: sound,
                                     ),
                                   );
                                 }
                               },
                       ),
-                      if (variant != 'en') ...[
+                      if (widget.controller.config.reminderSound ==
+                          PrayerReminderSound.defaultVoice) ...[
                         const SizedBox(height: 16),
-                        DropdownButtonFormField<PrayerReminderDialect>(
+                        DropdownButtonFormField<String>(
                           key: ValueKey(
-                            'reminder-dialect-${widget.controller.config.reminderDialect.name}',
+                            'reminder-language-${widget.controller.config.reminderLanguage}',
                           ),
                           initialValue:
-                              widget.controller.config.reminderDialect,
+                              widget.controller.config.reminderLanguage,
                           decoration: InputDecoration(
-                            labelText: context.prayerLabel('اللهجة العربية'),
+                            labelText: context.prayerLabel(
+                              'لغة التذكير / Reminder language',
+                            ),
                           ),
                           items: [
-                            for (final d in PrayerReminderDialect.values)
-                              DropdownMenuItem(
-                                value: d,
-                                child: Text(d.displayLabel(context)),
+                            DropdownMenuItem(
+                              value: 'auto',
+                              child: Text(
+                                context.prayerLabel('تلقائي حسب لغة التطبيق'),
                               ),
+                            ),
+                            DropdownMenuItem(
+                              value: 'ar',
+                              child: Text(context.prayerLabel('العربية')),
+                            ),
+                            DropdownMenuItem(
+                              value: 'en',
+                              child: Text('English'),
+                            ),
                           ],
                           onChanged: saving || busy != null
                               ? null
@@ -316,17 +340,48 @@ class _PrayerReminderRecordingsPageState
                                   if (v != null) {
                                     _savePreferences(
                                       widget.controller.config.copyWith(
-                                        reminderDialect: v,
+                                        reminderLanguage: v,
                                       ),
                                     );
                                   }
                                 },
                         ),
-                      ] else
-                        Padding(
-                          padding: EdgeInsets.only(top: 12),
-                          child: Text('English uses one voice.'),
-                        ),
+                        if (variant != 'en') ...[
+                          const SizedBox(height: 16),
+                          DropdownButtonFormField<PrayerReminderDialect>(
+                            key: ValueKey(
+                              'reminder-dialect-${widget.controller.config.reminderDialect.name}',
+                            ),
+                            initialValue:
+                                widget.controller.config.reminderDialect,
+                            decoration: InputDecoration(
+                              labelText: context.prayerLabel('اللهجة العربية'),
+                            ),
+                            items: [
+                              for (final d in PrayerReminderDialect.values)
+                                DropdownMenuItem(
+                                  value: d,
+                                  child: Text(d.displayLabel(context)),
+                                ),
+                            ],
+                            onChanged: saving || busy != null
+                                ? null
+                                : (v) {
+                                    if (v != null) {
+                                      _savePreferences(
+                                        widget.controller.config.copyWith(
+                                          reminderDialect: v,
+                                        ),
+                                      );
+                                    }
+                                  },
+                          ),
+                        ] else
+                          Padding(
+                            padding: EdgeInsets.only(top: 12),
+                            child: Text('English uses one voice.'),
+                          ),
+                      ],
                     ],
                   ),
                 ),
@@ -360,6 +415,8 @@ class _PrayerReminderRecordingsPageState
                                     : context.prayerLabel(
                                         'تسجيلك الخاص جاهز على هذا الجهاز',
                                       ))
+                              : variant.startsWith('pn-')
+                              ? context.tr('prayer.reminderSound.available')
                               : (variant == 'en'
                                     ? 'Synthetic voice • available offline'
                                     : context.prayerLabel(
@@ -372,7 +429,9 @@ class _PrayerReminderRecordingsPageState
                           runSpacing: 4,
                           children: [
                             TextButton.icon(
-                              onPressed: () => _preview(prayer),
+                              onPressed: saving || busy != null
+                                  ? null
+                                  : () => _preview(prayer),
                               icon: Icon(
                                 playing == prayer
                                     ? Icons.stop_circle_outlined

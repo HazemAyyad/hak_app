@@ -90,7 +90,7 @@ object HaqReminders {
     fun schedulePrayerTest(c:Context,kind:String,voice:String,variant:String):Long {
         require(c.applicationInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE != 0)
         require(kind in listOf("adhan","reminderVoice") && HaqAdhanRules.voiceId(voice))
-        require(variant in listOf("ar-ps","ar-eg","ar-gulf","en"))
+        require(HaqAdhanRules.reminderAsset(variant, "dhuhr") != null)
         check(allowed(c) && (Build.VERSION.SDK_INT < 31 || c.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()))
         val p=plan(c); val scope=p.optString("scope","guest"); val at=System.currentTimeMillis()+10000
         if (!p.has("revision")) p.put("revision",UUID.randomUUID().toString())
@@ -393,13 +393,30 @@ object HaqAdhanRules {
     fun occurrence(job: JSONObject, at: Long) = at > 0 && HaqReminders.next(job, at - 1) == at
     fun receipt(job: JSONObject, revision: String, at: Long) = "${job.getString("id")}:$revision:$at"
     fun voiceId(id: String) = id in listOf("alafasy", "nafees", "mustafa", "zahrani") || Regex("archive-[0-9a-f]{16}|nusuk-[1-9][0-9]*").matches(id)
-    fun reminderId(id: String) = Regex("reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en)-)?(fajr|dhuhr|asr|maghrib|isha)").matches(id)
+    fun reminderId(id: String) = Regex("reminder-[0-9a-f]{16}-((ar-eg|ar-gulf|en|pn-(current|old|intro|yarab|road|salaty|light|knock|wake))-)?(fajr|dhuhr|asr|maghrib|isha)").matches(id)
+    fun reminderAsset(variant: String, prayer: String): String? {
+        if (prayer !in listOf("fajr", "dhuhr", "asr", "maghrib", "isha")) return null
+        return when (variant) {
+            "ar-ps", "ar-eg", "ar-gulf", "en", "pn-current", "pn-old" -> "$variant/$prayer.mp3"
+            "pn-current-friday", "pn-old-friday" -> if (prayer == "dhuhr") "${variant.removeSuffix("-friday")}/friday.mp3" else null
+            "pn-intro" -> "pn-general/intro.mp3"
+            "pn-yarab" -> "pn-general/yarab.mp3"
+            "pn-road" -> "pn-general/road.mp3"
+            "pn-salaty" -> "pn-general/salaty.mp3"
+            "pn-light" -> "pn-general/light.wav"
+            "pn-knock" -> "pn-general/knock.wav"
+            "pn-wake" -> "pn-general/wake.mp3"
+            else -> null
+        }
+    }
     fun playbackId(id: String) = voiceId(id) || reminderId(id)
     fun targetVolume(maximum: Int, percent: Int) = kotlin.math.ceil(maximum * percent.coerceIn(0, 100) / 100.0).toInt()
     // Three reference takbeer files contain the full adhan. Keep short mode
     // bounded while allowing genuine takbeer recordings (up to ~32s) to finish.
-    fun playbackLimit(human: Boolean, full: Boolean, shortRecording: Boolean, duration: Int): Long =
-        if (human) 30000L else if (full) 360000L else if (shortRecording && duration in 1..45000) 45000L else 25000L
+    fun playbackLimit(human: Boolean, full: Boolean, shortRecording: Boolean, duration: Int, reminderVariant: String = ""): Long =
+        if (human) {
+            if (reminderVariant == "pn-wake" && duration in 1..45000) 45000L else 30000L
+        } else if (full) 360000L else if (shortRecording && duration in 1..45000) 45000L else 25000L
     fun timely(at: Long, now: Long) = now >= at && now - at <= 120000
     fun faceDown(x: Float, y: Float, z: Float) = z < -7f && kotlin.math.abs(x) < 6f && kotlin.math.abs(y) < 6f
 }
@@ -492,13 +509,16 @@ class HaqAdhanService : Service(), SensorEventListener {
         if (useShortRecording) audio = shortAudio
         if (!audio.isFile && job.optString("alertMode") == "reminderVoice" && HaqAdhanRules.reminderId(voice)) {
             val prayer = voice.substringAfterLast('-')
-            val variant=job.optString("reminderVariant","ar-ps").takeIf { it in listOf("ar-ps","ar-eg","ar-gulf","en") } ?: "ar-ps"
-            val bundled = File(filesDir, "adhan/bundled-v2-$variant-$prayer.mp3")
+            val variant = job.optString("reminderVariant", "ar-ps")
+            val relative = HaqAdhanRules.reminderAsset(variant, prayer)
             try {
+                requireNotNull(relative)
+                val extension = relative.substringAfterLast('.')
+                val bundled = File(filesDir, "adhan/bundled-v2-$variant-$prayer.$extension")
                 if (!bundled.isFile) {
                     bundled.parentFile!!.mkdirs()
                     val temp = File(bundled.parentFile, "bundled-v2-$variant-$prayer.part")
-                    assets.open("flutter_assets/assets/prayer/reminders/$variant/$prayer.mp3").use { input -> temp.outputStream().use { input.copyTo(it) } }
+                    assets.open("flutter_assets/assets/prayer/reminders/$relative").use { input -> temp.outputStream().use { input.copyTo(it) } }
                     check(temp.renameTo(bundled))
                 }
                 audio = bundled
@@ -636,7 +656,7 @@ class HaqAdhanService : Service(), SensorEventListener {
                         prepared = true
                         it.start()
                         if(testPlayback) android.util.Log.i("HaqReminderTest", "Audio playing mode=${job.optString("alertMode")} track=${queue.index}/${recordingFiles.size-1} file=${File(path).name} duration=${it.duration} volume=${job.optInt("volume",100)}")
-                        val limit = if (dhikrPlayback) it.duration.toLong() + 5000 else HaqAdhanRules.playbackLimit(humanReminder, job.optBoolean("fullAdhan"), useShortRecording, it.duration)
+                        val limit = if (dhikrPlayback) it.duration.toLong() + 5000 else HaqAdhanRules.playbackLimit(humanReminder, job.optBoolean("fullAdhan"), useShortRecording, it.duration, job.optString("reminderVariant"))
                         handler.postDelayed(trackTimeout, limit)
                     }
                     prepareAsync()

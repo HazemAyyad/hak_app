@@ -57,12 +57,26 @@ class PrayerController extends ChangeNotifier {
   String _appLanguage = 'ar';
   InterfaceMessages messages = InterfaceMessages.bundled('ar');
   String get reminderVariant =>
-      (config.reminderLanguage == 'auto'
-              ? _appLanguage
-              : config.reminderLanguage) ==
-          'en'
-      ? 'en'
-      : config.reminderDialect.assetKey;
+      config.reminderSound.variant ??
+      ((config.reminderLanguage == 'auto'
+                  ? _appLanguage
+                  : config.reminderLanguage) ==
+              'en'
+          ? 'en'
+          : config.reminderDialect.assetKey);
+
+  String reminderVariantFor(PrayerName prayer, DateTime time) {
+    final variant = reminderVariant;
+    final local = config.location == null
+        ? time
+        : tz.TZDateTime.from(time, config.location!.timeZone);
+    return prayer == PrayerName.dhuhr &&
+            local.weekday == DateTime.friday &&
+            ['pn-current', 'pn-old'].contains(variant)
+        ? '$variant-friday'
+        : variant;
+  }
+
   void setAppLanguage(String language) {
     setInterfaceMessages(
       InterfaceMessages.bundled(
@@ -492,7 +506,9 @@ class PrayerController extends ChangeNotifier {
                 minute: 0,
                 at: at.toUtc().millisecondsSinceEpoch,
                 volume: entry.key == 0 ? config.adhanVolume : null,
-                reminderVariant: entry.key < 0 ? reminderVariant : null,
+                reminderVariant: entry.key < 0
+                    ? reminderVariantFor(m.name, m.time)
+                    : null,
                 showAdhanScreen: entry.key == 0 ? config.showAdhanScreen : null,
                 iqamaMinutes: entry.key == 0 ? config.iqamaMinutes : null,
                 alertMode: entry.key == 0

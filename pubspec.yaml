@@ -108,6 +108,9 @@ flutter:
     - assets/prayer/reminders/ar-eg/
     - assets/prayer/reminders/ar-gulf/
     - assets/prayer/reminders/en/
+    - assets/prayer/reminders/pn-current/
+    - assets/prayer/reminders/pn-old/
+    - assets/prayer/reminders/pn-general/
     - assets/branding/haq_app_icon.png
     - assets/branding/haq_logo_transparent.png
     - assets/images/mosque_sunrise.png

@@ -1,4 +1,74 @@
 {
+  "prayer.reminderSound.title": {
+    "ar": "صوت التنبيه قبل الأذان",
+    "en": "Before-adhan sound",
+    "tr": "Ezan öncesi sesi"
+  },
+  "prayer.reminderSound.defaultVoice": {
+    "ar": "أصوات حق الحالية",
+    "en": "Haq voices",
+    "tr": "Haq sesleri"
+  },
+  "prayer.reminderSound.prayerNow": {
+    "ar": "PRAYER NOW — الحالي",
+    "en": "PRAYER NOW — current",
+    "tr": "PRAYER NOW — güncel"
+  },
+  "prayer.reminderSound.prayerNowOld": {
+    "ar": "PRAYER NOW — القديم",
+    "en": "PRAYER NOW — classic",
+    "tr": "PRAYER NOW — klasik"
+  },
+  "prayer.reminderSound.intro": {
+    "ar": "PRAYER NOW — مقدمة الأذان",
+    "en": "PRAYER NOW — adhan intro",
+    "tr": "PRAYER NOW — ezan girişi"
+  },
+  "prayer.reminderSound.yarab": {
+    "ar": "PRAYER NOW — يا رب",
+    "en": "PRAYER NOW — Ya Rabb",
+    "tr": "PRAYER NOW — Ya Rab"
+  },
+  "prayer.reminderSound.yarabRoad": {
+    "ar": "PRAYER NOW — يا رب (٢)",
+    "en": "PRAYER NOW — Ya Rabb (2)",
+    "tr": "PRAYER NOW — Ya Rab (2)"
+  },
+  "prayer.reminderSound.salaty": {
+    "ar": "PRAYER NOW — صلاتي",
+    "en": "PRAYER NOW — Salaty",
+    "tr": "PRAYER NOW — Salaty"
+  },
+  "prayer.reminderSound.light": {
+    "ar": "PRAYER NOW — نغمة خفيفة",
+    "en": "PRAYER NOW — soft tone",
+    "tr": "PRAYER NOW — hafif ton"
+  },
+  "prayer.reminderSound.knock": {
+    "ar": "PRAYER NOW — نغمة طرق",
+    "en": "PRAYER NOW — knocking tone",
+    "tr": "PRAYER NOW — kapı sesi"
+  },
+  "prayer.reminderSound.wake": {
+    "ar": "PRAYER NOW — الصلاة خير من النوم",
+    "en": "PRAYER NOW — prayer is better than sleep",
+    "tr": "PRAYER NOW — namaz uykudan hayırlıdır"
+  },
+  "prayer.reminderSound.offlineNotice": {
+    "ar": "هذه الأصوات عربية ومضمّنة للعمل دون إنترنت. في الخيارين الحالي والقديم يُستخدم صوت الجمعة بدل الظهر يوم الجمعة. تسجيلك الخاص، إن أضفته لهذا الخيار، له الأولوية.",
+    "en": "These Arabic sounds are available offline. Current and classic voices use the Friday clip instead of Dhuhr on Fridays. A custom recording added to this choice takes priority.",
+    "tr": "Bu Arapça sesler çevrimdışı kullanılabilir. Güncel ve klasik seçeneklerde cuma günü öğle yerine cuma kaydı kullanılır. Bu seçeneğe eklediğiniz kişisel kayıt önceliklidir."
+  },
+  "prayer.reminderSound.available": {
+    "ar": "صوت مضمّن • جاهز دون إنترنت",
+    "en": "Bundled sound • available offline",
+    "tr": "Dahili ses • çevrimdışı kullanılabilir"
+  },
+  "prayer.reminderSound.iosShort": {
+    "ar": "يستخدم إشعار iOS أول ٢٥ ثانية من هذا المقطع الطويل.",
+    "en": "The iOS notification uses the first 25 seconds of this longer clip.",
+    "tr": "iOS bildirimi bu uzun kaydın ilk 25 saniyesini kullanır."
+  },
   "source.title": {
     "ar": "مصادر ترجمة المعاني",
     "en": "Meaning translation sources",
