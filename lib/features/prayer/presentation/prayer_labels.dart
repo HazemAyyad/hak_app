@@ -12,7 +12,7 @@ extension PrayerAlertInterfaceLabel on PrayerAlertMode {
 
 extension AdhanVoiceInterfaceLabel on AdhanVoice {
   String displayLabel(BuildContext context) =>
-      LocalizationScope.maybeOf(context)?.code == 'en'
+      (LocalizationScope.maybeOf(context)?.code ?? 'ar') != 'ar'
       ? englishName ?? name
       : name;
 }
@@ -30,11 +30,13 @@ extension PrayerDialectInterfaceLabel on PrayerReminderDialect {
 }
 
 String prayerCountryLabel(BuildContext context, PlaceCountry country) =>
-    LocalizationScope.maybeOf(context)?.code == 'en'
+    (LocalizationScope.maybeOf(context)?.code ?? 'ar') != 'ar'
     ? country.english
     : country.name;
 String prayerCityLabel(BuildContext context, PlaceCity city) =>
-    LocalizationScope.maybeOf(context)?.code == 'en' ? city.english : city.name;
+    (LocalizationScope.maybeOf(context)?.code ?? 'ar') != 'ar'
+    ? city.english
+    : city.name;
 
 String prayerHijriInterfaceLabel(
   BuildContext context,

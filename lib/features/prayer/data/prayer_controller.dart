@@ -467,9 +467,12 @@ class PrayerController extends ChangeNotifier {
             if (config.beforeMinutes > 0)
               -config.beforeMinutes: m.name == PrayerName.sunrise
                   ? messages.text('reminder.sunrise')
-                  : reminderVariant == 'en'
-                  ? 'It is almost time for ${m.name.name[0].toUpperCase()}${m.name.name.substring(1)} prayer'
-                  : 'اقترب أذان ${m.name.label}',
+                  : messages.text(
+                      'prayer.approaching',
+                      args: {
+                        'prayer': messages.text('prayer.name.${m.name.name}'),
+                      },
+                    ),
             if (config.afterMinutes > 0)
               config.afterMinutes: messages.text(
                 'reminder.afterPrayer',

@@ -209,8 +209,13 @@ class AppLocalization extends ChangeNotifier {
         .map((v) => AppLanguage.fromJson(v as Map))
         .toList();
     final saved = preferences.getString('app.language.v1');
-    code = saved != null && ['ar', 'en'].contains(saved) ? saved : 'ar';
+    code = saved != null && bundledInterfaceLocales.contains(saved)
+        ? saved
+        : 'ar';
   }
+
+  /// Complete interfaces shipped with the app, available without a server package.
+  static const bundledInterfaceLocales = {'ar', 'en', 'tr'};
   static const maxBytes = 8 * 1024 * 1024;
   final SharedPreferences preferences;
   final Dio dio;
@@ -291,11 +296,11 @@ class AppLocalization extends ChangeNotifier {
   }
 
   bool local(String locale) =>
-      ['ar', 'en'].contains(locale) ||
+      bundledInterfaceLocales.contains(locale) ||
       ReligiousTranslationLibrary.supports(locale) ||
       installed.containsKey(locale);
   bool localInterface(String locale) =>
-      ['ar', 'en'].contains(locale) ||
+      bundledInterfaceLocales.contains(locale) ||
       interfacePackages[locale]?.uiComplete == true ||
       (installed[locale]?.uiComplete == true &&
           installed[locale]!.version >=
@@ -428,7 +433,7 @@ class AppLocalization extends ChangeNotifier {
     }
     final saved = preferences.getString('app.language.v1');
     if (saved != null &&
-        !['ar', 'en'].contains(saved) &&
+        !bundledInterfaceLocales.contains(saved) &&
         interfacePackages[saved]?.uiComplete != true &&
         installed[saved]?.uiComplete == true) {
       try {
@@ -439,7 +444,7 @@ class AppLocalization extends ChangeNotifier {
     }
     code =
         saved != null &&
-            (['ar', 'en'].contains(saved) ||
+            (bundledInterfaceLocales.contains(saved) ||
                 interfacePackages[saved]?.uiComplete == true) &&
             languages.any(
               (language) => language.code == saved && systemSupported(language),
@@ -473,7 +478,7 @@ class AppLocalization extends ChangeNotifier {
         !localInterface(locale)) {
       throw const FormatException('Language needs a verified package');
     }
-    if (!['ar', 'en'].contains(locale) &&
+    if (!bundledInterfaceLocales.contains(locale) &&
         interfacePackages[locale]?.uiComplete != true) {
       await _activateCachedInterface(locale);
     }
@@ -603,11 +608,13 @@ class AppLocalization extends ChangeNotifier {
         publicKeys,
         registry,
         locale,
-        allowIncompleteUi: contentOnly || ['ar', 'en'].contains(locale),
+        allowIncompleteUi:
+            contentOnly || bundledInterfaceLocales.contains(locale),
       );
       if (!contentOnly &&
           (!pack.includesUi ||
-              (!pack.uiComplete && !['ar', 'en'].contains(locale)))) {
+              (!pack.uiComplete &&
+                  !bundledInterfaceLocales.contains(locale)))) {
         throw const FormatException('Interface is not complete');
       }
       final previous = contentOnly
@@ -693,7 +700,7 @@ class AppLocalization extends ChangeNotifier {
   Future<void> remove(String locale) async {
     if (locale == code ||
         locale == contentCode ||
-        ['ar', 'en'].contains(locale) ||
+        bundledInterfaceLocales.contains(locale) ||
         busy) {
       return;
     }

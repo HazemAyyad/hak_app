@@ -297,6 +297,32 @@ void main() {
     },
   );
   test(
+    'Turkish advance notifications follow the interface independently of recording language',
+    () async {
+      await c.save(
+        PrayerConfig(
+          location: hebron(),
+          notifications: true,
+          beforeMinutes: 10,
+          reminderLanguage: 'ar',
+        ),
+      );
+      c.setAppLanguage('tr');
+      final advance = c.reminderJobs().where((job) => job.id.endsWith(':-10'));
+      expect(advance, isNotEmpty);
+      expect(
+        advance.every((job) => job.title.endsWith('vakti yaklaşıyor')),
+        true,
+      );
+      expect(
+        advance.any((job) => RegExp(r'[\u0600-\u06ff]').hasMatch(job.title)),
+        false,
+      );
+      expect(c.config.reminderLanguage, 'ar');
+      expect(c.reminderVariant, startsWith('ar'));
+    },
+  );
+  test(
     'Hijri conversion has independent known date and day correction bounds',
     () {
       expect(

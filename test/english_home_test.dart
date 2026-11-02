@@ -124,6 +124,32 @@ void main() {
     },
   );
 
+  testWidgets(
+    'Turkish home keeps the saved verse and uses Turkish navigation',
+    (tester) async {
+      final report = FlutterError.onError;
+      FlutterError.onError = (details) {
+        debugPrint(details.toDiagnosticsNode().toStringDeep());
+        report?.call(details);
+      };
+      addTearDown(() => FlutterError.onError = report);
+      await appearance.preferences.setString('app.language.v1', 'tr');
+      await pumpHome(tester);
+      expect(find.text('Hoş geldiniz'), findsOneWidget);
+      expect(find.byTooltip('Uygulama dili'), findsOneWidget);
+      expect(find.text('Ana sayfa'), findsWidgets);
+      expect(quran.lastVerse?.key, '2:255');
+      final scroll = find.byKey(const PageStorageKey('home-feed'));
+      for (var i = 0; i < 8; i++) {
+        expect(tester.takeException(), isNull);
+        await tester.drag(scroll, const Offset(0, -280));
+        await tester.pumpAndSettle();
+      }
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+    },
+  );
+
   testWidgets('English home cards fit narrow enlarged light and dark screens', (
     tester,
   ) async {

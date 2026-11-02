@@ -157,7 +157,7 @@ void main() {
         localization.availableContent.any((row) => row.code == 'tr'),
         true,
       );
-      expect(localization.localInterface('tr'), false);
+      expect(localization.localInterface('tr'), true);
       await localization.selectContent('tr');
       expect(localization.contentCode, 'tr');
       expect(localization.code, 'en');

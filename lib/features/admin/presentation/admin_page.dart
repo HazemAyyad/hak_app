@@ -544,9 +544,8 @@ class _AdminEditorPageState extends State<AdminEditorPage> {
           'value': TextEditingController(
             text:
                 widget.row['value'] as String? ??
-                (widget.locale == 'en'
-                    ? widget.row['suggestion'] as String?
-                    : ''),
+                widget.row['suggestion'] as String? ??
+                '',
           ),
         }
       : {

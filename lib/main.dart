@@ -1287,20 +1287,27 @@ class SectionHeader extends StatelessWidget {
     child: Row(
       children: [
         Expanded(
+          flex: 2,
           child: Text(
             title,
             style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800),
           ),
         ),
-        Text(
-          action,
-          style: TextStyle(
-            color: appAccent(context, AppColors.teal),
-            fontWeight: FontWeight.w700,
+        const SizedBox(width: 8),
+        Flexible(
+          child: Text(
+            action,
+            textAlign: TextAlign.end,
+            style: TextStyle(
+              color: appAccent(context, AppColors.teal),
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
         Icon(
-          Icons.chevron_left,
+          Directionality.of(context) == TextDirection.rtl
+              ? Icons.chevron_left
+              : Icons.chevron_right,
           color: appAccent(context, AppColors.teal),
           textDirection: TextDirection.ltr,
         ),

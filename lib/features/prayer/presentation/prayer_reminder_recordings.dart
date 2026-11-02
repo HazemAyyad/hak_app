@@ -56,7 +56,13 @@ class _PrayerReminderRecordingsPageState
     }
   }
 
-  String _label(PrayerName p) => variant == 'en'
+  String _label(PrayerName p) =>
+      LocalizationScope.maybeOf(context)?.code == 'tr'
+      ? context.tr(
+          'prayer.approaching',
+          args: {'prayer': p.displayLabel(context)},
+        )
+      : variant == 'en'
       ? 'It is almost time for ${p.name[0].toUpperCase()}${p.name.substring(1)} prayer'
       : 'قرب وقت صلاة ${p.label}';
 
@@ -334,9 +340,7 @@ class _PrayerReminderRecordingsPageState
                       children: [
                         Text(
                           _label(prayer),
-                          textDirection: variant == 'en'
-                              ? TextDirection.ltr
-                              : TextDirection.rtl,
+                          textDirection: contentTextDirection(_label(prayer)),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: AppPalette.of(context).heading,

@@ -9,7 +9,7 @@ import 'package:haq_app/core/localization/app_localization.dart';
 import 'quran_media_test.dart' show StubHttp;
 
 // All translations below are synthetic protocol fixtures, never published
-// religious translations or evidence of Turkish language readiness.
+// religious translations or evidence of French language readiness.
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late Directory directory;
@@ -22,7 +22,7 @@ void main() {
   Future<Map<String, dynamic>> envelope(
     int id,
     int version, {
-    String locale = 'tr',
+    String locale = 'fr',
     bool includesUi = true,
     bool legacy = false,
     Map<String, String>? strings,
@@ -87,7 +87,7 @@ void main() {
               'languages': [
                 if (contentId != null)
                   {
-                    'locale': 'tr',
+                    'locale': 'fr',
                     'release_id': uiId ?? contentId,
                     'interface_release_id': uiId,
                     'content_release_id': contentId,
@@ -143,44 +143,44 @@ void main() {
   }
 
   test(
-    'content-only Turkish discovery and offline reading keep the bundled English interface',
+    'content-only French discovery and offline reading keep the bundled English interface',
     () async {
       releases[1] = await envelope(1, 2, includesUi: false);
       contentId = 1;
       await controller.select('en');
       await controller.refresh();
       expect(
-        controller.available.any((language) => language.code == 'tr'),
+        controller.available.any((language) => language.code == 'fr'),
         false,
       );
       expect(
-        controller.availableContent.any((language) => language.code == 'tr'),
+        controller.availableContent.any((language) => language.code == 'fr'),
         true,
       );
-      expect(await controller.install('tr'), false);
-      expect(await controller.install('tr', contentOnly: true), true);
-      await controller.selectContent('tr');
+      expect(await controller.install('fr'), false);
+      expect(await controller.install('fr', contentOnly: true), true);
+      await controller.selectContent('fr');
       expect(controller.code, 'en');
       expect(controller.text('nav.home'), 'Home');
       expect(
         controller.content('sunnah-hands')!['text'],
         'Test content version 2',
       );
-      await expectLater(controller.select('tr'), throwsFormatException);
+      await expectLater(controller.select('fr'), throwsFormatException);
       final restored = await offline();
       expect(restored.code, 'en');
-      expect(restored.contentCode, 'tr');
+      expect(restored.contentCode, 'fr');
       expect(restored.text('nav.home'), 'Home');
       expect(
         restored.content('sunnah-hands')!['text'],
         'Test content version 2',
       );
-      await controller.remove('tr');
-      expect(controller.installed.containsKey('tr'), true);
+      await controller.remove('fr');
+      expect(controller.installed.containsKey('fr'), true);
       await controller.selectContent(null);
-      await controller.remove('tr');
-      expect(controller.installed.containsKey('tr'), false);
-      expect((await offline()).installed.containsKey('tr'), false);
+      await controller.remove('fr');
+      expect(controller.installed.containsKey('fr'), false);
+      expect((await offline()).installed.containsKey('fr'), false);
     },
   );
 
@@ -190,17 +190,17 @@ void main() {
       releases[1] = await envelope(1, 2);
       uiId = contentId = 1;
       await controller.refresh();
-      expect(await controller.install('tr'), true);
-      await controller.select('tr');
+      expect(await controller.install('fr'), true);
+      await controller.select('fr');
       releases[3] = await envelope(3, 4, includesUi: false);
       contentId = 3;
       await controller.refresh();
-      expect(await controller.install('tr', contentOnly: true), true);
+      expect(await controller.install('fr', contentOnly: true), true);
       expect(controller.text('nav.home'), 'Test interface v2');
-      expect(controller.installed['tr']!.version, 4);
-      expect(controller.interfacePackages['tr']!.version, 2);
+      expect(controller.installed['fr']!.version, 4);
+      expect(controller.interfacePackages['fr']!.version, 2);
       var restored = await offline();
-      expect(restored.code, 'tr');
+      expect(restored.code, 'fr');
       expect(restored.text('nav.home'), 'Test interface v2');
       expect(
         restored.content('sunnah-hands')!['text'],
@@ -209,20 +209,20 @@ void main() {
       releases[2] = await envelope(2, 3);
       uiId = 2;
       await controller.refresh();
-      expect(await controller.install('tr'), true);
+      expect(await controller.install('fr'), true);
       expect(controller.text('nav.home'), 'Test interface v3');
-      expect(controller.installed['tr']!.version, 4);
+      expect(controller.installed['fr']!.version, 4);
       expect(
         controller.content('sunnah-hands')!['text'],
         'Test content version 4',
       );
       uiId = contentId = 1;
       await controller.refresh();
-      expect(await controller.install('tr'), false);
-      expect(await controller.install('tr', contentOnly: true), false);
+      expect(await controller.install('fr'), false);
+      expect(await controller.install('fr', contentOnly: true), false);
       expect(controller.text('nav.home'), 'Test interface v3');
       restored = await offline();
-      expect(restored.code, 'tr');
+      expect(restored.code, 'fr');
       expect(restored.text('nav.home'), 'Test interface v3');
       expect(
         restored.content('sunnah-hands')!['text'],
@@ -237,12 +237,12 @@ void main() {
       releases[1] = await envelope(1, 2);
       uiId = contentId = 1;
       await controller.refresh();
-      expect(await controller.install('tr'), true);
-      await controller.select('tr');
+      expect(await controller.install('fr'), true);
+      await controller.select('fr');
       releases[4] = await envelope(4, 5);
       uiId = contentId = 4;
       await controller.refresh();
-      expect(await controller.install('tr', contentOnly: true), true);
+      expect(await controller.install('fr', contentOnly: true), true);
       expect(controller.text('nav.home'), 'Test interface v2');
       expect(
         controller.content('sunnah-hands')!['text'],
@@ -254,7 +254,7 @@ void main() {
         restored.content('sunnah-hands')!['text'],
         'Test content version 5',
       );
-      expect(await controller.install('tr'), true);
+      expect(await controller.install('fr'), true);
       expect(controller.text('nav.home'), 'Test interface v5');
     },
   );
@@ -270,14 +270,14 @@ void main() {
       );
       final bytes = jsonEncode(old);
       await File('${directory.path}/release-9.json').writeAsString(bytes);
-      await controller.preferences.setInt('app.language.release.tr', 9);
-      await controller.preferences.setString('app.language.v1', 'tr');
+      await controller.preferences.setInt('app.language.release.fr', 9);
+      await controller.preferences.setString('app.language.v1', 'fr');
       await controller.initialize();
       expect(controller.code, 'ar');
-      expect(controller.local('tr'), true);
-      expect(controller.localInterface('tr'), false);
+      expect(controller.local('fr'), true);
+      expect(controller.localInterface('fr'), false);
       expect(controller.contentLanguage.code, 'ar');
-      await controller.selectContent('tr');
+      await controller.selectContent('fr');
       expect(
         controller.content('sunnah-hands')!['text'],
         'Test content version 2',
@@ -287,13 +287,13 @@ void main() {
         bytes,
       );
       final restored = await offline();
-      expect(restored.contentCode, 'tr');
+      expect(restored.contentCode, 'fr');
       expect(
         restored.content('sunnah-hands')!['text'],
         'Test content version 2',
       );
       await expectLater(
-        LanguagePackage.verify(old, keys, controller.registry, 'tr'),
+        LanguagePackage.verify(old, keys, controller.registry, 'fr'),
         throwsFormatException,
       );
     },
@@ -305,14 +305,14 @@ void main() {
       releases[1] = await envelope(1, 2, includesUi: false);
       contentId = 1;
       await controller.refresh();
-      expect(await controller.install('tr', contentOnly: true), true);
+      expect(await controller.install('fr', contentOnly: true), true);
       final bad = await envelope(2, 3, includesUi: false);
       bad['signature'] = base64Encode(List<int>.filled(64, 0));
       releases[2] = bad;
       contentId = 2;
       await controller.refresh();
-      expect(await controller.install('tr', contentOnly: true), false);
-      expect(controller.installed['tr']!.version, 2);
+      expect(await controller.install('fr', contentOnly: true), false);
+      expect(controller.installed['fr']!.version, 2);
       for (final invalid in [
         await envelope(
           3,
@@ -328,14 +328,14 @@ void main() {
             invalid,
             keys,
             controller.registry,
-            'tr',
+            'fr',
             allowIncompleteUi: true,
           ),
           throwsFormatException,
         );
       }
       final restored = await offline();
-      expect(restored.installed['tr']!.version, 2);
+      expect(restored.installed['fr']!.version, 2);
     },
   );
 
@@ -345,17 +345,17 @@ void main() {
       releases[1] = await envelope(1, 2);
       uiId = contentId = 1;
       await controller.refresh();
-      expect(await controller.install('tr'), true);
-      await controller.select('tr');
+      expect(await controller.install('fr'), true);
+      await controller.select('fr');
       releases[2] = await envelope(2, 3, includesUi: false);
       contentId = 2;
       await controller.refresh();
-      expect(await controller.install('tr', contentOnly: true), true);
+      expect(await controller.install('fr', contentOnly: true), true);
       await File(
         '${directory.path}/release-2.json',
       ).writeAsString('broken cache');
       final restored = await offline();
-      expect(restored.code, 'tr');
+      expect(restored.code, 'fr');
       expect(restored.text('nav.home'), 'Test interface v2');
       expect(
         restored.content('sunnah-hands')!['text'],

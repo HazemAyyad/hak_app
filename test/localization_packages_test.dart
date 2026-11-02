@@ -154,6 +154,7 @@ void main() {
       expect(controller.available.map((language) => language.code), [
         'ar',
         'en',
+        'tr',
       ]);
     },
   );
