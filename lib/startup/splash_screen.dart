@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import '../core/localization/ui_text.dart';
-import 'package:rive/rive.dart' as rive;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({required this.onFinished, super.key});
@@ -13,10 +12,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  rive.File? _file;
-  rive.RiveWidgetController? _controller;
-  bool _loading = false;
-  bool _failed = false;
   Timer? _timer;
   bool _started = false;
   bool _finished = false;
@@ -26,37 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.didChangeDependencies();
     if (MediaQuery.disableAnimationsOf(context)) {
       _begin(const Duration(milliseconds: 400));
-    } else if (!_loading && _controller == null) {
-      _loading = true;
-      // Keep startup usable if loading or the native renderer fails.
-      _timer = Timer(const Duration(seconds: 6), _finish);
-      _loadAnimation();
-    }
-  }
-
-  Future<void> _loadAnimation() async {
-    rive.File? file;
-    try {
-      await rive.RiveNative.init();
-      file = await rive.File.asset(
-        'assets/animations/haq_splash.riv',
-        riveFactory: rive.Factory.flutter,
-      );
-      if (!mounted || _finished) {
-        file?.dispose();
-        return;
-      }
-      if (file == null) {
-        throw StateError('Unable to load the splash animation.');
-      }
-      final controller = rive.RiveWidgetController(file);
-      _file = file;
-      setState(() => _controller = controller);
-      _begin();
-    } catch (_) {
-      file?.dispose();
-      if (!mounted || _finished) return;
-      setState(() => _failed = true);
+    } else {
       _begin();
     }
   }
@@ -78,15 +43,11 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void dispose() {
     _timer?.cancel();
-    _controller?.dispose();
-    _file?.dispose();
     super.dispose();
   }
 
-  Widget _logo() => Image.asset(
-    'assets/branding/haq_logo_transparent.png',
-    fit: BoxFit.contain,
-  );
+  Widget _logo() =>
+      Image.asset('assets/branding/haq_splash_logo.png', fit: BoxFit.contain);
 
   @override
   Widget build(BuildContext context) => Directionality(
@@ -105,13 +66,20 @@ class _SplashScreenState extends State<SplashScreen> {
                   dimension: MediaQuery.sizeOf(
                     context,
                   ).width.clamp(220, 320).toDouble(),
-                  child: _failed || MediaQuery.disableAnimationsOf(context)
+                  child: MediaQuery.disableAnimationsOf(context)
                       ? _logo()
-                      : _controller == null
-                      ? const SizedBox()
-                      : rive.RiveWidget(
-                          controller: _controller!,
-                          fit: rive.Fit.contain,
+                      : TweenAnimationBuilder<double>(
+                          tween: Tween(begin: 0, end: 1),
+                          duration: const Duration(milliseconds: 700),
+                          curve: Curves.easeOutCubic,
+                          child: _logo(),
+                          builder: (context, value, child) => Opacity(
+                            opacity: value,
+                            child: Transform.scale(
+                              scale: .92 + .08 * value,
+                              child: child,
+                            ),
+                          ),
                         ),
                 ),
               ),

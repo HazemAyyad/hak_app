@@ -16,7 +16,6 @@ import 'package:haq_app/startup/onboarding_screen.dart';
 import 'package:haq_app/startup/splash_screen.dart';
 import 'package:haq_app/startup/startup_flow.dart';
 import 'package:haq_app/core/localization/language_page.dart';
-import 'package:rive/rive.dart' as rive;
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -30,7 +29,6 @@ void main() {
       jsonDecode(io.File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
     );
-    await rive.RiveNative.init();
     await (FontLoader(
       'QuranUI',
     )..addFont(rootBundle.load('assets/fonts/Cairo.ttf'))).load();
@@ -59,22 +57,39 @@ void main() {
     quran.dispose();
   });
 
-  test(
-    'bundled Rive logo imports and has a playable Splash state machine',
-    () async {
-      final file = await rive.File.asset(
-        'assets/animations/haq_splash.riv',
-        riveFactory: rive.Factory.flutter,
+  testWidgets(
+    'splash shows the transparent logo in full color and finishes once',
+    (tester) async {
+      var completions = 0;
+      await tester.pumpWidget(
+        MaterialApp(home: SplashScreen(onFinished: () => completions++)),
       );
-      expect(file, isNotNull);
-      final artboard = file!.defaultArtboard()!;
-      final machine = artboard.stateMachine('Splash');
-      expect(machine, isNotNull);
-      expect(machine!.advanceAndApply(.4), isTrue);
-      machine.advanceAndApply(2.4);
-      machine.dispose();
-      artboard.dispose();
-      file.dispose();
+      await _loadSplash(tester);
+      final image = tester.widget<Image>(find.byType(Image));
+      expect(
+        (image.image as AssetImage).assetName,
+        'assets/branding/haq_splash_logo.png',
+      );
+      expect(image.color, isNull);
+      final bundled = await rootBundle.load(
+        'assets/branding/haq_splash_logo.png',
+      );
+      expect(
+        bundled.buffer.asUint8List(
+          bundled.offsetInBytes,
+          bundled.lengthInBytes,
+        ),
+        io.File('assets/branding/haq_splash_logo.png').readAsBytesSync(),
+        reason:
+            'The rendered bundle must contain the current approved artwork.',
+      );
+      await tester.pump(const Duration(milliseconds: 800));
+      expect(completions, 0);
+      await tester.pump(const Duration(milliseconds: 1900));
+      expect(completions, 1);
+      await tester.pump(const Duration(seconds: 3));
+      expect(completions, 1);
+      await tester.pumpWidget(const SizedBox());
     },
   );
 
@@ -157,7 +172,7 @@ void main() {
         HaqApp(appearance: appearance, quranController: quran),
       );
       expect(find.byType(SplashScreen), findsOneWidget);
-      expect(find.byType(rive.RiveWidget), findsNothing);
+      expect(find.byType(TweenAnimationBuilder<double>), findsNothing);
       await tester.pump(const Duration(milliseconds: 450));
       await tester.pumpAndSettle();
       await tester.tap(find.text('العربية'));
@@ -275,27 +290,22 @@ void main() {
 }
 
 Future<void> _loadSplash(WidgetTester tester) async {
-  for (
-    var attempt = 0;
-    attempt < 40 && find.byType(rive.RiveWidget).evaluate().isEmpty;
-    attempt++
-  ) {
-    await tester.runAsync(
-      () => Future<void>.delayed(const Duration(milliseconds: 50)),
-    );
-    await tester.pump();
-  }
-  expect(
-    find.byType(rive.RiveWidget),
-    findsOneWidget,
-    reason: 'The real Rive file must load, not just the fallback logo.',
+  final image = find.descendant(
+    of: find.byType(SplashScreen),
+    matching: find.byType(Image),
   );
+  expect(image, findsOneWidget);
+  await tester.runAsync(
+    () =>
+        precacheImage(tester.widget<Image>(image).image, tester.element(image)),
+  );
+  await tester.pump();
 }
 
 Future<void> _capture(WidgetTester tester, GlobalKey key, String name) async {
   await tester.runAsync(() async {
     for (final asset in [
-      'assets/branding/haq_logo_transparent.png',
+      'assets/branding/haq_splash_logo.png',
       'assets/quran/quran_cover.png',
     ]) {
       await precacheImage(AssetImage(asset), key.currentContext!);

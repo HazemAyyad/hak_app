@@ -113,22 +113,9 @@ class _HeroHeader extends StatelessWidget {
                   100,
                   MediaQuery.sizeOf(context).width - 244,
                 ),
-                child: Stack(
-                  children: [
-                    Image.asset(
-                      'assets/branding/haq_logo_transparent.png',
-                      fit: BoxFit.contain,
-                      color: dark ? const Color(0xFFE9F0F2) : null,
-                    ),
-                    if (dark)
-                      ClipPath(
-                        clipper: const _LogoAccentsClipper(),
-                        child: Image.asset(
-                          'assets/branding/haq_logo_transparent.png',
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                  ],
+                child: Image.asset(
+                  'assets/branding/haq_logo_transparent.png',
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
@@ -174,53 +161,6 @@ class _HeroHeader extends StatelessWidget {
       ),
     );
   }
-}
-
-// Preserve the original gold star and teal leaf while whitening the navy mark.
-class _LogoAccentsClipper extends CustomClipper<Path> {
-  const _LogoAccentsClipper();
-  @override
-  Path getClip(Size size) {
-    final path = Path()
-      ..addRect(
-        Rect.fromLTRB(
-          size.width * .42,
-          size.height * .30,
-          size.width * .59,
-          size.height * .47,
-        ),
-      );
-    path.moveTo(size.width * .287, size.height * .827);
-    path.cubicTo(
-      size.width * .43,
-      size.height * .81,
-      size.width * .55,
-      size.height * .72,
-      size.width * .617,
-      size.height * .695,
-    );
-    path.cubicTo(
-      size.width * .68,
-      size.height * .695,
-      size.width * .76,
-      size.height * .705,
-      size.width * .805,
-      size.height * .718,
-    );
-    path.cubicTo(
-      size.width * .69,
-      size.height * .88,
-      size.width * .49,
-      size.height * .94,
-      size.width * .287,
-      size.height * .827,
-    );
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(_LogoAccentsClipper oldClipper) => false;
 }
 
 class _RoundButton extends StatelessWidget {

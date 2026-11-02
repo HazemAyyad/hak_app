@@ -113,6 +113,8 @@ flutter:
     - assets/prayer/reminders/pn-general/
     - assets/branding/haq_app_icon.png
     - assets/branding/haq_logo_transparent.png
+    - assets/branding/haq_splash_logo.png
+    - assets/branding/haq_logo_light.png
     - assets/images/mosque_sunrise.png
     - assets/images/home_header.png
     - assets/quran/
@@ -156,6 +158,7 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: assets/branding/haq_app_icon.png
+  image_path_ios: assets/branding/haq_app_icon_ios.png
   adaptive_icon_background: "#102A43"
   adaptive_icon_foreground: assets/branding/haq_app_icon.png
   remove_alpha_ios: true

@@ -774,10 +774,9 @@ class HaqAdhanActivity : Activity() {
         content.addView(text(intent.getStringExtra("title") ?: HaqReminders.ui(this@HaqAdhanActivity, "native.prayerTime", "حان وقت الصلاة"),24f,gold).apply { maxLines=2;autosize(this,15,24) },
             LinearLayout.LayoutParams(-1,dp(if(compact)44 else 56)))
         val logo=ImageView(this).apply {
-            scaleType=ImageView.ScaleType.FIT_CENTER;contentDescription=HaqReminders.ui(this@HaqAdhanActivity, "native.logo", "شعار حق");setPadding(dp(9),dp(9),dp(9),dp(9))
-            background=GradientDrawable().apply { shape=GradientDrawable.OVAL;setColor(Color.rgb(247,244,237));setStroke(dp(1),gold) }
+            scaleType=ImageView.ScaleType.FIT_CENTER;contentDescription=HaqReminders.ui(this@HaqAdhanActivity, "native.logo", "شعار حق")
         }
-        try { assets.open("flutter_assets/assets/branding/haq_logo_transparent.png").use { logo.setImageDrawable(android.graphics.drawable.Drawable.createFromStream(it,null)) } } catch(_:Exception) { }
+        try { assets.open("flutter_assets/assets/branding/haq_logo_light.png").use { logo.setImageDrawable(android.graphics.drawable.Drawable.createFromStream(it,null)) } } catch(_:Exception) { }
         val logoSize=dp(if(compact)48 else 68)
         content.addView(logo,LinearLayout.LayoutParams(logoSize,logoSize))
         val middle=LinearLayout(this).apply { orientation=LinearLayout.VERTICAL;gravity=Gravity.CENTER }

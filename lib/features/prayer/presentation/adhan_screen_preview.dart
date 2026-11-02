@@ -150,17 +150,12 @@ class _AdhanScreenPreviewState extends State<AdhanScreenPreview>
                           ),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: compact ? 48 : 68,
                         height: compact ? 48 : 68,
-                        padding: const EdgeInsets.all(9),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF7F4ED),
-                          shape: BoxShape.circle,
-                          border: Border.all(color: const Color(0xFFC7A45A)),
-                        ),
                         child: Image.asset(
-                          'assets/branding/haq_logo_transparent.png',
+                          'assets/branding/haq_logo_light.png',
+                          fit: BoxFit.contain,
                         ),
                       ),
                       Expanded(

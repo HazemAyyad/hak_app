@@ -1216,9 +1216,6 @@ class _FeatureCard extends StatelessWidget {
         showLogo
             ? Image.asset(
                 'assets/branding/haq_logo_transparent.png',
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? AppPalette.of(context).heading
-                    : null,
                 width: 100,
                 height: 100,
               )
