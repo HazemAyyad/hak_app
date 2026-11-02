@@ -5,7 +5,31 @@ extracted from the supplied `شعار التطبيق.png` with the built-in Imag
 The white strokes were changed to navy for the existing ivory splash background.
 The launcher icon keeps its blue tile. Android and iOS launch images use the same
 transparent splash artwork; iOS launch images are resized to 160/320/480 pixels.
-The splash currently uses Flutter opacity/scale animation, not the old Rive file.
+The splash plays `assets/animations/haq_splash.riv` with the Rive runtime. Its
+source is `tool/haq_splash_rive/scene.rml`: the transparent mark gently fades in,
+rises 12 points and settles without bouncing. A warm radial glow and seven
+translucent dawn rays appear behind its crown, then fade. A single narrow,
+screen-blended copy of the logo sweeps across the original through an animated
+clipping window; the light stays on the mark instead of drawing a rectangle.
+
+Flutter fades/slides in the localized tagline in two phrases, synchronized with
+the Rive entrance: the first begins at 720ms, the second at 1152ms, and both are
+fully readable by 1560ms. The existing translated sentence is split at its first
+comma, without changing translations. The entrance finishes at 2500ms. Reduced
+motion and loading failure show the static logo and whole tagline immediately.
+Startup remains bounded if the renderer cannot load.
+
+Android 12+ uses `drawable-nodpi/haq_launch_logo_android12.png`: a 1152px
+transparent canvas with the 640px source centered inside it, so the whole mark
+stays inside the system's circular mask. Padding is baked into the PNG because
+an XML layer-list still clipped the bitmap on the connected device.
+See the [Android splash dimensions](https://developer.android.com/develop/ui/views/launch/splash-screen#dimensions).
+The earlier direct bitmap was visibly clipped on the connected Android 13 phone.
+The padded PNG and the moving Rive entrance were then verified on the same
+Xiaomi 2201117SI device with a recorded cold start through to the home screen.
+The debug APK was installed as an update, preserving app data.
+The later dawn/rays/light-sweep revision was verified in Flutter captures and
+startup tests; the phone was disconnected during that revision's validation.
 
 The adhan preview and native Android adhan/reminder activity use
 `assets/branding/haq_logo_light.png` directly on the dark photo, without a tile

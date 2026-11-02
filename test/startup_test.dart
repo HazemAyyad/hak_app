@@ -17,6 +17,7 @@ import 'package:haq_app/startup/splash_screen.dart';
 import 'package:haq_app/startup/startup_flow.dart';
 import 'package:haq_app/core/localization/language_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rive/rive.dart' as rive;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,7 @@ void main() {
   late QuranRepository repository;
 
   setUpAll(() async {
+    await rive.RiveNative.init();
     repository = QuranRepository.fromJson(
       jsonDecode(io.File('assets/quran/quran.json').readAsStringSync())
           as Map<String, dynamic>,
@@ -57,41 +59,101 @@ void main() {
     quran.dispose();
   });
 
-  testWidgets(
-    'splash shows the transparent logo in full color and finishes once',
-    (tester) async {
-      var completions = 0;
-      await tester.pumpWidget(
-        MaterialApp(home: SplashScreen(onFinished: () => completions++)),
-      );
-      await _loadSplash(tester);
-      final image = tester.widget<Image>(find.byType(Image));
+  test(
+    'Android 12 splash artwork fits inside the circular safe area',
+    () async {
+      final bytes = io.File(
+        'android/app/src/main/res/drawable-nodpi/haq_launch_logo_android12.png',
+      ).readAsBytesSync();
+      final codec = await ui.instantiateImageCodec(bytes);
+      final frame = await codec.getNextFrame();
+      final image = frame.image;
+      final pixels = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+      expect(image.width, image.height);
+      final center = image.width / 2;
+      // Android exposes a circle whose diameter is two thirds of the canvas.
+      final radiusSquared = (image.width / 3) * (image.width / 3);
+      var visible = 0;
+      for (var y = 0; y < image.height; y++) {
+        for (var x = 0; x < image.width; x++) {
+          if (pixels!.getUint8((y * image.width + x) * 4 + 3) <= 16) continue;
+          visible++;
+          final dx = x - center;
+          final dy = y - center;
+          if (dx * dx + dy * dy > radiusSquared) {
+            fail('Visible splash pixel ($x, $y) would be clipped by Android.');
+          }
+        }
+      }
       expect(
-        (image.image as AssetImage).assetName,
-        'assets/branding/haq_splash_logo.png',
+        visible,
+        greaterThan(10000),
+        reason: 'The logo must not be blank.',
       );
-      expect(image.color, isNull);
-      final bundled = await rootBundle.load(
-        'assets/branding/haq_splash_logo.png',
-      );
-      expect(
-        bundled.buffer.asUint8List(
-          bundled.offsetInBytes,
-          bundled.lengthInBytes,
-        ),
-        io.File('assets/branding/haq_splash_logo.png').readAsBytesSync(),
-        reason:
-            'The rendered bundle must contain the current approved artwork.',
-      );
-      await tester.pump(const Duration(milliseconds: 800));
-      expect(completions, 0);
-      await tester.pump(const Duration(milliseconds: 1900));
-      expect(completions, 1);
-      await tester.pump(const Duration(seconds: 3));
-      expect(completions, 1);
-      await tester.pumpWidget(const SizedBox());
+      image.dispose();
+      codec.dispose();
     },
   );
+
+  testWidgets('splash plays the current Rive logo and finishes once', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    var completions = 0;
+    final key = GlobalKey();
+    await tester.pumpWidget(
+      RepaintBoundary(
+        key: key,
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(fontFamily: 'QuranUI'),
+          home: SplashScreen(onFinished: () => completions++),
+        ),
+      ),
+    );
+    await _loadSplash(tester);
+    expect(find.byType(rive.RiveWidget), findsOneWidget);
+    final bundled = await rootBundle.load('assets/animations/haq_splash.riv');
+    expect(
+      bundled.buffer.asUint8List(bundled.offsetInBytes, bundled.lengthInBytes),
+      io.File('assets/animations/haq_splash.riv').readAsBytesSync(),
+      reason: 'The rendered bundle must contain the current approved artwork.',
+    );
+    await tester.pump(const Duration(milliseconds: 200));
+    await _capture(tester, key, 'rive-entrance');
+    double phraseOpacity(int index) => tester
+        .widget<FadeTransition>(find.byKey(ValueKey('splash-tagline-$index')))
+        .opacity
+        .value;
+    expect(phraseOpacity(0), 0);
+    expect(phraseOpacity(1), 0);
+    await tester.pump(const Duration(milliseconds: 600));
+    await _capture(tester, key, 'rive-settled');
+    expect(phraseOpacity(0), greaterThan(0));
+    expect(phraseOpacity(1), 0);
+    expect(
+      io.File('build/startup-preview/rive-entrance.png').readAsBytesSync(),
+      isNot(
+        orderedEquals(
+          io.File('build/startup-preview/rive-settled.png').readAsBytesSync(),
+        ),
+      ),
+      reason: 'Rive must visibly animate instead of showing a static logo.',
+    );
+    await tester.pump(const Duration(milliseconds: 800));
+    expect(phraseOpacity(0), 1);
+    expect(phraseOpacity(1), 1);
+    await _capture(tester, key, 'rive-tagline-complete');
+    expect(completions, 0);
+    await tester.pump(const Duration(milliseconds: 1100));
+    expect(completions, 1);
+    await tester.pump(const Duration(seconds: 3));
+    expect(completions, 1);
+    await tester.pumpWidget(const SizedBox());
+  });
 
   testWidgets(
     'first launch selects a language before onboarding; completion survives restart',
@@ -172,7 +234,10 @@ void main() {
         HaqApp(appearance: appearance, quranController: quran),
       );
       expect(find.byType(SplashScreen), findsOneWidget);
-      expect(find.byType(TweenAnimationBuilder<double>), findsNothing);
+      expect(find.byType(rive.RiveWidget), findsNothing);
+      expect(find.text('نورٌ لقلبك،'), findsOneWidget);
+      expect(find.text('ورفيقٌ ليومك'), findsOneWidget);
+      expect(find.byKey(const ValueKey('splash-tagline-0')), findsNothing);
       await tester.pump(const Duration(milliseconds: 450));
       await tester.pumpAndSettle();
       await tester.tap(find.text('العربية'));
@@ -290,16 +355,21 @@ void main() {
 }
 
 Future<void> _loadSplash(WidgetTester tester) async {
-  final image = find.descendant(
-    of: find.byType(SplashScreen),
-    matching: find.byType(Image),
+  for (
+    var attempt = 0;
+    attempt < 60 && find.byType(rive.RiveWidget).evaluate().isEmpty;
+    attempt++
+  ) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 50)),
+    );
+    await tester.pump();
+  }
+  expect(
+    find.byType(rive.RiveWidget),
+    findsOneWidget,
+    reason: 'The real Rive animation must load instead of the static fallback.',
   );
-  expect(image, findsOneWidget);
-  await tester.runAsync(
-    () =>
-        precacheImage(tester.widget<Image>(image).image, tester.element(image)),
-  );
-  await tester.pump();
 }
 
 Future<void> _capture(WidgetTester tester, GlobalKey key, String name) async {

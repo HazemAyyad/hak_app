@@ -1,64 +1,88 @@
 <Rive version="1" kind="fragment">
-    <ImageAsset file="../../assets/branding/haq_logo_transparent.png" name="Haq original logo" id="0:60"/>
+    <ImageAsset file="../../assets/branding/haq_splash_logo.png" name="Haq transparent logo" id="0:60"/>
     <Artboard defaultStateMachineId="0:7" styleId="0:5" width="360" height="360" name="Haq Splash" id="0:2">
         <LayoutComponentStyle name="Artboard Style" id="0:5"/>
         <Fill name="Warm cream background"><SolidColor colorValue="FFFFFCF7"/></Fill>
-        <Node x="180" y="180" opacity="0" name="Golden halo" id="0:20">
-            <Shape name="Halo">
-                <Ellipse width="250" height="250"/>
-                <Stroke thickness="2" name="Gold outline"><SolidColor colorValue="FFCAA15D"/></Stroke>
+        <Node x="180" y="78" opacity="0" scaleX="0.7" scaleY="0.7" name="Warm dawn glow" id="0:20">
+            <Shape name="Soft sunlight behind the arch">
+                <Ellipse width="200" height="200"/>
+                <Fill><RadialGradient startX="0" startY="0" endX="100" endY="0">
+                    <GradientStop colorValue="88F3CE8C" position="0"/>
+                    <GradientStop colorValue="36F4D69B" position="0.45"/>
+                    <GradientStop colorValue="00F4D69B" position="1"/>
+                </RadialGradient></Fill>
             </Shape>
         </Node>
-        <Node x="180" y="200" opacity="0" scaleX="0.72" scaleY="0.72" name="Haq logo entrance" id="0:30">
-            <Image assetId="0:60" scaleX="0.225" scaleY="0.225" name="Original Haq logo"/>
+        <Node x="180" y="78" opacity="0" scaleX="0.7" scaleY="0.7" name="Seven quiet dawn rays" id="0:21">
+            <Shape rotation="-1.2" name="Dawn ray 1">
+                <PointsPath isClosed="true"><StraightVertex x="0" y="-12"/><StraightVertex x="-2.6" y="-72"/><StraightVertex x="2.6" y="-72"/></PointsPath>
+                <Fill><LinearGradient startX="0" startY="-12" endX="0" endY="-72"><GradientStop colorValue="18CAA15D" position="0"/><GradientStop colorValue="66CAA15D" position="0.55"/><GradientStop colorValue="00CAA15D" position="1"/></LinearGradient></Fill>
+            </Shape>
+            <Shape rotation="-0.8" name="Dawn ray 2">
+                <PointsPath isClosed="true"><StraightVertex x="0" y="-12"/><StraightVertex x="-2.6" y="-72"/><StraightVertex x="2.6" y="-72"/></PointsPath>
+                <Fill><LinearGradient startX="0" startY="-12" endX="0" endY="-72"><GradientStop colorValue="18CAA15D" position="0"/><GradientStop colorValue="66CAA15D" position="0.55"/><GradientStop colorValue="00CAA15D" position="1"/></LinearGradient></Fill>
+            </Shape>
+            <Shape rotation="-0.4" name="Dawn ray 3">
+                <PointsPath isClosed="true"><StraightVertex x="0" y="-12"/><StraightVertex x="-2.6" y="-72"/><StraightVertex x="2.6" y="-72"/></PointsPath>
+                <Fill><LinearGradient startX="0" startY="-12" endX="0" endY="-72"><GradientStop colorValue="18CAA15D" position="0"/><GradientStop colorValue="66CAA15D" position="0.55"/><GradientStop colorValue="00CAA15D" position="1"/></LinearGradient></Fill>
+            </Shape>
+            <Shape rotation="0" name="Dawn ray 4">
+                <PointsPath isClosed="true"><StraightVertex x="0" y="-12"/><StraightVertex x="-2.6" y="-72"/><StraightVertex x="2.6" y="-72"/></PointsPath>
+                <Fill><LinearGradient startX="0" startY="-12" endX="0" endY="-72"><GradientStop colorValue="18CAA15D" position="0"/><GradientStop colorValue="66CAA15D" position="0.55"/><GradientStop colorValue="00CAA15D" position="1"/></LinearGradient></Fill>
+            </Shape>
+            <Shape rotation="0.4" name="Dawn ray 5">
+                <PointsPath isClosed="true"><StraightVertex x="0" y="-12"/><StraightVertex x="-2.6" y="-72"/><StraightVertex x="2.6" y="-72"/></PointsPath>
+                <Fill><LinearGradient startX="0" startY="-12" endX="0" endY="-72"><GradientStop colorValue="18CAA15D" position="0"/><GradientStop colorValue="66CAA15D" position="0.55"/><GradientStop colorValue="00CAA15D" position="1"/></LinearGradient></Fill>
+            </Shape>
+            <Shape rotation="0.8" name="Dawn ray 6">
+                <PointsPath isClosed="true"><StraightVertex x="0" y="-12"/><StraightVertex x="-2.6" y="-72"/><StraightVertex x="2.6" y="-72"/></PointsPath>
+                <Fill><LinearGradient startX="0" startY="-12" endX="0" endY="-72"><GradientStop colorValue="18CAA15D" position="0"/><GradientStop colorValue="66CAA15D" position="0.55"/><GradientStop colorValue="00CAA15D" position="1"/></LinearGradient></Fill>
+            </Shape>
+            <Shape rotation="1.2" name="Dawn ray 7">
+                <PointsPath isClosed="true"><StraightVertex x="0" y="-12"/><StraightVertex x="-2.6" y="-72"/><StraightVertex x="2.6" y="-72"/></PointsPath>
+                <Fill><LinearGradient startX="0" startY="-12" endX="0" endY="-72"><GradientStop colorValue="18CAA15D" position="0"/><GradientStop colorValue="66CAA15D" position="0.55"/><GradientStop colorValue="00CAA15D" position="1"/></LinearGradient></Fill>
+            </Shape>
+        </Node>
+        <Node x="180" y="192" opacity="0" scaleX="0.94" scaleY="0.94" name="Gentle Haq entrance" id="0:30">
+            <Image assetId="0:60" scaleX="0.24" scaleY="0.24" name="Transparent Haq logo"/>
+            <Node opacity="0" name="Single light sweep" id="0:80">
+                <Image assetId="0:60" scaleX="0.24" scaleY="0.24" blendModeValue="screen" name="Light reflected only on the mark">
+                    <ClippingShape sourceId="0:82"/>
+                </Image>
+                <Shape x="-180" rotation="-0.25" name="Moving light window" id="0:82">
+                    <Rectangle width="38" height="360"/>
+                </Shape>
+            </Node>
         </Node>
         <StateMachine name="Splash" id="0:7">
-            <StateMachineLayer name="Entrance">
-                <AnyState x="200" y="-120"/>
-                <ExitState x="400" y="-120"/>
+            <StateMachineLayer name="Dawn entrance">
+                <AnyState x="200" y="-120"/><ExitState x="400" y="-120"/>
                 <EntryState><StateTransition stateToId="0:12"/></EntryState>
                 <AnimationState x="200" y="0" animationId="0:6" id="0:12"/>
             </StateMachineLayer>
         </StateMachine>
-        <LinearAnimation fps="60" duration="144" loopValue="oneShot" name="Logo entrance" id="0:6">
+        <LinearAnimation fps="60" duration="144" loopValue="oneShot" name="Dawn and reflected light" id="0:6">
             <KeyedObject objectId="0:30">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
-                    <KeyFrameDouble frame="30" value="1"/>
-                </KeyedProperty>
-                <KeyedProperty propertyKey="14">
-                    <KeyFrameDouble frame="0" value="200" interpolationType="linear"/>
-                    <KeyFrameDouble frame="38" value="180"/>
-                </KeyedProperty>
-                <KeyedProperty propertyKey="16">
-                    <KeyFrameDouble frame="0" value="0.72" interpolationType="linear"/>
-                    <KeyFrameDouble frame="32" value="1.045" interpolationType="linear"/>
-                    <KeyFrameDouble frame="48" value="1" interpolationType="linear"/>
-                    <KeyFrameDouble frame="96" value="1.025" interpolationType="linear"/>
-                    <KeyFrameDouble frame="144" value="1"/>
-                </KeyedProperty>
-                <KeyedProperty propertyKey="17">
-                    <KeyFrameDouble frame="0" value="0.72" interpolationType="linear"/>
-                    <KeyFrameDouble frame="32" value="1.045" interpolationType="linear"/>
-                    <KeyFrameDouble frame="48" value="1" interpolationType="linear"/>
-                    <KeyFrameDouble frame="96" value="1.025" interpolationType="linear"/>
-                    <KeyFrameDouble frame="144" value="1"/>
-                </KeyedProperty>
+                <KeyedProperty propertyKey="14"><KeyFrameDouble frame="0" value="192" interpolationType="linear"/><KeyFrameDouble frame="36" value="180" interpolationType="linear"/></KeyedProperty>
+                <KeyedProperty propertyKey="16"><KeyFrameDouble frame="0" value="0.94" interpolationType="linear"/><KeyFrameDouble frame="36" value="1" interpolationType="linear"/></KeyedProperty>
+                <KeyedProperty propertyKey="17"><KeyFrameDouble frame="0" value="0.94" interpolationType="linear"/><KeyFrameDouble frame="36" value="1" interpolationType="linear"/></KeyedProperty>
+                <KeyedProperty propertyKey="18"><KeyFrameDouble frame="0" value="0" interpolationType="linear"/><KeyFrameDouble frame="24" value="1" interpolationType="linear"/></KeyedProperty>
             </KeyedObject>
             <KeyedObject objectId="0:20">
-                <KeyedProperty propertyKey="18">
-                    <KeyFrameDouble frame="0" value="0" interpolationType="linear"/>
-                    <KeyFrameDouble frame="24" value="0.7" interpolationType="linear"/>
-                    <KeyFrameDouble frame="84" value="0"/>
-                </KeyedProperty>
-                <KeyedProperty propertyKey="16">
-                    <KeyFrameDouble frame="0" value="0.65" interpolationType="linear"/>
-                    <KeyFrameDouble frame="84" value="1.2"/>
-                </KeyedProperty>
-                <KeyedProperty propertyKey="17">
-                    <KeyFrameDouble frame="0" value="0.65" interpolationType="linear"/>
-                    <KeyFrameDouble frame="84" value="1.2"/>
-                </KeyedProperty>
+                <KeyedProperty propertyKey="16"><KeyFrameDouble frame="0" value="0.7" interpolationType="linear"/><KeyFrameDouble frame="84" value="1.12" interpolationType="linear"/></KeyedProperty>
+                <KeyedProperty propertyKey="17"><KeyFrameDouble frame="0" value="0.7" interpolationType="linear"/><KeyFrameDouble frame="84" value="1.12" interpolationType="linear"/></KeyedProperty>
+                <KeyedProperty propertyKey="18"><KeyFrameDouble frame="0" value="0" interpolationType="linear"/><KeyFrameDouble frame="24" value="0.85" interpolationType="linear"/><KeyFrameDouble frame="54" value="0.5" interpolationType="linear"/><KeyFrameDouble frame="84" value="0" interpolationType="linear"/></KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:21">
+                <KeyedProperty propertyKey="16"><KeyFrameDouble frame="0" value="0.7" interpolationType="linear"/><KeyFrameDouble frame="78" value="1" interpolationType="linear"/></KeyedProperty>
+                <KeyedProperty propertyKey="17"><KeyFrameDouble frame="0" value="0.7" interpolationType="linear"/><KeyFrameDouble frame="78" value="1" interpolationType="linear"/></KeyedProperty>
+                <KeyedProperty propertyKey="18"><KeyFrameDouble frame="0" value="0" interpolationType="linear"/><KeyFrameDouble frame="12" value="0" interpolationType="linear"/><KeyFrameDouble frame="30" value="0.7" interpolationType="linear"/><KeyFrameDouble frame="54" value="0.45" interpolationType="linear"/><KeyFrameDouble frame="78" value="0" interpolationType="linear"/></KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:80">
+                <KeyedProperty propertyKey="18"><KeyFrameDouble frame="0" value="0" interpolationType="linear"/><KeyFrameDouble frame="30" value="0" interpolationType="linear"/><KeyFrameDouble frame="38" value="0.65" interpolationType="linear"/><KeyFrameDouble frame="68" value="0.65" interpolationType="linear"/><KeyFrameDouble frame="76" value="0" interpolationType="linear"/></KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:82">
+                <KeyedProperty propertyKey="13"><KeyFrameDouble frame="0" value="-180" interpolationType="linear"/><KeyFrameDouble frame="30" value="-180" interpolationType="linear"/><KeyFrameDouble frame="76" value="180" interpolationType="linear"/></KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
     </Artboard>
