@@ -129,7 +129,7 @@ class QuranPlayerPanel extends StatelessWidget {
   Widget _compact(BuildContext context) => Column(
     mainAxisSize: MainAxisSize.min,
     children: [
-      if (floating || _minimize(context) != null)
+      if (floating || onToggleCollapsed != null || _minimize(context) != null)
         Row(
           children: [
             IconButton(
@@ -158,6 +158,12 @@ class QuranPlayerPanel extends StatelessWidget {
               ),
             ),
             if (collapsed) _playButton(context, size: 32),
+            if (onToggleCollapsed != null && onMinimize != null)
+              IconButton(
+                tooltip: context.tr('quran.hidePlayer'),
+                icon: const Icon(Icons.keyboard_double_arrow_right, size: 21),
+                onPressed: onMinimize,
+              ),
             if (onClose != null)
               IconButton(
                 tooltip: context.quranLabel('إغلاق المشغل وإيقاف الصوت'),
@@ -807,7 +813,11 @@ class QuranPlaybackBubble extends StatelessWidget {
         tooltip: context.tr('quran.restorePlayer'),
         onPressed: onOpen,
         icon: Icon(
-          media.playing ? Icons.graphic_eq : Icons.pause,
+          media.current == null
+              ? Icons.headphones_rounded
+              : media.playing
+              ? Icons.graphic_eq
+              : Icons.pause,
           color: qAccent(context),
         ),
       ),

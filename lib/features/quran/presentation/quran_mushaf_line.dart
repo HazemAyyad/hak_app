@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../data/quran_content.dart';
 import '../data/quran_repository.dart';
 import 'quran_widgets.dart';
+import 'quran_script.dart';
 
 /// A complete physical line scales together; words never wrap or get clipped.
 /// Glyph measurement is reused when only the selected ayah changes.
@@ -157,8 +158,10 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
   }
 
   Widget _glyph(String glyph) {
-    final text = Text(
-      glyph,
+    final text = Text.rich(
+      widget.useUnicode
+          ? quranScriptSpan(glyph, fontFamily: widget.fontFamily)
+          : TextSpan(text: glyph),
       textDirection: TextDirection.rtl,
       textScaler: TextScaler.noScaling,
       style: style,

@@ -167,6 +167,29 @@ void main() {
             .state<QuranHostState>(find.byType(QuranHost))
             .openReader(repo.byKey['2:1']!);
         await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('quran-player-bubble')),
+          findsOneWidget,
+        );
+        expect(find.byKey(const ValueKey('quran-reader-player')), findsNothing);
+        expect(audio.starts, 0);
+        await tester.tap(find.byKey(const ValueKey('quran-player-bubble')));
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const ValueKey('quran-reader-player')),
+          findsOneWidget,
+        );
+        expect(
+          audio.starts,
+          0,
+          reason: 'Opening idle controls must not start playback',
+        );
+        await tester.tap(
+          find.byKey(const ValueKey('quran-reader-hide-player')),
+        );
+        await tester.pumpAndSettle();
+        expect(find.byKey(const ValueKey('quran-reader-player')), findsNothing);
+
         await tester.tap(
           find.byKey(const ValueKey('quran-reader-follow-play')),
         );
@@ -195,6 +218,12 @@ void main() {
             inInclusiveRange(0, 600),
           );
         }
+        expect(
+          find.byKey(const ValueKey('quran-player-bubble')),
+          findsOneWidget,
+        );
+        await tester.tap(find.byKey(const ValueKey('quran-player-bubble')));
+        await tester.pumpAndSettle();
         await tester.tap(
           find.byKey(const ValueKey('quran-reader-hide-player')),
         );

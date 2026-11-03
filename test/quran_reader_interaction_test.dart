@@ -177,6 +177,8 @@ void main() {
         .state<QuranHostState>(find.byType(QuranHost))
         .openReader(repository.byKey[key]!);
     await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('quran-player-bubble')));
+    await tester.pumpAndSettle();
   }
 
   Future<void> capture(WidgetTester tester, String name) async {

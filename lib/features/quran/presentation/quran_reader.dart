@@ -10,6 +10,7 @@ import '../../../app_experience.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
 import 'quran_widgets.dart';
+import 'quran_script.dart';
 import 'quran_account.dart';
 import 'quran_mushaf.dart';
 import 'quran_reader_player.dart';
@@ -45,7 +46,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   bool playerExpanded = false;
   bool showHeader = true;
   bool fullscreen = false;
-  bool playerHidden = false, playerOnLeft = false, fullscreenPlayer = false;
+  bool playerHidden = true, playerOnLeft = false, fullscreenPlayer = false;
   String? audioVerseKey;
   String? _lastAudioTrack;
   double initialAlignment = 0;
@@ -410,9 +411,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                                 selected != null ||
                                 controller.audio.readingSession,
                           ),
-                          onHide: controller.audio.current == null
-                              ? null
-                              : _hidePlayer,
+                          onHide: _hidePlayer,
                         ),
                       ),
                     if (!fullscreen) const SizedBox(height: 78),
@@ -423,7 +422,6 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                         context,
                       )?.isDocked(controller.audio) ??
                       false) &&
-                  controller.audio.current != null &&
                   (playerHidden || fullscreen && !fullscreenPlayer))
                 Positioned(
                   left: playerOnLeft ? 16 : null,
@@ -803,8 +801,11 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
         if (chapter.basmala != null)
           Padding(
             padding: const EdgeInsets.only(top: 10),
-            child: Text(
-              chapter.basmala!,
+            child: Text.rich(
+              quranScriptSpan(
+                chapter.basmala!,
+                fontFamily: controller.scriptFont.family,
+              ),
               textDirection: TextDirection.rtl,
               style: TextStyle(
                 fontFamily: controller.scriptFont.family,
@@ -867,8 +868,11 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
-                          verse.text,
+                        Text.rich(
+                          quranScriptSpan(
+                            verse.text,
+                            fontFamily: controller.scriptFont.family,
+                          ),
                           textDirection: TextDirection.rtl,
                           textAlign: TextAlign.right,
                           style: TextStyle(
@@ -930,8 +934,11 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                   textColor: _ink(context),
                 ),
                 const SizedBox(height: 15),
-                Text(
-                  verse.text,
+                Text.rich(
+                  quranScriptSpan(
+                    verse.text,
+                    fontFamily: controller.scriptFont.family,
+                  ),
                   textDirection: TextDirection.rtl,
                   textAlign: TextAlign.center,
                   style: TextStyle(

@@ -74,6 +74,24 @@ class QuranReaderPlayer extends StatelessWidget {
             : media.catalog == null
             ? context.quranLabel('اختيار القارئ')
             : media.selection(verse: selected != null || following).name;
+        if (expanded) {
+          return QuranPlayerDismissGesture(
+            onHide: onHide,
+            child: QuranPlayerPanel(
+              key: const ValueKey('quran-reader-player'),
+              media: media,
+              repository: repository,
+              compact: true,
+              verseReciter: selected != null || following,
+              initialTitle: title,
+              onReciter: onReciter,
+              onStart: toggle,
+              onPlay: toggle,
+              onToggleCollapsed: onToggleExpanded,
+              onMinimize: onHide == null ? null : () => onHide!(false),
+            ),
+          );
+        }
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -148,24 +166,23 @@ class QuranReaderPlayer extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (media.current != null) ...[
+                    if (media.current != null)
                       QuranSleepTimerButton(media: media),
-                      if (onHide != null)
-                        IconButton(
-                          key: const ValueKey('quran-reader-hide-player'),
-                          constraints: const BoxConstraints.tightFor(
-                            width: 34,
-                            height: 40,
-                          ),
-                          padding: EdgeInsets.zero,
-                          tooltip: context.tr('quran.hidePlayer'),
-                          onPressed: () => onHide!(false),
-                          icon: const Icon(
-                            Icons.keyboard_double_arrow_right,
-                            size: 21,
-                          ),
+                    if (onHide != null)
+                      IconButton(
+                        key: const ValueKey('quran-reader-hide-player'),
+                        constraints: const BoxConstraints.tightFor(
+                          width: 34,
+                          height: 40,
                         ),
-                    ],
+                        padding: EdgeInsets.zero,
+                        tooltip: context.tr('quran.hidePlayer'),
+                        onPressed: () => onHide!(false),
+                        icon: const Icon(
+                          Icons.keyboard_double_arrow_right,
+                          size: 21,
+                        ),
+                      ),
                     IconButton(
                       onPressed: onToggleExpanded,
                       tooltip: expanded
@@ -210,19 +227,7 @@ class QuranReaderPlayer extends StatelessWidget {
                 ),
               ),
             ),
-            if (expanded)
-              QuranPlayerPanel(
-                media: media,
-                repository: repository,
-                compact: true,
-                verseReciter: selected != null || following,
-                initialTitle: title,
-                onReciter: onReciter,
-                onStart: toggle,
-                onPlay: toggle,
-                onMinimize: onHide == null ? null : () => onHide!(false),
-              ),
-            if (!expanded && media.error != null)
+            if (media.error != null)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(

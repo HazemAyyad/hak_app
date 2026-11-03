@@ -9,6 +9,7 @@ import 'package:haq_app/features/quran/data/quran_audio_models.dart';
 import 'package:haq_app/features/quran/data/quran_downloads.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/quran/presentation/quran_reader_player.dart';
+import 'package:haq_app/features/quran/presentation/quran_audio_widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'quran_playback_ownership_test.dart' as ownership;
@@ -43,6 +44,7 @@ void main() {
       final appearance = AppAppearance(prefs);
       QuranVerse? selected;
       var surah = 1;
+      var expanded = false;
       late StateSetter update;
       await tester.pumpWidget(
         AppearanceScope(
@@ -57,8 +59,8 @@ void main() {
                     repository: repo,
                     surah: surah,
                     selected: selected,
-                    expanded: false,
-                    onToggleExpanded: () {},
+                    expanded: expanded,
+                    onToggleExpanded: () => update(() => expanded = !expanded),
                     onReciter: () {},
                   );
                 },
@@ -134,6 +136,18 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('quran-timer-cancel')));
       await tester.pumpAndSettle();
       expect(media.sleepTimerActive, isFalse);
+      await tester.tap(find.byTooltip('توسيع المشغل'));
+      await tester.pumpAndSettle();
+      expect(find.byType(QuranPlayerPanel), findsOneWidget);
+      expect(find.byKey(const ValueKey('quran-reader-play')), findsNothing);
+      expect(find.byType(QuranSleepTimerButton), findsOneWidget);
+      expect(find.byIcon(Icons.pause), findsOneWidget);
+      final expandedSession = media.playbackSession;
+      await tester.tap(find.byTooltip('طي المشغل'));
+      await tester.pumpAndSettle();
+      expect(find.byType(QuranPlayerPanel), findsNothing);
+      expect(find.byKey(const ValueKey('quran-reader-play')), findsOneWidget);
+      expect(media.playbackSession, expandedSession);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
       appearance.dispose();
