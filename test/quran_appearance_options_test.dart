@@ -9,6 +9,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:haq_app/app_appearance.dart';
 import 'package:haq_app/features/quran/data/quran_controller.dart';
+import 'package:haq_app/features/quran/data/bundled_mushaf.dart';
 import 'package:haq_app/features/quran/data/quran_repository.dart';
 import 'package:haq_app/features/quran/data/quran_content.dart';
 import 'package:haq_app/features/quran/presentation/quran_reader.dart';
@@ -22,7 +23,6 @@ void main() {
   late QuranController c;
   late AppAppearance appearance;
   final boundary = GlobalKey();
-  final colorFont = File('build/quran-fixtures/v4-p2.ttf');
   setUpAll(() async {
     repo = QuranRepository.fromJson(
       jsonDecode(File('assets/quran/quran.json').readAsStringSync())
@@ -50,12 +50,10 @@ void main() {
           ))
           .load();
     }
-    if (colorFont.existsSync()) {
-      await (FontLoader('QuranTajweedPage2')..addFont(
-            Future.value(ByteData.sublistView(colorFont.readAsBytesSync())),
-          ))
-          .load();
-    }
+    await (FontLoader('QuranTajweedPage2')..addFont(
+          Future.value(ByteData.sublistView(await BundledMushaf().font(2))),
+        ))
+        .load();
   });
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
@@ -384,6 +382,72 @@ void main() {
       expect(counts.first, greaterThan(100));
       expect(counts.last, 0);
     },
-    skip: !colorFont.existsSync(),
+  );
+  testWidgets(
+    'monochrome ayah medallion retains a light interior behind its number',
+    (tester) async {
+      tester.view.physicalSize = const Size(160, 180);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      final page = MushafPageData.parse(
+        2,
+        jsonDecode(File('test/fixtures/quran/page2.json').readAsStringSync()),
+        repo,
+      );
+      final marker = page.words.firstWhere((word) => word.text == '١');
+      await tester.pumpWidget(
+        MaterialApp(
+          home: RepaintBoundary(
+            key: boundary,
+            child: ColoredBox(
+              color: Colors.transparent,
+              child: Center(
+                child: SizedBox(
+                  width: 140,
+                  height: 150,
+                  child: QuranMushafLine(
+                    words: [marker],
+                    fontFamily: page.fontFamily,
+                    fontSize: 100,
+                    centered: true,
+                    selected: null,
+                    repository: repo,
+                    showTajweed: false,
+                    onSelect: (_) {},
+                    onOptions: (_) {},
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.runAsync(() async {
+        final image =
+            await (boundary.currentContext!.findRenderObject()
+                    as RenderRepaintBoundary)
+                .toImage();
+        final rgba = (await image.toByteData(
+          format: ui.ImageByteFormat.rawRgba,
+        ))!.buffer.asUint8List();
+        var lightInterior = 0, darkInk = 0;
+        for (var i = 0; i < rgba.length; i += 4) {
+          if (rgba[i + 3] < 250) continue;
+          if (rgba[i] > 100 && rgba[i] < 240) lightInterior++;
+          if (rgba[i] < 65) darkInk++;
+        }
+        image.dispose();
+        expect(
+          lightInterior,
+          greaterThan(500),
+          reason:
+              'An opaque ink mask fills this light COLR background and hides the number',
+        );
+        expect(darkInk, greaterThan(50));
+      });
+      await tester.pumpWidget(const SizedBox());
+    },
   );
 }

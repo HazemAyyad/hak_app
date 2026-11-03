@@ -15693,5 +15693,70 @@
     "ar": "الرقية بالدعاء والقرآن، وهذه قائمة آيات مختارة وليست تسجيلًا واحدًا ذا مدة ثابتة. يُعرض اسم القارئ والمدة من الصوت الفعلي. الرقية لا تُغني عن الرعاية الطبية عند الحاجة.",
     "en": "Ruqya uses supplication and Quran recitation. This is a playlist of selected verses, not a single recording with a fixed duration. The reciter and duration come from the actual audio. Ruqya does not replace medical care when needed.",
     "tr": "Rukye, dua ve Kur’an tilavetiyle yapılır. Bu, sabit süreli tek bir kayıt değil, seçilmiş ayetlerden oluşan bir çalma listesidir. Kâri ve süre bilgisi gerçek ses kaydından alınır. Rukye, ihtiyaç duyulan tıbbi bakımın yerini tutmaz."
+  },
+  "quran.pageFont": {
+    "ar": "خط صفحات المصحف",
+    "en": "Mushaf page font",
+    "tr": "Mushaf sayfa yazı tipi"
+  },
+  "quran.originalMushafFont": {
+    "ar": "خط المصحف الأصلي — التجويد",
+    "en": "Original Mushaf font — Tajweed",
+    "tr": "Özgün Mushaf yazı tipi — Tecvit"
+  },
+  "quran.pageFontHint": {
+    "ar": "الخط الأصلي يحافظ على تخطيط المصحف. الخطوط الأخرى تعرض النص ضمن السطور نفسها.",
+    "en": "The original font preserves the Mushaf layout. Other fonts display the text within the same lines.",
+    "tr": "Özgün yazı tipi Mushaf düzenini korur. Diğer yazı tipleri metni aynı satırlarda gösterir."
+  },
+  "quran.tajweedFontHint": {
+    "ar": "ألوان التجويد متاحة مع خط المصحف الأصلي في وضع صفحات المصحف.",
+    "en": "Tajweed colors are available with the original font in Mushaf pages mode.",
+    "tr": "Tecvit renkleri, Mushaf sayfaları modunda özgün yazı tipiyle kullanılabilir."
+  },
+  "quran.bundledMushafReady": {
+    "ar": "المصحف جاهز للقراءة دون إنترنت",
+    "en": "Mushaf ready to read offline",
+    "tr": "Mushaf çevrimdışı okumaya hazır"
+  },
+  "quran.mushafAttribution": {
+    "ar": "خط المصحف: مجمع الملك فهد، عبر Quran Foundation • بيانات الصفحات والكلمات: QUL — Tarteel AI",
+    "en": "Mushaf fonts: King Fahd Complex, via Quran Foundation • Page and word data: QUL — Tarteel AI",
+    "tr": "Mushaf yazı tipleri: Kral Fahd Kompleksi, Quran Foundation aracılığıyla • Sayfa ve kelime verileri: QUL — Tarteel AI"
+  },
+  "quran.followReading": {
+    "ar": "تشغيل التلاوة من الآية الحالية",
+    "en": "Read aloud from the current verse",
+    "tr": "Mevcut ayetten itibaren oku"
+  },
+  "quran.startReadingFrom": {
+    "ar": "ابدأ التلاوة من هذه الآية",
+    "en": "Read aloud from this verse",
+    "tr": "Bu ayetten itibaren oku"
+  },
+  "quran.hidePlayer": {
+    "ar": "إخفاء المشغل مع استمرار التلاوة",
+    "en": "Hide player and keep listening",
+    "tr": "Oynatıcıyı gizle ve dinlemeye devam et"
+  },
+  "quran.restorePlayer": {
+    "ar": "إظهار مشغل القرآن",
+    "en": "Show Quran player",
+    "tr": "Kur’an oynatıcısını göster"
+  },
+  "quran.sleepTimer": {
+    "ar": "مؤقت النوم",
+    "en": "Sleep timer",
+    "tr": "Uyku zamanlayıcısı"
+  },
+  "quran.sleepAfter": {
+    "ar": "إيقاف التلاوة بعد…",
+    "en": "Stop recitation after…",
+    "tr": "Tilaveti şu süreden sonra durdur…"
+  },
+  "quran.setTimer": {
+    "ar": "تعيين",
+    "en": "Set timer",
+    "tr": "Zamanlayıcıyı ayarla"
   }
 }

@@ -424,9 +424,24 @@ void main() {
       await tester.pumpAndSettle();
       await capture(tester, 'audio-collapsed');
       expect(slider, findsNothing);
-      await tester.tap(find.byTooltip('توسيع المشغل'));
+      expect(find.byKey(const ValueKey('quran-player-bubble')), findsOneWidget);
+      expect(audio.playing, isTrue);
+      await tester.tap(find.byTooltip('إظهار مشغل القرآن'));
       await tester.pumpAndSettle();
       expect(slider, findsOneWidget);
+      final dock = tester.getRect(
+        find.byKey(const ValueKey('app-playback-dock')),
+      );
+      await tester.dragFrom(
+        Offset(dock.right - 45, dock.top + 12),
+        const Offset(-120, 0),
+      );
+      await tester.pumpAndSettle();
+      expect(controller.dockOnLeft, isTrue);
+      expect(audio.playing, isTrue);
+      expect(find.byKey(const ValueKey('quran-player-bubble')), findsOneWidget);
+      await tester.tap(find.byTooltip('إظهار مشغل القرآن'));
+      await tester.pumpAndSettle();
       controller.changeSurface('more');
       await tester.pumpAndSettle();
       expect(find.text('متابعة الاستماع؟'), findsNothing);

@@ -14,6 +14,7 @@ class AppExperienceController extends ChangeNotifier {
   final Map<QuranMedia, VoidCallback> _listeners = {};
   String surface = 'home';
   bool transitioning = false, collapsed = false, bottomBarVisible = true;
+  bool dockOnLeft = false;
   bool _disposed = false, _queued = false, _asking = false;
   int _popups = 0;
   Timer? _transitionTimer;
@@ -136,6 +137,11 @@ class AppExperienceController extends ChangeNotifier {
   void setCollapsed(bool value) {
     collapsed = value;
     _update();
+  }
+
+  void hideDock(bool left) {
+    dockOnLeft = left;
+    setCollapsed(true);
   }
 
   Future<void> stop() async {
@@ -440,24 +446,37 @@ class AppPlaybackDock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final audio = controller.media!;
-    return Material(
-      key: const ValueKey('app-playback-dock'),
-      elevation: 5,
-      borderRadius: BorderRadius.circular(18),
-      clipBehavior: Clip.antiAlias,
-      child: AnimatedSize(
-        duration: const Duration(milliseconds: 180),
-        alignment: Alignment.bottomCenter,
-        child: QuranPlayerPanel(
+    if (controller.collapsed) {
+      return Align(
+        alignment: controller.dockOnLeft
+            ? Alignment.centerLeft
+            : Alignment.centerRight,
+        child: QuranPlaybackBubble(
           media: audio,
-          repository: audio.repository(),
-          compact: true,
-          floating: true,
-          collapsed: controller.collapsed,
-          onToggleCollapsed: () =>
-              controller.setCollapsed(!controller.collapsed),
-          onOpen: controller.openPlayer,
-          onClose: controller.stop,
+          onOpen: () => controller.setCollapsed(false),
+        ),
+      );
+    }
+    return QuranPlayerDismissGesture(
+      onHide: controller.hideDock,
+      child: Material(
+        key: const ValueKey('app-playback-dock'),
+        elevation: 5,
+        borderRadius: BorderRadius.circular(18),
+        clipBehavior: Clip.antiAlias,
+        child: AnimatedSize(
+          duration: const Duration(milliseconds: 180),
+          alignment: Alignment.bottomCenter,
+          child: QuranPlayerPanel(
+            media: audio,
+            repository: audio.repository(),
+            compact: true,
+            floating: true,
+            collapsed: controller.collapsed,
+            onToggleCollapsed: () => controller.hideDock(false),
+            onOpen: controller.openPlayer,
+            onClose: controller.stop,
+          ),
         ),
       ),
     );

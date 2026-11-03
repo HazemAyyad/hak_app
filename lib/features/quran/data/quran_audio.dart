@@ -339,6 +339,8 @@ class QuranMedia extends ChangeNotifier {
   AudioServiceRepeatMode repeat = AudioServiceRepeatMode.none;
   double _preferredSpeed = 1;
   List<QuranAudioTrack> playingTracks = [];
+  bool _readingSession = false;
+  bool get readingSession => _readingSession && current?.ayah != null;
   bool get ownsPlayback =>
       !_disposed &&
       handler != null &&
@@ -494,8 +496,10 @@ class QuranMedia extends ChangeNotifier {
   Future<void> _playSelection(
     ({List<QuranAudioTrack> tracks, int start}) Function() select, {
     QuranAudioTrack? pending,
+    bool reading = false,
   }) async {
     final generation = ++_generation;
+    _readingSession = reading;
     _pendingTrack = pending;
     loading = true;
     error = null;
@@ -567,20 +571,32 @@ class QuranMedia extends ChangeNotifier {
     );
   });
 
-  Future<void> playVerse(QuranVerse verse, {int? endAyah, int repeats = 1}) =>
-      _playSelection(() {
-        final recitation = selection(verse: true);
-        final end = (endAyah ?? verse.ayah).clamp(
-          verse.ayah,
-          repository().surah(verse.surah).ayahCount,
-        );
-        final tracks = [
-          for (var count = 0; count < repeats.clamp(1, 10); count++)
-            for (var ayah = verse.ayah; ayah <= end; ayah++)
-              recitation.track(repository(), verse.surah, ayah: ayah),
-        ];
-        return (tracks: tracks, start: 0);
-      });
+  Future<void> playVerse(
+    QuranVerse verse, {
+    int? endAyah,
+    int repeats = 1,
+    bool followReading = false,
+  }) => _playSelection(() {
+    final recitation = selection(verse: true);
+    final end = (endAyah ?? verse.ayah).clamp(
+      verse.ayah,
+      repository().surah(verse.surah).ayahCount,
+    );
+    final tracks = [
+      for (var count = 0; count < repeats.clamp(1, 10); count++)
+        for (var ayah = verse.ayah; ayah <= end; ayah++)
+          recitation.track(repository(), verse.surah, ayah: ayah),
+    ];
+    return (tracks: tracks, start: 0);
+  }, reading: followReading);
+
+  /// A reading session has a track identity for every ayah, so the reader can
+  /// follow it without guessing timestamps in a complete-surah recording.
+  Future<void> playReadingFrom(QuranVerse verse) => playVerse(
+    verse,
+    endAyah: repository().surah(verse.surah).ayahCount,
+    followReading: true,
+  );
 
   Future<void> playWord(String key, int position, String audioUrl) async {
     final uri = Uri.parse('https://audio.qurancdn.com/').resolve(audioUrl);

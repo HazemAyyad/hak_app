@@ -100,6 +100,40 @@ void main() {
       await play();
       expect(media.current!.surah, 2);
       expect(media.current!.ayah, isNull);
+
+      await tester.runAsync(() => media.playReadingFrom(repo.byKey['2:285']!));
+      await tester.pumpAndSettle();
+      expect(media.playingTracks.map((track) => track.ayah), [285, 286]);
+      expect(media.readingSession, isTrue);
+      final readingSession = media.playbackSession;
+      await play();
+      expect(media.playbackSession, readingSession);
+      expect(media.playing, isFalse);
+      await play();
+      expect(media.playing, isTrue);
+      expect(media.current!.ayah, 285);
+
+      await tester.tap(find.byKey(const ValueKey('quran-sleep-timer')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('quran-timer-minutes-10')));
+      await tester.pumpAndSettle();
+      expect(
+        media.stopAt,
+        isNull,
+        reason: 'Choosing a duration must not start the timer before Set',
+      );
+      await tester.tap(find.byKey(const ValueKey('quran-timer-apply')));
+      await tester.pumpAndSettle();
+      expect(media.stopAt, isNotNull);
+      expect(
+        media.stopAt!.difference(DateTime.now()).inSeconds,
+        inInclusiveRange(598, 600),
+      );
+      await tester.tap(find.byKey(const ValueKey('quran-sleep-timer')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('quran-timer-cancel')));
+      await tester.pumpAndSettle();
+      expect(media.sleepTimerActive, isFalse);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
       appearance.dispose();

@@ -200,15 +200,7 @@ class QuranPlayerPanel extends StatelessWidget {
                   ),
                 ),
               ),
-              _smallButton(
-                context,
-                Icons.timer_outlined,
-                !media.sleepTimerActive
-                    ? context.quranLabel('مؤقت إيقاف')
-                    : context.quranLabel('المؤقت مفعّل'),
-                () => chooseAudioTimer(context, media),
-                active: media.sleepTimerActive,
-              ),
+              QuranSleepTimerButton(media: media),
               SizedBox(
                 width: 37,
                 child: TextButton(
@@ -761,72 +753,288 @@ Future<void> chooseAudioRepeat(BuildContext context, QuranMedia media) =>
         ),
       ),
     );
-Future<void> chooseAudioTimer(BuildContext context, QuranMedia media) =>
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (context) => SafeArea(
-        child: StatefulBuilder(
-          builder: (context, update) => SingleChildScrollView(
+
+class QuranPlayerDismissGesture extends StatefulWidget {
+  const QuranPlayerDismissGesture({
+    super.key,
+    required this.child,
+    this.onHide,
+  });
+  final Widget child;
+  final ValueChanged<bool>? onHide;
+  @override
+  State<QuranPlayerDismissGesture> createState() =>
+      _QuranPlayerDismissGestureState();
+}
+
+class _QuranPlayerDismissGestureState extends State<QuranPlayerDismissGesture> {
+  double drag = 0;
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+    onHorizontalDragStart: widget.onHide == null ? null : (_) => drag = 0,
+    onHorizontalDragUpdate: widget.onHide == null
+        ? null
+        : (details) => drag += details.delta.dx,
+    onHorizontalDragEnd: widget.onHide == null
+        ? null
+        : (_) {
+            if (drag.abs() > 48) widget.onHide!(drag < 0);
+          },
+    child: widget.child,
+  );
+}
+
+class QuranPlaybackBubble extends StatelessWidget {
+  const QuranPlaybackBubble({
+    super.key,
+    required this.media,
+    required this.onOpen,
+  });
+  final QuranMedia media;
+  final VoidCallback onOpen;
+  @override
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: media,
+    builder: (context, _) => Material(
+      key: const ValueKey('quran-player-bubble'),
+      elevation: 4,
+      color: AppPalette.of(context).surface,
+      shape: CircleBorder(
+        side: BorderSide(color: qAccent(context).withValues(alpha: .4)),
+      ),
+      child: IconButton(
+        constraints: const BoxConstraints.tightFor(width: 54, height: 54),
+        tooltip: context.tr('quran.restorePlayer'),
+        onPressed: onOpen,
+        icon: Icon(
+          media.playing ? Icons.graphic_eq : Icons.pause,
+          color: qAccent(context),
+        ),
+      ),
+    ),
+  );
+}
+
+class QuranSleepTimerButton extends StatefulWidget {
+  const QuranSleepTimerButton({super.key, required this.media});
+  final QuranMedia media;
+  @override
+  State<QuranSleepTimerButton> createState() => _QuranSleepTimerButtonState();
+}
+
+class _QuranSleepTimerButtonState extends State<QuranSleepTimerButton> {
+  Timer? ticker;
+  DateTime? deadline;
+  @override
+  void initState() {
+    super.initState();
+    widget.media.addListener(changed);
+    syncTicker();
+  }
+
+  void syncTicker() {
+    if (deadline == widget.media.stopAt) return;
+    deadline = widget.media.stopAt;
+    ticker?.cancel();
+    if (deadline != null) {
+      ticker = Timer.periodic(const Duration(seconds: 1), (_) {
+        if (mounted) setState(() {});
+      });
+    }
+  }
+
+  void changed() {
+    syncTicker();
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void didUpdateWidget(covariant QuranSleepTimerButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.media != widget.media) {
+      oldWidget.media.removeListener(changed);
+      widget.media.addListener(changed);
+      syncTicker();
+    }
+  }
+
+  @override
+  void dispose() {
+    ticker?.cancel();
+    widget.media.removeListener(changed);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final remaining = widget.media.stopAt?.difference(DateTime.now());
+    return TextButton(
+      key: const ValueKey('quran-sleep-timer'),
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        minimumSize: const Size(34, 40),
+        foregroundColor: qAccent(context),
+      ),
+      onPressed: () => chooseAudioTimer(context, widget.media),
+      child: Tooltip(
+        message: context.tr('quran.sleepTimer'),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              widget.media.sleepTimerActive
+                  ? Icons.bedtime
+                  : Icons.bedtime_outlined,
+              size: 20,
+            ),
+            if (remaining != null) ...[
+              const SizedBox(width: 3),
+              Text(
+                audioTime(
+                  remaining.isNegative ? Duration.zero : remaining,
+                  formats: LocalizationScope.maybeOf(context)?.formats,
+                ),
+                textDirection: TextDirection.ltr,
+                style: const TextStyle(fontSize: 10),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+Future<void> chooseAudioTimer(BuildContext context, QuranMedia media) {
+  const durations = [5, 10, 15, 20, 30, 60];
+  final remaining = media.stopAt?.difference(DateTime.now()).inSeconds;
+  int? choice = media.stoppingAfterSurah
+      ? 0
+      : remaining == null
+      ? null
+      : durations.firstWhere(
+          (minutes) => minutes * 60 >= remaining,
+          orElse: () => 60,
+        );
+  var fade = media.fadeTimer;
+  return showModalBottomSheet<void>(
+    context: context,
+    backgroundColor: AppPalette.of(context).surface,
+    showDragHandle: true,
+    isScrollControlled: true,
+    builder: (context) => SafeArea(
+      child: StatefulBuilder(
+        builder: (context, update) => ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(context).height * .8,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  context.quranLabel('مؤقت إيقاف التلاوة'),
-                  style: qText(context, size: 18, weight: FontWeight.w800),
+                  context.tr('quran.sleepAfter'),
+                  style: qText(context, size: 19, weight: FontWeight.w800),
                 ),
-                SwitchListTile(
-                  title: Text(context.quranLabel('تلاشي الصوت في آخر 5 ثوانٍ')),
-                  value: media.fadeTimer,
-                  onChanged: (value) {
-                    media.setTimerFade(value);
-                    update(() {});
-                  },
-                ),
-                ListTile(
-                  title: Text(context.quranLabel('إلغاء المؤقت')),
-                  onTap: () {
-                    media.setTimer(null);
-                    Navigator.pop(context);
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    media.current?.surah == 0
-                        ? context.quranLabel('بعد التسجيل الحالي')
-                        : context.quranLabel('بعد السورة الحالية'),
-                  ),
-                  subtitle: Text(
-                    context.quranLabel(
-                      'حتى نهاية السورة أو النطاق المحمّل؛ يلغي التكرار الحالي',
+                const SizedBox(height: 12),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        RadioGroup<int>(
+                          groupValue: choice,
+                          onChanged: (value) => update(() => choice = value),
+                          child: Column(
+                            children: [
+                              for (final minutes in durations)
+                                RadioListTile<int>(
+                                  key: ValueKey('quran-timer-minutes-$minutes'),
+                                  value: minutes,
+                                  title: Text(
+                                    context.tr(
+                                      'quran.audioSleepMinutes',
+                                      args: {
+                                        'minutes': quranNumber(
+                                          context,
+                                          minutes,
+                                        ),
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              RadioListTile<int>(
+                                key: const ValueKey('quran-timer-after-surah'),
+                                value: 0,
+                                title: Text(
+                                  media.current?.surah == 0
+                                      ? context.quranLabel('بعد التسجيل الحالي')
+                                      : context.quranLabel(
+                                          'بعد السورة الحالية',
+                                        ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Divider(),
+                        SwitchListTile(
+                          title: Text(
+                            context.quranLabel('تلاشي الصوت في آخر 5 ثوانٍ'),
+                          ),
+                          value: fade,
+                          onChanged: (value) => update(() => fade = value),
+                        ),
+                      ],
                     ),
                   ),
-                  enabled: media.ownsPlayback && media.current != null,
-                  onTap: () {
-                    media.setTimerAfterSurah();
-                    Navigator.pop(context);
-                  },
                 ),
-                for (final minutes in [5, 10, 15, 20, 30, 60])
-                  ListTile(
-                    title: Text(
-                      context.tr(
-                        'quran.audioSleepMinutes',
-                        args: {'minutes': quranNumber(context, minutes)},
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        key: const ValueKey('quran-timer-cancel'),
+                        onPressed: !media.sleepTimerActive
+                            ? null
+                            : () {
+                                media.setTimer(null);
+                                Navigator.pop(context);
+                              },
+                        child: Text(context.quranLabel('إلغاء المؤقت')),
                       ),
                     ),
-                    enabled: media.ownsPlayback,
-                    onTap: () {
-                      media.setTimer(Duration(minutes: minutes));
-                      Navigator.pop(context);
-                    },
-                  ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: FilledButton(
+                        key: const ValueKey('quran-timer-apply'),
+                        onPressed:
+                            choice == null ||
+                                !media.ownsPlayback ||
+                                media.current == null
+                            ? null
+                            : () {
+                                media.setTimerFade(fade);
+                                if (choice == 0) {
+                                  media.setTimerAfterSurah();
+                                } else {
+                                  media.setTimer(Duration(minutes: choice!));
+                                }
+                                Navigator.pop(context);
+                              },
+                        child: Text(context.tr('quran.setTimer')),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
         ),
       ),
-    );
+    ),
+  );
+}
 
 Future<void> shareAudio(BuildContext context, QuranAudioTrack track) async {
   await chooseContentShare(

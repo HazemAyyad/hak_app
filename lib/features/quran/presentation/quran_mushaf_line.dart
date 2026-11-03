@@ -23,10 +23,12 @@ class QuranMushafLine extends StatefulWidget {
     required this.onOptions,
     this.showTajweed = true,
     this.useUnicode = false,
+    this.playing,
   });
   final List<MushafWord> words;
   final String fontFamily;
   final String? selected;
+  final String? playing;
   final double fontSize;
   final bool centered;
   final QuranRepository repository;
@@ -129,7 +131,9 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
                         button: true,
                         child: DecoratedBox(
                           decoration: BoxDecoration(
-                            color: word.key == widget.selected
+                            color: word.key == widget.playing
+                                ? qAccent(context).withValues(alpha: .18)
+                                : word.key == widget.selected
                                 ? const Color(0x20C7A45A)
                                 : Colors.transparent,
                             borderRadius: BorderRadius.circular(3),
@@ -159,15 +163,33 @@ class _QuranMushafLineState extends State<QuranMushafLine> {
       textScaler: TextScaler.noScaling,
       style: style,
     );
-    // Mask only the glyph's rasterized ink, leaving selection backgrounds and
-    // the original text/font bytes untouched. COLR colors ignore TextStyle.color.
+    // Preserve luminance inside the COLR layers: an alpha-only mask also fills
+    // the light medallion background and makes its dark ayah number unreadable.
     return widget.showTajweed || widget.useUnicode
         ? text
         : ColorFiltered(
-            colorFilter: const ColorFilter.mode(
-              Color(0xFF17150F),
-              BlendMode.srcIn,
-            ),
+            colorFilter: const ColorFilter.matrix([
+              .2126,
+              .7152,
+              .0722,
+              0,
+              0,
+              .2126,
+              .7152,
+              .0722,
+              0,
+              0,
+              .2126,
+              .7152,
+              .0722,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+            ]),
             child: text,
           );
   }

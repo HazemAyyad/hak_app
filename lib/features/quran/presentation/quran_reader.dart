@@ -6,13 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../../app_appearance.dart';
+import '../../../app_experience.dart';
 import '../data/quran_controller.dart';
 import '../data/quran_repository.dart';
 import 'quran_widgets.dart';
 import 'quran_account.dart';
 import 'quran_mushaf.dart';
 import 'quran_reader_player.dart';
-import 'quran_audio_widgets.dart' show chooseVerseRange;
+import 'quran_audio_widgets.dart' show chooseVerseRange, QuranPlaybackBubble;
 import 'quran_audio_pages.dart';
 import 'quran_tafsir.dart';
 import '../../sharing/share_card.dart';
@@ -44,6 +45,9 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   bool playerExpanded = false;
   bool showHeader = true;
   bool fullscreen = false;
+  bool playerHidden = false, playerOnLeft = false, fullscreenPlayer = false;
+  String? audioVerseKey;
+  String? _lastAudioTrack;
   double initialAlignment = 0;
   late int fixedPage;
   late QuranReadingMode previousMode;
@@ -73,6 +77,7 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     controller.audio.addListener(_onAudioChanged);
     positions.itemPositions.addListener(_onVisibleItems);
     WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onAudioChanged());
   }
 
   void _reportActiveVerse() => widget.onActiveVerseChanged?.call(active.value);
@@ -107,7 +112,10 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   }
 
   void _setFullscreen(bool value) {
-    setState(() => fullscreen = value);
+    setState(() {
+      fullscreen = value;
+      fullscreenPlayer = false;
+    });
     widget.onFullscreenChanged(value);
   }
 
@@ -125,7 +133,9 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
     }
     active.value = verse;
     controller.remember(verse);
-    if (controller.mode == QuranReadingMode.continuous && items.isAttached) {
+    if (!fromAudio &&
+        controller.mode == QuranReadingMode.continuous &&
+        items.isAttached) {
       items.jumpTo(index: verse.ayah);
     }
   }
@@ -157,17 +167,59 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
   }
 
   void _onAudioChanged() {
-    final track = controller.audio.current;
-    if (!mounted ||
-        track == null ||
-        track.ayah == null ||
-        !track.recitation.startsWith('everyayah:')) {
-      return;
-    }
-    final verse = repo.byKey['${track.surah}:${track.ayah}'];
-    if (verse != null && verse.key != active.value.key) {
+    if (!mounted) return;
+    final audio = controller.audio;
+    if (audio.loading) return;
+    final track = audio.current;
+    final key =
+        track?.ayah != null && track!.recitation.startsWith('everyayah:')
+        ? '${track.surah}:${track.ayah}'
+        : null;
+    if (audioVerseKey == key && _lastAudioTrack == track?.id) return;
+    setState(() {
+      audioVerseKey = key;
+      _lastAudioTrack = track?.id;
+    });
+    final verse = repo.byKey[key];
+    if (verse != null) {
       _go(verse, fromAudio: true);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted &&
+            audioVerseKey == key &&
+            controller.mode == QuranReadingMode.continuous &&
+            items.isAttached) {
+          items.scrollTo(
+            index: verse.ayah,
+            duration: const Duration(milliseconds: 280),
+            curve: Curves.easeOut,
+          );
+        }
+      });
     }
+  }
+
+  void _hidePlayer(bool left) => setState(() {
+    playerOnLeft = left;
+    playerHidden = true;
+  });
+
+  Future<void> _toggleReading() async {
+    final track = controller.audio.current;
+    if (controller.audio.readingSession &&
+        track?.ayah != null &&
+        track!.surah == surahId &&
+        (controller.audio.playing ||
+            selected == null ||
+            selected!.ayah == track.ayah)) {
+      await controller.audio.toggle();
+    } else {
+      await _startReading(selected ?? active.value);
+    }
+  }
+
+  Future<void> _startReading(QuranVerse verse) {
+    setState(() => selected = null);
+    return controller.audio.playReadingFrom(verse);
   }
 
   void _turnPage(int page) {
@@ -226,131 +278,166 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
       if (!didPop && fullscreen) _setFullscreen(false);
     },
     child: ListenableBuilder(
-      listenable: controller,
+      listenable: Listenable.merge([
+        controller,
+        AppExperienceScope.maybeOf(context),
+      ]),
       builder: (context, _) => ValueListenableBuilder(
         valueListenable: active,
         builder: (context, verse, _) {
           final chapter = repo.surah(surahId);
-          return ColoredBox(
-            color: _paper(context),
-            child: Column(
-              children: [
-                if (!fullscreen) _toolbar(context, verse),
-                if (!fullscreen && showHeader)
-                  QuranHeader(
-                    title: chapter.localizedTitle(context),
-                    subtitle: context.tr(
-                      'quran.readerHeader',
-                      args: {
-                        'juz': quranJuzName(context, verse.juz),
-                        'page': quranNumber(
-                          context,
-                          controller.mode == QuranReadingMode.pages
-                              ? fixedPage
-                              : verse.page,
-                        ),
-                        'revelation': chapter.localizedRevelation(context),
-                        'count': quranNumber(context, chapter.ayahCount),
-                      },
-                    ),
-                    height: 154,
-                    onBack: () => Navigator.pop(context),
-                    actions: [
-                      QCircleButton(
-                        icon:
-                            controller.bookmarks.containsKey(
-                              (selected ?? verse).key,
-                            )
-                            ? Icons.bookmark
-                            : Icons.bookmark_outline,
-                        label: context.quranLabel('علامة مرجعية'),
-                        onTap: () =>
-                            controller.toggleBookmark((selected ?? verse).key),
-                        color: qNavy,
-                      ),
-                      QCircleButton(
-                        icon: Icons.menu_book_outlined,
-                        label: context.quranLabel('تفسير الآية'),
-                        onTap: () => _explanation(selected ?? verse),
-                      ),
-                      QCircleButton(
-                        icon: Icons.settings_outlined,
-                        label: context.quranLabel('إعدادات القراءة'),
-                        onTap: _settings,
-                      ),
-                    ],
-                  ),
-                if (fullscreen)
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      tooltip: context.quranLabel('إغلاق التكبير'),
-                      onPressed: () => _setFullscreen(false),
-                      icon: Icon(Icons.close, color: _ink(context)),
-                    ),
-                  ),
-                if (widget.highlight != null && !fullscreen)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Row(
-                      children: [
-                        TextButton.icon(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.arrow_forward, size: 16),
-                          label: Text(
-                            context.quranLabel('العودة إلى النتائج'),
-                            style: qText(
+          return Stack(
+            fit: StackFit.expand,
+            children: [
+              ColoredBox(
+                color: _paper(context),
+                child: Column(
+                  children: [
+                    if (!fullscreen) _toolbar(context, verse),
+                    if (!fullscreen && showHeader)
+                      QuranHeader(
+                        title: chapter.localizedTitle(context),
+                        subtitle: context.tr(
+                          'quran.readerHeader',
+                          args: {
+                            'juz': quranJuzName(context, verse.juz),
+                            'page': quranNumber(
                               context,
-                              size: 11,
-                              color: qAccent(context),
+                              controller.mode == QuranReadingMode.pages
+                                  ? fixedPage
+                                  : verse.page,
                             ),
+                            'revelation': chapter.localizedRevelation(context),
+                            'count': quranNumber(context, chapter.ayahCount),
+                          },
+                        ),
+                        height: 154,
+                        onBack: () => Navigator.pop(context),
+                        actions: [
+                          QCircleButton(
+                            icon:
+                                controller.bookmarks.containsKey(
+                                  (selected ?? verse).key,
+                                )
+                                ? Icons.bookmark
+                                : Icons.bookmark_outline,
+                            label: context.quranLabel('علامة مرجعية'),
+                            onTap: () => controller.toggleBookmark(
+                              (selected ?? verse).key,
+                            ),
+                            color: qNavy,
                           ),
+                          QCircleButton(
+                            icon: Icons.menu_book_outlined,
+                            label: context.quranLabel('تفسير الآية'),
+                            onTap: () => _explanation(selected ?? verse),
+                          ),
+                          QCircleButton(
+                            icon: Icons.settings_outlined,
+                            label: context.quranLabel('إعدادات القراءة'),
+                            onTap: _settings,
+                          ),
+                        ],
+                      ),
+                    if (fullscreen)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          tooltip: context.quranLabel('إغلاق التكبير'),
+                          onPressed: () => _setFullscreen(false),
+                          icon: Icon(Icons.close, color: _ink(context)),
                         ),
-                        const Spacer(),
-                        Text(
-                          widget.highlight!,
-                          style: qText(context, size: 11, color: qGold),
+                      ),
+                    if (widget.highlight != null && !fullscreen)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Row(
+                          children: [
+                            TextButton.icon(
+                              onPressed: () => Navigator.pop(context),
+                              icon: const Icon(Icons.arrow_forward, size: 16),
+                              label: Text(
+                                context.quranLabel('العودة إلى النتائج'),
+                                style: qText(
+                                  context,
+                                  size: 11,
+                                  color: qAccent(context),
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              widget.highlight!,
+                              style: qText(context, size: 11, color: qGold),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
+                    Expanded(
+                      child: controller.mode == QuranReadingMode.pages
+                          ? QuranMushaf(
+                              showTajweed: controller.showTajweed,
+                              content: controller.content,
+                              repository: repo,
+                              page: fixedPage,
+                              selected: selected?.key,
+                              playing: audioVerseKey,
+                              onPage: _turnPage,
+                              onSelect: _selectPageVerse,
+                              onOptions: _options,
+                              paper: _paper(context),
+                              ink: _ink(context),
+                              fontFamily: controller.pageFont?.family,
+                            )
+                          : controller.mode == QuranReadingMode.continuous
+                          ? _continuous(context, chapter)
+                          : _single(context, verse),
                     ),
-                  ),
-                Expanded(
-                  child: controller.mode == QuranReadingMode.pages
-                      ? QuranMushaf(
-                          showTajweed: controller.showTajweed,
-                          content: controller.content,
+                    if (selected != null) _selectionTools(context),
+                    if (!playerHidden && (!fullscreen || fullscreenPlayer))
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(14, 8, 14, 9),
+                        child: QuranReaderPlayer(
+                          media: controller.audio,
                           repository: repo,
-                          page: fixedPage,
-                          selected: selected?.key,
-                          onPage: _turnPage,
-                          onSelect: _selectPageVerse,
-                          onOptions: _options,
-                          paper: _paper(context),
-                          ink: _ink(context),
-                          fontFamily: controller.pageFont?.family,
-                        )
-                      : controller.mode == QuranReadingMode.continuous
-                      ? _continuous(context, chapter)
-                      : _single(context, verse),
+                          surah: surahId,
+                          selected: selected,
+                          expanded: playerExpanded,
+                          onToggleExpanded: () =>
+                              setState(() => playerExpanded = !playerExpanded),
+                          onReciter: () => _reciter(
+                            verse:
+                                selected != null ||
+                                controller.audio.readingSession,
+                          ),
+                          onHide: controller.audio.current == null
+                              ? null
+                              : _hidePlayer,
+                        ),
+                      ),
+                    if (!fullscreen) const SizedBox(height: 78),
+                  ],
                 ),
-                if (selected != null) _selectionTools(context),
-                if (!fullscreen)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(14, 8, 14, 9),
-                    child: QuranReaderPlayer(
-                      media: controller.audio,
-                      repository: repo,
-                      surah: surahId,
-                      selected: selected,
-                      expanded: playerExpanded,
-                      onToggleExpanded: () =>
-                          setState(() => playerExpanded = !playerExpanded),
-                      onReciter: () => _reciter(),
-                    ),
+              ),
+              if (!(AppExperienceScope.maybeOf(
+                        context,
+                      )?.isDocked(controller.audio) ??
+                      false) &&
+                  controller.audio.current != null &&
+                  (playerHidden || fullscreen && !fullscreenPlayer))
+                Positioned(
+                  left: playerOnLeft ? 16 : null,
+                  right: playerOnLeft ? null : 16,
+                  bottom: fullscreen ? 12 : 88,
+                  child: QuranPlaybackBubble(
+                    media: controller.audio,
+                    onOpen: () => setState(() {
+                      playerHidden = false;
+                      fullscreenPlayer = fullscreen;
+                    }),
                   ),
-                if (!fullscreen) const SizedBox(height: 78),
-              ],
-            ),
+                ),
+            ],
           );
         },
       ),
@@ -364,22 +451,47 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
         children: [
           if (!showHeader)
             IconButton(
+              style: IconButton.styleFrom(
+                minimumSize: const Size(36, 44),
+                maximumSize: const Size(36, 44),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              constraints: const BoxConstraints.tightFor(width: 36, height: 44),
+              padding: EdgeInsets.zero,
               tooltip: context.quranLabel('رجوع'),
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.arrow_forward_ios, size: 20),
             ),
-          Flexible(
-            child: TextButton.icon(
+          if (constraints.maxWidth < 360)
+            IconButton(
+              style: IconButton.styleFrom(
+                minimumSize: const Size(36, 44),
+                maximumSize: const Size(36, 44),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              constraints: const BoxConstraints.tightFor(width: 36, height: 44),
+              padding: EdgeInsets.zero,
+              tooltip: context.quranLabel('انتقال'),
               onPressed: _navigation,
-              icon: Icon(Icons.unfold_more, size: 19, color: qAccent(context)),
-              label: Text(
-                context.quranLabel('انتقال'),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: qText(context, size: 12, color: qAccent(context)),
+              icon: Icon(Icons.unfold_more, color: qAccent(context), size: 21),
+            )
+          else
+            Flexible(
+              child: TextButton.icon(
+                onPressed: _navigation,
+                icon: Icon(
+                  Icons.unfold_more,
+                  size: 19,
+                  color: qAccent(context),
+                ),
+                label: Text(
+                  context.quranLabel('انتقال'),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: qText(context, size: 12, color: qAccent(context)),
+                ),
               ),
             ),
-          ),
           if (constraints.maxWidth > 390)
             Text(
               context.tr(
@@ -400,7 +512,38 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
               ),
             ),
           const Spacer(),
+          ListenableBuilder(
+            listenable: controller.audio,
+            builder: (context, _) => IconButton(
+              style: IconButton.styleFrom(
+                minimumSize: const Size(36, 44),
+                maximumSize: const Size(36, 44),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              constraints: const BoxConstraints.tightFor(width: 36, height: 44),
+              padding: EdgeInsets.zero,
+              key: const ValueKey('quran-reader-follow-play'),
+              tooltip: audioVerseKey != null && controller.audio.playing
+                  ? context.quranLabel('إيقاف مؤقت')
+                  : context.tr('quran.followReading'),
+              onPressed: controller.audio.buffering ? null : _toggleReading,
+              icon: Icon(
+                audioVerseKey != null && controller.audio.playing
+                    ? Icons.pause_circle_outline
+                    : Icons.play_circle_outline,
+                color: qAccent(context),
+                size: 24,
+              ),
+            ),
+          ),
           IconButton(
+            style: IconButton.styleFrom(
+              minimumSize: const Size(36, 44),
+              maximumSize: const Size(36, 44),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            constraints: const BoxConstraints.tightFor(width: 36, height: 44),
+            padding: EdgeInsets.zero,
             key: const ValueKey('quran-toggle-header'),
             tooltip: showHeader
                 ? context.quranLabel('إخفاء الهيدر')
@@ -422,11 +565,25 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
               ),
             ),
           IconButton(
+            style: IconButton.styleFrom(
+              minimumSize: const Size(36, 44),
+              maximumSize: const Size(36, 44),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            constraints: const BoxConstraints.tightFor(width: 36, height: 44),
+            padding: EdgeInsets.zero,
             tooltip: context.quranLabel('طريقة العرض'),
             onPressed: _chooseMode,
             icon: const Icon(Icons.chrome_reader_mode_outlined, size: 21),
           ),
           IconButton(
+            style: IconButton.styleFrom(
+              minimumSize: const Size(36, 44),
+              maximumSize: const Size(36, 44),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            constraints: const BoxConstraints.tightFor(width: 36, height: 44),
+            padding: EdgeInsets.zero,
             tooltip: context.quranLabel('تكبير السورة'),
             onPressed: () => _setFullscreen(true),
             icon: const Icon(Icons.fullscreen, size: 24),
@@ -683,14 +840,16 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
               'ayah': quranNumber(context, verse.ayah),
             },
           ),
-          selected: selected?.key == verse.key,
+          selected: selected?.key == verse.key || audioVerseKey == verse.key,
           child: InkWell(
             key: ValueKey('quran-select-${verse.key}'),
             onLongPress: () => _options(verse),
             onTap: () => _selectPageVerse(verse),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              color: selected?.key == verse.key
+              color: audioVerseKey == verse.key
+                  ? qAccent(context).withValues(alpha: .18)
+                  : selected?.key == verse.key
                   ? qAccent(context).withValues(alpha: .09)
                   : highlighted
                   ? qGold.withValues(alpha: .13)
@@ -752,7 +911,12 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
           QCard(
             key: ValueKey('quran-ayah-${verse.key}'),
             onTap: () => _selectPageVerse(verse),
-            color: selected?.key == verse.key
+            color: audioVerseKey == verse.key
+                ? Color.alphaBlend(
+                    qAccent(context).withValues(alpha: .18),
+                    _paper(context),
+                  )
+                : selected?.key == verse.key
                 ? Color.alphaBlend(
                     qAccent(context).withValues(alpha: .09),
                     _paper(context),
@@ -886,6 +1050,15 @@ class _QuranReaderState extends State<QuranReader> with WidgetsBindingObserver {
                     ),
                   ),
                   const SizedBox(height: 12),
+                  ListTile(
+                    key: const ValueKey('quran-reading-from-verse'),
+                    leading: Icon(Icons.playlist_play, color: qAccent(context)),
+                    title: Text(context.tr('quran.startReadingFrom')),
+                    onTap: () {
+                      Navigator.pop(sheetContext);
+                      _startReading(verse);
+                    },
+                  ),
                   ListTile(
                     leading: Icon(Icons.play_arrow, color: qAccent(context)),
                     title: Text(context.quranLabel('استماع إلى الآية')),

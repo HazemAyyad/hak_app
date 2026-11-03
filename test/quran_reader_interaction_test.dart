@@ -261,7 +261,7 @@ void main() {
         width: 320,
       );
       final original = repository.byKey['1:1']!.text;
-      await tester.tap(find.text('Go to'));
+      await tester.tap(find.byTooltip('Go to'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Reading settings'));
       await tester.pumpAndSettle();

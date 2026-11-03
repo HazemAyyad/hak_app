@@ -26,11 +26,13 @@ class QuranMushaf extends StatefulWidget {
     this.downloads,
     this.fontFamily,
     this.showTajweed = true,
+    this.playing,
   });
   final QuranContent content;
   final QuranRepository repository;
   final int page;
   final String? selected;
+  final String? playing;
   final ValueChanged<int> onPage;
   final ValueChanged<QuranVerse> onSelect, onOptions;
   final Color paper, ink;
@@ -167,6 +169,7 @@ class _QuranMushafState extends State<QuranMushaf> {
                             data: snapshot.data!,
                             repository: widget.repository,
                             selected: widget.selected,
+                            playing: widget.playing,
                             paper: widget.paper,
                             ink: widget.ink,
                             fontFamily: widget.fontFamily,
@@ -238,10 +241,12 @@ class MushafCanvas extends StatelessWidget {
     required this.onOptions,
     this.showTajweed = true,
     this.fontFamily,
+    this.playing,
   });
   final MushafPageData data;
   final QuranRepository repository;
   final String? selected;
+  final String? playing;
   final Color paper, ink;
   final bool showTajweed;
   final String? fontFamily;
@@ -401,6 +406,7 @@ class MushafCanvas extends StatelessWidget {
       fontSize: fontSize,
       centered: data.page <= 2,
       selected: selected,
+      playing: playing,
       repository: repository,
       onSelect: onSelect,
       onOptions: onOptions,
